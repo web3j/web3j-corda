@@ -3,5 +3,5 @@ rootProject.name = 'web3j-corda'
 include 'common'
 findProject(':common')?.name = 'web3j-corda-common'
 
-include 'abi'
-findProject(':abi')?.name = 'web3j-corda-abi'
+include 'transport'
+findProject(':transport')?.name = 'web3j-corda-transport'
