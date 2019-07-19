@@ -1,0 +1,252 @@
+buildscript {
+    repositories {
+        mavenCentral()
+        maven {
+            url "https://plugins.gradle.org/m2/"
+        }
+    }
+    dependencies {
+        classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.3.41'
+        classpath 'org.unbroken-dome.gradle-plugins:gradle-testsets-plugin:2.1.1'
+        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.4'
+        classpath 'com.diffplug.spotless:spotless-plugin-gradle:3.23.0'
+        classpath 'com.adarshr:gradle-test-logger-plugin:1.7.0'
+    }
+}
+
+description = 'Integrates web3j with the Corda blockchain platform.'
+
+ext {
+    loadPropsFromFile = { String path ->
+        def props = new Properties()
+        def propsFile = file(path)
+        if (propsFile.exists()) {
+            propsFile.withReader { reader ->
+                props.load(reader)
+            }
+        }
+        props
+    }
+    versions = loadPropsFromFile("$rootDir/versions.properties")
+    ossrhUsername = project.hasProperty('ossrhUsername') ? project.property('ossrhUsername') : System.getenv('OSSRH_USERNAME')
+    ossrhPassword = project.hasProperty('ossrhPassword') ? project.property('ossrhPassword') : System.getenv('OSSRH_PASSWORD')
+    ossrhRepoUrl = project.hasProperty('ossrhRepoUrl') ? project.property('ossrhRepoUrl') : System.getenv('OSSRH_REPO_URL')
+    ossrhSnapshotRepoUrl = project.hasProperty('ossrhSnapshotRepoUrl') ? project.property('ossrhSnapshotRepoUrl') : System.getenv('OSSRH_SNAPSHOT_REPO_URL')
+    bintrayUser = project.hasProperty('bintrayUser') ? project.property('bintrayUser') : System.getenv('BINTRAY_USER')
+    bintrayKey = project.hasProperty('bintrayApiKey') ? project.property('bintrayApiKey') : System.getenv('BINTRAY_API_KEY')
+    bintrayGpgPassphrase = project.hasProperty('bintrayGpgPassphrase') ? project.property('bintrayGpgPassphrase') : System.getenv('BINTRAY_GPG_PASSPHRASE')
+}
+
+subprojects {
+    apply plugin: 'java'
+    apply plugin: 'idea'
+    apply plugin: 'maven'
+    apply plugin: 'signing'
+    apply plugin: 'maven-publish'
+    apply plugin: 'com.jfrog.bintray'
+    apply plugin: 'org.jetbrains.kotlin.jvm'
+    apply plugin: 'org.unbroken-dome.test-sets'
+    apply plugin: 'com.diffplug.gradle.spotless'
+    apply plugin: 'com.adarshr.test-logger'
+
+    repositories {
+        mavenCentral()
+        maven {
+            url 'https://oss.sonatype.org/content/repositories/snapshots/'
+            mavenContent {
+                snapshotsOnly()
+            }
+        }
+        maven {
+            url "$rootProject.projectDir/lib"
+        }
+    }
+
+    task sourcesJar(type: Jar) {
+        from sourceSets.main.allSource
+        classifier = 'sources'
+    }
+
+    testSets {
+        integrationTest {
+            dirName = 'integration-test'
+        }
+    }
+
+    tasks.withType(Test) {
+        useJUnitPlatform()
+        systemProperties = [
+                'junit.jupiter.extensions.autodetection.enabled': 'true',
+                'junit.jupiter.testinstance.lifecycle.default'  : 'per_class'
+        ]
+    }
+
+    configurations {
+        testOutput.extendsFrom(testCompile)
+        integrationTestOutput.extendsFrom(integrationTestCompile)
+    }
+
+    artifacts {
+        archives sourcesJar
+        testOutput testJar
+        integrationTestOutput integrationTestJar
+    }
+
+    testlogger {
+        showStandardStreams true
+    }
+
+    dependencies {
+        implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk8'
+        implementation 'org.jetbrains.kotlin:kotlin-reflect'
+        implementation 'org.jetbrains.kotlin:kotlin-noarg'
+        implementation 'org.jetbrains.kotlin:kotlin-native-utils'
+
+        implementation "io.github.microutils:kotlin-logging:${versions.kLogging}"
+
+        implementation("com.github.shyiko:ktlint:${versions.ktlint}") {
+            exclude group: 'org.jetbrains.kotlin'
+            exclude group: 'org.slf4j'
+        }
+
+        testImplementation(group: 'org.web3j', name: 'core', version: versions.web3j, classifier: 'tests')
+        testImplementation "org.junit.jupiter:junit-jupiter-api:${versions.junit5}"
+        testImplementation "com.willowtreeapps.assertk:assertk-jvm:${versions.assertk}"
+        testImplementation "junit:junit:${versions.junit4}"
+        testImplementation("io.mockk:mockk:${versions.mockk}") {
+            exclude group: 'org.jetbrains.kotlin'
+        }
+
+        runtimeOnly "com.github.schnitker.logmanager:logmgr-logback:${versions.logmanager}"
+
+        testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:${versions.junit5}"
+        testRuntimeOnly "org.junit.vintage:junit-vintage-engine:${versions.junit5}"
+
+        integrationTestImplementation "org.testcontainers:testcontainers:${versions.testcontainers}"
+        integrationTestImplementation "org.testcontainers:junit-jupiter:${versions.testcontainers}"
+    }
+
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    compileKotlin.kotlinOptions.jvmTarget = sourceCompatibility
+    compileTestKotlin.kotlinOptions.jvmTarget = sourceCompatibility
+    compileIntegrationTestKotlin.kotlinOptions.jvmTarget = sourceCompatibility
+
+    spotless {
+        kotlin {
+            // This path needs to be relative to each project
+            target fileTree('.') {
+                include '**/*.kt'
+                exclude '**/.gradle/**'
+            }
+            ktlint(versions.ktlint)
+            trimTrailingWhitespace()
+            endWithNewline()
+        }
+    }
+
+    publishing {
+        publications {
+            maven(MavenPublication) {
+                groupId = project.group
+                artifactId = project.name
+                version = project.version
+                from components.java
+                artifact sourcesJar
+                pom {
+                    name = project.name
+                    description = project.description
+                    url = "https://github.com/web3j/web3j-corda"
+                    licenses {
+                        license {
+                            name = "The Apache License, Version 2.0"
+                            url = "http://www.apache.org/licenses/LICENSE-2.0.txt"
+                            distribution = "repo"
+                        }
+                    }
+                    developers {
+                        developer {
+                            id = 'xaviarias'
+                            name = 'Xavier Arias'
+                            email = 'xavier@web3labs.com'
+                            organization = 'Web3 Labs'
+                        }
+                    }
+                    scm {
+                        connection = "scm:git:https://github.com/web3j/web3j-corda.git"
+                        developerConnection = "scm:git://github.com/web3j/web3j-corda.git"
+                        url = "https://github.com/web3j/web3j-corda.git"
+                    }
+                }
+            }
+        }
+    }
+
+    uploadArchives {
+        repositories {
+            mavenDeployer {
+                repository(url: ossrhRepoUrl) {
+                    authentication(userName: ossrhUsername, password: ossrhPassword)
+                }
+                snapshotRepository(url: ossrhSnapshotRepoUrl) {
+                    authentication(userName: ossrhUsername, password: ossrhPassword)
+                }
+                pom.project {
+                    packaging 'jar'
+                    name 'web3j Corda Integration'
+                    description rootProject.description
+                    url 'https://web3j.io'
+                    scm {
+                        connection 'scm:git:https://github.com/web3j/web3j-corda.git'
+                        url 'https://github.com/web3j/web3j-corda.git'
+                        developerConnection 'scm:git://github.com/web3j/web3j-corda.git'
+                    }
+                    licenses {
+                        license {
+                            name 'The Apache License, Version 2.0'
+                            url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                            distribution 'repo'
+                        }
+                    }
+                    developers {
+                        developer {
+                            id = 'xaviarias'
+                            name = 'Xavier Arias'
+                            email = 'xavier@web3labs.com'
+                            organization = 'Web3 Labs'
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    bintray {
+        user = bintrayUser
+        key = bintrayKey
+        publications = ['maven']
+        publish = true
+        pkg {
+            repo = 'maven'
+            name = project.name
+            desc = project.description
+            userOrg = 'web3j'
+            licenses = ['Apache-2.0']
+            issueTrackerUrl = 'https://github.com/web3j/web3j-corda/issues'
+            vcsUrl = 'https://github.com/web3j/web3j-corda.git'
+            websiteUrl = 'https://web3j.io'
+            publicDownloadNumbers = true
+            version {
+                gpg {
+                    sign = true
+                    passphrase = bintrayGpgPassphrase
+                }
+                mavenCentralSync {
+                    sync = true
+                    user = ossrhUsername
+                    password = ossrhPassword
+                    close = '1'
+                }
+            }
+        }
+    }
+}
