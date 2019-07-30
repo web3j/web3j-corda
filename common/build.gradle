@@ -1,4 +1,12 @@
 dependencies {
     api "org.web3j:core:${versions.web3j}"
     api "org.web3j:abi:${versions.web3j}"
+    
+    implementation group: 'org.glassfish.jersey.inject', name: 'jersey-hk2', version: '2.29'
+    implementation group: 'org.glassfish.jersey.core', name: 'jersey-client', version: '2.29'
+    implementation group: 'org.glassfish.jersey.media', name: 'jersey-media-json-jackson', version: '2.29'
+    implementation group: 'org.glassfish.jersey.ext', name: 'jersey-proxy-client', version: '2.29'
+    implementation group: 'javax.activation', name: 'activation', version: '1.1.1'
+    implementation group: 'javax.xml.bind', name: 'jaxb-api', version: '2.3.1'
+    implementation "com.fasterxml.jackson.module:jackson-module-kotlin:2.9.7"
 }
