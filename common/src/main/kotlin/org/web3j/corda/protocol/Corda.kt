@@ -10,7 +10,7 @@ import javax.ws.rs.client.Client
 import javax.ws.rs.client.ClientBuilder
 
 @Path("api/rest")
-interface Corda {
+interface CordaApi {
 
     @get:Path("cordapps")
     val corDapps: CorDappsResource
@@ -63,16 +63,22 @@ interface Corda {
         val corDappId: CorDappId
         val flowId: FlowId
     }
+}
+
+class Corda private constructor(
+    private val api: CordaApi,
+    val service: CordaService
+) : CordaApi by api {
 
     companion object {
         fun build(service: CordaService): Corda {
-            val target = service.client.target(service.target)
-            return WebResourceFactory.newResource(Corda::class.java, target)
+            val target = service.client.target(service.uri)
+            return Corda(WebResourceFactory.newResource(CordaApi::class.java, target), service)
         }
     }
 }
 
-class CordaService(val target: String) : AutoCloseable {
+class CordaService(val uri: String) : AutoCloseable {
     internal val client: Client by lazy {
         ClientBuilder.newClient()
     }
@@ -85,14 +91,8 @@ class CordaService(val target: String) : AutoCloseable {
 abstract class BaseFlow protected constructor(
     override val corDappId: CorDappId,
     override val flowId: FlowId,
-    private val corda: Corda
-) : Corda.Flow {
-
-    protected open fun start(vararg params: Any): Any {
-        // TODO Type conversion and invocation
-        return corda.corDapps[corDappId].flows[flowId]
-    }
-}
+    private val api: CordaApi
+) : CordaApi.Flow
 
 data class SignedTransaction(
     val txBits: SerializedBytesCoreTransaction
