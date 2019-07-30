@@ -46,7 +46,6 @@ interface CordaApi {
     }
 
     interface CorDapp {
-        val corDappId: CorDappId
 
         @get:Path("flows")
         val flows: FlowsResource
@@ -59,10 +58,12 @@ interface CordaApi {
         operator fun get(@PathParam("id") id: FlowId): Flow
     }
 
-    interface Flow {
-        val corDappId: CorDappId
-        val flowId: FlowId
-    }
+    interface Flow
+}
+
+fun CordaApi.Flow.start(vararg parameters: Any): Any {
+    // TODO
+    return ""
 }
 
 class Corda private constructor(
@@ -88,12 +89,6 @@ class CordaService(val uri: String) : AutoCloseable {
     }
 }
 
-abstract class BaseFlow protected constructor(
-    override val corDappId: CorDappId,
-    override val flowId: FlowId,
-    private val api: CordaApi
-) : CordaApi.Flow
-
 data class SignedTransaction(
     val txBits: SerializedBytesCoreTransaction
 )
@@ -102,7 +97,6 @@ data class SerializedBytesCoreTransaction(
     val offset: Int,
     val size: Int
 )
-
 
 class Party @JsonCreator constructor(
     @field:JsonProperty("owningKey") val owningKey: PublicKey,

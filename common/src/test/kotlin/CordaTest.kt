@@ -1,8 +1,5 @@
 import org.glassfish.jersey.client.proxy.WebResourceFactory
-import org.web3j.corda.protocol.Corda
-import org.web3j.corda.protocol.CordaService
-import org.web3j.corda.protocol.Party
-import org.web3j.corda.protocol.SignedTransaction
+import org.web3j.corda.protocol.*
 import javax.ws.rs.POST
 import javax.ws.rs.Path
 
@@ -12,6 +9,7 @@ fun main() {
 
     val corda = Corda.build(service)
     corda.network.nodes.forEach { println(it) }
+    corda.corDapps[""].flows[""].start()
 
     Obligation.Issue.build(corda).start(party)
 }
