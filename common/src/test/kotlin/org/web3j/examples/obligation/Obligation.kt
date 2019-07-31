@@ -3,6 +3,7 @@ package org.web3j.examples.obligation
 import org.web3j.corda.Party
 import org.web3j.corda.SignedTransaction
 import org.web3j.corda.contracts.ContractBuilder
+import org.web3j.corda.protocol.Corda
 import javax.ws.rs.POST
 import javax.ws.rs.Path
 
@@ -15,6 +16,12 @@ interface Obligation {
         @POST
         fun start(party: Party): SignedTransaction
 
-        class Builder : ContractBuilder<Issue>(Issue::class.java)
+        private class Builder : ContractBuilder<Issue>(Issue::class.java)
+
+        companion object {
+
+            @JvmStatic
+            fun build(corda: Corda) = Builder().build(corda)
+        }
     }
 }

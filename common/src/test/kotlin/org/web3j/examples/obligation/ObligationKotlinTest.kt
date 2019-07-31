@@ -6,7 +6,7 @@ import org.web3j.corda.SignedTransaction
 import org.web3j.corda.protocol.Corda
 import org.web3j.corda.protocol.CordaService
 
-class ObligationTest {
+class ObligationKotlinTest {
 
     @Test
     fun `issue obligation`() {
@@ -23,6 +23,6 @@ class ObligationTest {
             .start(party) as SignedTransaction
 
         // 2. web3j generated version, 100% type safe
-        Obligation.Issue.Builder().build(corda).start(party)
+        Obligation.Issue.build(corda).start(party)
     }
 }
