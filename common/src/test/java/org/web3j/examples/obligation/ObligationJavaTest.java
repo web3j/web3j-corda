@@ -9,7 +9,7 @@ import org.web3j.corda.protocol.CordaService;
 public class ObligationJavaTest {
 
     @Test
-    void issueObligation() {
+    public void issueObligation() {
         Party party = new Party("", "");
         CordaService service = new CordaService("http://localhost:9000/");
 
