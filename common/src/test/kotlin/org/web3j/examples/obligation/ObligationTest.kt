@@ -19,5 +19,5 @@ fun main() {
         .start(party) as SignedTransaction
 
     // 2. web3j generated version, 100% type safe
-    Obligation.Issue.build(corda).start(party)
+    Obligation.Issue.Builder().build(corda).start(party)
 }
