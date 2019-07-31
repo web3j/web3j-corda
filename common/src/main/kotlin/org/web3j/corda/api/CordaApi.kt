@@ -3,8 +3,8 @@ package org.web3j.corda.api
 import org.web3j.corda.CorDappId
 import org.web3j.corda.FlowId
 import org.web3j.corda.Party
-import org.web3j.corda.constraints.HostAndPort
-import org.web3j.corda.constraints.X500Name
+import org.web3j.corda.validation.HostAndPort
+import org.web3j.corda.validation.X500Name
 import javax.ws.rs.*
 
 @Path("api/rest")
