@@ -6,7 +6,5 @@ class CordaAbiIntegrationTest {
 
     @Test
     internal fun `deploy and call contract`() {
-        
     }
-
 }
