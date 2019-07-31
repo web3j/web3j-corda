@@ -10,6 +10,7 @@ web3j-corda is a lightweight client library for working with Cordapps and intera
 * Query the available CorDapps in the node
 * Interact with the deployed CorDapp
 * Generate automated tests using Docker containers to verify the working of CorDapp. 
+* Client-side validation of Corda API requests (?)
 
 ## Quickstart
 
@@ -24,18 +25,18 @@ Add the relevant dependancy to your project
 ### Maven
 
 ```xml
-   <dependency>
-     <groupId>org.web3j</groupId>
-     <artifactId>web3j-corda</artifactId>
-     <version>1.0.0</version>
-   </dependency>
+<dependency>
+    <groupId>org.web3j</groupId>
+    <artifactId>web3j-corda</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+</dependency>
 ```
 
 ### Gradle
 
 ```groovy
 dependencies {
-    compile ('org.web3j:web3j-corda:1.0.0')
+    compile ('org.web3j:web3j-corda:1.0.0-SNAPSHOT')
 }
 ```
 
@@ -55,7 +56,6 @@ To query the list of all running CorDapps:
 val service = CordaService("http://localhost:9000/") // URL exposed by BRAID service
 val corda = Corda.build(service)
 val corDapps = corda.corDapps
-
 ```
 
 To start a flow:

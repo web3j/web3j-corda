@@ -15,9 +15,11 @@ public class ObligationJavaTest {
 
         Corda corda = Corda.build(service);
 
+        corda.getNetwork().getAllNodes().forEach(System.out::println);
+
         SignedTransaction signedTx = (SignedTransaction) corda
-                .corDappById("obligation-cordapp")
-                .flowById("issue-obligation")
+                .getCorDappById("obligation-cordapp")
+                .getFlowById("issue-obligation")
                 .start(party);
 
         Obligation.Issue issue = Obligation.Issue.build(corda);

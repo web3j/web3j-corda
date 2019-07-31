@@ -3,48 +3,68 @@ package org.web3j.corda.api
 import org.web3j.corda.CorDappId
 import org.web3j.corda.FlowId
 import org.web3j.corda.Party
-import javax.ws.rs.GET
-import javax.ws.rs.POST
-import javax.ws.rs.Path
-import javax.ws.rs.PathParam
+import org.web3j.corda.constraints.HostAndPort
+import org.web3j.corda.constraints.X500Name
+import javax.ws.rs.*
 
 @Path("api/rest")
 interface CordaApi {
 
-    @get:GET
-    @get:Path("cordapps")
-    val corDapps: Array<CorDappId>
+    @GET
+    @Path("cordapps")
+    fun getAllCorDapps(): List<CorDappId>
 
     @Path("cordapps/{id}")
-    fun corDappById(id: CorDappId): CorDappResource
+    fun getCorDappById(id: CorDappId): CorDappResource
 
-    @get:Path("network")
-    val network: NetworkResource
+    @Path("network")
+    fun getNetwork(): NetworkResource
 }
 
 interface CorDappResource {
 
-    @get:GET
-    @get:Path("flows")
-    val flows: Array<FlowId>
+    @GET
+    @Path("flows")
+    fun getAllFlows(): List<FlowId>
 
     @Path("flows/{id}")
-    fun flowById(@PathParam("id") id: FlowId): FlowResource
+    fun getFlowById(@PathParam("id") id: FlowId): FlowResource
 }
 
 interface NetworkResource {
 
-    @get:GET
-    @get:Path("nodes")
-    val nodes: Array<Party>
+    /**
+     * Retrieves all nodes.
+     */
+    @GET
+    @Path("nodes")
+    fun getAllNodes(): List<Party>
 
-    @get:GET
-    @get:Path("notaries")
-    val notaries: Array<Party>
+    /**
+     * Retrieves by the supplied host and port.
+     *
+     * @param hostAndPort `host:port` for the Corda P2P of the node
+     */
+    @GET
+    @Path("nodes")
+    fun getNodesByHostAndPort(@QueryParam("hostAndPort") @HostAndPort hostAndPort: String): List<Party>
 
-    @get:GET
-    @get:Path("my-node-info")
-    val myNodeInfo: Party
+    /**
+     * Retrieves by the supplied X500 name.
+     *
+     * @param x500Name `host:port` for the Corda P2P of the node
+     */
+    @GET
+    @Path("nodes")
+    fun getNodesByX500Name(@QueryParam("x500Name") @X500Name x500Name: String): List<Party>
+
+    @GET
+    @Path("notaries")
+    fun getAllNotaries(): List<Party>
+
+    @GET
+    @Path("my-node-info")
+    fun getMyNodeInfo(): Party
 }
 
 interface FlowResource {

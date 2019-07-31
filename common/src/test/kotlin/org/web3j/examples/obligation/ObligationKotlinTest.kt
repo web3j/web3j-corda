@@ -14,12 +14,12 @@ class ObligationKotlinTest {
         val service = CordaService("http://localhost:9000/")
 
         val corda = Corda.build(service)
-        corda.network.nodes.forEach { println(it) }
+        corda.getNetwork().getAllNodes().forEach { println(it) }
 
         // 1. Normal version, not type safe
         val signedTx = corda
-            .corDappById("obligation-cordapp")
-            .flowById("issue-obligation")
+            .getCorDappById("obligation-cordapp")
+            .getFlowById("issue-obligation")
             .start(party) as SignedTransaction
 
         // 2. web3j generated version, 100% type safe
