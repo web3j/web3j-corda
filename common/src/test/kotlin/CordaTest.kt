@@ -9,8 +9,16 @@ fun main() {
 
     val corda = Corda.build(service)
     corda.network.nodes.forEach { println(it) }
-    corda.corDapps[""].flows[""].start()
 
+    // 1. Normal version, not type safe  
+    var signedTx: SignedTransaction = corda.corDapps["obligation-cordapp"]
+        .flows.start("issue-obligation", party) as SignedTransaction
+
+    // 2. Extension version, not type safe but nicer
+    signedTx = corda.corDapps["obligation-cordapp"]
+        .flows["issue-obligation"].start(party)
+
+    // 3. web3j generated version, 100% type safe 
     Obligation.Issue.build(corda).start(party)
 }
 

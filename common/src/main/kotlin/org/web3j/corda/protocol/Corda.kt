@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
 import org.glassfish.jersey.client.proxy.WebResourceFactory
 import javax.ws.rs.GET
+import javax.ws.rs.POST
 import javax.ws.rs.Path
 import javax.ws.rs.PathParam
 import javax.ws.rs.client.Client
@@ -41,6 +42,10 @@ interface CordaApi {
 
     interface CorDappsResource {
 
+        @GET
+        fun list(): Array<CorDapp>
+
+        @GET
         @Path("{id}")
         operator fun get(@PathParam("id") id: CorDappId): CorDapp
     }
@@ -54,16 +59,22 @@ interface CordaApi {
     interface FlowsResource {
 
         @GET
+        fun list(): Array<Flow>
+
+        @GET
         @Path("{id}")
         operator fun get(@PathParam("id") id: FlowId): Flow
+
+        @POST
+        @Path("{id}")
+        fun start(@PathParam("id") id: FlowId, vararg parameters: Any): Any
     }
 
     interface Flow
 }
 
-fun CordaApi.Flow.start(vararg parameters: Any): Any {
-    // TODO
-    return ""
+inline fun <reified T> CordaApi.Flow.start(vararg parameters: Any): T {
+    TODO("Improved syntax for starting a flow")
 }
 
 class Corda private constructor(
