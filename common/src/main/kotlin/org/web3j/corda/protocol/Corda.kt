@@ -9,6 +9,7 @@ class Corda private constructor(
 ) : CordaApi by api {
 
     companion object {
+        @JvmStatic
         fun build(service: CordaService): Corda {
             val target = service.client.target(service.uri)
             return Corda(WebResourceFactory.newResource(CordaApi::class.java, target), service)
