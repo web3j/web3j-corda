@@ -1,9 +1,9 @@
 package org.web3j.corda
 
-import com.fasterxml.jackson.annotation.JsonCreator
-import com.fasterxml.jackson.annotation.JsonProperty
+import org.web3j.corda.validation.X500Name
 
-class Party @JsonCreator constructor(
-    @field:JsonProperty("owningKey") val owningKey: PublicKey,
-    @field:JsonProperty("name") val name: CordaX500Name
+data class Party(
+    @field:X500Name
+    val name: CordaX500Name,
+    val owningKey: PublicKey
 )

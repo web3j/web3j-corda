@@ -6,6 +6,7 @@ import javax.validation.constraints.Pattern
 import kotlin.reflect.KClass
 
 @Target(
+    AnnotationTarget.TYPEALIAS,
     AnnotationTarget.FUNCTION,
     AnnotationTarget.FIELD,
     AnnotationTarget.ANNOTATION_CLASS,
