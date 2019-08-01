@@ -23,7 +23,7 @@ interface ObligationCorDapp {
 
         data class InitiatorParameters(
             val amount: String,
-            val party: CordaX500Name,
+            val lender: CordaX500Name,
             val anonymous: Boolean
         )
 

@@ -77,7 +77,7 @@ interface FlowResource {
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    fun start(vararg parameters: Any): Any
+    fun start(parameters: Any): Any
 }
 
 fun Any.toJson(): String = jacksonObjectMapper()
