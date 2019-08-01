@@ -1,10 +1,7 @@
 package org.web3j.corda.api
 
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
-import org.web3j.corda.CorDappId
-import org.web3j.corda.FlowId
-import org.web3j.corda.Party
-import org.web3j.corda.SimpleNodeInfo
+import org.web3j.corda.*
 import org.web3j.corda.validation.HostAndPort
 import org.web3j.corda.validation.X500Name
 import javax.validation.Valid
@@ -21,7 +18,10 @@ interface CordaApi {
     fun getAllCorDapps(): List<CorDappId>
 
     @Path("cordapps/{corDappId}")
-    fun getCorDappById(@PathParam("corDappId") corDappId: CorDappId): CorDappResource
+    fun getCorDappById(
+        @PathParam("corDappId")
+        corDappId: CorDappId
+    ): CorDappResource
 
     @Path("network")
     fun getNetwork(): NetworkResource
@@ -34,7 +34,10 @@ interface CorDappResource {
     fun getAllFlows(): List<FlowId>
 
     @Path("flows/{flowId}")
-    fun getFlowById(@PathParam("flowId") id: FlowId): FlowResource
+    fun getFlowById(
+        @PathParam("flowId")
+        flowId: FlowId
+    ): FlowResource
 }
 
 interface NetworkResource {
@@ -53,7 +56,12 @@ interface NetworkResource {
      */
     @GET
     @Path("nodes")
-    fun getNodesByHostAndPort(@Valid @QueryParam("hostAndPort") @HostAndPort hostAndPort: String): List<SimpleNodeInfo>
+    fun getNodesByHostAndPort(
+        @Valid
+        @HostAndPort
+        @QueryParam("hostAndPort")
+        hostAndPort: String
+    ): List<SimpleNodeInfo>
 
     /**
      * Retrieves by the supplied X500 name.
@@ -62,7 +70,12 @@ interface NetworkResource {
      */
     @GET
     @Path("nodes")
-    fun getNodesByX500Name(@Valid @QueryParam("x500Name") @X500Name x500Name: String): List<SimpleNodeInfo>
+    fun getNodesByX500Name(
+        @Valid
+        @X500Name
+        @QueryParam("x500Name")
+        x500Name: CordaX500Name
+    ): List<SimpleNodeInfo>
 
     @GET
     @Path("my-node-info")
