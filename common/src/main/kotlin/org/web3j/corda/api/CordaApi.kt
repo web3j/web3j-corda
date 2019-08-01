@@ -20,7 +20,7 @@ interface CordaApi {
     fun getAllCorDapps(): List<CorDappId>
 
     @Path("cordapps/{corDappId}")
-    fun getCorDappById(corDappId: CorDappId): CorDappResource
+    fun getCorDappById(@PathParam("corDappId") corDappId: CorDappId): CorDappResource
 
     @Path("network")
     fun getNetwork(): NetworkResource
