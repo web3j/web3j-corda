@@ -3,7 +3,7 @@ web3j integration for Corda
 
 ## Introduction
 
-web3j-corda is a lightweight client library for working with Cordapps and interacting with different nodes on Corda network.
+web3j-corda is a lightweight client library for working with CorDapps and interacting with different nodes on Corda network.
 
 ![web3j-corda Network](docs/img/web3j-corda.png)
 
@@ -31,7 +31,7 @@ Add the relevant dependancy to your project
 <dependency>
     <groupId>org.web3j</groupId>
     <artifactId>web3j-corda</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
+    <version>0.1.0-SNAPSHOT</version>
 </dependency>
 ```
 
@@ -39,7 +39,7 @@ Add the relevant dependancy to your project
 
 ```groovy
 dependencies {
-    compile ('org.web3j:web3j-corda:1.0.0-SNAPSHOT')
+    compile ('org.web3j:web3j-corda:0.1.0-SNAPSHOT')
 }
 ```
 
