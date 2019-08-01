@@ -2,9 +2,10 @@ package org.web3j.examples.obligation
 
 import org.web3j.corda.CordaX500Name
 import org.web3j.corda.SignedTransaction
-import org.web3j.corda.contracts.ContractBuilder
+import org.web3j.corda.contracts.CorDappLifeCycle
 import org.web3j.corda.protocol.Corda
-import org.web3j.corda.validation.X500Name
+import org.web3j.corda.protocol.ProxyBuilder
+import java.io.File
 import javax.validation.Valid
 import javax.ws.rs.Consumes
 import javax.ws.rs.POST
@@ -12,26 +13,48 @@ import javax.ws.rs.Path
 import javax.ws.rs.Produces
 import javax.ws.rs.core.MediaType
 
-@Path("api/rest/cordapps/obligation-cordapp")
-interface Obligation {
+@Path("api/rest/cordapps")
+interface ObligationCorDapp {
 
-    @Path("flows/issue-obligation")
-    fun getIssue(): Issue
+    @Path("obligation-cordapp")
+    fun getObligation(): Obligation
 
-    interface Issue {
+    interface Obligation {
 
-        @POST
-        @Valid
-        @Produces(MediaType.APPLICATION_JSON)
-        @Consumes(MediaType.APPLICATION_JSON)
-        fun start(amount: String, @X500Name party: CordaX500Name, anonymous: Boolean): SignedTransaction
+        data class InitiatorParameters(
+            val amount: String,
+            val party: CordaX500Name,
+            val anonymous: Boolean
+        )
+
+        @Path("flows/issue-obligation")
+        fun getIssue(): Issue
+
+        interface Issue {
+
+            @POST
+            @Valid
+            @Produces(MediaType.APPLICATION_JSON)
+            @Consumes(MediaType.APPLICATION_JSON)
+            fun start(parameters: InitiatorParameters): SignedTransaction
+        }
     }
 
-    private class Builder : ContractBuilder<Obligation>(Obligation::class.java)
+    private class Builder : ProxyBuilder<ObligationCorDapp>(ObligationCorDapp::class.java)
 
-    companion object {
+    companion object : CorDappLifeCycle<ObligationCorDapp> {
+
+        override fun upgrade(corda: Corda, file: File): ObligationCorDapp {
+            TODO("not implemented")
+        }
+
+        override fun deploy(corda: Corda, file: File): ObligationCorDapp {
+            TODO("not implemented")
+        }
 
         @JvmStatic
-        fun build(corda: Corda) = Builder().build(corda)
+        override fun load(corda: Corda) = Builder().build(corda.service)
     }
 }
+
+

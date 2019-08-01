@@ -4,8 +4,10 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.web3j.corda.Party;
+import org.web3j.corda.SignedTransaction;
 import org.web3j.corda.protocol.Corda;
 import org.web3j.corda.protocol.CordaService;
+import org.web3j.examples.obligation.ObligationCorDapp.Obligation.InitiatorParameters;
 
 public class ObligationJavaTest {
 
@@ -22,15 +24,22 @@ public class ObligationJavaTest {
     public void issueObligation() {
         corda.getNetwork().getAllNodes().forEach(System.out::println);
 
-//        SignedTransaction signedTx = (SignedTransaction) corda
-//                .getCorDappById("obligation-cordapp")
-//                .getFlowById("issue-obligation")
-//                .start(party);
+        final Party party = corda.getNetwork()
+                .getAllNodes().get(2)
+                .getLegalIdentities().get(0);
 
-        final Obligation.Issue issue = Obligation.build(corda).getIssue();
-        final Party party = corda.getNetwork().getAllNodes().get(2).getLegalIdentities().get(0);
+        final InitiatorParameters parameters =
+                new InitiatorParameters("$1", party.getName(), false);
 
-        issue.start("$1", party.getName(), false);
+        SignedTransaction signedTx = (SignedTransaction) corda
+                .getCorDappById("obligation-cordapp")
+                .getFlowById("issue-obligation")
+                .start(parameters);
+
+        final ObligationCorDapp.Obligation.Issue issue =
+                ObligationCorDapp.load(corda).getObligation().getIssue();
+
+        issue.start(parameters);
     }
 
     @AfterAll
