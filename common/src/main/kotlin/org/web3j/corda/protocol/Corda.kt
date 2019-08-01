@@ -7,12 +7,10 @@ class Corda private constructor(
     val service: CordaService
 ) : CordaApi by api {
 
-    private class Builder : ProxyBuilder<CordaApi>(CordaApi::class.java)
-
     companion object {
         @JvmStatic
         fun build(service: CordaService): Corda {
-            return Corda(Builder().build(service), service)
+            return Corda(ProxyBuilder.build(CordaApi::class.java, service), service)
         }
     }
 }

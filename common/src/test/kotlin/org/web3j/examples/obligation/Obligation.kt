@@ -40,21 +40,16 @@ interface ObligationCorDapp {
         }
     }
 
-    private class Builder : ProxyBuilder<ObligationCorDapp>(ObligationCorDapp::class.java)
-
     companion object : CorDappLifeCycle<ObligationCorDapp> {
 
-        override fun upgrade(corda: Corda, file: File): ObligationCorDapp {
+        override fun upgrade(corda: Corda, file: File): ObligationCorDapp =
             TODO("not implemented")
-        }
 
-        override fun deploy(corda: Corda, file: File): ObligationCorDapp {
+        override fun deploy(corda: Corda, file: File): ObligationCorDapp =
             TODO("not implemented")
-        }
 
         @JvmStatic
-        override fun load(corda: Corda) = Builder().build(corda.service)
+        override fun load(corda: Corda) =
+            ProxyBuilder.build(ObligationCorDapp::class.java, corda.service)
     }
 }
-
-
