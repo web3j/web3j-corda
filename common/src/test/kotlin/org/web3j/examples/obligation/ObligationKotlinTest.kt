@@ -14,15 +14,15 @@ class ObligationKotlinTest {
     fun `issue obligation`() {
         val party = corda.getNetwork().getAllNodes()[2].legalIdentities[0]
         val parameters = InitiatorParameters("$1", party.name, false)
-        
+
         // 1. Normal version, not type safe
-        val signedTx = corda
+        var signedTx = corda
             .getCorDappById("obligation-cordapp")
             .getFlowById("issue-obligation")
             .start(parameters) as SignedTransaction
 
         // 2. web3j generated version, 100% type safe
-        ObligationCorDapp.load(corda)
+        signedTx = ObligationCorDapp.load(corda)
             .getObligation()
             .getIssue()
             .start(parameters)
@@ -32,7 +32,7 @@ class ObligationKotlinTest {
     internal fun `validate party name`() {
         val parameters = InitiatorParameters("$1", "PartyX", false)
 
-        ObligationCorDapp.load(corda)
+        val signedTx = ObligationCorDapp.load(corda)
             .getObligation()
             .getIssue()
             .start(parameters)
