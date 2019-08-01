@@ -12,9 +12,12 @@ class CordaService(val uri: String) : AutoCloseable {
     internal val client: Client by lazy {
 
         val config = ClientConfig().apply {
-            val jsonProvider = JacksonJaxbJsonProvider(jacksonObjectMapper(), arrayOf(Annotations.JACKSON))
-            register(jsonProvider)
-
+            register(
+                JacksonJaxbJsonProvider(
+                    jacksonObjectMapper(),
+                    arrayOf(Annotations.JACKSON)
+                )
+            )
             property(ClientProperties.READ_TIMEOUT, 5000)
             property(ClientProperties.CONNECT_TIMEOUT, 5000)
         }
