@@ -5,6 +5,7 @@ import org.web3j.corda.SignedTransaction
 import org.web3j.corda.dapps.LifeCycle
 import org.web3j.corda.protocol.Corda
 import org.web3j.corda.protocol.ProxyBuilder
+import org.web3j.corda.validation.X500Name
 import java.io.File
 import javax.validation.Valid
 import javax.ws.rs.Consumes
@@ -23,6 +24,7 @@ interface ObligationCorDapp {
 
         data class InitiatorParameters(
             val amount: String,
+            @X500Name
             val lender: CordaX500Name,
             val anonymous: Boolean
         )
@@ -33,10 +35,9 @@ interface ObligationCorDapp {
         interface Issue {
 
             @POST
-            @Valid
             @Produces(MediaType.APPLICATION_JSON)
             @Consumes(MediaType.APPLICATION_JSON)
-            fun start(parameters: InitiatorParameters): SignedTransaction
+            fun start(@Valid parameters: InitiatorParameters): SignedTransaction
         }
     }
 

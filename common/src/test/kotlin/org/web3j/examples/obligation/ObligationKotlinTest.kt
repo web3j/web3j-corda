@@ -28,6 +28,16 @@ class ObligationKotlinTest {
             .start(parameters)
     }
 
+    @Test
+    internal fun `validate party name`() {
+        val parameters = InitiatorParameters("$1", "PartyX", false)
+
+        ObligationCorDapp.load(corda)
+            .getObligation()
+            .getIssue()
+            .start(parameters)
+    }
+
     companion object {
 
         @JvmStatic

@@ -7,6 +7,7 @@ import org.web3j.corda.Party
 import org.web3j.corda.SimpleNodeInfo
 import org.web3j.corda.validation.HostAndPort
 import org.web3j.corda.validation.X500Name
+import javax.validation.Valid
 import javax.ws.rs.*
 import javax.ws.rs.core.MediaType
 
@@ -52,7 +53,7 @@ interface NetworkResource {
      */
     @GET
     @Path("nodes")
-    fun getNodesByHostAndPort(@QueryParam("hostAndPort") @HostAndPort hostAndPort: String): List<SimpleNodeInfo>
+    fun getNodesByHostAndPort(@Valid @QueryParam("hostAndPort") @HostAndPort hostAndPort: String): List<SimpleNodeInfo>
 
     /**
      * Retrieves by the supplied X500 name.
@@ -61,7 +62,7 @@ interface NetworkResource {
      */
     @GET
     @Path("nodes")
-    fun getNodesByX500Name(@QueryParam("x500Name") @X500Name x500Name: String): List<SimpleNodeInfo>
+    fun getNodesByX500Name(@Valid @QueryParam("x500Name") @X500Name x500Name: String): List<SimpleNodeInfo>
 
     @GET
     @Path("my-node-info")
@@ -77,7 +78,7 @@ interface FlowResource {
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    fun start(parameters: Any): Any
+    fun start(@Valid parameters: Any): Any
 }
 
 fun Any.toJson(): String = jacksonObjectMapper()
