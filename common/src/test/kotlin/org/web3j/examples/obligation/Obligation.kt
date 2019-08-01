@@ -2,7 +2,7 @@ package org.web3j.examples.obligation
 
 import org.web3j.corda.CordaX500Name
 import org.web3j.corda.SignedTransaction
-import org.web3j.corda.contracts.CorDappLifeCycle
+import org.web3j.corda.dapps.LifeCycle
 import org.web3j.corda.protocol.Corda
 import org.web3j.corda.protocol.ProxyBuilder
 import java.io.File
@@ -40,7 +40,7 @@ interface ObligationCorDapp {
         }
     }
 
-    companion object : CorDappLifeCycle<ObligationCorDapp> {
+    companion object : LifeCycle<ObligationCorDapp> {
 
         override fun upgrade(corda: Corda, file: File): ObligationCorDapp =
             TODO("not implemented")
