@@ -48,7 +48,6 @@ class ObligationKotlinTest {
 
         @BeforeAll
         @JvmStatic
-        @Throws(Exception::class)
         fun setUpClass() {
             service = CordaService("http://localhost:9000/")
             corda = Corda.build(service)
