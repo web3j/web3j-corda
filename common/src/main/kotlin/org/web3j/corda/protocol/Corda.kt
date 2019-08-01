@@ -1,6 +1,5 @@
 package org.web3j.corda.protocol
 
-import org.glassfish.jersey.client.proxy.WebResourceFactory
 import org.web3j.corda.api.CordaApi
 
 class Corda private constructor(
@@ -8,11 +7,12 @@ class Corda private constructor(
     val service: CordaService
 ) : CordaApi by api {
 
+    private class Builder : ProxyBuilder<CordaApi>(CordaApi::class.java)
+
     companion object {
         @JvmStatic
         fun build(service: CordaService): Corda {
-            val target = service.client.target(service.uri)
-            return Corda(WebResourceFactory.newResource(CordaApi::class.java, target), service)
+            return Corda(Builder().build(service), service)
         }
     }
 }
