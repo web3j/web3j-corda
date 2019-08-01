@@ -39,7 +39,7 @@ Add the relevant dependancy to your project
 
 ```groovy
 dependencies {
-    compile ('org.web3j:web3j-corda:0.1.0-SNAPSHOT')
+    implementation 'org.web3j:web3j-corda:0.1.0-SNAPSHOT'
 }
 ```
 
