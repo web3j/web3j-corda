@@ -5,12 +5,15 @@ web3j integration for Corda
 
 web3j-corda is a lightweight client library for working with Cordapps and interacting with different nodes on Corda network.
 
+![web3j-corda Network](docs/img/web3j-corda.png)
+
 ## Features
 * Connect to a Corda node.
-* Query the available CorDapps in the node
-* Interact with the deployed CorDapp
+* Query the available CorDapps in the node.
+* Generate CorDapp wrappers to interact with the deployed CorDapps
 * Generate automated tests using Docker containers to verify the working of CorDapp. 
-* Client-side validation of Corda API requests (?)
+* Validate client-side of Corda API requests.
+
 
 ## Quickstart
 
