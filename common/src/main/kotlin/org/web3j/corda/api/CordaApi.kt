@@ -15,7 +15,7 @@ interface CordaApi {
 
     @GET
     @Path("cordapps")
-    fun getAllCorDapps(): List<CorDappId>
+    fun getAllCorDappIds(): List<CorDappId>
 
     @Path("cordapps/{corDappId}")
     fun getCorDappById(
@@ -31,7 +31,7 @@ interface CorDappResource {
 
     @GET
     @Path("flows")
-    fun getAllFlows(): List<FlowId>
+    fun getAllFlowIds(): List<FlowId>
 
     @Path("flows/{flowId}")
     fun getFlowById(
