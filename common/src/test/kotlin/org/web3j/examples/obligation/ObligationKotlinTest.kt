@@ -25,24 +25,14 @@ class ObligationKotlinTest {
 
         // Potential runtime exception!
         val signedTxAny = issue.start(parameters)
-        issue.progressTracker.steps.current.label
 
         // Potential runtime exception!
         var signedTx = convert<SignedTransaction>(signedTxAny)
         assertThat(signedTx.coreTransaction.outputs[0]?.data?.lender?.name).isEqualTo(party.name)
 
         // 2. web3j generated version, 100% type-safe
-        val issueFlow = Obligation.load(corda).flows.issue
-        signedTx = issueFlow.start(parameters)
-
+        signedTx = Obligation.load(corda).flows.issue.start(parameters)
         assertThat(signedTx.coreTransaction.outputs[0]?.data?.lender?.name).isEqualTo(party.name)
-        issueFlow.progressTracker.steps.current.label
-    }
-
-    @Test
-    internal fun `validate party name`() {
-        val parameters = InitiatorParameters("$1", "PartyX", false)
-        val signedTx = Obligation.load(corda).flows.issue.start(parameters)
     }
 
     companion object {

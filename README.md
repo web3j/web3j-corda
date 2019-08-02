@@ -50,7 +50,7 @@ To print all the nodes connected to the current node:
 ```kotlin
 val service = CordaService("http://localhost:9000/") // URL exposed by BRAID service
 val corda = Corda.build(service)
-corda.getNetwork().getAllNodes()
+corda.network.nodes.findAll()
 ```
 
 To query the list of all running CorDapps:
@@ -58,7 +58,7 @@ To query the list of all running CorDapps:
 ```kotlin
 val service = CordaService("http://localhost:9000/") // URL exposed by BRAID service
 val corda = Corda.build(service)
-corda.getAllCorDappIds()
+corda.corDapps.findAll()
 ```
 
 To start a flow there are two option depending on whether you want to use a generated CorDapp wrapper
@@ -70,10 +70,14 @@ This way works but is not type-safe, so can lead to runtime exceptions:
 // Initialise the parameters of the flow 
 val params = InitiatorParameters("$1", "O=PartyA, L=London, C=GB", false)
 
-// Start the flow   
-val signedTx = corda.getCorDappById("obligation-cordapp")
-    .getFlowById("issue-obligation")
-    .start(params) as SignedTransaction
+// Response can be Any
+val signedTxAny = corda
+    .corDapps.findById("obligation-cordapp")
+    .flows.findById("issue-obligation")
+    .start(parameters) // Potential runtime exception!
+
+// Type-conversion with potential runtime exception!
+var signedTx = convert<SignedTransaction>(signedTxAny)
 ```
 
 ### Using the web3j CorDapp wrapper
@@ -83,11 +87,6 @@ you can interact with your CorDapp in a type-safe way:
 // Initialise the parameters of the flow 
 val params = InitiatorParameters("$1", "O=PartyA, L=London, C=GB", false)
 
-// Start the flow
-val signedTx = ObligationCorDapp.load(corda)
-            .getObligation()
-            .getIssue()
-            .start(params)
+// Start the flow with typed parameters and response
+val signedTx = Obligation.load(corda).flows.issue.start(parameters)
 ```
-
-
