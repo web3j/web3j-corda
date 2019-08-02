@@ -3,7 +3,7 @@ package org.web3j.examples.obligation
 import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
-import org.web3j.corda.SignedTransaction
+import org.web3j.corda.model.SignedTransaction
 import org.web3j.corda.protocol.Corda
 import org.web3j.corda.protocol.CordaService
 import org.web3j.examples.obligation.ObligationCorDapp.Obligation.InitiatorParameters

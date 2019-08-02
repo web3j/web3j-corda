@@ -1,4 +1,4 @@
-package org.web3j.corda
+package org.web3j.corda.model
 
 import org.web3j.corda.validation.X500Name
 

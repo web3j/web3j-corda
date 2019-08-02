@@ -1,4 +1,4 @@
-package org.web3j.corda
+package org.web3j.corda.model
 
 data class SignedTransaction(
     val txBits: ByteArray

@@ -1,9 +1,9 @@
 package org.web3j.examples.obligation
 
-import org.web3j.corda.CordaX500Name
-import org.web3j.corda.SignedTransaction
 import org.web3j.corda.dapps.CorDapp
 import org.web3j.corda.dapps.LifeCycle
+import org.web3j.corda.model.CordaX500Name
+import org.web3j.corda.model.SignedTransaction
 import org.web3j.corda.protocol.Corda
 import org.web3j.corda.protocol.ProxyBuilder
 import org.web3j.corda.validation.X500Name

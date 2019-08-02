@@ -1,11 +1,11 @@
 package org.web3j.corda.api
 
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
-import org.web3j.corda.CorDappId
-import org.web3j.corda.CordaX500Name
-import org.web3j.corda.FlowId
-import org.web3j.corda.Party
-import org.web3j.corda.SimpleNodeInfo
+import org.web3j.corda.model.CorDappId
+import org.web3j.corda.model.CordaX500Name
+import org.web3j.corda.model.FlowId
+import org.web3j.corda.model.Party
+import org.web3j.corda.model.SimpleNodeInfo
 import org.web3j.corda.validation.HostAndPort
 import org.web3j.corda.validation.X500Name
 import javax.validation.Valid
