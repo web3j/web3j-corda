@@ -18,8 +18,8 @@ class CordaService(val uri: String) : AutoCloseable {
                     arrayOf(Annotations.JACKSON)
                 )
             )
-            property(ClientProperties.READ_TIMEOUT, 5000)
-            property(ClientProperties.CONNECT_TIMEOUT, 5000)
+            property(ClientProperties.READ_TIMEOUT, 15000)
+            property(ClientProperties.CONNECT_TIMEOUT, 15000)
         }
 
         ClientBuilder.newClient(config)
