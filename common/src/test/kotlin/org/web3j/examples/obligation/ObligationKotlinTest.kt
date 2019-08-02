@@ -2,8 +2,6 @@ package org.web3j.examples.obligation
 
 import assertk.assertThat
 import assertk.assertions.isEqualTo
-import com.fasterxml.jackson.module.kotlin.convertValue
-import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
@@ -27,7 +25,7 @@ class ObligationKotlinTest {
         val signedTxAny = issue.start(parameters)
         issue.progressTracker.steps.current.label
 
-        var signedTx = jacksonObjectMapper().convertValue<SignedTransaction>(signedTxAny)
+        var signedTx = CordaService.convert<SignedTransaction>(signedTxAny)
         assertThat(signedTx.coreTransaction.outputs[0]?.data?.lender?.name).isEqualTo(party.name)
 
         // 2. web3j generated version, 100% type safe

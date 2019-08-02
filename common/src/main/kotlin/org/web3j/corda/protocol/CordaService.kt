@@ -1,5 +1,6 @@
 package org.web3j.corda.protocol
 
+import com.fasterxml.jackson.module.kotlin.convertValue
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import org.glassfish.jersey.client.ClientConfig
 import org.glassfish.jersey.client.ClientProperties
@@ -12,12 +13,7 @@ class CordaService(val uri: String) : AutoCloseable {
     internal val client: Client by lazy {
 
         val config = ClientConfig().apply {
-            register(
-                JacksonJaxbJsonProvider(
-                    jacksonObjectMapper(),
-                    arrayOf(Annotations.JACKSON)
-                )
-            )
+            register(JacksonJaxbJsonProvider(mapper, arrayOf(Annotations.JACKSON)))
             property(ClientProperties.READ_TIMEOUT, 15000)
             property(ClientProperties.CONNECT_TIMEOUT, 15000)
         }
@@ -27,5 +23,16 @@ class CordaService(val uri: String) : AutoCloseable {
 
     override fun close() {
         client.close()
+    }
+
+    companion object {
+
+        @PublishedApi
+        internal val mapper = jacksonObjectMapper()
+
+        @JvmStatic
+        fun <T> convert(value: Any, type: Class<T>): T = mapper.convertValue(value, type)
+
+        inline fun <reified T> convert(value: Any) = mapper.convertValue<T>(value)
     }
 }
