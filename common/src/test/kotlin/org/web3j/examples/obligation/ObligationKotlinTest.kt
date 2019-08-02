@@ -17,18 +17,20 @@ class ObligationKotlinTest {
         val party = corda.network.nodes.findAll()[2].legalIdentities[0]
         val parameters = InitiatorParameters("$1", party.name!!, false)
 
-        // 1. Normal version, not type safe
+        // 1. Normal version, not type-safe
         val issue = corda
             .corDapps.findById("obligation-cordapp")
             .flows.findById("issue-obligation")
 
+        // Potential runtime exception!
         val signedTxAny = issue.start(parameters)
         issue.progressTracker.steps.current.label
 
+        // Potential runtime exception!
         var signedTx = CordaService.convert<SignedTransaction>(signedTxAny)
         assertThat(signedTx.coreTransaction.outputs[0]?.data?.lender?.name).isEqualTo(party.name)
 
-        // 2. web3j generated version, 100% type safe
+        // 2. web3j generated version, 100% type-safe
         val issueFlow = Obligation.load(corda).flows.issue
         signedTx = issueFlow.start(parameters)
 

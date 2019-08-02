@@ -34,18 +34,19 @@ public class ObligationJavaTest {
         final InitiatorParameters parameters = new InitiatorParameters(
                 "$1", Objects.requireNonNull(party.getName()), false);
 
-        // 1. Normal version, not type safe
+        // 1. Normal version, not type-safe
         Object signedTxObject = corda.getCorDapps()
                 .findById("obligation-cordapp")
                 .getFlows()
                 .findById("issue-obligation")
                 .start(parameters);
 
+        // Potential runtime exception!
         SignedTransaction signedTx = CordaService.convert(signedTxObject, SignedTransaction.class);
         String name = signedTx.getCoreTransaction().getOutputs().get(0).getData().getLender().getName();
         assertEquals(name, party.getName());
 
-        // 2. web3j generated version, 100% type safe
+        // 2. web3j generated version, 100% type-safe
         final Issue issue = Obligation.load(corda).getFlows().getIssue();
         signedTx = issue.start(parameters);
 
