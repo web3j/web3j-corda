@@ -1,6 +1,5 @@
 package org.web3j.corda.api
 
-import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import javax.ws.rs.Consumes
 import javax.ws.rs.Path
 import javax.ws.rs.Produces
@@ -17,7 +16,3 @@ interface CordaApi {
     @get:Path("network")
     val network: NetworkResource
 }
-
-fun Any.toJson(): String = jacksonObjectMapper()
-    .writerWithDefaultPrettyPrinter()
-    .writeValueAsString(this)

@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test
 import org.web3j.corda.model.SignedTransaction
 import org.web3j.corda.protocol.Corda
 import org.web3j.corda.protocol.CordaService
+import org.web3j.corda.util.convert
 import org.web3j.examples.obligation.Obligation.ObligationFlowResource.Issue.InitiatorParameters
 
 class ObligationKotlinTest {
@@ -27,7 +28,7 @@ class ObligationKotlinTest {
         issue.progressTracker.steps.current.label
 
         // Potential runtime exception!
-        var signedTx = CordaService.convert<SignedTransaction>(signedTxAny)
+        var signedTx = convert<SignedTransaction>(signedTxAny)
         assertThat(signedTx.coreTransaction.outputs[0]?.data?.lender?.name).isEqualTo(party.name)
 
         // 2. web3j generated version, 100% type-safe

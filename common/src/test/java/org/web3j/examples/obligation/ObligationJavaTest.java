@@ -13,6 +13,7 @@ import org.web3j.examples.obligation.Obligation.ObligationFlowResource.Issue.Ini
 import java.util.Objects;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.web3j.corda.util.CordaUtilsKt.convert;
 
 public class ObligationJavaTest {
 
@@ -42,7 +43,7 @@ public class ObligationJavaTest {
                 .start(parameters);
 
         // Potential runtime exception!
-        SignedTransaction signedTx = CordaService.convert(signedTxObject, SignedTransaction.class);
+        SignedTransaction signedTx = convert(signedTxObject, SignedTransaction.class);
         String name = signedTx.getCoreTransaction().getOutputs().get(0).getData().getLender().getName();
         assertEquals(name, party.getName());
 
