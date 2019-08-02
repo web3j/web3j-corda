@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test
 import org.web3j.corda.model.SignedTransaction
 import org.web3j.corda.protocol.Corda
 import org.web3j.corda.protocol.CordaService
-import org.web3j.examples.obligation.ObligationCorDapp.Obligation.InitiatorParameters
+import org.web3j.examples.obligation.Obligation.Issue.InitiatorParameters
 
 class ObligationKotlinTest {
 
@@ -22,8 +22,7 @@ class ObligationKotlinTest {
             .start(parameters) as SignedTransaction
 
         // 2. web3j generated version, 100% type safe
-        signedTx = ObligationCorDapp.load(corda)
-            .getObligation()
+        signedTx = Obligation.load(corda)
             .getIssue()
             .start(parameters)
     }
@@ -32,8 +31,7 @@ class ObligationKotlinTest {
     internal fun `validate party name`() {
         val parameters = InitiatorParameters("$1", "PartyX", false)
 
-        val signedTx = ObligationCorDapp.load(corda)
-            .getObligation()
+        val signedTx = Obligation.load(corda)
             .getIssue()
             .start(parameters)
     }
