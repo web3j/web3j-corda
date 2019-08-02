@@ -1,5 +1,9 @@
 package org.web3j.examples.obligation
 
+import assertk.assertThat
+import assertk.assertions.isEqualTo
+import com.fasterxml.jackson.module.kotlin.convertValue
+import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
@@ -13,18 +17,23 @@ class ObligationKotlinTest {
     @Test
     fun `issue obligation`() {
         val party = corda.getNetwork().getAllNodes()[2].legalIdentities[0]
-        val parameters = InitiatorParameters("$1", party.name, false)
+        val parameters = InitiatorParameters("$1", party.name!!, false)
 
         // 1. Normal version, not type safe
-        var signedTx = corda
-            .getCorDappById("obligation-cordapp")
-            .getFlowById("issue-obligation")
-            .start(parameters) as SignedTransaction
+        val signedTxAny = corda
+                .getCorDappById("obligation-cordapp")
+                .getFlowById("issue-obligation")
+                .start(parameters)
+
+        var signedTx = jacksonObjectMapper().convertValue<SignedTransaction>(signedTxAny)
+        assertThat(signedTx.coreTransaction.outputs[0]?.data?.lender?.name).isEqualTo(party.name)
 
         // 2. web3j generated version, 100% type safe
         signedTx = Obligation.load(corda)
             .getIssue()
             .start(parameters)
+
+        assertThat(signedTx.coreTransaction.outputs[0]?.data?.lender?.name).isEqualTo(party.name)
     }
 
     @Test
