@@ -142,6 +142,20 @@ subprojects {
             trimTrailingWhitespace()
             endWithNewline()
         }
+        java {
+            // This path needs to be relative to each project
+            target fileTree('.') {
+                include '**/src/*/java/**/*.java'
+                exclude '**/.gradle/**'
+                exclude '**/generated/**'
+            }
+            removeUnusedImports()
+            googleJavaFormat("1.7").aosp()
+            importOrder 'java', '', 'org.web3j', '\\#'
+            trimTrailingWhitespace()
+            endWithNewline()
+            paddedCell()
+        }
     }
 
     publishing {
