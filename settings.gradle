@@ -2,6 +2,3 @@ rootProject.name = 'web3j-corda'
 
 include 'common'
 findProject(':common')?.name = 'web3j-corda-common'
-
-include 'transport'
-findProject(':transport')?.name = 'web3j-corda-transport'
