@@ -8,7 +8,6 @@ import org.web3j.corda.model.CordaX500Name
 import org.web3j.corda.model.SignedTransaction
 import org.web3j.corda.protocol.Corda
 import org.web3j.corda.protocol.ProxyBuilder
-import org.web3j.corda.validation.X500Name
 import java.io.File
 import javax.annotation.processing.Generated
 import javax.validation.Valid
@@ -46,7 +45,6 @@ interface Obligation : CorDapp {
              */
             data class InitiatorParameters(
                 val amount: String,
-                @X500Name
                 val lender: CordaX500Name,
                 val anonymous: Boolean
             )
