@@ -70,14 +70,12 @@ This way works but is not type-safe, so can lead to runtime exceptions:
 // Initialise the parameters of the flow 
 val params = InitiatorParameters("$1", "O=PartyA, L=London, C=GB", false)
 
-// Response can be Any
-val signedTxAny = corda
+val issue = corda
     .corDapps.findById("obligation-cordapp")
     .flows.findById("issue-obligation")
-    .start(parameters) // Potential runtime exception!
 
-// Type-conversion with potential runtime exception!
-var signedTx = convert<SignedTransaction>(signedTxAny)
+// Type-conversions with potential runtime exception!
+var signedTx = issue.start(parameters).convert<SignedTransaction>()
 ```
 
 ### Using the web3j CorDapp wrapper
