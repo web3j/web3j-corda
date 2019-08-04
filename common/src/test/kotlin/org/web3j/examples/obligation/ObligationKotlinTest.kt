@@ -24,10 +24,7 @@ class ObligationKotlinTest {
             .flows.findById("issue-obligation")
 
         // Potential runtime exception!
-        val signedTxAny = issue.start(parameters)
-
-        // Potential runtime exception!
-        var signedTx = convert<SignedTransaction>(signedTxAny)
+        var signedTx = issue.start(parameters).convert<SignedTransaction>()
         assertThat(signedTx.coreTransaction.outputs[0]?.data?.lender?.name).isEqualTo(party.name)
 
         // 2. web3j generated version, 100% type-safe
