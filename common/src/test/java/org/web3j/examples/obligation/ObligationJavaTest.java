@@ -1,16 +1,29 @@
+/*
+ * Copyright 2019 Web3 Labs LTD.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
+ * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
+ * specific language governing permissions and limitations under the License.
+ */
 package org.web3j.examples.obligation;
+
+import java.util.Objects;
 
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+
 import org.web3j.corda.model.Party;
 import org.web3j.corda.model.SignedTransaction;
 import org.web3j.corda.protocol.Corda;
 import org.web3j.corda.protocol.CordaService;
 import org.web3j.examples.obligation.Obligation.ObligationFlowResource.Issue;
 import org.web3j.examples.obligation.Obligation.ObligationFlowResource.Issue.InitiatorParameters;
-
-import java.util.Objects;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.web3j.corda.util.CordaUtilsKt.convert;
@@ -30,21 +43,24 @@ public class ObligationJavaTest {
     public void issueObligation() {
         corda.getNetwork().getNodes().findAll().forEach(System.out::println);
 
-        final Party party = corda.getNetwork().getNodes().findAll().get(2).getLegalIdentities().get(0);
+        final Party party =
+                corda.getNetwork().getNodes().findAll().get(2).getLegalIdentities().get(0);
 
-        final InitiatorParameters parameters = new InitiatorParameters(
-                "$1", Objects.requireNonNull(party.getName()), false);
+        final InitiatorParameters parameters =
+                new InitiatorParameters("$1", Objects.requireNonNull(party.getName()), false);
 
         // 1. Normal version, not type-safe
-        Object signedTxObject = corda.getCorDapps()
-                .findById("obligation-cordapp")
-                .getFlows()
-                .findById("issue-obligation")
-                .start(parameters);
+        Object signedTxObject =
+                corda.getCorDapps()
+                        .findById("obligation-cordapp")
+                        .getFlows()
+                        .findById("issue-obligation")
+                        .start(parameters);
 
         // Potential runtime exception!
         SignedTransaction signedTx = convert(signedTxObject, SignedTransaction.class);
-        String name = signedTx.getCoreTransaction().getOutputs().get(0).getData().getLender().getName();
+        String name =
+                signedTx.getCoreTransaction().getOutputs().get(0).getData().getLender().getName();
         assertEquals(name, party.getName());
 
         // 2. web3j generated version, 100% type-safe
