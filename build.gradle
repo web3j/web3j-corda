@@ -9,7 +9,7 @@ buildscript {
         classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.3.41'
         classpath 'org.unbroken-dome.gradle-plugins:gradle-testsets-plugin:2.1.1'
         classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.4'
-        classpath 'com.diffplug.spotless:spotless-plugin-gradle:3.23.0'
+        classpath 'com.diffplug.spotless:spotless-plugin-gradle:3.24.0'
         classpath 'com.adarshr:gradle-test-logger-plugin:1.7.0'
     }
 }
@@ -104,12 +104,19 @@ subprojects {
 
         implementation "io.github.microutils:kotlin-logging:${versions.kLogging}"
 
-        implementation("com.github.shyiko:ktlint:${versions.ktlint}") {
-            exclude group: 'org.jetbrains.kotlin'
+        implementation("org.jetbrains.kotlin:kotlin-compiler-embeddable:${versions.kotlin}") {
+            force = true
+        }
+
+        implementation("com.pinterest.ktlint:ktlint-core:${versions.ktlint}") {
+            exclude group: 'org.apache.commons'
+            exclude group: 'org.apache.httpcomponents'
             exclude group: 'org.slf4j'
         }
 
-        testImplementation(group: 'org.web3j', name: 'core', version: versions.web3j, classifier: 'tests')
+        implementation "com.pinterest.ktlint:ktlint-ruleset-standard:${versions.ktlint}"
+        implementation "com.pinterest.ktlint:ktlint-ruleset-experimental:${versions.ktlint}"
+
         testImplementation "org.junit.jupiter:junit-jupiter-api:${versions.junit5}"
         testImplementation "com.willowtreeapps.assertk:assertk-jvm:${versions.assertk}"
         testImplementation "junit:junit:${versions.junit4}"
@@ -138,7 +145,8 @@ subprojects {
                 include '**/*.kt'
                 exclude '**/.gradle/**'
             }
-            ktlint(versions.ktlint)
+//            FIXME spotless breaks with ktlint version 0.32 + (https://github.com/diffplug/spotless/issues/419)
+//            ktlint(versions.ktlint)
             trimTrailingWhitespace()
             licenseHeaderFile "${rootDir}/gradle/spotless.license"
             endWithNewline()

@@ -18,7 +18,7 @@ data class SignedTransaction(
     val networkParametersHash: String,
     val coreTransaction: CoreTransaction,
     val notaryChangeTransaction: Boolean,
-    val missingSigners: List<String>
+    val missingSigners: List<PublicKey>
 )
 
 data class CoreTransaction(
