@@ -1,0 +1,927 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "description": "",
+    "version": "1.0.0",
+    "title": "",
+    "contact": {
+      "name": "",
+      "url": "",
+      "email": ""
+    }
+  },
+  "host": "localhost:9000",
+  "basePath": "/api/rest/",
+  "schemes": [
+    "http"
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/network/nodes": {
+      "get": {
+        "tags": [
+          "network"
+        ],
+        "description": "Retrieves all nodes if neither query parameter is supplied. Otherwise returns a list of one node matching the supplied query parameter.",
+        "consumes": [
+          "text/plain"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "hostAndPort",
+            "in": "query",
+            "description": "[host]:[port] for the Corda P2P of the node",
+            "required": false,
+            "type": "string",
+            "minItems": 0,
+            "x-example": "localhost:10000"
+          },
+          {
+            "name": "x500Name",
+            "in": "query",
+            "description": "the X500 name for the node",
+            "required": false,
+            "type": "string",
+            "minItems": 0,
+            "x-example": "O=PartyB, L=New York, C=US"
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": "default response",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/SimpleNodeInfo"
+              }
+            }
+          },
+          "200": {
+            "description": "default response",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/SimpleNodeInfo"
+              }
+            }
+          },
+          "500": {
+            "description": "server failure"
+          }
+        }
+      }
+    },
+    "/network/notaries": {
+      "get": {
+        "tags": [
+          "network"
+        ],
+        "description": "",
+        "consumes": [
+          "text/plain"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "x500Name",
+            "in": "query",
+            "description": "the X500 name for the node",
+            "required": false,
+            "type": "string",
+            "minItems": 0,
+            "x-example": "O=PartyB, L=New York, C=US"
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": "default response",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Party"
+              }
+            }
+          },
+          "200": {
+            "description": "default response",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Party"
+              }
+            }
+          },
+          "500": {
+            "description": "server failure"
+          }
+        }
+      }
+    },
+    "/network/my-node-info": {
+      "get": {
+        "tags": [
+          "network"
+        ],
+        "description": "",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [],
+        "responses": {
+          "default": {
+            "description": "default response",
+            "schema": {
+              "$ref": "#/definitions/SimpleNodeInfo"
+            }
+          },
+          "200": {
+            "description": "default response",
+            "schema": {
+              "$ref": "#/definitions/SimpleNodeInfo"
+            }
+          },
+          "500": {
+            "description": "server failure"
+          }
+        }
+      }
+    },
+    "/cordapps/obligation-cordapp/flows/issue-obligation": {
+      "post": {
+        "tags": [
+          "cordapps"
+        ],
+        "description": "",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "params",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/IssueObligationInitiatorParameters"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": "default response",
+            "schema": {
+              "$ref": "#/definitions/SignedTransaction"
+            }
+          },
+          "200": {
+            "description": "default response",
+            "schema": {
+              "$ref": "#/definitions/SignedTransaction"
+            }
+          },
+          "500": {
+            "description": "server failure"
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "CordaX500Name": {
+      "type": "object",
+      "properties": {
+        "commonName": {
+          "type": "string"
+        },
+        "organisationUnit": {
+          "type": "string"
+        },
+        "organisation": {
+          "type": "string"
+        },
+        "locality": {
+          "type": "string"
+        },
+        "state": {
+          "type": "string"
+        },
+        "country": {
+          "type": "string"
+        },
+        "x500Principal": {
+          "$ref": "#/definitions/X500Principal"
+        }
+      }
+    },
+    "NetworkHostAndPort": {
+      "type": "object",
+      "properties": {
+        "host": {
+          "type": "string"
+        },
+        "port": {
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
+    "Party": {
+      "type": "object",
+      "properties": {
+        "owningKey": {
+          "$ref": "#/definitions/PublicKey"
+        },
+        "name": {
+          "$ref": "#/definitions/CordaX500Name"
+        }
+      }
+    },
+    "PublicKey": {
+      "type": "object",
+      "properties": {
+        "encoded": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "byte"
+          }
+        },
+        "algorithm": {
+          "type": "string"
+        },
+        "format": {
+          "type": "string"
+        }
+      }
+    },
+    "SimpleNodeInfo": {
+      "type": "object",
+      "properties": {
+        "addresses": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/NetworkHostAndPort"
+          }
+        },
+        "legalIdentities": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Party"
+          }
+        }
+      }
+    },
+    "X500Principal": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "encoded": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "byte"
+          }
+        }
+      }
+    },
+    "AbstractParty": {
+      "type": "object",
+      "properties": {
+        "owningKey": {
+          "$ref": "#/definitions/PublicKey"
+        }
+      }
+    },
+    "AttachmentConstraint": {
+      "type": "object"
+    },
+    "Command": {
+      "type": "object",
+      "properties": {
+        "value": {
+          "$ref": "#/definitions/CommandData"
+        },
+        "signers": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/PublicKey"
+          }
+        }
+      }
+    },
+    "CommandData": {
+      "type": "object"
+    },
+    "CommandObject": {
+      "type": "object",
+      "properties": {
+        "value": {
+          "type": "object"
+        },
+        "signers": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/PublicKey"
+          }
+        }
+      }
+    },
+    "ComponentGroup": {
+      "type": "object",
+      "properties": {
+        "groupIndex": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "components": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/OpaqueBytes"
+          }
+        }
+      }
+    },
+    "ContractState": {
+      "type": "object",
+      "properties": {
+        "participants": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/AbstractParty"
+          }
+        }
+      }
+    },
+    "CoreTransaction": {
+      "type": "object",
+      "properties": {
+        "inputs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/StateRef"
+          }
+        },
+        "references": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/StateRef"
+          }
+        },
+        "networkParametersHash": {
+          "$ref": "#/definitions/SecureHash"
+        },
+        "notary": {
+          "$ref": "#/definitions/Party"
+        },
+        "outputStates": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ContractState"
+          }
+        },
+        "outputs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/TransactionStateContractState"
+          }
+        },
+        "id": {
+          "$ref": "#/definitions/SecureHash"
+        }
+      }
+    },
+    "Duration": {
+      "type": "object",
+      "properties": {
+        "seconds": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "zero": {
+          "type": "boolean"
+        },
+        "nano": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "negative": {
+          "type": "boolean"
+        },
+        "units": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/TemporalUnit"
+          }
+        }
+      }
+    },
+    "MerkleTree": {
+      "type": "object",
+      "properties": {
+        "hash": {
+          "$ref": "#/definitions/SecureHash"
+        }
+      }
+    },
+    "NotaryChangeWireTransaction": {
+      "type": "object",
+      "properties": {
+        "inputs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/StateRef"
+          }
+        },
+        "references": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/StateRef"
+          }
+        },
+        "notary": {
+          "$ref": "#/definitions/Party"
+        },
+        "newNotary": {
+          "$ref": "#/definitions/Party"
+        },
+        "serializedComponents": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/OpaqueBytes"
+          }
+        },
+        "id": {
+          "$ref": "#/definitions/SecureHash"
+        },
+        "networkParametersHash": {
+          "$ref": "#/definitions/SecureHash"
+        },
+        "outputs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/TransactionStateContractState"
+          }
+        },
+        "outputStates": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ContractState"
+          }
+        }
+      }
+    },
+    "OpaqueBytes": {
+      "type": "object",
+      "properties": {
+        "offset": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "size": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "bytes": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "byte"
+          }
+        }
+      }
+    },
+    "PartialMerkleTree": {
+      "type": "object",
+      "properties": {
+        "root": {
+          "$ref": "#/definitions/PartialTree"
+        }
+      }
+    },
+    "PartialTree": {
+      "type": "object"
+    },
+    "PrivacySalt": {
+      "type": "object",
+      "properties": {
+        "offset": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "size": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "bytes": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "byte"
+          }
+        }
+      }
+    },
+    "SecureHash": {
+      "type": "object",
+      "properties": {
+        "offset": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "size": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "bytes": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "byte"
+          }
+        }
+      }
+    },
+    "SerializedBytes": {
+      "type": "object",
+      "properties": {
+        "offset": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "size": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "bytes": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "byte"
+          }
+        },
+        "hash": {
+          "$ref": "#/definitions/SecureHash"
+        }
+      }
+    },
+    "SerializedBytesCoreTransaction": {
+      "type": "object",
+      "properties": {
+        "offset": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "size": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "bytes": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "byte"
+          }
+        },
+        "hash": {
+          "$ref": "#/definitions/SecureHash"
+        }
+      }
+    },
+    "SignatureMetadata": {
+      "type": "object",
+      "properties": {
+        "platformVersion": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "schemeNumberID": {
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
+    "SignedTransaction": {
+      "type": "object",
+      "properties": {
+        "txBits": {
+          "$ref": "#/definitions/SerializedBytesCoreTransaction"
+        },
+        "sigs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/TransactionSignature"
+          }
+        },
+        "id": {
+          "$ref": "#/definitions/SecureHash"
+        },
+        "tx": {
+          "$ref": "#/definitions/WireTransaction"
+        },
+        "inputs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/StateRef"
+          }
+        },
+        "references": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/StateRef"
+          }
+        },
+        "networkParametersHash": {
+          "$ref": "#/definitions/SecureHash"
+        },
+        "notary": {
+          "$ref": "#/definitions/Party"
+        },
+        "requiredSigningKeys": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/definitions/PublicKey"
+          }
+        },
+        "coreTransaction": {
+          "$ref": "#/definitions/CoreTransaction"
+        },
+        "notaryChangeTx": {
+          "$ref": "#/definitions/NotaryChangeWireTransaction"
+        },
+        "notaryChangeTransaction": {
+          "type": "boolean"
+        },
+        "missingSigners": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/definitions/PublicKey"
+          }
+        }
+      }
+    },
+    "StateRef": {
+      "type": "object",
+      "properties": {
+        "txhash": {
+          "$ref": "#/definitions/SecureHash"
+        },
+        "index": {
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
+    "TemporalUnit": {
+      "type": "object",
+      "properties": {
+        "dateBased": {
+          "type": "boolean"
+        },
+        "timeBased": {
+          "type": "boolean"
+        },
+        "durationEstimated": {
+          "type": "boolean"
+        },
+        "duration": {
+          "$ref": "#/definitions/Duration"
+        }
+      }
+    },
+    "TimeWindow": {
+      "type": "object",
+      "properties": {
+        "length": {
+          "$ref": "#/definitions/Duration"
+        },
+        "fromTime": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "untilTime": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "midpoint": {
+          "type": "integer",
+          "format": "int64"
+        }
+      }
+    },
+    "TransactionSignature": {
+      "type": "object",
+      "properties": {
+        "offset": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "size": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "bytes": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "byte"
+          }
+        },
+        "by": {
+          "$ref": "#/definitions/PublicKey"
+        },
+        "signatureMetadata": {
+          "$ref": "#/definitions/SignatureMetadata"
+        },
+        "partialMerkleTree": {
+          "$ref": "#/definitions/PartialMerkleTree"
+        }
+      }
+    },
+    "TransactionState": {
+      "type": "object",
+      "properties": {
+        "data": {
+          "$ref": "#/definitions/ContractState"
+        },
+        "contract": {
+          "type": "string"
+        },
+        "notary": {
+          "$ref": "#/definitions/Party"
+        },
+        "encumbrance": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "constraint": {
+          "$ref": "#/definitions/AttachmentConstraint"
+        }
+      }
+    },
+    "TransactionStateContractState": {
+      "type": "object",
+      "properties": {
+        "data": {
+          "$ref": "#/definitions/ContractState"
+        },
+        "contract": {
+          "type": "string"
+        },
+        "notary": {
+          "$ref": "#/definitions/Party"
+        },
+        "encumbrance": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "constraint": {
+          "$ref": "#/definitions/AttachmentConstraint"
+        }
+      }
+    },
+    "WireTransaction": {
+      "type": "object",
+      "properties": {
+        "attachments": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/SecureHash"
+          }
+        },
+        "inputs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/StateRef"
+          }
+        },
+        "references": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/StateRef"
+          }
+        },
+        "outputs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/TransactionStateContractState"
+          }
+        },
+        "commands": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CommandObject"
+          }
+        },
+        "notary": {
+          "$ref": "#/definitions/Party"
+        },
+        "timeWindow": {
+          "$ref": "#/definitions/TimeWindow"
+        },
+        "networkParametersHash": {
+          "$ref": "#/definitions/SecureHash"
+        },
+        "componentGroups": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ComponentGroup"
+          }
+        },
+        "privacySalt": {
+          "$ref": "#/definitions/PrivacySalt"
+        },
+        "id": {
+          "$ref": "#/definitions/SecureHash"
+        },
+        "requiredSigningKeys": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/definitions/PublicKey"
+          }
+        },
+        "merkleTree": {
+          "$ref": "#/definitions/MerkleTree"
+        },
+        "groupHashes$core": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/SecureHash"
+          }
+        },
+        "groupsMerkleRoots$core": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/definitions/SecureHash"
+          }
+        },
+        "availableComponentNonces$core": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "array",
+            "items": {
+              "$ref": "#/definitions/SecureHash"
+            }
+          }
+        },
+        "availableComponentHashes$core": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "array",
+            "items": {
+              "$ref": "#/definitions/SecureHash"
+            }
+          }
+        },
+        "availableComponentGroups": {
+          "type": "array",
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "object"
+            }
+          }
+        },
+        "outputStates": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ContractState"
+          }
+        }
+      }
+    },
+    "IssueObligationInitiatorParameters": {
+      "type": "object",
+      "properties": {
+        "amount": {
+          "type": "string"
+        },
+        "lender": {
+          "type": "string"
+        },
+        "anonymous": {
+          "type": "boolean"
+        }
+      }
+    }
+  }
+}
