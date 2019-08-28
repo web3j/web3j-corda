@@ -33,25 +33,25 @@ interface {{classname}} : CorDapp {
 
     interface {{classname}}FlowResource : FlowResource {
     {{#flows}}
-    /**
-    * Get the {{flowId}} flow.
-    */
-    @get:Path("{{#lowercase}}{{flowId}}{{/lowercase}}-{{#lowercase}}{{classname}}{{/lowercase}}")
-    val {{#lowercase}}{{flowId}}{{/lowercase}}: {{flowId}}
+        /**
+        * Get the {{flowId}} flow.
+        */
+        @get:Path("{{#lowercase}}{{flowId}}{{/lowercase}}-{{#lowercase}}{{classname}}{{/lowercase}}")
+        val {{#lowercase}}{{flowId}}{{/lowercase}}: {{flowId}}
 
-    /**
-    * {{classname}} {{flowId}} flow.
-    */
-    interface {{flowId}} : Flow {
+        /**
+        * {{classname}} {{flowId}} flow.
+        */
+        interface {{flowId}} : Flow {
 
-    /**
-    * Start the {{flowId}} flow.
-    */
-    @POST
-    @Produces("{{produces}}")
-    @Consumes("{{consumes}}")
-    fun start(@Valid parameters: {{inputClass}}): {{outputClass}}
-    }
+        /**
+        * Start the {{flowId}} flow.
+        */
+        @POST
+        @Produces("{{produces}}")
+        @Consumes("{{consumes}}")
+        fun start(@Valid parameters: {{inputClass}}): {{outputClass}}
+        }
 
     {{/flows}}
     }
@@ -60,18 +60,18 @@ interface {{classname}} : CorDapp {
     */
     companion object : LifeCycle<{{classname}}> {
 
-        override fun upgrade(corda: Corda, file: File): {{classname}} =
-        TODO("not implemented")
+    override fun upgrade(corda: Corda, file: File): {{classname}} =
+    TODO("not implemented")
 
-        override fun deploy(corda: Corda, file: File): {{classname}} =
-        TODO("not implemented")
+    override fun deploy(corda: Corda, file: File): {{classname}} =
+    TODO("not implemented")
 
-        /**
-        * Loads an existing {{classname}} CorDapp instance.
-        */
-        @JvmStatic
-        override fun load(corda: Corda) =
-        ProxyBuilder.build({{classname}}::class.java, corda.service)
-        }
+    /**
+    * Loads an existing {{classname}} CorDapp instance.
+    */
+    @JvmStatic
+    override fun load(corda: Corda) =
+    ProxyBuilder.build({{classname}}::class.java, corda.service)
+    }
 {{/operations}}
 }
