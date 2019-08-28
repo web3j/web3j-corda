@@ -118,20 +118,19 @@ class CorDappCodegen(
         objs: MutableMap<String, Any>,
         allModels: MutableList<Any>
     ): MutableMap<String, Any> {
+
         val operation = (objs["operations"] as HashMap<*, *>)["operation"] as ArrayList<*>
         val flows = operation.filterIsInstance<CodegenOperation>()
-        val allFlowInfo = ArrayList<Any>()
-        flows.forEach {
+
+        objs["flows"] = flows.map {
             val flowName = it.path.split("/".toRegex())[4].split("-".toRegex())[0]
-            val flowHashMap = hashMapOf<String, String>(
+            hashMapOf<String, String>(
                     "flowId" to camelize(flowName),
                     "outputClass" to it.returnType,
                     "inputClass" to it.bodyParams[0].baseType,
                     "consumes" to (it.consumes[0] as HashMap)["mediaType"]!!,
                     "produces" to (it.produces[0] as HashMap)["mediaType"]!!)
-            allFlowInfo.add(flowHashMap)
         }
-        objs["flows"] = allFlowInfo
         return super.postProcessOperationsWithModels(objs, allModels)
     }
 
@@ -158,5 +157,9 @@ class CorDappCodegen(
                 CordaX500Name::class,
                 PublicKey::class
         )
+
+        private fun buildFlowNameFromPath(path: String): String {
+            return camelize(path.split("/".toRegex())[4].split("-".toRegex())[0])
+        }
     }
 }
