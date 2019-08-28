@@ -22,7 +22,7 @@ class CorDappGeneratorTest {
     lateinit var output: File
 
     @Test
-    internal fun `generate with mustache`() {
+    fun `generate with mustache`() {
 
         val obligation = javaClass.classLoader.getResource("ObligationTest.json")
 
