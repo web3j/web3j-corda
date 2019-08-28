@@ -29,14 +29,14 @@
         ],
         "description": "Retrieves all nodes if neither query parameter is supplied. Otherwise returns a list of one node matching the supplied query parameter.",
         "consumes": [
-          "text/plain"
+          "application/json"
         ],
         "produces": [
           "application/json"
         ],
         "parameters": [
           {
-            "name": "hostAndPort",
+            "name": "host-and-port",
             "in": "query",
             "description": "[host]:[port] for the Corda P2P of the node",
             "required": false,
@@ -45,7 +45,7 @@
             "x-example": "localhost:10000"
           },
           {
-            "name": "x500Name",
+            "name": "x500-name",
             "in": "query",
             "description": "the X500 name for the node",
             "required": false,
@@ -86,14 +86,14 @@
         ],
         "description": "",
         "consumes": [
-          "text/plain"
+          "application/json"
         ],
         "produces": [
           "application/json"
         ],
         "parameters": [
           {
-            "name": "x500Name",
+            "name": "x500-name",
             "in": "query",
             "description": "the X500 name for the node",
             "required": false,
@@ -127,19 +127,38 @@
         }
       }
     },
-    "/network/my-node-info": {
+    "/network/nodes/self": {
       "get": {
         "tags": [
           "network"
         ],
-        "description": "",
+        "description": "Retrieves all nodes if neither query parameter is supplied. Otherwise returns a list of one node matching the supplied query parameter.",
         "consumes": [
           "application/json"
         ],
         "produces": [
           "application/json"
         ],
-        "parameters": [],
+        "parameters": [
+          {
+            "name": "host-and-port",
+            "in": "query",
+            "description": "[host]:[port] for the Corda P2P of the node",
+            "required": false,
+            "type": "string",
+            "minItems": 0,
+            "x-example": "localhost:10000"
+          },
+          {
+            "name": "x500-name",
+            "in": "query",
+            "description": "the X500 name for the node",
+            "required": false,
+            "type": "string",
+            "minItems": 0,
+            "x-example": "O=PartyB, L=New York, C=US"
+          }
+        ],
         "responses": {
           "default": {
             "description": "default response",
@@ -151,6 +170,44 @@
             "description": "default response",
             "schema": {
               "$ref": "#/definitions/SimpleNodeInfo"
+            }
+          },
+          "500": {
+            "description": "server failure"
+          }
+        }
+      }
+    },
+    "/cordapps/flows": {
+      "get": {
+        "tags": [
+          "network"
+        ],
+        "description": "Retrieves a list of callable flows. Example [\"net.corda.core.flows.ContractUpgradeFlow$Authorise\"]",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [],
+        "responses": {
+          "default": {
+            "description": "default response",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          "200": {
+            "description": "default response",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
             }
           },
           "500": {
@@ -178,6 +235,88 @@
             "required": true,
             "schema": {
               "$ref": "#/definitions/IssueObligationInitiatorParameters"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": "default response",
+            "schema": {
+              "$ref": "#/definitions/SignedTransaction"
+            }
+          },
+          "200": {
+            "description": "default response",
+            "schema": {
+              "$ref": "#/definitions/SignedTransaction"
+            }
+          },
+          "500": {
+            "description": "server failure"
+          }
+        }
+      }
+    },
+    "/cordapps/obligation-cordapp/flows/settle-obligation": {
+      "post": {
+        "tags": [
+          "cordapps"
+        ],
+        "description": "",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "params",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/SettleObligationInitiatorParameters"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": "default response",
+            "schema": {
+              "$ref": "#/definitions/SignedTransaction"
+            }
+          },
+          "200": {
+            "description": "default response",
+            "schema": {
+              "$ref": "#/definitions/SignedTransaction"
+            }
+          },
+          "500": {
+            "description": "server failure"
+          }
+        }
+      }
+    },
+    "/cordapps/test-cordapp/flows/settle-obligation": {
+      "post": {
+        "tags": [
+          "cordapps"
+        ],
+        "description": "",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "params",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/SettleObligationInitiatorParameters"
             }
           }
         ],
@@ -909,7 +1048,21 @@
         }
       }
     },
-    "IssueObligationInitiatorParameters": {
+    "IssueObligationInitiatorPayload": {
+      "type": "object",
+      "properties": {
+        "amount": {
+          "type": "string"
+        },
+        "lender": {
+          "type": "string"
+        },
+        "anonymous": {
+          "type": "boolean"
+        }
+      }
+    },
+    "SettleObligationInitiatorPayload": {
       "type": "object",
       "properties": {
         "amount": {

@@ -34,28 +34,28 @@ interface NodeResource {
     fun findAll(): List<SimpleNodeInfo>
 
     /**
-     * Retrieves by the supplied host and port.
+     * Retrieves by the supplied host and port, e.g. `localhost:10000`.
      *
-     * @param hostAndPort `host:port` for the Corda P2P of the node
+     * @param hostAndPort `host:port` for the Corda P2P of the node.
      */
     @GET
     fun findByHostAndPort(
         @Valid
         @HostAndPort
-        @QueryParam("hostAndPort")
+        @QueryParam("host-and-port")
         hostAndPort: String
     ): List<SimpleNodeInfo>
 
     /**
-     * Retrieves by the supplied X500 name.
+     * Retrieves by the supplied X500 name, e.g. `O=PartyB, L=New York, C=US`.
      *
-     * @param x500Name `host:port` for the Corda P2P of the node
+     * @param x500Name the X500 name for the node.
      */
     @GET
     fun findByX500Name(
         @Valid
         @X500Name
-        @QueryParam("x500Name")
+        @QueryParam("x500-name")
         x500Name: CordaX500Name
     ): List<SimpleNodeInfo>
 }

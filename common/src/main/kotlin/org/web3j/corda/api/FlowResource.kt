@@ -19,6 +19,10 @@ import javax.ws.rs.PathParam
 
 interface FlowResource {
 
+    /**
+     * Retrieves a list of callable flows. Example response:
+     * `["net.corda.core.flows.ContractUpgradeFlow$Authorise"]`
+     */
     @GET
     fun findAll(): List<FlowId>
 

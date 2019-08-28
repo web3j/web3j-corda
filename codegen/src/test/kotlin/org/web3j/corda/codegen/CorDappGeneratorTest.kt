@@ -13,6 +13,7 @@
 package org.web3j.corda.codegen
 
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.fail
 import org.junit.jupiter.api.io.TempDir
 import java.io.File
 
@@ -24,13 +25,13 @@ class CorDappGeneratorTest {
     @Test
     fun `generate with mustache`() {
 
-        val obligation = javaClass.classLoader.getResource("ObligationTest.json")
+        val obligation = javaClass.classLoader.getResource("Obligation.json")
 
         val outputDir = "build/generated"
         val generator = CorDappGenerator(
             "obligation-cordapp",
             "org.web3j.corda.codegen.generated.obligation",
-            obligation?.file ?: throw NullPointerException("ObligationTest.json"),
+            obligation?.file ?: fail { "Obligation.json" },
             outputDir
         )
 

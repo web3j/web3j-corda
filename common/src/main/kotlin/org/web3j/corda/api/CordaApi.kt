@@ -25,6 +25,10 @@ interface CordaApi {
     @get:Path("cordapps")
     val corDapps: CorDappResource
 
+    /**
+     * Retrieves all nodes if neither query parameter is supplied.
+     * Otherwise returns a list of one node matching the supplied query parameter.
+     */
     @get:Path("network")
     val network: NetworkResource
 }
