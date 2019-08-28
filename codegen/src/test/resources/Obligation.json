@@ -234,7 +234,7 @@
             "name": "params",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/IssueObligationInitiatorParameters"
+              "$ref": "#/definitions/IssueObligationInitiatorPayload"
             }
           }
         ],
@@ -275,7 +275,7 @@
             "name": "params",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/SettleObligationInitiatorParameters"
+              "$ref": "#/definitions/SettleObligationInitiatorPayload"
             }
           }
         ],
@@ -316,7 +316,7 @@
             "name": "params",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/SettleObligationInitiatorParameters"
+              "$ref": "#/definitions/SettleObligationInitiatorPayload"
             }
           }
         ],
