@@ -12,6 +12,8 @@
  */
 package org.web3j.corda.model
 
+import java.time.Duration
+
 data class SignedTransaction(
     val signatures: List<String>,
     val references: List<String>,
@@ -41,10 +43,10 @@ data class CoreTransaction(
     val availableComponentGroups: List<List<Any?>?>
 )
 data class TimeWindow(
-    val fromTime: String,
-    val untilTime: String,
-    val midpoint: String,
-    val length: String
+    val fromTime: Long,
+    val untilTime: Long,
+    val midpoint: Long,
+    val length: Duration
 )
 data class Commands(
     val value: Value?,
