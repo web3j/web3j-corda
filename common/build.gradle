@@ -1,5 +1,6 @@
 dependencies {
     implementation group: 'org.glassfish.jersey.inject', name: 'jersey-hk2', version: versions.jersey
+    implementation group: 'org.glassfish.jersey.core', name: 'jersey-common', version: versions.jersey
     implementation group: 'org.glassfish.jersey.core', name: 'jersey-client', version: versions.jersey
     implementation group: 'org.glassfish.jersey.media', name: 'jersey-media-json-jackson', version: versions.jersey
     implementation group: 'org.glassfish.jersey.ext', name: 'jersey-proxy-client', version: versions.jersey

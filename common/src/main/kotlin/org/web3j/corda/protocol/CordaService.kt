@@ -16,17 +16,26 @@ import org.glassfish.jersey.client.ClientConfig
 import org.glassfish.jersey.client.ClientProperties
 import org.glassfish.jersey.jackson.internal.jackson.jaxrs.cfg.Annotations
 import org.glassfish.jersey.jackson.internal.jackson.jaxrs.json.JacksonJaxbJsonProvider
+import org.glassfish.jersey.logging.LoggingFeature
+import org.glassfish.jersey.server.validation.ValidationFeature
 import org.web3j.corda.util.mapper
 import javax.ws.rs.client.Client
 import javax.ws.rs.client.ClientBuilder
 
-class CordaService(val uri: String) : AutoCloseable {
+class CordaService(
+    val uri: String,
+    readTimeout: Long = DEFAULT_READ_TIMEOUT,
+    connectTimeout: Long = DEFAULT_CONNECT_TIMEOUT
+) : AutoCloseable {
+
     internal val client: Client by lazy {
 
         val config = ClientConfig().apply {
+            register(LoggingFeature())
+            register(ValidationFeature())
             register(JacksonJaxbJsonProvider(mapper, arrayOf(Annotations.JACKSON)))
-            property(ClientProperties.READ_TIMEOUT, 15000)
-            property(ClientProperties.CONNECT_TIMEOUT, 15000)
+            property(ClientProperties.READ_TIMEOUT, readTimeout)
+            property(ClientProperties.CONNECT_TIMEOUT, connectTimeout)
         }
 
         ClientBuilder.newClient(config)
@@ -34,5 +43,10 @@ class CordaService(val uri: String) : AutoCloseable {
 
     override fun close() {
         client.close()
+    }
+
+    companion object {
+        const val DEFAULT_READ_TIMEOUT: Long = 5000
+        const val DEFAULT_CONNECT_TIMEOUT: Long = 5000
     }
 }

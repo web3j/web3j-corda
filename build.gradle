@@ -124,6 +124,7 @@ subprojects {
             exclude group: 'org.jetbrains.kotlin'
         }
 
+        runtimeOnly "com.github.schnitker.logmanager:logmgr-factory:${versions.logmanager}"
         runtimeOnly "com.github.schnitker.logmanager:logmgr-logback:${versions.logmanager}"
 
         testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:${versions.junit5}"
