@@ -12,6 +12,7 @@
  */
 package org.web3j.corda.util
 
+import com.fasterxml.jackson.databind.SerializationFeature
 import com.fasterxml.jackson.module.kotlin.convertValue
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 
@@ -21,6 +22,7 @@ fun Any.toJson(): String = mapper
 
 @PublishedApi
 internal val mapper = jacksonObjectMapper()
+    .enable(SerializationFeature.WRITE_ENUMS_USING_TO_STRING)
 
 fun <T> convert(value: Any, type: Class<T>): T = mapper.convertValue(value, type)
 

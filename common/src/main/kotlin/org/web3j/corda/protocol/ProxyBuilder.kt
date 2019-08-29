@@ -13,13 +13,18 @@
 package org.web3j.corda.protocol
 
 import org.glassfish.jersey.client.proxy.WebResourceFactory
+import org.web3j.corda.api.AuthenticationFilter
 
 object ProxyBuilder {
 
-    fun <T> build(type: Class<T>, service: CordaService): T {
+    fun <T> build(type: Class<T>, service: CordaService) = build(type, service, null)
+
+    fun <T> build(type: Class<T>, service: CordaService, token: String?): T {
         require(type.isInterface) { "Proxy class must be an interface" }
 
         val target = service.client.target(service.uri)
+        token?.run { target.register(AuthenticationFilter.token(token)) }
+
         return WebResourceFactory.newResource(type, target)
     }
 }

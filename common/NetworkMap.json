@@ -1,0 +1,1282 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "description": "<h4><a href=\"/\">Cordite Networkmap Service</a></h4><b>Please note:</b> The protected parts of this API require JWT authentication.To activate, execute the <code>login</code> method.Then copy the returned JWT token and insert it into the <i>Authorize</i> swagger dialog box as<code>Bearer &lt;token&gt;</code>",
+    "version": "1.0.0",
+    "title": "Cordite Network Map Service",
+    "contact": {
+      "name": "Cordite Foundation",
+      "url": "https://cordite.foundation"
+    }
+  },
+  "host": "localhost:8080",
+  "basePath": "//",
+  "schemes": [
+    "http"
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/network-map": {
+      "get": {
+        "tags": [
+          "network map"
+        ],
+        "description": "Retrieve the current signed network map object. The entire object is signed with the network map certificate which is also attached.",
+        "consumes": [
+          "application/octet-stream"
+        ],
+        "produces": [
+          "application/octet-stream"
+        ],
+        "parameters": [],
+        "responses": {
+          "default": {
+            "description": "default response",
+            "schema": {
+              "type": "string",
+              "format": "binary"
+            }
+          },
+          "200": {
+            "description": "default response",
+            "schema": {
+              "type": "string",
+              "format": "binary"
+            }
+          },
+          "500": {
+            "description": "server failure"
+          }
+        }
+      }
+    },
+    "/network-map/publish": {
+      "post": {
+        "tags": [
+          "network map"
+        ],
+        "description": "For the node to upload its signed NodeInfo object to the network map",
+        "consumes": [
+          "application/octet-stream"
+        ],
+        "produces": [
+          "text/plain"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "nodeInfo",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "binary"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": "empty response"
+          },
+          "200": {
+            "description": "empty response"
+          },
+          "500": {
+            "description": "server failure"
+          }
+        }
+      }
+    },
+    "/network-map/ack-parameters": {
+      "post": {
+        "tags": [
+          "network map"
+        ],
+        "description": "For the node operator to acknowledge network map that new parameters were accepted for future update.",
+        "consumes": [
+          "application/octet-stream"
+        ],
+        "produces": [
+          "text/plain"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "signedSecureHash",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "binary"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": "empty response"
+          },
+          "200": {
+            "description": "empty response"
+          },
+          "500": {
+            "description": "server failure"
+          }
+        }
+      }
+    },
+    "/network-map/node-info/{hash}": {
+      "get": {
+        "tags": [
+          "network map"
+        ],
+        "description": "Retrieve a signed NodeInfo as specified in the network map object.",
+        "consumes": [
+          "application/octet-stream"
+        ],
+        "produces": [
+          "application/octet-stream"
+        ],
+        "parameters": [],
+        "responses": {
+          "default": {
+            "description": "default response",
+            "schema": {
+              "type": "string",
+              "format": "binary"
+            }
+          },
+          "200": {
+            "description": "default response",
+            "schema": {
+              "type": "string",
+              "format": "binary"
+            }
+          },
+          "500": {
+            "description": "server failure"
+          }
+        }
+      }
+    },
+    "/network-map/network-parameters/{hash}": {
+      "get": {
+        "tags": [
+          "network map"
+        ],
+        "description": "Retrieve the signed network parameters. The entire object is signed with the network map certificate which is also attached.",
+        "consumes": [
+          "application/octet-stream"
+        ],
+        "produces": [
+          "application/octet-stream"
+        ],
+        "parameters": [],
+        "responses": {
+          "default": {
+            "description": "default response",
+            "schema": {
+              "type": "string",
+              "format": "binary"
+            }
+          },
+          "200": {
+            "description": "default response",
+            "schema": {
+              "type": "string",
+              "format": "binary"
+            }
+          },
+          "500": {
+            "description": "server failure"
+          }
+        }
+      }
+    },
+    "/network-map/my-hostname": {
+      "get": {
+        "tags": [
+          "network map"
+        ],
+        "description": "undocumented Corda Networkmap API for retrieving the caller's IP",
+        "consumes": [
+          "text/plain"
+        ],
+        "produces": [
+          "text/plain"
+        ],
+        "parameters": [],
+        "responses": {
+          "default": {
+            "description": "default response",
+            "schema": {
+              "type": "string"
+            }
+          },
+          "200": {
+            "description": "default response",
+            "schema": {
+              "type": "string"
+            }
+          },
+          "500": {
+            "description": "server failure"
+          }
+        }
+      }
+    },
+    "/network-map/truststore": {
+      "get": {
+        "tags": [
+          "network map"
+        ],
+        "description": "Retrieve this network-map's truststore",
+        "consumes": [
+          "application/octet-stream"
+        ],
+        "produces": [
+          "application/octet-stream"
+        ],
+        "parameters": [],
+        "responses": {
+          "default": {
+            "description": "default response",
+            "schema": {
+              "type": "string",
+              "format": "binary"
+            }
+          },
+          "200": {
+            "description": "default response",
+            "schema": {
+              "type": "string",
+              "format": "binary"
+            }
+          },
+          "500": {
+            "description": "server failure"
+          }
+        }
+      }
+    },
+    "/certificate": {
+      "post": {
+        "tags": [
+          "doorman"
+        ],
+        "description": "Receives a certificate signing request",
+        "consumes": [
+          "application/octet-stream"
+        ],
+        "produces": [
+          "text/plain"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "pkcS10CertificationRequest",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "binary"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": "default response",
+            "schema": {
+              "type": "string"
+            }
+          },
+          "200": {
+            "description": "default response",
+            "schema": {
+              "type": "string"
+            }
+          },
+          "500": {
+            "description": "server failure"
+          }
+        }
+      }
+    },
+    "/certificate/{id}": {
+      "get": {
+        "tags": [
+          "doorman"
+        ],
+        "description": "Retrieve the certificate chain as a zipped binary block",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "text/plain"
+        ],
+        "parameters": [],
+        "responses": {
+          "default": {
+            "description": "empty response"
+          },
+          "200": {
+            "description": "empty response"
+          },
+          "500": {
+            "description": "server failure"
+          }
+        }
+      }
+    },
+    "/certman/api/generate": {
+      "post": {
+        "tags": [
+          "certman"
+        ],
+        "description": "",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "text/plain"
+        ],
+        "parameters": [],
+        "responses": {
+          "default": {
+            "description": "empty response"
+          },
+          "200": {
+            "description": "empty response"
+          },
+          "500": {
+            "description": "server failure"
+          }
+        }
+      }
+    },
+    "/admin/api/login": {
+      "post": {
+        "tags": [
+          "admin"
+        ],
+        "description": "",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "text/plain"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "request",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/LoginRequest"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": "default response",
+            "schema": {
+              "type": "string"
+            }
+          },
+          "200": {
+            "description": "default response",
+            "schema": {
+              "type": "string"
+            }
+          },
+          "500": {
+            "description": "server failure"
+          }
+        }
+      }
+    },
+    "/admin/api/whitelist": {
+      "get": {
+        "tags": [
+          "admin"
+        ],
+        "description": "serve whitelist",
+        "consumes": [
+          "text/plain"
+        ],
+        "produces": [
+          "text/plain"
+        ],
+        "parameters": [],
+        "responses": {
+          "default": {
+            "description": "default response",
+            "schema": {
+              "type": "string"
+            }
+          },
+          "200": {
+            "description": "default response",
+            "schema": {
+              "type": "string"
+            }
+          },
+          "500": {
+            "description": "server failure"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "admin"
+        ],
+        "description": "replace the whitelist",
+        "consumes": [
+          "text/plain"
+        ],
+        "produces": [
+          "text/plain"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "replacement",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": "empty response"
+          },
+          "200": {
+            "description": "empty response"
+          },
+          "500": {
+            "description": "server failure"
+          }
+        },
+        "security": [
+          {
+            "Authorization": []
+          }
+        ]
+      },
+      "put": {
+        "tags": [
+          "admin"
+        ],
+        "description": "append to the whitelist",
+        "consumes": [
+          "text/plain"
+        ],
+        "produces": [
+          "text/plain"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "append",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": "empty response"
+          },
+          "200": {
+            "description": "empty response"
+          },
+          "500": {
+            "description": "server failure"
+          }
+        },
+        "security": [
+          {
+            "Authorization": []
+          }
+        ]
+      },
+      "delete": {
+        "tags": [
+          "admin"
+        ],
+        "description": "clears the whitelist",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "text/plain"
+        ],
+        "parameters": [],
+        "responses": {
+          "default": {
+            "description": "empty response"
+          },
+          "200": {
+            "description": "empty response"
+          },
+          "500": {
+            "description": "server failure"
+          }
+        },
+        "security": [
+          {
+            "Authorization": []
+          }
+        ]
+      }
+    },
+    "/admin/api/notaries": {
+      "get": {
+        "tags": [
+          "admin"
+        ],
+        "description": "serve set of notaries",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [],
+        "responses": {
+          "default": {
+            "description": "default response",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/SimpleNotaryInfo"
+              }
+            }
+          },
+          "200": {
+            "description": "default response",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/SimpleNotaryInfo"
+              }
+            }
+          },
+          "500": {
+            "description": "server failure"
+          }
+        }
+      }
+    },
+    "/admin/api/nodes": {
+      "get": {
+        "tags": [
+          "admin"
+        ],
+        "description": "retrieve all nodeinfos",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [],
+        "responses": {
+          "default": {
+            "description": "default response",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/SimpleNodeInfo"
+              }
+            }
+          },
+          "200": {
+            "description": "default response",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/SimpleNodeInfo"
+              }
+            }
+          },
+          "500": {
+            "description": "server failure"
+          }
+        }
+      }
+    },
+    "/admin/api/network-parameters": {
+      "get": {
+        "tags": [
+          "admin"
+        ],
+        "description": "serve a page of network parameters",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "pageSize",
+            "in": "query",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": "default response",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "$ref": "#/definitions/NetworkParameters"
+              }
+            }
+          },
+          "200": {
+            "description": "default response",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "$ref": "#/definitions/NetworkParameters"
+              }
+            }
+          },
+          "500": {
+            "description": "server failure"
+          }
+        }
+      }
+    },
+    "/admin/api/network-parameters/current": {
+      "get": {
+        "tags": [
+          "admin"
+        ],
+        "description": "Retrieve the current network parameters",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [],
+        "responses": {
+          "default": {
+            "description": "default response",
+            "schema": {
+              "$ref": "#/definitions/NetworkParameters"
+            }
+          },
+          "200": {
+            "description": "default response",
+            "schema": {
+              "$ref": "#/definitions/NetworkParameters"
+            }
+          },
+          "500": {
+            "description": "server failure"
+          }
+        }
+      }
+    },
+    "/admin/api/build-properties": {
+      "get": {
+        "tags": [
+          "admin"
+        ],
+        "description": "get the build-time properties",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [],
+        "responses": {
+          "default": {
+            "description": "default response",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string"
+              }
+            }
+          },
+          "200": {
+            "description": "default response",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string"
+              }
+            }
+          },
+          "500": {
+            "description": "server failure"
+          }
+        }
+      }
+    },
+    "/admin/api/network-map": {
+      "get": {
+        "tags": [
+          "admin"
+        ],
+        "description": "serve current network map as a JSON document",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [],
+        "responses": {
+          "default": {
+            "description": "default response",
+            "schema": {
+              "$ref": "#/definitions/NetworkMap"
+            }
+          },
+          "200": {
+            "description": "default response",
+            "schema": {
+              "$ref": "#/definitions/NetworkMap"
+            }
+          },
+          "500": {
+            "description": "server failure"
+          }
+        }
+      }
+    },
+    "/admin/api/notaries/validating": {
+      "post": {
+        "tags": [
+          "admin"
+        ],
+        "description": "For the validating notary to upload its signed NodeInfo object to the network map.\n    Please ignore the way swagger presents this. To upload a notary info file use:\n      <code>\n      curl -X POST -H \"Authorization: Bearer &lt;token&gt;\" -H \"accept: text/plain\" -H  \"Content-Type: application/octet-stream\" --data-binary @nodeInfo-007A0CAE8EECC5C9BE40337C8303F39D34592AA481F3153B0E16524BAD467533 http://localhost:8080//admin/api/notaries/validating\n      </code>\n      ",
+        "consumes": [
+          "application/octet-stream"
+        ],
+        "produces": [
+          "text/plain"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "nodeInfoBuffer",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "binary"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": "default response",
+            "schema": {
+              "type": "string"
+            }
+          },
+          "200": {
+            "description": "default response",
+            "schema": {
+              "type": "string"
+            }
+          },
+          "500": {
+            "description": "server failure"
+          }
+        },
+        "security": [
+          {
+            "Authorization": []
+          }
+        ]
+      },
+      "delete": {
+        "tags": [
+          "admin"
+        ],
+        "description": "delete a validating notary with the node key",
+        "consumes": [
+          "text/plain"
+        ],
+        "produces": [
+          "text/plain"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "nodeKey",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": "empty response"
+          },
+          "200": {
+            "description": "empty response"
+          },
+          "500": {
+            "description": "server failure"
+          }
+        },
+        "security": [
+          {
+            "Authorization": []
+          }
+        ]
+      }
+    },
+    "/admin/api/notaries/nonValidating": {
+      "post": {
+        "tags": [
+          "admin"
+        ],
+        "description": "For the non validating notary to upload its signed NodeInfo object to the network map\",\n    Please ignore the way swagger presents this. To upload a notary info file use:\n      <code>\n      curl -X POST -H \"Authorization: Bearer &lt;token&gt;\" -H \"accept: text/plain\" -H  \"Content-Type: application/octet-stream\" --data-binary @nodeInfo-007A0CAE8EECC5C9BE40337C8303F39D34592AA481F3153B0E16524BAD467533 http://localhost:8080//admin/api/notaries/nonValidating\n      </code>\n      ",
+        "consumes": [
+          "application/octet-stream"
+        ],
+        "produces": [
+          "text/plain"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "nodeInfoBuffer",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "binary"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": "default response",
+            "schema": {
+              "type": "string"
+            }
+          },
+          "200": {
+            "description": "default response",
+            "schema": {
+              "type": "string"
+            }
+          },
+          "500": {
+            "description": "server failure"
+          }
+        },
+        "security": [
+          {
+            "Authorization": []
+          }
+        ]
+      },
+      "delete": {
+        "tags": [
+          "admin"
+        ],
+        "description": "delete a non-validating notary with the node key",
+        "consumes": [
+          "text/plain"
+        ],
+        "produces": [
+          "text/plain"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "nodeKey",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": "empty response"
+          },
+          "200": {
+            "description": "empty response"
+          },
+          "500": {
+            "description": "server failure"
+          }
+        },
+        "security": [
+          {
+            "Authorization": []
+          }
+        ]
+      }
+    },
+    "/admin/api/nodes/{nodeKey}": {
+      "delete": {
+        "tags": [
+          "admin"
+        ],
+        "description": "delete a node by its key",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "text/plain"
+        ],
+        "parameters": [
+          {
+            "name": "nodeKey",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": "empty response"
+          },
+          "200": {
+            "description": "empty response"
+          },
+          "500": {
+            "description": "server failure"
+          }
+        },
+        "security": [
+          {
+            "Authorization": []
+          }
+        ]
+      }
+    }
+  },
+  "securityDefinitions": {
+    "Authorization": {
+      "type": "apiKey",
+      "name": "authorization",
+      "in": "header"
+    }
+  },
+  "definitions": {
+    "LoginRequest": {
+      "type": "object",
+      "properties": {
+        "user": {
+          "type": "string",
+          "example": "sa",
+          "description": "user name"
+        },
+        "password": {
+          "type": "string",
+          "example": "admin",
+          "description": "password"
+        }
+      }
+    },
+    "CordaX500Name": {
+      "type": "object",
+      "properties": {
+        "commonName": {
+          "type": "string"
+        },
+        "organisationUnit": {
+          "type": "string"
+        },
+        "organisation": {
+          "type": "string"
+        },
+        "locality": {
+          "type": "string"
+        },
+        "state": {
+          "type": "string"
+        },
+        "country": {
+          "type": "string"
+        },
+        "x500Principal": {
+          "$ref": "#/definitions/X500Principal"
+        }
+      }
+    },
+    "NotaryInfo": {
+      "type": "object",
+      "properties": {
+        "identity": {
+          "$ref": "#/definitions/Party"
+        },
+        "validating": {
+          "type": "boolean"
+        }
+      }
+    },
+    "Party": {
+      "type": "object",
+      "properties": {
+        "owningKey": {
+          "$ref": "#/definitions/PublicKey"
+        },
+        "name": {
+          "$ref": "#/definitions/CordaX500Name"
+        }
+      }
+    },
+    "PublicKey": {
+      "type": "object",
+      "properties": {
+        "format": {
+          "type": "string"
+        },
+        "algorithm": {
+          "type": "string"
+        },
+        "encoded": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "byte"
+          }
+        }
+      }
+    },
+    "SimpleNotaryInfo": {
+      "type": "object",
+      "properties": {
+        "nodeKey": {
+          "type": "string"
+        },
+        "notaryInfo": {
+          "$ref": "#/definitions/NotaryInfo"
+        }
+      }
+    },
+    "X500Principal": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "encoded": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "byte"
+          }
+        }
+      }
+    },
+    "NameAndKey": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "$ref": "#/definitions/CordaX500Name"
+        },
+        "key": {
+          "$ref": "#/definitions/PublicKey"
+        }
+      }
+    },
+    "NetworkHostAndPort": {
+      "type": "object",
+      "properties": {
+        "host": {
+          "type": "string"
+        },
+        "port": {
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
+    "SimpleNodeInfo": {
+      "type": "object",
+      "properties": {
+        "nodeKey": {
+          "type": "string"
+        },
+        "addresses": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/NetworkHostAndPort"
+          }
+        },
+        "parties": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/NameAndKey"
+          }
+        },
+        "platformVersion": {
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
+    "Duration": {
+      "type": "object",
+      "properties": {
+        "seconds": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "nano": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "units": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/TemporalUnit"
+          }
+        },
+        "negative": {
+          "type": "boolean"
+        },
+        "zero": {
+          "type": "boolean"
+        }
+      }
+    },
+    "NetworkParameters": {
+      "type": "object",
+      "properties": {
+        "minimumPlatformVersion": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "notaries": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/NotaryInfo"
+          }
+        },
+        "maxMessageSize": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "maxTransactionSize": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "modifiedTime": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "epoch": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "whitelistedContractImplementations": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "array",
+            "items": {
+              "$ref": "#/definitions/SecureHash"
+            }
+          }
+        },
+        "eventHorizon": {
+          "$ref": "#/definitions/Duration"
+        },
+        "packageOwnership": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/definitions/PublicKey"
+          }
+        }
+      }
+    },
+    "SecureHash": {
+      "type": "object",
+      "properties": {
+        "offset": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "size": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "bytes": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "byte"
+          }
+        }
+      }
+    },
+    "TemporalUnit": {
+      "type": "object",
+      "properties": {
+        "durationEstimated": {
+          "type": "boolean"
+        },
+        "dateBased": {
+          "type": "boolean"
+        },
+        "duration": {
+          "$ref": "#/definitions/Duration"
+        },
+        "timeBased": {
+          "type": "boolean"
+        }
+      }
+    },
+    "NetworkMap": {
+      "type": "object",
+      "properties": {
+        "nodeInfoHashes": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/SecureHash"
+          }
+        },
+        "networkParameterHash": {
+          "$ref": "#/definitions/SecureHash"
+        },
+        "parametersUpdate": {
+          "$ref": "#/definitions/ParametersUpdate"
+        }
+      }
+    },
+    "ParametersUpdate": {
+      "type": "object",
+      "properties": {
+        "newParametersHash": {
+          "$ref": "#/definitions/SecureHash"
+        },
+        "description": {
+          "type": "string"
+        },
+        "updateDeadline": {
+          "type": "integer",
+          "format": "int64"
+        }
+      }
+    }
+  }
+}
