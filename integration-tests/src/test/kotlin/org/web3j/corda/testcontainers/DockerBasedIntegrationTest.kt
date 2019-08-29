@@ -12,7 +12,6 @@
  */
 package org.web3j.corda.testcontainers
 
-import org.junit.Test
 import org.testcontainers.containers.BindMode.READ_WRITE
 import org.testcontainers.containers.FixedHostPortGenericContainer
 import org.testcontainers.containers.Network
@@ -26,11 +25,30 @@ import java.lang.Thread.sleep
 import java.time.Duration
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
+import org.junit.jupiter.api.io.TempDir
+import java.io.OutputStreamWriter
+import com.github.mustachejava.DefaultMustacheFactory
+import org.junit.jupiter.api.Test
+import org.testcontainers.utility.MountableFile
+import java.io.FileOutputStream
+import java.io.PrintWriter
 
 @Testcontainers
 open class DockerBasedIntegrationTest {
 
+    @TempDir
+    lateinit var notaryNode: File
+
+    @TempDir
+    lateinit var partyANode: File
+
+    @TempDir
+    lateinit var partyBNode: File
+
     companion object {
+
+        val PREFIX = if(System.getProperty("os.name").contains("Mac", true)) "/private" else ""
+
         const val NETWORK_MAP_ALIAS = "networkmap"
 
         const val NETWORK_MAP_IMAGE = "cordite/network-map:v0.4.5"
@@ -39,7 +57,6 @@ open class DockerBasedIntegrationTest {
         private val network: Network = Network.newNetwork()
         private val timeOut: Duration = Duration.ofMinutes(2)
 
-        @Container
         @JvmStatic
         val NETWORK_MAP: KGenericContainer = KGenericContainer(NETWORK_MAP_IMAGE)
             .withCreateContainerCmdModifier {
@@ -52,7 +69,6 @@ open class DockerBasedIntegrationTest {
             .waitingFor(Wait.forHttp("").forPort(8080))
             .withFixedExposedPort(8080, 8080)
 
-        @Container
         @JvmStatic
         val NOTARY: KGenericContainer = KGenericContainer(CORDA_ZULU_IMAGE)
             .withNetwork(network)
@@ -61,44 +77,44 @@ open class DockerBasedIntegrationTest {
                 it.withHostName("notary")
                 it.withName("notary")
             }
-
-        @Container
-        @JvmStatic
-        val PARTY_A: KGenericContainer = KGenericContainer(CORDA_ZULU_IMAGE)
-            .withEnv("NETWORKMAP_URL", "http://$NETWORK_MAP_ALIAS:8080")
-            .withEnv("DOORMAN_URL", "http://$NETWORK_MAP_ALIAS:8080")
-            .withEnv("NETWORK_TRUST_PASSWORD", "trustpass")
-            .withEnv("MY_PUBLIC_ADDRESS", "http://localhost:10005")
-            .withNetwork(network)
-            .withCommand("config-generator --generic")
-            .withCreateContainerCmdModifier {
-                it.withHostName("partya")
-                it.withName("partya")
-            }
-            .waitingFor(Wait.forHttp("").forPort(9000).withStartupTimeout(timeOut))
-            .withStartupTimeout(timeOut)
-            .withExposedPorts(10005, 10006, 10007, 10046, 9000)
-
-        @Container
-        @JvmStatic
-        val PARTY_B: KGenericContainer = KGenericContainer(CORDA_ZULU_IMAGE)
-            .withEnv("NETWORKMAP_URL", "http://$NETWORK_MAP_ALIAS:8080")
-            .withEnv("DOORMAN_URL", "http://$NETWORK_MAP_ALIAS:8080")
-            .withEnv("NETWORK_TRUST_PASSWORD", "trustpass")
-            .withEnv("MY_PUBLIC_ADDRESS", "http://localhost:10008")
-            .withNetwork(network)
-            .withCommand("config-generator --generic")
-            .withCreateContainerCmdModifier {
-                it.withHostName("partyb")
-                it.withName("partyb")
-            }
-            .waitingFor(
-                Wait.forHttp("")
-                    .forPort(9000)
-                    .withStartupTimeout(timeOut)
-            )
-            .withStartupTimeout(timeOut)
-            .withExposedPorts(10008, 10009, 10010, 10049, 9000)
+//
+//        @Container
+//        @JvmStatic
+//        val PARTY_A: KGenericContainer = KGenericContainer(CORDA_ZULU_IMAGE)
+//            .withEnv("NETWORKMAP_URL", "http://$NETWORK_MAP_ALIAS:8080")
+//            .withEnv("DOORMAN_URL", "http://$NETWORK_MAP_ALIAS:8080")
+//            .withEnv("NETWORK_TRUST_PASSWORD", "trustpass")
+//            .withEnv("MY_PUBLIC_ADDRESS", "http://localhost:10005")
+//            .withNetwork(network)
+//            .withCommand("config-generator --generic")
+//            .withCreateContainerCmdModifier {
+//                it.withHostName("partya")
+//                it.withName("partya")
+//            }
+//            .waitingFor(Wait.forHttp("").forPort(9000).withStartupTimeout(timeOut))
+//            .withStartupTimeout(timeOut)
+//            .withExposedPorts(10005, 10006, 10007, 10046, 9000)
+//
+//        @Container
+//        @JvmStatic
+//        val PARTY_B: KGenericContainer = KGenericContainer(CORDA_ZULU_IMAGE)
+//            .withEnv("NETWORKMAP_URL", "http://$NETWORK_MAP_ALIAS:8080")
+//            .withEnv("DOORMAN_URL", "http://$NETWORK_MAP_ALIAS:8080")
+//            .withEnv("NETWORK_TRUST_PASSWORD", "trustpass")
+//            .withEnv("MY_PUBLIC_ADDRESS", "http://localhost:10008")
+//            .withNetwork(network)
+//            .withCommand("config-generator --generic")
+//            .withCreateContainerCmdModifier {
+//                it.withHostName("partyb")
+//                it.withName("partyb")
+//            }
+//            .waitingFor(
+//                Wait.forHttp("")
+//                    .forPort(9000)
+//                    .withStartupTimeout(timeOut)
+//            )
+//            .withStartupTimeout(timeOut)
+//            .withExposedPorts(10008, 10009, 10010, 10049, 9000)
 
         class KGenericContainer(imageName: String) : FixedHostPortGenericContainer<KGenericContainer>(imageName)
 
@@ -109,39 +125,51 @@ open class DockerBasedIntegrationTest {
         private lateinit var service: CordaService
     }
 
+    private fun createNodeConfFiles(name: String, location: String, country: String, p2pPort: Int, rpcPort: Int, adminPort: Int, networkMapUrl: String, file: File, isNotary: Boolean) {
+        val nodes = hashMapOf("name" to name,
+                "location" to location,
+                "country" to country,
+                "p2pPort" to p2pPort,
+                "rpcPort" to rpcPort,
+                "adminPort" to adminPort,
+                "networkMapUrl" to networkMapUrl)
+        val writer = OutputStreamWriter(FileOutputStream(file))
+        val mf = DefaultMustacheFactory()
+//        val mustache = if(isNotary)
+//            mf.compile("notaryNodeConf.mustache")
+//        else
+//            mf.compile("nodeConf.mustache")
+        val mustache = mf.compile("notaryNodeConf.mustache")
+        mustache.execute(PrintWriter(writer), nodes).flush()
+
+    }
+
+    @Test
+    fun `test conf file generation`() {
+        createNodeConfFiles("Notary", "London", "GB",10005, 10006, 10007, "http://networkmap:8080", notaryNode.resolve("node.conf"), true)
+    }
+
     @Test
     fun `test to setup docker containers`() {
         val workingDir = File(System.getProperty("user.dir"))
         val updateNotary = File(javaClass.classLoader.getResource("updateNotary.sh")?.toURI()!!)
-        val createNodeConfs = File(javaClass.classLoader.getResource("createNodeConfs.sh")?.toURI()!!)
 
-        // create Notary credentials
-        runCommand(workingDir, "mkdir -p out/test/resources/nodes/Notary")
-        runCommand(workingDir, "mkdir -p out/test/resources/nodes/Notary/certificates")
-        runCommand(workingDir, createNodeConfs, "Notary", "O=Notary,L=London,C=GB", "10002", NETWORK_MAP_ALIAS)
-
-        // create PartyA credentials
-        runCommand(workingDir, "mkdir -p out/test/resources/nodes/PartyA")
-        runCommand(workingDir, "mkdir -p out/test/resources/nodes/PartyA/certificates")
-        runCommand(workingDir, createNodeConfs, "PartyA", "O=PartyA,L=London,C=GB", "10005", NETWORK_MAP_ALIAS)
-
-        // create PartyB credentials
-        runCommand(workingDir, "mkdir -p out/test/resources/nodes/PartyB")
-        runCommand(workingDir, "mkdir -p out/test/resources/nodes/PartyB/certificates")
-        runCommand(workingDir, createNodeConfs, "PartyB", "O=PartyB,L=New York,C=US", "10008", NETWORK_MAP_ALIAS)
+        createNodeConfFiles("Notary", "London", "GB",10005, 10006, 10007, "http://networkmap:8080", notaryNode.resolve("node.conf"), true)
 
         NETWORK_MAP.start()
 
+        getCertificate(workingDir, notaryNode)
 
-        getCertificate(workingDir, "Notary")
+        println(notaryNode.resolve("certificates").absolutePath)
         NOTARY.withEnv("NETWORKMAP_URL", "http://$NETWORK_MAP_ALIAS:8080")
-            .withClasspathResourceMapping("nodes/Notary", "/etc/corda", READ_WRITE)
-            .withClasspathResourceMapping("nodes/Notary/certificates", "/opt/corda/certificates", READ_WRITE)
+            .withFileSystemBind(PREFIX + notaryNode.absolutePath, "/etc/corda", READ_WRITE)
+            .withFileSystemBind(PREFIX + notaryNode.resolve("certificates").absolutePath, "/opt/corda/certificates", READ_WRITE)
             .withEnv("DOORMAN_URL", "http://$NETWORK_MAP_ALIAS:8080")
             .withEnv("NETWORK_TRUST_PASSWORD", "trustpass")
-            .withEnv("MY_PUBLIC_ADDRESS", "http://localhost:10002")
+            .withEnv("MY_PUBLIC_ADDRESS", "http://localhost:10005")
             .withCommand("config-generator --generic")
             .start()
+
 
         waitForNodeToStart(NOTARY)
         var nodeinfo = NOTARY.execInContainer("find", ".", "-maxdepth", "1", "-name", "nodeInfo*").stdout
@@ -149,7 +177,7 @@ open class DockerBasedIntegrationTest {
 
         NOTARY.copyFileFromContainer(
             "/opt/corda/$nodeinfo",
-            "${workingDir.absolutePath}/out/test/resources/nodes/Notary/$nodeinfo"
+            notaryNode.resolve(nodeinfo).absolutePath
         )
         NOTARY.execInContainer("rm", "network-parameters")
         NOTARY.stop()
@@ -159,30 +187,34 @@ open class DockerBasedIntegrationTest {
         sleep(5000)
         NOTARY.start()
         waitForNodeToStart(NOTARY)
+//
+//        createNodeConfFiles("PartyA", 10008, 10009, 10010, "http://networkmap:8080", partyANode.resolve("node.conf"), false)
 
-        getCertificate(workingDir, "PartyA")
-        PARTY_A.withClasspathResourceMapping("nodes/PartyA/cordapps", "/opt/corda/cordapps", READ_WRITE)
-            .withClasspathResourceMapping("nodes/PartyA", "/etc/corda", READ_WRITE)
-            .withClasspathResourceMapping("nodes/PartyA/certificates", "/opt/corda/certificates", READ_WRITE)
-            .start()
+//        getCertificate(workingDir, "PartyA")
+//        PARTY_A.withClasspathResourceMapping("nodes/PartyA/cordapps", "/opt/corda/cordapps", READ_WRITE)
+//            .withClasspathResourceMapping("nodes/PartyA", "/etc/corda", READ_WRITE)
+//            .withClasspathResourceMapping("nodes/PartyA/certificates", "/opt/corda/certificates", READ_WRITE)
+//            .start()
+//
+//        createNodeConfFiles("PartyB", 10011, 10012, 10013, "http://networkmap:8080", partyBNode.resolve("node.conf"), false)
 
-        getCertificate(workingDir, "PartyB")
-        PARTY_B.withClasspathResourceMapping("nodes/PartyB/cordapps", "/opt/corda/cordapps", READ_WRITE)
-            .withClasspathResourceMapping("nodes/PartyB", "/etc/corda", READ_WRITE)
-            .withClasspathResourceMapping("nodes/PartyB/certificates", "/opt/corda/certificates", READ_WRITE)
-            .start()
-
-        service = CordaService("http://localhost:${PARTY_A.getMappedPort(9000)}/")
-        corda = Corda.build(service)
-
-        val parties = corda.network.nodes.findAll()
-        parties.apply { forEach(::println) }
-        service.close()
-
+//        getCertificate(workingDir, "PartyB")
+//        PARTY_B.withClasspathResourceMapping("nodes/PartyB/cordapps", "/opt/corda/cordapps", READ_WRITE)
+//            .withClasspathResourceMapping("nodes/PartyB", "/etc/corda", READ_WRITE)
+//            .withClasspathResourceMapping("nodes/PartyB/certificates", "/opt/corda/certificates", READ_WRITE)
+//            .start()
+//
+//        service = CordaService("http://localhost:${PARTY_A.getMappedPort(9000)}/")
+//        corda = Corda.build(service)
+//
+//        val parties = corda.network.nodes.findAll()
+//        parties.apply { forEach(::println) }
+//        service.close()
+//
         CountDownLatch(1).await()
-        NOTARY.stop()
-        PARTY_A.stop()
-        PARTY_B.stop()
+//        NOTARY.stop()
+//        PARTY_A.stop()
+//        PARTY_B.stop()
     }
 
     private fun waitForNodeToStart(node: KGenericContainer) {
@@ -192,14 +224,11 @@ open class DockerBasedIntegrationTest {
         }
     }
 
-    private fun getCertificate(workingDir: File, node: String) {
-
-        val nodeCertificatePath = "${javaClass.classLoader.getResource("nodes/$node")!!.path}/certificates"
-
-        runCommand(workingDir, "rm -rf $nodeCertificatePath")
-        runCommand(workingDir, "mkdir -p $nodeCertificatePath")
+    private fun getCertificate(workingDir: File, node: File) {
+        val certificateFolder = File(node, "certificates").apply { mkdir() }
+        val certificateFile = certificateFolder.resolve("network-root-truststore.jks")
         val networkTrust =
-            "curl http://localhost:8080/network-map/truststore -o $nodeCertificatePath/network-root-truststore.jks"
+            "curl http://localhost:8080/network-map/truststore -o $certificateFile"
         runCommand(workingDir, networkTrust)
     }
 
