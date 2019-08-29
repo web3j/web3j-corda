@@ -35,7 +35,7 @@ public class ObligationJavaTest {
 
     @BeforeAll
     static void setUpClass() throws Exception {
-        service = new CordaService("http://localhost:9000/");
+        service = new CordaService("http://localhost:9000/", 5000, 5000);
         corda = Corda.build(service);
     }
 

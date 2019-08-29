@@ -18,4 +18,6 @@ interface AdminApi {
     @Consumes(MediaType.APPLICATION_JSON)
     fun login(request: LoginRequest): String
 
+    @get:Path("notaries")
+    val notaries: Notaries
 }

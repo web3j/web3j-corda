@@ -24,8 +24,8 @@ import javax.ws.rs.client.ClientBuilder
 
 class CordaService(
     val uri: String,
-    readTimeout: Long = DEFAULT_READ_TIMEOUT,
-    connectTimeout: Long = DEFAULT_CONNECT_TIMEOUT
+    readTimeout: Int = DEFAULT_READ_TIMEOUT,
+    connectTimeout: Int = DEFAULT_CONNECT_TIMEOUT
 ) : AutoCloseable {
 
     internal val client: Client by lazy {
@@ -46,7 +46,7 @@ class CordaService(
     }
 
     companion object {
-        const val DEFAULT_READ_TIMEOUT: Long = 5000
-        const val DEFAULT_CONNECT_TIMEOUT: Long = 5000
+        const val DEFAULT_READ_TIMEOUT: Int = 5000
+        const val DEFAULT_CONNECT_TIMEOUT: Int = 5000
     }
 }

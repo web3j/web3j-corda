@@ -16,7 +16,7 @@ interface Notaries {
     @POST
     @Path("{notaryType}")
     @Consumes(MediaType.APPLICATION_OCTET_STREAM)
-    fun create(@PathParam("notaryType") type: NotaryType, nodeInfo: ByteArray)
+    fun create(@PathParam("notaryType") type: NotaryType, nodeInfo: ByteArray): String
 
     /**
      * Delete a notary with the node key.
