@@ -12,26 +12,29 @@
  */
 package org.web3j.corda.testcontainers
 
+import com.github.mustachejava.DefaultMustacheFactory
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.io.TempDir
 import org.testcontainers.containers.BindMode.READ_WRITE
 import org.testcontainers.containers.FixedHostPortGenericContainer
 import org.testcontainers.containers.Network
 import org.testcontainers.containers.wait.strategy.Wait
-import org.testcontainers.junit.jupiter.Container
 import org.testcontainers.junit.jupiter.Testcontainers
+import org.web3j.corda.model.LoginRequest
+import org.web3j.corda.model.NotaryType
+import org.web3j.corda.networkmap.NetworkMapApi
 import org.web3j.corda.protocol.Corda
 import org.web3j.corda.protocol.CordaService
 import java.io.File
+import java.io.FileOutputStream
+import java.io.OutputStreamWriter
+import java.io.PrintWriter
 import java.lang.Thread.sleep
+import java.nio.file.Files
+import java.nio.file.Path
 import java.time.Duration
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
-import org.junit.jupiter.api.io.TempDir
-import java.io.OutputStreamWriter
-import com.github.mustachejava.DefaultMustacheFactory
-import org.junit.jupiter.api.Test
-import org.testcontainers.utility.MountableFile
-import java.io.FileOutputStream
-import java.io.PrintWriter
 
 @Testcontainers
 open class DockerBasedIntegrationTest {
@@ -152,7 +155,6 @@ open class DockerBasedIntegrationTest {
     @Test
     fun `test to setup docker containers`() {
         val workingDir = File(System.getProperty("user.dir"))
-        val updateNotary = File(javaClass.classLoader.getResource("updateNotary.sh")?.toURI()!!)
 
         createNodeConfFiles("Notary", "London", "GB",10005, 10006, 10007, "http://networkmap:8080", notaryNode.resolve("node.conf"), true)
 
@@ -183,7 +185,11 @@ open class DockerBasedIntegrationTest {
         NOTARY.stop()
         sleep(5000)
 
-        runCommand(workingDir, updateNotary, NETWORK_MAP_ALIAS)
+        println(notaryNode.resolve(nodeinfo).absolutePath)
+        if(notaryNode.resolve(nodeinfo).isFile) println("it exists")
+        updateNotaryInNetworkMap(notaryNode.resolve(nodeinfo).absolutePath)
+
+//        runCommand(workingDir, updateNotary, NETWORK_MAP_ALIAS)
         sleep(5000)
         NOTARY.start()
         waitForNodeToStart(NOTARY)
@@ -228,8 +234,21 @@ open class DockerBasedIntegrationTest {
         val certificateFolder = File(node, "certificates").apply { mkdir() }
         val certificateFile = certificateFolder.resolve("network-root-truststore.jks")
         val networkTrust =
-            "curl http://localhost:8080/network-map/truststore -o $certificateFile"
+                "curl http://localhost:8080/network-map/truststore -o $certificateFile"
         runCommand(workingDir, networkTrust)
+
+//         NetworkMapApi.build(CordaService("http://localhost:8080")).apply {
+//             Files.write(certificateFile.toPath(), IOUtils.toByteArray(networkMap.truststore))
+//         }
+    }
+
+    private fun updateNotaryInNetworkMap(nodeInfoPath: String) {
+        var networkMapApi = NetworkMapApi.build(CordaService("http://localhost:8080"))
+        val loginRequest = LoginRequest("sa", "admin")
+
+        val token = networkMapApi.admin.login(loginRequest)
+        networkMapApi = NetworkMapApi.build(CordaService("http://localhost:8080"), token)
+        networkMapApi.admin.notaries.create(NotaryType.NON_VALIDATING, Files.readAllBytes(Path.of(nodeInfoPath)))
     }
 
     private fun runCommand(workingDir: File, command: String) {
