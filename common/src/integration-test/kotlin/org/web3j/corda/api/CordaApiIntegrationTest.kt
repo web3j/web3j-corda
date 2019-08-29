@@ -10,20 +10,21 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
-package org.web3j.corda
+package org.web3j.corda.api
 
 import org.testcontainers.containers.GenericContainer
 import org.testcontainers.junit.jupiter.Container
 import org.testcontainers.junit.jupiter.Testcontainers
 
 @Testcontainers
-abstract class CordaIntegrationTest {
+class CordaApiIntegrationTest {
 
     companion object {
 
         @Container
         @JvmStatic
-        private val CORDA = KGenericContainer("corda/corda-zulu-4.1:latest")
+        private val CORDA =
+            KGenericContainer("corda/corda-zulu-4.1:latest")
 //            .withClasspathResourceMapping("aion/config", "/aion/custom/config", READ_WRITE)
 //            .withClasspathResourceMapping("aion/log", "/aion/custom/log", READ_WRITE)
 //            .withCommand("/aion/aion.sh --network custom")
