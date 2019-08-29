@@ -123,9 +123,8 @@ class CorDappCodegen(
         val flows = operation.filterIsInstance<CodegenOperation>()
 
         objs["flows"] = flows.map {
-            val flowName = it.path.split("/".toRegex())[4].split("-".toRegex())[0]
             hashMapOf<String, String>(
-                    "flowId" to camelize(flowName),
+                "flowId" to buildFlowNameFromPath(it.path),
                     "outputClass" to it.returnType,
                     "inputClass" to it.bodyParams[0].baseType,
                     "consumes" to (it.consumes[0] as HashMap)["mediaType"]!!,
@@ -136,8 +135,6 @@ class CorDappCodegen(
 
     companion object {
         const val TEMPLATE_DIR = "cordapp"
-
-//        val TEMPLATE_ENGINE = HandlebarsEngineAdapter()
 
         internal val CORDA_SERIALIZABLE = setOf(
                 SignedTransaction::class,
