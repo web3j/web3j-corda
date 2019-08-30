@@ -47,7 +47,8 @@ public class ObligationJavaTest {
                 corda.getNetwork().getNodes().findAll().get(2).getLegalIdentities().get(0);
 
         final IssueObligationInitiatorParameters parameters =
-                new IssueObligationInitiatorParameters("$1", Objects.requireNonNull(party.getName()), false);
+                new IssueObligationInitiatorParameters(
+                        "$1", Objects.requireNonNull(party.getName()), false);
 
         // 1. Normal version, not type-safe
         Object signedTxObject =
@@ -64,7 +65,8 @@ public class ObligationJavaTest {
         assertEquals(name, party.getName());
 
         // 2. web3j generated version, 100% type-safe
-        final Obligation.ObligationFlowResource.Issue issue = Obligation.load(corda).getFlows().getIssue();
+        final Obligation.ObligationFlowResource.Issue issue =
+                Obligation.load(corda).getFlows().getIssue();
         signedTx = issue.start(parameters);
 
         name = signedTx.getCoreTransaction().getOutputs().get(0).getData().getLender().getName();

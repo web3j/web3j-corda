@@ -39,7 +39,7 @@ class CorDappGenerator(
         val codegen = CorDappCodegen(artifactId, packageName, outputDir)
         val result = parser.readLocation(url, listOf(), parseOptions)
 
-        // Filter common API endpoints 
+        // Filter common API endpoints
         result.openAPI.paths.entries.removeIf {
             !it.key.startsWith("/cordapps") || it.key.endsWith("/flows")
         }
