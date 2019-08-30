@@ -32,7 +32,6 @@ import java.nio.file.Files
 import java.nio.file.Paths
 import java.time.Duration
 import java.util.concurrent.CountDownLatch
-import java.util.concurrent.TimeUnit
 
 @Testcontainers
 open class DockerBasedIntegrationTest {
@@ -143,17 +142,12 @@ open class DockerBasedIntegrationTest {
     }
 
     private fun getCertificate(node: File) {
-        val workingDir = File(System.getProperty("user.dir"))
-
         val certificateFolder = File(node, "certificates").apply { mkdir() }
         val certificateFile = certificateFolder.resolve("network-root-truststore.jks")
-        val networkTrust =
-                "curl http://localhost:${NETWORK_MAP.getMappedPort(8080)}/network-map/truststore -o $certificateFile"
-        runCommand(workingDir, networkTrust)
 
-//         NetworkMapApi.build(CordaService("http://localhost:8080")).apply {
-//             Files.write(certificateFile.toPath(), IOUtils.toByteArray(networkMap.truststore))
-//         }
+        NetworkMapApi.build(CordaService("http://localhost:${NETWORK_MAP.getMappedPort(8080)}")).apply {
+            Files.write(certificateFile.toPath(), networkMap.truststore())
+        }
     }
 
     private fun extractNotaryNodeInfo(notary: KGenericContainer, notaryNode: File): String {
@@ -175,14 +169,5 @@ open class DockerBasedIntegrationTest {
         val token = networkMapApi.admin.login(loginRequest)
         networkMapApi = NetworkMapApi.build(CordaService("http://localhost:${NETWORK_MAP.getMappedPort(8080)}"), token)
         networkMapApi.admin.notaries.create(NotaryType.NON_VALIDATING, Files.readAllBytes(Paths.get(nodeInfoPath)))
-    }
-
-    private fun runCommand(workingDir: File, command: String) {
-        ProcessBuilder(command.split(" "))
-                .directory(workingDir)
-                .redirectOutput(ProcessBuilder.Redirect.INHERIT)
-                .redirectError(ProcessBuilder.Redirect.INHERIT)
-                .start()
-                .waitFor(60, TimeUnit.MINUTES)
     }
 }

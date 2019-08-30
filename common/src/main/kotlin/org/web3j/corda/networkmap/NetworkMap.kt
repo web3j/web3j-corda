@@ -56,8 +56,7 @@ interface NetworkMap {
     /**
      * Retrieve this network-map's truststore.
      */
-    @get:GET
-    @get:Produces(APPLICATION_OCTET_STREAM)
-    @get:Consumes(APPLICATION_OCTET_STREAM)
-    val truststore: ByteArray
+    @GET
+    @Path("truststore")
+    fun truststore(): ByteArray
 }
