@@ -19,6 +19,7 @@ import org.testcontainers.containers.BindMode.READ_WRITE
 import org.testcontainers.containers.GenericContainer
 import org.testcontainers.containers.Network
 import org.testcontainers.containers.wait.strategy.Wait
+import org.testcontainers.junit.jupiter.Container
 import org.testcontainers.junit.jupiter.Testcontainers
 import org.web3j.corda.model.LoginRequest
 import org.web3j.corda.model.NotaryType
@@ -53,6 +54,7 @@ open class DockerBasedIntegrationTest {
         private val timeOut: Duration = Duration.ofMinutes(2)
 
         @JvmStatic
+        @Container
         val NETWORK_MAP: KGenericContainer = KGenericContainer(NETWORK_MAP_IMAGE)
                 .withCreateContainerCmdModifier {
                     it.withHostName(NETWORK_MAP_ALIAS)
@@ -97,7 +99,15 @@ open class DockerBasedIntegrationTest {
         NETWORK_MAP.stop()
     }
 
-    private fun createNodeContainer(name: String, location: String, country: String, p2pPort: Int, rpcPort: Int, adminPort: Int, isNotary: Boolean): KGenericContainer {
+    protected fun createNodeContainer(
+        name: String,
+        location: String,
+        country: String,
+        p2pPort: Int,
+        rpcPort: Int,
+        adminPort: Int,
+        isNotary: Boolean
+    ): KGenericContainer {
         val nodeDir = File(nodes, name).apply { mkdir() }
         createNodeConfFiles(name, location, country, p2pPort, rpcPort, adminPort, nodeDir.resolve("node.conf"), isNotary)
         getCertificate(nodeDir)
@@ -117,14 +127,23 @@ open class DockerBasedIntegrationTest {
                     it.withName(name.toLowerCase())
                 }
 
-        if (!isNotary) {
+        if (isNotary) {
+            node.start()
+
+            val nodeInfo = extractNotaryNodeInfo(node, nodeDir)
+            node.stop()
+
+            updateNotaryInNetworkMap(nodeDir.resolve(nodeInfo).absolutePath)
+        } else {
             node.withClasspathResourceMapping("cordapps", "/opt/corda/cordapps", READ_WRITE)
         }
+
         return node
     }
 
     private fun createNodeConfFiles(name: String, location: String, country: String, p2pPort: Int, rpcPort: Int, adminPort: Int, file: File, isNotary: Boolean) {
         val nodes = hashMapOf("name" to name,
+            "isNotary" to isNotary,
                 "location" to location,
                 "country" to country,
                 "p2pPort" to p2pPort,
@@ -133,12 +152,12 @@ open class DockerBasedIntegrationTest {
                 "networkMapUrl" to NETWORK_MAP_URL)
         val writer = OutputStreamWriter(FileOutputStream(file))
         val mf = DefaultMustacheFactory()
-        val mustache = if (isNotary)
+        val mustache = if (isNotary) {
             mf.compile("notaryNodeConf.mustache")
-        else
+        } else {
             mf.compile("nodeConf.mustache")
+        }
         mustache.execute(PrintWriter(writer), nodes).flush()
-
     }
 
     private fun getCertificate(node: File) {
