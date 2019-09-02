@@ -70,20 +70,7 @@ open class DockerBasedIntegrationTest {
 
     @Test
     fun `test to setup docker containers`() {
-
-        NETWORK_MAP.start()
-
-        val notaryName = "Notary"
-        val notaryNodeDir = nodes.resolve(notaryName)
-
-        val notary = createNodeContainer(notaryName, "London", "GB", 10005, 10006, 10007, true)
-        notary.start()
-
-        val nodeInfo = extractNotaryNodeInfo(notary, notaryNodeDir)
-        notary.stop()
-
-        updateNotaryInNetworkMap(notaryNodeDir.resolve(nodeInfo).absolutePath)
-
+        val notary = createNodeContainer("Notary", "London", "GB", 10005, 10006, 10007, true)
         notary.start()
 
         val partyA = createNodeContainer("PartyA", "Tokyo", "JP", 10008, 10009, 10010, false)
@@ -96,7 +83,6 @@ open class DockerBasedIntegrationTest {
         notary.stop()
         partyA.stop()
         partyB.stop()
-        NETWORK_MAP.stop()
     }
 
     protected fun createNodeContainer(
