@@ -10,7 +10,7 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
-package org.web3j.examples.obligation
+package org.web3j.corda.examples.obligation
 
 import assertk.assertThat
 import assertk.assertions.isEqualTo
@@ -18,13 +18,14 @@ import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
 import org.web3j.corda.codegen.generated.obligation.api.Obligation
+import org.web3j.corda.codegen.generated.obligation.model.IssueObligationInitiatorParameters
 import org.web3j.corda.model.SignedTransaction
 import org.web3j.corda.protocol.Corda
 import org.web3j.corda.protocol.CordaService
+import org.web3j.corda.testcontainers.DockerBasedIntegrationTest
 import org.web3j.corda.util.convert
-import org.web3j.corda.codegen.generated.obligation.model.IssueObligationInitiatorParameters
 
-class ObligationGeneratedKotlinTest {
+class ObligationGeneratedKotlinTest : DockerBasedIntegrationTest() {
 
     @Test
     fun `issue obligation`() {

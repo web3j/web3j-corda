@@ -10,20 +10,19 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
-package org.web3j.examples.obligation;
-
-import java.util.Objects;
+package org.web3j.corda.examples.obligation;
 
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-
 import org.web3j.corda.codegen.generated.obligation.api.Obligation;
 import org.web3j.corda.codegen.generated.obligation.model.IssueObligationInitiatorParameters;
 import org.web3j.corda.model.Party;
 import org.web3j.corda.model.SignedTransaction;
 import org.web3j.corda.protocol.Corda;
 import org.web3j.corda.protocol.CordaService;
+
+import java.util.Objects;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.web3j.corda.util.CordaUtilsKt.convert;

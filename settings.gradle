@@ -2,7 +2,7 @@ rootProject.name = 'web3j-corda'
 
 include 'common'
 findProject(':common')?.name = 'web3j-corda-common'
+
 include 'codegen'
 findProject(':codegen')?.name = 'web3j-corda-codegen'
-include 'integration-tests'
-findProject(':integration-tests')?.name = 'web3j-corda-integration-tests'
+

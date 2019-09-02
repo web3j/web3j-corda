@@ -12,12 +12,57 @@
  */
 package org.web3j.corda.api
 
+import org.junit.jupiter.api.Test
 import org.testcontainers.containers.GenericContainer
 import org.testcontainers.junit.jupiter.Container
 import org.testcontainers.junit.jupiter.Testcontainers
+import org.web3j.corda.protocol.Corda
+import org.web3j.corda.protocol.CordaService
+import org.web3j.corda.testcontainers.DockerBasedIntegrationTest
 
+/**
+ * TODO Implement tests
+ */
 @Testcontainers
-class CordaApiIntegrationTest {
+class CordaApiTest : DockerBasedIntegrationTest() {
+
+    @Test
+    internal fun `corDapps resource`() {
+
+        val service = CordaService("mapped Docker port")
+        val corda = Corda.build(service)
+
+        corda.corDapps.findAll().forEach {
+            // Assertions
+        }
+
+        corda.corDapps.findById("").apply {
+            // Assertions
+        }
+    }
+
+    @Test
+    internal fun `network resource`() {
+
+        val service = CordaService("mapped Docker port")
+        val corda = Corda.build(service)
+
+        corda.network.nodes.self.apply {
+            // Assertions
+        }
+
+        corda.network.nodes.findAll().apply {
+            // Assertions
+        }
+
+        corda.network.nodes.findByX500Name("").apply {
+            // Assertions
+        }
+
+        corda.network.nodes.findByHostAndPort("").apply {
+            // Assertions
+        }
+    }
 
     companion object {
 

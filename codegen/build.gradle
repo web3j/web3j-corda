@@ -1,5 +1,6 @@
 dependencies {
     api project(':web3j-corda-common')
+    api project(':web3j-corda-common').sourceSets.integrationTest.output
     api "jakarta.ws.rs:jakarta.ws.rs-api:${versions.jaxRs}"
 
     implementation ("com.networknt:openapi-parser:${versions.openApiParser}") {
