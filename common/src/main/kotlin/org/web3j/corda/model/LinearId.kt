@@ -12,11 +12,7 @@
  */
 package org.web3j.corda.model
 
-data class SignedTransaction(
-    val signatures: List<String>,
-    val references: List<String>,
-    val networkParametersHash: String,
-    val coreTransaction: CoreTransaction,
-    val notaryChangeTransaction: Boolean,
-    val missingSigners: List<PublicKey>
+data class LinearId(
+    val externalId: String?,
+    val id: String
 )

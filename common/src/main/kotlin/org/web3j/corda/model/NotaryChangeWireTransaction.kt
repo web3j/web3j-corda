@@ -12,11 +12,17 @@
  */
 package org.web3j.corda.model
 
-data class SignedTransaction(
-    val signatures: List<String>,
-    val references: List<String>,
+data class NotaryChangeWireTransaction(
+    val inputs: StateRef,
+    val references: StateRef,
+    val notary: Party,
+    val newNotary: Party,
+    /**
+     * Hex encoded Byte Array, eg. `736F6D654279746573`.
+     */
+    val serializedComponents: List<String>,
+    val id: String,
+    val outputs: TransactionStateContractState,
     val networkParametersHash: String,
-    val coreTransaction: CoreTransaction,
-    val notaryChangeTransaction: Boolean,
-    val missingSigners: List<PublicKey>
+    val outputStates: List<ContractState>
 )

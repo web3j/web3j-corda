@@ -12,11 +12,20 @@
  */
 package org.web3j.corda.model
 
-data class SignedTransaction(
-    val signatures: List<String>,
-    val references: List<String>,
-    val networkParametersHash: String,
-    val coreTransaction: CoreTransaction,
-    val notaryChangeTransaction: Boolean,
-    val missingSigners: List<PublicKey>
+// FIXME Why we need two amount classes?
+data class Amount(
+    /**
+     * Total amount in minor units, eg. 100.
+     */
+    val quantity: Int,
+    /**
+     * Number of decimals, eg. 0.01
+     * FIXME Should be Float
+     */
+    val displayTokenSize: Number,
+    /**
+     * ISO Code of the currency, eg. `GBP`.
+     */
+    val token: String,
+    val _tokenType: String
 )

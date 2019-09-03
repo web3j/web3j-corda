@@ -18,22 +18,35 @@ import org.openapitools.codegen.CodegenOperation
 import org.openapitools.codegen.languages.AbstractKotlinCodegen
 import org.openapitools.codegen.templating.mustache.LowercaseLambda
 import org.openapitools.codegen.utils.StringUtils.camelize
+import org.web3j.corda.model.AbstractParty
+import org.web3j.corda.model.Amount
+import org.web3j.corda.model.AmountCurrency
+import org.web3j.corda.model.AttachmentConstraint
+import org.web3j.corda.model.CommandObject
 import org.web3j.corda.model.Commands
 import org.web3j.corda.model.ComponentGroup
 import org.web3j.corda.model.Constraint
-import org.web3j.corda.model.CordaX500Name
+import org.web3j.corda.model.ContractState
 import org.web3j.corda.model.CoreTransaction
 import org.web3j.corda.model.Data
 import org.web3j.corda.model.LinearId
-import org.web3j.corda.model.Money
+import org.web3j.corda.model.LoginRequest
+import org.web3j.corda.model.MerkleTree
 import org.web3j.corda.model.NetworkHostAndPort
+import org.web3j.corda.model.NotaryChangeWireTransaction
+import org.web3j.corda.model.NotaryType
 import org.web3j.corda.model.Output
 import org.web3j.corda.model.Party
-import org.web3j.corda.model.PublicKey
+import org.web3j.corda.model.Result
 import org.web3j.corda.model.SignedTransaction
 import org.web3j.corda.model.SimpleNodeInfo
+import org.web3j.corda.model.StateAndRef
+import org.web3j.corda.model.StateAndRefObject
+import org.web3j.corda.model.StateRef
 import org.web3j.corda.model.TimeWindow
-import org.web3j.corda.model.Value
+import org.web3j.corda.model.TransactionStateContractState
+import org.web3j.corda.model.TransactionStateObject
+import org.web3j.corda.model.WireTransaction
 
 class CorDappCodegen(
     artifactId: String,
@@ -125,10 +138,11 @@ class CorDappCodegen(
         objs["flows"] = flows.map {
             hashMapOf<String, String>(
                 "flowId" to buildFlowNameFromPath(it.path),
-                    "outputClass" to it.returnType,
-                    "inputClass" to it.bodyParams[0].baseType,
-                    "consumes" to (it.consumes[0] as HashMap)["mediaType"]!!,
-                    "produces" to (it.produces[0] as HashMap)["mediaType"]!!)
+                "outputClass" to it.returnType,
+                "inputClass" to it.bodyParams[0].baseType,
+                "consumes" to (it.consumes[0] as HashMap)["mediaType"]!!,
+                "produces" to (it.produces[0] as HashMap)["mediaType"]!!
+            )
         }
         return super.postProcessOperationsWithModels(objs, allModels)
     }
@@ -137,22 +151,35 @@ class CorDappCodegen(
         const val TEMPLATE_DIR = "cordapp"
 
         internal val CORDA_SERIALIZABLE = setOf(
-                SignedTransaction::class,
-                NetworkHostAndPort::class,
-                SimpleNodeInfo::class,
-                CoreTransaction::class,
-                TimeWindow::class,
-                Commands::class,
-                Party::class,
-                Value::class,
-                ComponentGroup::class,
-                Output::class,
-                Constraint::class,
-                Data::class,
-                LinearId::class,
-                Money::class,
-                CordaX500Name::class,
-                PublicKey::class
+            AbstractParty::class,
+            Amount::class,
+            AmountCurrency::class,
+            AttachmentConstraint::class,
+            CommandObject::class,
+            Commands::class,
+            ComponentGroup::class,
+            Constraint::class,
+            ContractState::class,
+            CoreTransaction::class,
+            Data::class,
+            LinearId::class,
+            LoginRequest::class,
+            MerkleTree::class,
+            NetworkHostAndPort::class,
+            NotaryChangeWireTransaction::class,
+            NotaryType::class,
+            Output::class,
+            Party::class,
+            Result::class,
+            SignedTransaction::class,
+            SimpleNodeInfo::class,
+            StateAndRef::class,
+            StateAndRefObject::class,
+            StateRef::class,
+            TimeWindow::class,
+            TransactionStateContractState::class,
+            TransactionStateObject::class,
+            WireTransaction::class
         )
 
         private fun buildFlowNameFromPath(path: String): String {
