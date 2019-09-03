@@ -13,6 +13,7 @@
 package org.web3j.corda.api
 
 import io.bluebank.braid.server.Braid
+import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
 import org.testcontainers.junit.jupiter.Testcontainers
@@ -29,11 +30,11 @@ class CordaIntegrationTest : DockerBasedIntegrationTest() {
     @Test
     internal fun `corDapps resource`() {
 
-        corda.corDapps.findAll().forEach {
-            // Assertions
+        corda.corDapps.findAll().apply {
+            Assertions.assertTrue(isEmpty())
         }
 
-        corda.corDapps.findById("").apply {
+        corda.corDapps.findById("xyz").apply {
             // Assertions
         }
     }
