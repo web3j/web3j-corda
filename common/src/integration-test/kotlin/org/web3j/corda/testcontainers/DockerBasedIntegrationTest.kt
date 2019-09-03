@@ -29,6 +29,7 @@ import org.web3j.corda.protocol.CordaService
 import org.web3j.corda.protocol.NetworkMap
 import java.io.File
 import java.io.FileOutputStream
+import java.io.InputStreamReader
 import java.io.OutputStreamWriter
 import java.io.PrintWriter
 import java.nio.file.Files
@@ -80,8 +81,15 @@ open class DockerBasedIntegrationTest {
         @TempDir
         lateinit var nodesBaseDir: File
 
-        private val network: Network = Network.newNetwork()
-        private val timeOut: Duration = Duration.ofMinutes(2)
+        private val network = Network.newNetwork()
+        private val timeOut = Duration.ofMinutes(2)
+
+        private val nodeConfTemplate = Mustache.compiler().compile(
+            InputStreamReader(
+                DockerBasedIntegrationTest::class.java.classLoader
+                    .getResourceAsStream("nodeConf.mustache")!!
+            )
+        )
 
         @JvmStatic
         @Container
@@ -161,10 +169,9 @@ open class DockerBasedIntegrationTest {
             file: File,
             isNotary: Boolean
         ) {
-            Mustache.compiler()
-                .compile("nodeConf.mustache")
-                .execute(
-                    hashMapOf(
+            PrintWriter(OutputStreamWriter(FileOutputStream(file))).use {
+                nodeConfTemplate.execute(
+                    mapOf(
                         "name" to name,
                         "isNotary" to isNotary,
                         "location" to location,
@@ -174,8 +181,10 @@ open class DockerBasedIntegrationTest {
                         "adminPort" to adminPort,
                         "networkMapUrl" to NETWORK_MAP_URL
                     ),
-                    PrintWriter(OutputStreamWriter(FileOutputStream(file)))
+                    it
                 )
+                it.flush()
+            }
         }
 
         private fun getCertificate(node: File) {
