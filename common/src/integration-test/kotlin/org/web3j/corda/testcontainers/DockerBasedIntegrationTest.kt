@@ -195,14 +195,13 @@ open class DockerBasedIntegrationTest {
         }
 
         private fun extractNotaryNodeInfo(notary: KGenericContainer, notaryNodeDir: File): String {
-            return notary.execInContainer("find", ".", "-maxdepth", "1", "-name", "nodeInfo*").stdout.apply {
-                substring(2, length - 1) // remove the ending newline character
-            }.also {
-                notary.copyFileFromContainer(
-                    "/opt/corda/$it",
-                    notaryNodeDir.resolve(it).absolutePath
-                )
-                notary.execInContainer("rm", "network-parameters")
+            return notary.run {
+                execInContainer("find", ".", "-maxdepth", "1", "-name", "nodeInfo*").stdout.run {
+                    substring(2, length - 1) // remove relative path and the ending newline character
+                }.also {
+                    copyFileFromContainer("/opt/corda/$it", notaryNodeDir.resolve(it).absolutePath)
+                    execInContainer("rm", "network-parameters")
+                }
             }
         }
 
