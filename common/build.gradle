@@ -1,21 +1,19 @@
 dependencies {
     api group: 'javax.validation', name: 'validation-api', version: '2.0.1.Final'
+    
     implementation group: 'javax.activation', name: 'javax.activation-api', version: '1.2.0'
     implementation group: 'javax.xml.bind', name: 'jaxb-api', version: '2.3.1'
+    implementation group: 'com.fasterxml.jackson.module', name: 'jackson-module-kotlin', version: versions.jackson, force: true
 
-    implementation("com.fasterxml.jackson.module:jackson-module-kotlin:${versions.jackson}") {
-        force = true
-    }
+    integrationTestApi project(':web3j-corda-core')
+    integrationTestApi group: 'io.bluebank.braid', name: 'braid-server', version: versions.braid, changing: true
 
-    testImplementation project(':web3j-corda-core')
-    testImplementation "com.samskivert:jmustache:1.14"
-
-    testImplementation group: 'io.bluebank.braid', name:'braid-server', version:'4.1.2-SNAPSHOT', changing: true
-    testImplementation "net.corda:corda-core:4.1"
-    testImplementation "net.corda:corda-jackson:4.1"
-    testImplementation "net.corda:corda-rpc:4.1"
-    testImplementation "net.corda:corda:4.1"
-    testImplementation "net.corda:corda-webserver:4.1"
+    testImplementation group: 'net.corda', name: 'corda', version: versions.corda
+    testImplementation group: 'net.corda', name: 'corda-core', version: versions.corda
+    testImplementation group: 'net.corda', name: 'corda-jackson', version: versions.corda
+    testImplementation group: 'net.corda', name: 'corda-rpc', version: versions.corda
+    testImplementation group: 'net.corda', name: 'corda-webserver', version: versions.corda
+    testImplementation group: 'com.samskivert', name: 'jmustache', version: '1.14'
 }
 
 task copyGeneratedFiles(type: Copy, dependsOn: []) {
