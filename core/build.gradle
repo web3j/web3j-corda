@@ -8,4 +8,5 @@ dependencies {
     implementation group: 'org.glassfish.jersey.ext', name: 'jersey-bean-validation', version: versions.jersey
 
     integrationTestImplementation project(path: ':web3j-corda-common', configuration: 'integrationTest')
+    integrationTestImplementation project(':web3j-corda-common').sourceSets.integrationTest.output // FIXME
 }

@@ -76,7 +76,7 @@ open class DockerBasedIntegrationTest {
         private const val CORDA_ZULU_IMAGE = "corda/corda-zulu-4.1:latest"
 
         @TempDir
-        private lateinit var nodes: File
+        lateinit var nodes: File
 
         private val network: Network = Network.newNetwork()
         private val timeOut: Duration = Duration.ofMinutes(2)

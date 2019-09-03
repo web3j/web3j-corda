@@ -14,6 +14,7 @@ dependencies {
     }
 
     integrationTestImplementation project(path: ':web3j-corda-common', configuration: 'integrationTest')
+    integrationTestImplementation project(':web3j-corda-common').sourceSets.integrationTest.output // FIXME
 
     testRuntime "org.jetbrains.kotlin:kotlin-scripting-compiler-embeddable"
     testRuntime "org.jetbrains.kotlin:kotlin-reflect"
