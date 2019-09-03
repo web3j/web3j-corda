@@ -13,22 +13,11 @@
 package org.web3j.corda.model
 
 data class CoreTransaction(
-    val componentGroups: List<ComponentGroup>,
-    val privacySalt: String,
-    val attachments: List<String>,
     val inputs: List<StateRef>,
     val references: List<StateRef>,
+    val networkParametersHash: String,
     val outputs: List<TransactionStateContractState>,
     val outputStates: List<ContractState>,
-    val commands: List<Commands>,
     val notary: Party,
-    val timeWindow: TimeWindow,
-    val networkParametersHash: String,
-    val id: String,
-    val requiredSigningKeys: List<String>,
-    val `groupHashes$core`: List<String>,
-    val `groupsMerkleRoots$core`: Map<String, String>,
-    val `availableComponentNonces$core`: Map<String, List<String>>,
-    val `availableComponentHashes$core`: Map<String, List<String>>,
-    val availableComponentGroups: List<List<Any?>?>
+    val id: String
 )

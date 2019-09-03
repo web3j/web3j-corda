@@ -12,7 +12,7 @@
  */
 package org.web3j.corda.model
 
-data class Commands(
+data class Command(
     val value: Any?,
     val signers: List<String>
 )

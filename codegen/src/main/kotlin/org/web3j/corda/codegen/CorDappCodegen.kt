@@ -22,8 +22,8 @@ import org.web3j.corda.model.AbstractParty
 import org.web3j.corda.model.Amount
 import org.web3j.corda.model.AmountCurrency
 import org.web3j.corda.model.AttachmentConstraint
+import org.web3j.corda.model.Command
 import org.web3j.corda.model.CommandObject
-import org.web3j.corda.model.Commands
 import org.web3j.corda.model.ComponentGroup
 import org.web3j.corda.model.Constraint
 import org.web3j.corda.model.ContractState
@@ -156,7 +156,7 @@ class CorDappCodegen(
             AmountCurrency::class,
             AttachmentConstraint::class,
             CommandObject::class,
-            Commands::class,
+            Command::class,
             ComponentGroup::class,
             Constraint::class,
             ContractState::class,

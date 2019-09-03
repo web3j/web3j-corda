@@ -12,5 +12,4 @@
  */
 package org.web3j.corda.model
 
-// FIXME Type object??
 class AttachmentConstraint
