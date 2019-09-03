@@ -20,7 +20,7 @@ import javax.ws.rs.Path
 import javax.ws.rs.Produces
 import javax.ws.rs.core.MediaType.APPLICATION_OCTET_STREAM
 
-interface NetworkMap {
+interface NetworkMapResource {
 
     /**
      * Retrieve the current signed network map object.
@@ -47,16 +47,16 @@ interface NetworkMap {
     fun ackParameters(@NotNull signedSecureHash: ByteArray)
 
     @get:Path("node-info")
-    val nodeInfo: NodeInfo
+    val nodeInfo: NodeInfoResource
 
     @get:Path("network-parameters")
-    val networkParameters: NetworkParameters
+    val networkParameters: NetworkParametersResource
 
 
     /**
      * Retrieve this network-map's truststore.
      */
-    @GET
-    @Path("truststore")
-    fun truststore(): ByteArray
+    @get:GET
+    @get:Path("truststore")
+    val truststore: ByteArray
 }

@@ -12,13 +12,20 @@
  */
 package org.web3j.corda.networkmap
 
-import javax.ws.rs.POST
+import javax.ws.rs.GET
+import javax.ws.rs.Path
+import javax.ws.rs.PathParam
 import javax.ws.rs.Produces
 import javax.ws.rs.core.MediaType
 
-interface CertManApi {
+interface NetworkParametersResource {
 
-    @POST
-    @Produces(MediaType.TEXT_PLAIN)
-    fun generate(): String
+    /**
+     * Retrieve the signed network parameters.
+     * The entire object is signed with the network map certificate which is also attached.
+     */
+    @GET
+    @Path("{hash}")
+    @Produces(MediaType.APPLICATION_OCTET_STREAM)
+    fun findById(@PathParam("hash") hash: String): ByteArray
 }

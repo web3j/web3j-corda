@@ -12,29 +12,24 @@
  */
 package org.web3j.corda.networkmap
 
-import org.web3j.corda.model.NotaryType
+import org.web3j.corda.model.LoginRequest
 import javax.ws.rs.Consumes
-import javax.ws.rs.DELETE
 import javax.ws.rs.POST
 import javax.ws.rs.Path
-import javax.ws.rs.PathParam
+import javax.ws.rs.Produces
 import javax.ws.rs.core.MediaType
 
-interface Notaries {
+interface AdminResource {
 
     /**
-     * Upload a signed NodeInfo object to the network map.
+     * Obtains a valid token.
      */
     @POST
-    @Path("{notaryType}")
-    @Consumes(MediaType.APPLICATION_OCTET_STREAM)
-    fun create(@PathParam("notaryType") type: NotaryType, nodeInfo: ByteArray): String
+    @Path("login")
+    @Produces(MediaType.TEXT_PLAIN)
+    @Consumes(MediaType.APPLICATION_JSON)
+    fun login(request: LoginRequest): String
 
-    /**
-     * Delete a notary with the node key.
-     */
-    @DELETE
-    @Path("{notaryType}")
-    @Consumes(MediaType.TEXT_PLAIN)
-    fun delete(@PathParam("notaryType") type: NotaryType, nodeKey: String)
+    @get:Path("notaries")
+    val notaries: NotariesResource
 }

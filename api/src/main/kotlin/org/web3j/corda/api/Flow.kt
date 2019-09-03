@@ -10,21 +10,15 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
-package org.web3j.corda.networkmap
+package org.web3j.corda.api
 
-import javax.ws.rs.GET
 import javax.ws.rs.Path
-import javax.ws.rs.PathParam
-import javax.ws.rs.Produces
-import javax.ws.rs.core.MediaType
 
-interface NodeInfo {
+/**
+ * General CorDapp flow logic resources, eg. progress tracker etc.
+ */
+interface Flow {
 
-    /**
-     * Retrieve a signed NodeInfo as specified in the network map object.
-     */
-    @GET
-    @Path("{hash}")
-    @Produces(MediaType.APPLICATION_OCTET_STREAM)
-    fun findById(@PathParam("hash") hash: String): ByteArray
+    @get:Path("progress-tracker")
+    val progressTracker: ProgressTracker
 }
