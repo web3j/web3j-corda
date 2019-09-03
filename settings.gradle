@@ -3,6 +3,11 @@ rootProject.name = 'web3j-corda'
 include 'common'
 findProject(':common')?.name = 'web3j-corda-common'
 
+include 'core'
+findProject(':core')?.name = 'web3j-corda-core'
+
+include 'api'
+findProject(':api')?.name = 'web3j-corda-api'
+
 include 'codegen'
 findProject(':codegen')?.name = 'web3j-corda-codegen'
-

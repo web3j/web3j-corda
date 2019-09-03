@@ -1,0 +1,7 @@
+dependencies {
+    api project(":web3j-corda-common")
+    api group: 'jakarta.ws.rs', name: 'jakarta.ws.rs-api', version: versions.jaxrs
+    
+    testImplementation project(':web3j-corda-core')
+    testImplementation project(':web3j-corda-common').sourceSets.integrationTest.output
+}

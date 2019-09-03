@@ -10,28 +10,28 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
-package org.web3j.corda.api
+package org.web3j.corda.networkmap
 
-import javax.validation.Valid
-import javax.ws.rs.Consumes
-import javax.ws.rs.POST
 import javax.ws.rs.Path
-import javax.ws.rs.Produces
-import javax.ws.rs.core.MediaType
 
 /**
- * General CorDapp flow logic resources, eg. progress tracker etc.
+ * Network Map Service client.
+ *
+ * **Please note:** The protected parts of this API require JWT authentication.
+ *
+ * @see [AdminResource.login]
  */
-interface Flow {
+interface NetworkMapApi {
 
-    @get:Path("progress-tracker")
-    val progressTracker: ProgressTracker
-}
+    @get:Path("network-map")
+    val networkMap: NetworkMapResource
 
-interface StartableFlow : Flow {
+    @get:Path("certificate")
+    val certificate: CertificateResource
 
-    @POST
-    @Produces(MediaType.APPLICATION_JSON)
-    @Consumes(MediaType.APPLICATION_JSON)
-    fun start(@Valid parameters: Any): Any
+    @get:Path("certman/api")
+    val certMan: CertManResource
+
+    @get:Path("admin/api")
+    val admin: AdminResource
 }
