@@ -15,6 +15,7 @@ package org.web3j.corda.api
 import io.bluebank.braid.server.Braid
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeAll
+import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import org.testcontainers.junit.jupiter.Testcontainers
 import org.web3j.corda.protocol.Corda
@@ -28,6 +29,7 @@ import org.web3j.corda.testcontainers.DockerBasedIntegrationTest
 class CordaIntegrationTest : DockerBasedIntegrationTest() {
 
     @Test
+    @Disabled("https://gitlab.com/bluebank/braid/issues/111")
     internal fun `corDapps resource`() {
 
         corda.corDapps.findAll().apply {
@@ -76,6 +78,7 @@ class CordaIntegrationTest : DockerBasedIntegrationTest() {
                 .startServer()
 
             corda = Corda.build(CordaService("http://localhost:9000"))
+            Thread.sleep(20000)
         }
     }
 }
