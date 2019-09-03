@@ -12,9 +12,9 @@
  */
 package org.web3j.corda.api
 
+import io.bluebank.braid.server.Braid
+import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
-import org.testcontainers.containers.GenericContainer
-import org.testcontainers.junit.jupiter.Container
 import org.testcontainers.junit.jupiter.Testcontainers
 import org.web3j.corda.protocol.Corda
 import org.web3j.corda.protocol.CordaService
@@ -24,13 +24,10 @@ import org.web3j.corda.testcontainers.DockerBasedIntegrationTest
  * TODO Implement tests
  */
 @Testcontainers
-class CordaApiTest : DockerBasedIntegrationTest() {
+class CordaIntegrationTest : DockerBasedIntegrationTest() {
 
     @Test
     internal fun `corDapps resource`() {
-
-        val service = CordaService("mapped Docker port")
-        val corda = Corda.build(service)
 
         corda.corDapps.findAll().forEach {
             // Assertions
@@ -43,9 +40,6 @@ class CordaApiTest : DockerBasedIntegrationTest() {
 
     @Test
     internal fun `network resource`() {
-
-        val service = CordaService("mapped Docker port")
-        val corda = Corda.build(service)
 
         corda.network.nodes.self.apply {
             // Assertions
@@ -66,15 +60,20 @@ class CordaApiTest : DockerBasedIntegrationTest() {
 
     companion object {
 
-        @Container
-        @JvmStatic
-        private val CORDA =
-            KGenericContainer("corda/corda-zulu-4.1:latest")
-//            .withClasspathResourceMapping("aion/config", "/aion/custom/config", READ_WRITE)
-//            .withClasspathResourceMapping("aion/log", "/aion/custom/log", READ_WRITE)
-//            .withCommand("/aion/aion.sh --network custom")
-//            .withExposedPorts(8545)
+        private lateinit var corda: Corda
 
-        class KGenericContainer(imageName: String) : GenericContainer<KGenericContainer>(imageName)
+        @BeforeAll
+        internal fun setUp() {
+            val notary = createNodeContainer("Notary", "London", "GB", 10005, 10006, 10007, true)
+            notary.start()
+
+            Braid().withPort(9000)
+                .withUserName("user1")
+                .withPassword("test")
+                .withNodeAddress("localhost:${notary.getMappedPort(10006)}")
+                .startServer()
+
+            corda = Corda.build(CordaService("localhost:9000"))
+        }
     }
 }
