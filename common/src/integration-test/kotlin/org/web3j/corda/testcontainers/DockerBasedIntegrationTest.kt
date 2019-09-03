@@ -14,6 +14,7 @@ package org.web3j.corda.testcontainers
 
 import com.samskivert.mustache.Mustache
 import io.bluebank.braid.server.Braid
+import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.io.TempDir
 import org.testcontainers.containers.BindMode.READ_WRITE
@@ -39,6 +40,7 @@ import java.util.concurrent.CountDownLatch
 open class DockerBasedIntegrationTest {
 
     @Test
+    @Disabled
     fun `test to setup docker containers`() {
         val notary = createNodeContainer("Notary", "London", "GB", 10005, 10006, 10007, true)
         notary.start()
@@ -70,13 +72,13 @@ open class DockerBasedIntegrationTest {
         }
 
         private const val NETWORK_MAP_ALIAS = "networkmap"
-        private const val NETWORK_MAP_URL = "http://${NETWORK_MAP_ALIAS}:8080"
+        private const val NETWORK_MAP_URL = "http://$NETWORK_MAP_ALIAS:8080"
 
         private const val NETWORK_MAP_IMAGE = "cordite/network-map:v0.4.5"
         private const val CORDA_ZULU_IMAGE = "corda/corda-zulu-4.1:latest"
 
         @TempDir
-        lateinit var nodes: File
+        lateinit var nodesBaseDir: File
 
         private val network: Network = Network.newNetwork()
         private val timeOut: Duration = Duration.ofMinutes(2)
@@ -94,7 +96,7 @@ open class DockerBasedIntegrationTest {
             .waitingFor(Wait.forHttp("").forPort(8080))
 
         @JvmStatic
-        protected fun createNodeContainer(
+        fun createNodeContainer(
             name: String,
             location: String,
             country: String,
@@ -103,7 +105,7 @@ open class DockerBasedIntegrationTest {
             adminPort: Int,
             isNotary: Boolean
         ): KGenericContainer {
-            val nodeDir = File(nodes, name).apply { mkdir() }
+            val nodeDir = File(nodesBaseDir, name).apply { mkdir() }
             createNodeConfFiles(
                 name,
                 location,

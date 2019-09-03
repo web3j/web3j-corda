@@ -63,6 +63,7 @@ class CordaIntegrationTest : DockerBasedIntegrationTest() {
         private lateinit var corda: Corda
 
         @BeforeAll
+        @JvmStatic
         fun setUp() {
             val notary = createNodeContainer("Notary", "London", "GB", 10005, 10006, 10007, true)
             notary.start()
