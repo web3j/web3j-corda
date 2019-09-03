@@ -75,7 +75,7 @@ class CordaIntegrationTest : DockerBasedIntegrationTest() {
                 .withNodeAddress("localhost:${notary.getMappedPort(10006)}")
                 .startServer()
 
-            corda = Corda.build(CordaService("localhost:9000"))
+            corda = Corda.build(CordaService("http://localhost:9000"))
         }
     }
 }
