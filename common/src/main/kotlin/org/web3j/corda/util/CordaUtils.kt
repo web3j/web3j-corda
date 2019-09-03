@@ -26,4 +26,4 @@ val mapper: ObjectMapper = jacksonObjectMapper()
 
 fun <T> convert(value: Any, type: Class<T>): T = mapper.convertValue(value, type)
 
-inline fun <reified T> Any.convert() = mapper.convertValue<T>(this)
+inline fun <reified T : Any> Any.convert() = mapper.convertValue<T>(this)
