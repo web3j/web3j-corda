@@ -124,8 +124,9 @@ open class DockerBasedIntegrationTest {
                 nodeDir.resolve("node.conf"),
                 isNotary
             )
-            getCertificate(nodeDir)
-            val node = KGenericContainer(CORDA_ZULU_IMAGE)
+            saveCertificateFromNetworkMap(nodeDir)
+
+            return KGenericContainer(CORDA_ZULU_IMAGE)
                 .withNetwork(network)
                 .withExposedPorts(p2pPort, rpcPort, adminPort)
                 .withFileSystemBind(PREFIX + nodeDir.absolutePath, "/etc/corda", READ_WRITE)
@@ -143,20 +144,16 @@ open class DockerBasedIntegrationTest {
                 .withCreateContainerCmdModifier {
                     it.withHostName(name.toLowerCase())
                     it.withName(name.toLowerCase())
+                }.apply {
+                    if (isNotary) {
+                        start()
+                        val nodeInfo = extractNotaryNodeInfo(this, nodeDir)
+                        stop()
+                        updateNotaryInNetworkMap(nodeDir.resolve(nodeInfo).absolutePath)
+                    } else {
+                        withClasspathResourceMapping("cordapps", "/opt/corda/cordapps", READ_WRITE)
+                    }
                 }
-
-            if (isNotary) {
-                node.start()
-
-                val nodeInfo = extractNotaryNodeInfo(node, nodeDir)
-                node.stop()
-
-                updateNotaryInNetworkMap(nodeDir.resolve(nodeInfo).absolutePath)
-            } else {
-                node.withClasspathResourceMapping("cordapps", "/opt/corda/cordapps", READ_WRITE)
-            }
-
-            return node
         }
 
         private fun createNodeConfFiles(
@@ -187,8 +184,8 @@ open class DockerBasedIntegrationTest {
             }
         }
 
-        private fun getCertificate(node: File) {
-            val certificateFolder = File(node, "certificates").apply { mkdir() }
+        private fun saveCertificateFromNetworkMap(nodeDir: File) {
+            val certificateFolder = File(nodeDir, "certificates").apply { mkdir() }
             val certificateFile = certificateFolder.resolve("network-root-truststore.jks")
             val networkMapUrl = "http://localhost:${NETWORK_MAP.getMappedPort(8080)}"
 
@@ -197,16 +194,16 @@ open class DockerBasedIntegrationTest {
             }
         }
 
-        private fun extractNotaryNodeInfo(notary: KGenericContainer, notaryNode: File): String {
-            var nodeInfo = notary.execInContainer("find", ".", "-maxdepth", "1", "-name", "nodeInfo*").stdout
-            nodeInfo = nodeInfo.substring(2, nodeInfo.length - 1) // remove the ending newline character
-
-            notary.copyFileFromContainer(
-                "/opt/corda/$nodeInfo",
-                notaryNode.resolve(nodeInfo).absolutePath
-            )
-            notary.execInContainer("rm", "network-parameters")
-            return nodeInfo
+        private fun extractNotaryNodeInfo(notary: KGenericContainer, notaryNodeDir: File): String {
+            return notary.execInContainer("find", ".", "-maxdepth", "1", "-name", "nodeInfo*").stdout.apply {
+                substring(2, length - 1) // remove the ending newline character
+            }.also {
+                notary.copyFileFromContainer(
+                    "/opt/corda/$it",
+                    notaryNodeDir.resolve(it).absolutePath
+                )
+                notary.execInContainer("rm", "network-parameters")
+            }
         }
 
         private fun updateNotaryInNetworkMap(nodeInfoPath: String) {
