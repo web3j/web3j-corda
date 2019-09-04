@@ -12,8 +12,11 @@
  */
 package org.web3j.corda.api
 
+import assertk.assertThat
+import assertk.assertions.hasSize
+import assertk.assertions.isEmpty
+import assertk.assertions.isEqualTo
 import io.bluebank.braid.server.Braid
-import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
@@ -23,7 +26,7 @@ import org.web3j.corda.protocol.CordaService
 import org.web3j.corda.testcontainers.DockerBasedIntegrationTest
 
 /**
- * TODO Implement tests
+ * TODO Implement tests.
  */
 @Testcontainers
 class CordaIntegrationTest : DockerBasedIntegrationTest() {
@@ -33,11 +36,11 @@ class CordaIntegrationTest : DockerBasedIntegrationTest() {
     internal fun `corDapps resource`() {
 
         corda.corDapps.findAll().apply {
-            Assertions.assertTrue(isEmpty())
+            assertThat(this).isEmpty()
         }
 
         corda.corDapps.findById("xyz").apply {
-            // Assertions
+            // TODO Assertion null or exception
         }
     }
 
@@ -45,19 +48,25 @@ class CordaIntegrationTest : DockerBasedIntegrationTest() {
     internal fun `network resource`() {
 
         corda.network.nodes.self.apply {
-            // Assertions
+            assertThat(legalIdentities).hasSize(1)
+            assertThat(legalIdentities.first().name).isEqualTo("Notary")
         }
 
         corda.network.nodes.findAll().apply {
-            // Assertions
+            assertThat(this).isEmpty()
         }
 
         corda.network.nodes.findByX500Name("").apply {
-            // Assertions
+            assertThat(this).isEmpty()
         }
 
         corda.network.nodes.findByHostAndPort("").apply {
-            // Assertions
+            assertThat(this).isEmpty()
+        }
+
+        corda.network.notaries.findAll().apply {
+            assertThat(this).hasSize(1)
+            assertThat(first().name).isEqualTo("Notary")
         }
     }
 
@@ -68,8 +77,17 @@ class CordaIntegrationTest : DockerBasedIntegrationTest() {
         @BeforeAll
         @JvmStatic
         fun setUp() {
-            val notary = createNodeContainer("Notary", "London", "GB", 10005, 10006, 10007, true)
-            notary.start()
+            val notary = createNodeContainer(
+                "Notary",
+                "London",
+                "GB",
+                10005,
+                10006,
+                10007,
+                true
+            ).apply {
+                start()
+            }
 
             Braid().withPort(9000)
                 .withUserName("user1")
@@ -78,7 +96,7 @@ class CordaIntegrationTest : DockerBasedIntegrationTest() {
                 .startServer()
 
             corda = Corda.build(CordaService("http://localhost:9000"))
-            Thread.sleep(20000)
+            Thread.sleep(10000)
         }
     }
 }
