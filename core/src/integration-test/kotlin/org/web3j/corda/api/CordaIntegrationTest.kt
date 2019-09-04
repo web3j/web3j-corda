@@ -49,7 +49,7 @@ class CordaIntegrationTest : DockerBasedIntegrationTest() {
 
         corda.network.nodes.self.apply {
             assertThat(legalIdentities).hasSize(1)
-            assertThat(legalIdentities.first().name).isEqualTo("Notary")
+            assertThat(legalIdentities.first().name).isEqualTo("O=Notary, L=London, C=GB")
         }
 
         corda.network.nodes.findAll().apply {
