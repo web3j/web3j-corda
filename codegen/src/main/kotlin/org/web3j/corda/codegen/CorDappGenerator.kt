@@ -24,20 +24,18 @@ import org.openapitools.codegen.ClientOpts
 import org.openapitools.codegen.CodegenConstants
 import org.openapitools.codegen.DefaultGenerator
 import org.openapitools.codegen.config.GeneratorProperties.setProperty
-import org.openapitools.codegen.utils.StringUtils
 import java.io.File
 
 class CorDappGenerator(
-        private val artifactId: String,
-        private val packageName: String,
-        private val url: String,
-        private val outputDir: String
+    private val packageName: String,
+    private val openApiDef: String,
+    private val outputDir: File
 ) : DefaultGenerator() {
 
     override fun generate(): List<File> {
 
-        val codegen = CorDappCodegen(artifactId, packageName, outputDir)
-        val result = parser.readLocation(url, listOf(), parseOptions)
+        val codegen = CorDappCodegen(packageName, outputDir)
+        val result = parser.readContents(openApiDef, listOf(), parseOptions)
 
         // Filter common API endpoints
         result.openAPI.paths.entries.removeIf {
@@ -96,7 +94,7 @@ class CorDappGenerator(
         )
 
         fun buildCorDappNameFromPath(path: String): String {
-            return StringUtils.camelize((path.split("/".toRegex())[2]).split("-".toRegex())[0])
+            return (path.split("/".toRegex())[2])
         }
     }
 }

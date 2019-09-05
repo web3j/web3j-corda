@@ -5,7 +5,6 @@ package {{apiPackage}}
 
 import org.web3j.corda.api.CorDapp
 import org.web3j.corda.api.Flow
-import org.web3j.corda.api.FlowResource
 import org.web3j.corda.dapps.LifeCycle
 import org.web3j.corda.model.CordaX500Name
 import org.web3j.corda.protocol.Corda
@@ -21,7 +20,7 @@ import javax.ws.rs.Produces
 /**
 * {{cordappName}} CorDapp wrapper.
 */
-@Path("{{basePathWithoutHost}}/cordapps/{{#lowercase}}{{classname}}{{/lowercase}}-cordapp/")
+@Path("{{basePathWithoutHost}}/cordapps/{{classVarName}}/")
 @Generated(
 value = ["org.web3j.corda.codegen.CorDappGenerator"],
 date = ""
@@ -29,15 +28,15 @@ date = ""
 interface {{classname}} : CorDapp {
 {{#operations}}
     @get:Path("flows")
-    override val flows: {{classname}}FlowResource
+    override val flows: FlowResource
 
-    interface {{classname}}FlowResource : FlowResource {
+    interface FlowResource : org.web3j.corda.api.FlowResource {
     {{#flows}}
         /**
         * Get the {{flowId}} flow.
         */
-        @get:Path("{{#lowercase}}{{flowId}}{{/lowercase}}-{{#lowercase}}{{classname}}{{/lowercase}}")
-        val {{#lowercase}}{{flowId}}{{/lowercase}}: {{flowId}}
+        @get:Path("{{flowPath}}")
+        val {{#camelcase}}{{flowId}}{{/camelcase}}: {{flowId}}
 
         /**
         * {{classname}} {{flowId}} flow.
@@ -60,11 +59,9 @@ interface {{classname}} : CorDapp {
     */
     companion object : LifeCycle<{{classname}}> {
 
-    override fun upgrade(corda: Corda, file: File): {{classname}} =
-    TODO("not implemented")
+    override fun upgrade(corda: Corda, file: File): {{classname}} = TODO("not implemented")
 
-    override fun deploy(corda: Corda, file: File): {{classname}} =
-    TODO("not implemented")
+    override fun deploy(corda: Corda, file: File): {{classname}} = TODO("not implemented")
 
     /**
     * Loads an existing {{classname}} CorDapp instance.
