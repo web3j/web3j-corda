@@ -39,11 +39,11 @@ class ObligationGeneratedKotlinTest : DockerBasedIntegrationTest() {
 
         // Potential runtime exception!
         var signedTx = issue.start(parameters).convert<SignedTransaction>()
-        assertThat(signedTx.coreTransaction.outputs[0]?.data?.lender?.name).isEqualTo(party.name)
+        assertThat(signedTx.coreTransaction.outputs[0].data.participants.first().owningKey).isEqualTo(party.owningKey)
 
         // 2. web3j generated version, 100% type-safe
         signedTx = Obligation.load(corda).flows.issue.start(parameters)
-        assertThat(signedTx.coreTransaction.outputs[0]?.data?.lender?.name).isEqualTo(party.name)
+        assertThat(signedTx.coreTransaction.outputs[0].data.participants.first().owningKey).isEqualTo(party.owningKey)
     }
 
     companion object {
