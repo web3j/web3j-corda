@@ -16,6 +16,7 @@ import io.swagger.v3.oas.models.Operation
 import org.openapitools.codegen.CodegenConstants
 import org.openapitools.codegen.CodegenOperation
 import org.openapitools.codegen.languages.AbstractKotlinCodegen
+import org.openapitools.codegen.templating.mustache.CamelCaseLambda
 import org.openapitools.codegen.templating.mustache.LowercaseLambda
 import org.openapitools.codegen.utils.StringUtils.camelize
 import org.web3j.corda.model.AbstractParty
@@ -47,24 +48,24 @@ import org.web3j.corda.model.TimeWindow
 import org.web3j.corda.model.TransactionStateContractState
 import org.web3j.corda.model.TransactionStateObject
 import org.web3j.corda.model.WireTransaction
+import java.io.File
 
 class CorDappCodegen(
-    artifactId: String,
     packageName: String,
-    outputDir: String
+    outputDir: File
 ) : AbstractKotlinCodegen() {
 
     private val cordaMapping = mutableMapOf<String, String>()
 
     init {
-        this.artifactId = artifactId
+        this.artifactId = "web3j-corda"
         this.packageName = packageName
 
         // cliOptions default redefinition need to be updated
         updateOption(CodegenConstants.ARTIFACT_ID, artifactId)
         updateOption(CodegenConstants.PACKAGE_NAME, packageName)
 
-        outputFolder = outputDir
+        outputFolder = outputDir.absolutePath
         modelTemplateFiles["model.mustache"] = ".kt"
         apiTemplateFiles["cordapp.mustache"] = ".kt"
         templateDir = TEMPLATE_DIR
@@ -80,6 +81,7 @@ class CorDappCodegen(
 
         additionalProperties["java8"] = true
         additionalProperties["lowercase"] = LowercaseLambda()
+        additionalProperties["camelcase"] = CamelCaseLambda()
 
         typeMapping["array"] = "kotlin.collections.List"
         typeMapping["list"] = "kotlin.collections.List"
@@ -114,7 +116,7 @@ class CorDappCodegen(
     /**
      * Do not append the `Api` suffix on the CorDapp interface.
      */
-    override fun toApiName(name: String): String = name
+    override fun toApiName(name: String): String = camelize(name)
 
     override fun addOperationToGroup(
         tag: String,
@@ -132,17 +134,27 @@ class CorDappCodegen(
         allModels: MutableList<Any>
     ): MutableMap<String, Any> {
 
-        val operation = (objs["operations"] as HashMap<*, *>)["operation"] as ArrayList<*>
+        val operation = (objs["operations"] as Map<*, *>)["operation"] as List<*>
         val flows = operation.filterIsInstance<CodegenOperation>()
 
         objs["flows"] = flows.map {
-            hashMapOf<String, String>(
-                "flowId" to buildFlowNameFromPath(it.path),
-                "outputClass" to it.returnType,
-                "inputClass" to it.bodyParams[0].baseType,
-                "consumes" to (it.consumes[0] as HashMap)["mediaType"]!!,
-                "produces" to (it.produces[0] as HashMap)["mediaType"]!!
-            )
+            mutableMapOf<String, String>(
+                "flowPath" to buildFlowPath(it.path),
+                "flowId" to buildFlowId(it.path),
+                "outputClass" to if (it.returnType.isNullOrBlank()) "Unit" else it.returnType,
+                "inputClass" to it.bodyParams[0].baseType
+            ).apply {
+                if (it.hasConsumes) {
+                    (it.consumes[0] as Map<String, String>)["mediaType"]?.let { mediaType ->
+                        put("consumes", mediaType)
+                    }
+                }
+                if (it.hasProduces) {
+                    (it.produces[0] as Map<String, String>)["mediaType"]?.let { mediaType ->
+                        put("produces", mediaType)
+                    }
+                }
+            }
         }
         return super.postProcessOperationsWithModels(objs, allModels)
     }
@@ -182,8 +194,12 @@ class CorDappCodegen(
             WireTransaction::class
         )
 
-        private fun buildFlowNameFromPath(path: String): String {
-            return camelize(path.split("/".toRegex())[4].split("-".toRegex())[0])
-        }
+        private fun buildFlowId(path: String) = path.split("/".toRegex())[4]
+            .split("\\.".toRegex())
+            .last()
+            .replace("$", "")
+
+        private fun buildFlowPath(path: String) = path.split("/".toRegex())[4]
+            .replace("$", "\\$")
     }
 }

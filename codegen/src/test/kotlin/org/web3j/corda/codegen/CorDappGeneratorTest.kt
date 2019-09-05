@@ -17,24 +17,25 @@ import org.junit.jupiter.api.fail
 import org.junit.jupiter.api.io.TempDir
 import java.io.File
 
+/**
+ * TODO Assertions
+ */
 class CorDappGeneratorTest {
 
     @TempDir
-    lateinit var output: File
+    lateinit var outputDir: File
 
     @Test
     fun `generate with mustache`() {
 
-        val obligation = javaClass.classLoader.getResource("Obligation.json")
+        val obligation = javaClass.classLoader.getResource("Obligation.json")!!.file
 
-        val outputDir = "build/generated"
-        val generator = CorDappGenerator(
-            "obligation-cordapp",
+        CorDappGenerator(
             "org.web3j.corda.codegen.generated.obligation",
-            obligation?.file ?: fail { "Obligation.json" },
+            File(obligation).readText() ?: fail { "Obligation.json" },
             outputDir
-        )
-
-        generator.generate()
+        ).apply {
+            generate()
+        }
     }
 }

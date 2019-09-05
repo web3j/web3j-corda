@@ -2,11 +2,7 @@ dependencies {
     api project(':web3j-corda-common')
     api "jakarta.ws.rs:jakarta.ws.rs-api:${versions.jaxRs}"
 
-    implementation ("com.networknt:openapi-parser:${versions.openApiParser}") {
-        exclude group: 'javax.activation'
-    }
-
-    implementation ("org.openapitools:openapi-generator:${versions.openApiGenerator}") {
+    api ("org.openapitools:openapi-generator:${versions.openApiGenerator}") {
         exclude group: 'com.fasterxml.jackson.datatype'
         exclude group: 'javax.activation'
         exclude group: 'javax.validation'
