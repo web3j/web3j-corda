@@ -55,11 +55,11 @@ abstract class CommonCommand : Runnable {
         )
         lateinit var corDappsDir: File
 
-        fun isCorDappsDirInitialized() = ::corDappsDir.isInitialized
+        val isCorDappsDirInitialized = ::corDappsDir.isInitialized
     }
 
-    override fun run() {
-        if (cordaResource.isCorDappsDirInitialized()) {
+    final override fun run() {
+        if (cordaResource.isCorDappsDirInitialized) {
             generateOpenApiDef(cordaResource.corDappsDir)
         } else {
             fetchOpenApiDef(cordaResource.openApiUrl)
