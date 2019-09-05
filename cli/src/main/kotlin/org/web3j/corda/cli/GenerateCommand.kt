@@ -12,16 +12,77 @@
  */
 package org.web3j.corda.cli
 
+import io.bluebank.braid.server.BraidDocsMain
+import net.corda.core.internal.list
 import org.web3j.corda.codegen.CorDappGenerator
+import picocli.CommandLine.ArgGroup
 import picocli.CommandLine.Command
+import picocli.CommandLine.Option
+import java.io.File
+import java.net.URL
+import java.net.URLClassLoader
+import java.nio.charset.StandardCharsets
 
 /**
  * Custom CLI interpreter to generate a new template web3j wrappers for given CordApp.
  */
 @Command(name = "generate")
-class GenerateCommand : CommonCommand(), Runnable {
+class GenerateCommand : CommonCommand() {
 
-    override fun execute(openApiDef: String) {
-        CorDappGenerator(packageName, openApiDef, outputDir).generate()
+    @ArgGroup(exclusive = true, multiplicity = "1")
+    private lateinit var cordaResource: CordaResource
+
+    private object CordaResource {
+
+        @Option(
+            names = ["-u", "--url"],
+            description = ["Corda node OpenAPI URL"],
+            required = true
+        )
+        lateinit var openApiUrl: URL
+
+        @Option(
+            names = ["-d", "--cordappsDir"],
+            description = ["CorDapps node directory"],
+            required = true
+        )
+        lateinit var corDappsDir: File
+
+        val isCorDappsDirInitialized = ::corDappsDir.isInitialized
+    }
+
+    override fun run() {
+        if (cordaResource.isCorDappsDirInitialized) {
+            generateOpenApiDef(cordaResource.corDappsDir)
+        } else {
+            fetchOpenApiDef(cordaResource.openApiUrl)
+        }.apply {
+            CorDappGenerator(packageName, this, outputDir).generate()
+        }
+    }
+
+    companion object {
+        private fun fetchOpenApiDef(url: URL): String {
+            return url.run {
+                if (!toExternalForm().endsWith("/swagger.json")) {
+                    URL("$url/swagger.json")
+                } else {
+                    this
+                }
+            }.openStream().readBytes().toString(StandardCharsets.UTF_8)
+        }
+
+        private fun generateOpenApiDef(file: File): String {
+            return file.toPath().list().map {
+                it.toFile().toURI().toURL()
+            }.run {
+                BraidDocsMain(
+                    URLClassLoader(
+                        toTypedArray(),
+                        BraidDocsMain::class.java.classLoader
+                    )
+                ).swaggerText()
+            }
+        }
     }
 }

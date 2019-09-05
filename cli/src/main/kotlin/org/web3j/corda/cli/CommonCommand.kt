@@ -12,19 +12,10 @@
  */
 package org.web3j.corda.cli
 
-import io.bluebank.braid.server.BraidDocsMain
-import net.corda.core.internal.list
-import picocli.CommandLine.ArgGroup
 import picocli.CommandLine.Option
 import java.io.File
-import java.net.URL
-import java.net.URLClassLoader
-import java.nio.charset.StandardCharsets
 
 abstract class CommonCommand : Runnable {
-
-    @ArgGroup(exclusive = true, multiplicity = "1")
-    private lateinit var cordaResource: CordaResource
 
     @Option(
         names = ["-p", "--packageName"],
@@ -39,59 +30,4 @@ abstract class CommonCommand : Runnable {
         required = true
     )
     lateinit var outputDir: File
-
-    private object CordaResource {
-        @Option(
-            names = ["-u", "--url"],
-            description = ["Corda node OpenAPI URL"],
-            required = true
-        )
-        lateinit var openApiUrl: URL
-
-        @Option(
-            names = ["-d", "--cordappsDir"],
-            description = ["CordApps node directory"],
-            required = true
-        )
-        lateinit var corDappsDir: File
-
-        val isCorDappsDirInitialized = ::corDappsDir.isInitialized
-    }
-
-    final override fun run() {
-        if (cordaResource.isCorDappsDirInitialized) {
-            generateOpenApiDef(cordaResource.corDappsDir)
-        } else {
-            fetchOpenApiDef(cordaResource.openApiUrl)
-        }.apply {
-            execute(this)
-        }
-    }
-
-    abstract fun execute(openApiDef: String)
-
-    companion object {
-        private fun fetchOpenApiDef(url: URL): String {
-            return url.run {
-                if (!toExternalForm().endsWith("/swagger.json")) {
-                    URL("$url/swagger.json")
-                } else {
-                    this
-                }
-            }.openStream().readBytes().toString(StandardCharsets.UTF_8)
-        }
-
-        private fun generateOpenApiDef(file: File): String {
-            return file.toPath().list().map {
-                it.toFile().toURI().toURL()
-            }.run {
-                BraidDocsMain(
-                    URLClassLoader(
-                        toTypedArray(),
-                        BraidDocsMain::class.java.classLoader
-                    )
-                ).swaggerText()
-            }
-        }
-    }
 }
