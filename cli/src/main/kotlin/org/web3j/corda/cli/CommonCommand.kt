@@ -95,4 +95,3 @@ abstract class CommonCommand : Runnable {
         }
     }
 }
-
