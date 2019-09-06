@@ -12,5 +12,5 @@ findProject(':api')?.name = 'web3j-corda-api'
 include 'codegen'
 findProject(':codegen')?.name = 'web3j-corda-codegen'
 
-include 'cli'
-findProject(':cli')?.name = 'web3j-corda-cli'
+include 'console'
+findProject(':console')?.name = 'web3j-corda-console'
