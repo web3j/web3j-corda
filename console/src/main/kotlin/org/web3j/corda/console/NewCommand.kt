@@ -48,11 +48,7 @@ class NewCommand : CommonCommand() {
     override fun run() {
         generateFlow()
         generateGradleFile()
-        Files.copy(
-            javaClass.classLoader.getResource("constants.properties")?.openStream()!!,
-            outputDir.resolve("constants.properties").toPath(),
-            StandardCopyOption.REPLACE_EXISTING
-        )
+        copyCommonFiles()
 
         GenerateCommand().apply {
             cordaResource = GenerateCommand.CordaResource
@@ -61,6 +57,26 @@ class NewCommand : CommonCommand() {
             outputDir = this@NewCommand.outputDir
             run()
         }
+    }
+
+    private fun copyCommonFiles() {
+        Files.copy(
+            javaClass.classLoader.getResource("constants.properties")?.openStream()!!,
+            outputDir.resolve("constants.properties").toPath(),
+            StandardCopyOption.REPLACE_EXISTING
+        )
+
+        Files.copy(
+            javaClass.classLoader.getResource("gradlew")?.openStream()!!,
+            outputDir.resolve("gradlew").toPath(),
+            StandardCopyOption.REPLACE_EXISTING
+        )
+
+        Files.copy(
+            javaClass.classLoader.getResource("README.md")?.openStream()!!,
+            outputDir.resolve("README.md").toPath(),
+            StandardCopyOption.REPLACE_EXISTING
+        )
     }
 
     private fun mustacheTemplate(file: String): Template {

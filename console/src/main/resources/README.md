@@ -1,0 +1,1 @@
+A sample CorDapp with web3j-corda wrappers
