@@ -50,6 +50,9 @@ import org.web3j.corda.model.TransactionStateContractState
 import org.web3j.corda.model.TransactionStateObject
 import org.web3j.corda.model.WireTransaction
 import java.io.File
+import java.time.OffsetDateTime
+import java.time.ZoneOffset
+import java.time.format.DateTimeFormatter
 
 class CorDappCodegen(
     packageName: String,
@@ -161,6 +164,9 @@ class CorDappCodegen(
                 }
             }
         }
+
+        objs["currentDate"] = OffsetDateTime.now(ZoneOffset.UTC).format(DateTimeFormatter.ISO_DATE_TIME)
+        
         return super.postProcessOperationsWithModels(objs, allModels)
     }
 

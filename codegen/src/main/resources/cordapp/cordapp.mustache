@@ -22,7 +22,7 @@ import javax.ws.rs.Produces
 @Path("{{basePathWithoutHost}}/cordapps/{{classVarName}}/")
 @Generated(
 value = ["org.web3j.corda.codegen.CorDappGenerator"],
-date = ""
+date = "{{currentDate}}"
 )
 interface {{classname}} : CorDapp {
 {{#operations}}

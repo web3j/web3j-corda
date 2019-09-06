@@ -16,7 +16,7 @@ import javax.annotation.Generated
 
 @Generated(
 value = ["org.web3j.corda.codegen.CorDappGenerator"],
-date = ""
+date = "{{currentDate}}"
 )
 class {{classname}}Test: DockerBasedIntegrationTest() {
 
@@ -34,6 +34,7 @@ val result = {{#titlecase}}{{#camelcase}}{{flowId}}{{/camelcase}}{{/titlecase}}.
 Assertions.assertTrue(result != null)
 }
 {{/flows}}
+
 {{/operations}}
 
 companion object {
