@@ -141,12 +141,11 @@ class NewCommand : CommonCommand() {
             StandardRuleSetProvider().get(),
             ExperimentalRuleSetProvider().get()
         )
-
-        object LowercaseLambda : Mustache.Lambda {
-            override fun execute(fragment: Template.Fragment, writer: Writer) {
-                writer.write(fragment.execute().toLowerCase())
-            }
-        }
     }
 
+    object LowercaseLambda : Mustache.Lambda {
+        override fun execute(fragment: Template.Fragment, writer: Writer) {
+            writer.write(fragment.execute().toLowerCase())
+        }
+    }
 }
