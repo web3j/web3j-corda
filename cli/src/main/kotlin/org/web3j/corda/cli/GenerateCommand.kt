@@ -48,7 +48,9 @@ class GenerateCommand : CommonCommand() {
         )
         lateinit var corDappsDir: File
 
-        val isCorDappsDirInitialized = ::corDappsDir.isInitialized
+        val isCorDappsDirInitialized: Boolean by lazy {
+            ::corDappsDir.isInitialized
+        }
     }
 
     override fun run() {
@@ -64,7 +66,7 @@ class GenerateCommand : CommonCommand() {
     companion object {
         private fun fetchOpenApiDef(url: URL): String {
             return url.run {
-                if (!toExternalForm().endsWith("/swagger.json")) {
+                if (!toExternalForm().endsWith(".json")) {
                     URL("$url/swagger.json")
                 } else {
                     this

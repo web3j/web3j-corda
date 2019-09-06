@@ -59,10 +59,14 @@ public class ObligationJavaTest {
 
         // Potential runtime exception!
         SignedTransaction signedTx = convert(signedTxObject, SignedTransaction.class);
-        String name = signedTx.getCoreTransaction()
-                .getOutputs().get(0).getData()
-                .getParticipants().get(0)
-                .getOwningKey();
+        String name =
+                signedTx.getCoreTransaction()
+                        .getOutputs()
+                        .get(0)
+                        .getData()
+                        .getParticipants()
+                        .get(0)
+                        .getOwningKey();
         assertEquals(name, party.getOwningKey());
 
         // 2. web3j generated version, 100% type-safe
@@ -70,10 +74,14 @@ public class ObligationJavaTest {
                 Obligation.load(corda).getFlows().getIssue();
         signedTx = issue.start(parameters);
 
-        name = signedTx.getCoreTransaction()
-                .getOutputs().get(0).getData()
-                .getParticipants().get(0)
-                .getOwningKey();
+        name =
+                signedTx.getCoreTransaction()
+                        .getOutputs()
+                        .get(0)
+                        .getData()
+                        .getParticipants()
+                        .get(0)
+                        .getOwningKey();
         assertEquals(name, party.getOwningKey());
     }
 

@@ -1,0 +1,40 @@
+package org.web3j.corda.examples.obligation
+
+import assertk.assertThat
+import assertk.assertions.isEqualTo
+import org.junit.jupiter.api.AfterAll
+import org.junit.jupiter.api.BeforeAll
+import org.junit.jupiter.api.Test
+import org.web3j.corda.codegen.generated.obligation.api.Obligation
+import org.web3j.corda.codegen.generated.obligation.model.IssueObligationInitiatorParameters
+import org.web3j.corda.model.SignedTransaction
+import org.web3j.corda.protocol.Corda
+import org.web3j.corda.protocol.CordaService
+import org.web3j.corda.testcontainers.DockerBasedIntegrationTest
+import org.web3j.corda.util.convert
+import javax.annotation.Generated
+
+@Generated("org.web3j.corda.codegen.CorDappGenerator")
+class {{classname}}Test: DockerBasedIntegrationTest {
+
+companion object {
+
+@JvmStatic
+private lateinit var corda: Corda
+
+@JvmStatic
+private lateinit var service: CordaService
+
+@BeforeAll
+@JvmStatic
+internal fun setUpClass() {
+service = CordaService("http://localhost:9000/")
+corda = Corda.build(service)
+}
+
+@AfterAll
+internal fun tearDownClass() {
+service.close()
+}
+}
+}

@@ -19,6 +19,9 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.io.TempDir
 import java.io.File
 
+/**
+ * TODO Update OpenAPI definition and add Obligation CorDapp assertions.
+ */
 class CordaCommandTest {
 
     @TempDir
@@ -26,27 +29,42 @@ class CordaCommandTest {
 
     @Test
     @Disabled("Braid class loader issue")
-    fun generateFromCorDappsDir() {
+    fun `generate Obligation from CorDapps directory`() {
         CordaCommandMain.main(
             "generate",
-            "-p", "org.webj3.corda.examples.obligation",
-            "-d",
-            "/Users/xavier/Development/Projects/Web3Labs/web3j-corda-samples/kotlin-source/build/nodes/PartyA/cordapps",
-            "-o",
-            outputDir.absolutePath
+            "-p", "org.web3j.corda.examples.obligation",
+            "-d", javaClass.classLoader.getResource("cordapps")!!.file,
+            "-o", outputDir.absolutePath
         )
+
+        File(outputDir, "${OUTPUT_PATH.format("main")}/ObligationCordapp.kt").let {
+            assertThat(it).exists()
+        }
+
+        File(outputDir, "${OUTPUT_PATH.format("test")}/ObligationCordappTest.kt").let {
+            assertThat(it).exists()
+        }
     }
 
     @Test
-    fun generateFromOpenApiSpec() {
+    fun `generate Obligation from OpenAPI definition`() {
         CordaCommandMain.main(
             "generate",
-            "-p", "org.webj3.corda.examples.obligation",
+            "-p", "org.web3j.corda.examples.obligation",
             "-u", javaClass.classLoader.getResource("swagger.json")!!.toExternalForm(),
             "-o", outputDir.absolutePath
         )
 
-        assertThat(File(outputDir, "src/main/kotlin/org/webj3/corda/examples/obligation/api/CordaCore.kt")).exists()
-        // FIXME assertThat(File(outputDir, "src/main/kotlin/org/webj3/corda/examples/obligation/api/Obligation.kt")).exists()
+        File(outputDir, "${OUTPUT_PATH.format("main")}/CordaCore.kt").also {
+            assertThat(it).exists()
+        }
+
+        File(outputDir, "${OUTPUT_PATH.format("test")}/CordaCoreTest.kt").also {
+            assertThat(it).exists()
+        }
+    }
+
+    companion object {
+        const val OUTPUT_PATH = "src/%s/kotlin/org/web3j/corda/examples/obligation/api"
     }
 }
