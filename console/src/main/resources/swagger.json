@@ -158,7 +158,7 @@
         }
       }
     },
-    "/cordapps/web3j-cordapp/flows/org.web3j.corda$Sample" : {
+    "/cordapps/sample-cordapp/flows/org.web3j.corda$Sample": {
       "post" : {
         "tags" : [ "network" ],
         "description" : "",
