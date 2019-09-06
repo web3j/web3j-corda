@@ -1,3 +1,11 @@
+plugins {
+    id 'application'
+    id 'distribution'
+}
+
+mainClassName = 'org.web3j.corda.console.CordaCommandMain'
+applicationName = 'web3j-corda'
+
 dependencies {
 
     api project(':web3j-corda-core')
