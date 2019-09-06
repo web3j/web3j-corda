@@ -4,6 +4,7 @@ dependencies {
 
     api ("org.openapitools:openapi-generator:${versions.openApiGenerator}") {
         exclude group: 'com.fasterxml.jackson.datatype'
+        exclude group: 'com.github.jknack'
         exclude group: 'javax.activation'
         exclude group: 'javax.validation'
         exclude group: 'javax.xml.bind'

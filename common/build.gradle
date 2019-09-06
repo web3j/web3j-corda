@@ -13,7 +13,7 @@ dependencies {
     testImplementation group: 'net.corda', name: 'corda-jackson', version: versions.corda
     testImplementation group: 'net.corda', name: 'corda-rpc', version: versions.corda
     testImplementation group: 'net.corda', name: 'corda-webserver', version: versions.corda
-    testImplementation group: 'com.samskivert', name: 'jmustache', version: '1.14'
+    testImplementation group: 'com.samskivert', name: 'jmustache', version: versions.jmustache
 }
 
 task copyGeneratedFiles(type: Copy, dependsOn: []) {

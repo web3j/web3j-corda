@@ -33,38 +33,45 @@ class CorDappGenerator(
 ) : DefaultGenerator() {
 
     override fun generate(): List<File> {
-
-        val codegen = CorDappCodegen(packageName, outputDir)
-        val result = parser.readContents(openApiDef, listOf(), parseOptions)
+        val codegen = CorDappCodegen(packageName, outputDir).apply {
+            // TODO setArtifactId("web3j-corda")
+        }
 
         // Filter common API endpoints
+        val result = parser.readContents(openApiDef, listOf(), parseOptions)
         result.openAPI.paths.entries.removeIf {
             !it.key.startsWith("/cordapps") || it.key.endsWith("/flows")
         }
 
         opts(
-                ClientOptInput()
-                        .config(codegen)
-                        .opts(ClientOpts().apply { properties })
-                        .openAPI(result.openAPI)
+            ClientOptInput()
+                .config(codegen)
+                .opts(ClientOpts())
+                .openAPI(result.openAPI)
         )
         configureGeneratorProperties(result)
         setGenerateMetadata(false)
 
-        return super.generate().also {
-            it.forEach { file ->
-                // Format generated code using KtLint
-                KtLint.format(KtLint.Params(
-                        ruleSets = ruleSets,
-                        cb = { error, _ ->
-                            logger.warn { error }
-                        },
-                        text = file.readText(),
-                        debug = true
-                )).run {
-                    file.writeText(this)
-                }
-            }
+        return super.generate().onEach {
+            format(it)
+        }
+    }
+
+    /**
+     * Format a given Kotlin file using KtLint.
+     */
+    private fun format(file: File) {
+        KtLint.format(
+            KtLint.Params(
+                ruleSets = ruleSets,
+                cb = { error, _ ->
+                    logger.warn { error }
+                },
+                text = file.readText(),
+                debug = true
+            )
+        ).apply {
+            file.writeText(this)
         }
     }
 
@@ -72,11 +79,9 @@ class CorDappGenerator(
         val cordaTypes = CorDappCodegen.CORDA_SERIALIZABLE.map {
             it.simpleName
         }
-
         val models = result.openAPI.components.schemas.keys.filter {
             !cordaTypes.contains(it)
         }
-
         // Specify the list of model classes to generate
         setProperty(CodegenConstants.MODELS, models.joinToString(separator = ","))
         setProperty(CodegenConstants.APIS, result.openAPI.paths.keys.joinToString(separator = ",") {
@@ -89,8 +94,8 @@ class CorDappGenerator(
         private val parseOptions = ParseOptions()
 
         private val ruleSets = listOf(
-                StandardRuleSetProvider().get(),
-                ExperimentalRuleSetProvider().get()
+            StandardRuleSetProvider().get(),
+            ExperimentalRuleSetProvider().get()
         )
 
         fun buildCorDappNameFromPath(path: String): String {

@@ -33,42 +33,41 @@ interface {{classname}} : CorDapp {
     interface FlowResource : org.web3j.corda.api.FlowResource {
     {{#flows}}
         /**
-        * Get the {{flowId}} flow.
+* Get the {{#titlecase}}{{#camelcase}}{{flowId}}{{/camelcase}}{{/titlecase}} flow.
         */
         @get:Path("{{flowPath}}")
-        val {{#camelcase}}{{flowId}}{{/camelcase}}: {{flowId}}
+val {{#camelcase}}{{flowId}}{{/camelcase}}: {{#titlecase}}{{#camelcase}}{{flowId}}{{/camelcase}}{{/titlecase}}
 
         /**
-        * {{classname}} {{flowId}} flow.
+* {{classname}} {{#titlecase}}{{#camelcase}}{{flowId}}{{/camelcase}}{{/titlecase}} flow.
         */
-        interface {{flowId}} : Flow {
+interface {{#titlecase}}{{#camelcase}}{{flowId}}{{/camelcase}}{{/titlecase}} : Flow {
 
-        /**
-        * Start the {{flowId}} flow.
-        */
-        @POST
-        @Produces("{{produces}}")
-        @Consumes("{{consumes}}")
-        fun start(@Valid parameters: {{inputClass}}): {{outputClass}}
+/**
+* Start the {{#titlecase}}{{#camelcase}}{{flowId}}{{/camelcase}}{{/titlecase}} flow.
+*/
+@POST
+@Produces("{{produces}}")
+@Consumes("{{consumes}}")
+fun start(@Valid parameters: {{inputClass}}): {{outputClass}}
         }
-
     {{/flows}}
     }
+
     /**
     * {{classname}} CorDapp lifecycle methods.
     */
     companion object : LifeCycle<{{classname}}> {
 
-    override fun upgrade(corda: Corda, file: File): {{classname}} = TODO("not implemented")
+override fun upgrade(corda: Corda, file: File): {{classname}} = TODO("not implemented")
 
-    override fun deploy(corda: Corda, file: File): {{classname}} = TODO("not implemented")
+override fun deploy(corda: Corda, file: File): {{classname}} = TODO("not implemented")
 
-    /**
-    * Loads an existing {{classname}} CorDapp instance.
-    */
-    @JvmStatic
-    override fun load(corda: Corda) =
-    ProxyBuilder.build({{classname}}::class.java, corda.service)
+/**
+* Loads an existing {{classname}} CorDapp instance.
+*/
+@JvmStatic
+override fun load(corda: Corda) = ProxyBuilder.build({{classname}}::class.java, corda.service)
     }
 {{/operations}}
 }

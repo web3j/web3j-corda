@@ -41,9 +41,7 @@ class CordaService(
         ClientBuilder.newClient(config)
     }
 
-    override fun close() {
-        client.close()
-    }
+    override fun close() = client.close()
 
     companion object {
         const val DEFAULT_READ_TIMEOUT: Int = 5000
