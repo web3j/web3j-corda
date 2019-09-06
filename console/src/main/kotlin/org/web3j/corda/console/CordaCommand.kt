@@ -36,6 +36,6 @@ class CordaCommand : Runnable {
     private lateinit var spec: CommandSpec
 
     override fun run() {
-        throw ParameterException(spec.commandLine(), "Missing required sub-command: new, generate")
+        throw ParameterException(spec.commandLine(), "Missing required sub-command (see below)")
     }
 }
