@@ -71,7 +71,6 @@ class CorDappCodegen(
         apiTestTemplateFiles["cordapp_test.mustache"] = ".kt"
         templateDir = TEMPLATE_DIR
         embeddedTemplateDir = TEMPLATE_DIR
-        apiPackage = "$packageName.api"
         modelPackage = "$packageName.model"
         allowUnicodeIdentifiers = true
     }
@@ -138,6 +137,11 @@ class CorDappCodegen(
         val operation = (objs["operations"] as Map<*, *>)["operation"] as List<*>
         val flows = operation.filterIsInstance<CodegenOperation>()
 
+        ((objs["operations"] as Map<*, *>)["pathPrefix"] as String).run {
+            apiPackage = buildApiPackage(packageName, this)
+            additionalProperties.put(CodegenConstants.API_PACKAGE, apiPackage)
+        }
+
         objs["flows"] = flows.map {
             mutableMapOf<String, String>(
                 "flowPath" to buildFlowPath(it.path),
@@ -194,6 +198,9 @@ class CorDappCodegen(
             TransactionStateObject::class,
             WireTransaction::class
         )
+
+        private fun buildApiPackage(apiPackage: String, pathPrefix: String) =
+            "$apiPackage.${pathPrefix.replace("-", ".")}.api"
 
         private fun buildFlowId(path: String) = path.split("/".toRegex())[4]
             .split("\\.".toRegex())

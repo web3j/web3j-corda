@@ -32,16 +32,16 @@ class CordaCommandTest {
     fun `generate Obligation from CorDapps directory`() {
         CordaCommandMain.main(
             "generate",
-            "-p", "org.web3j.corda.examples.obligation",
+            "-p", "org.web3j",
             "-d", javaClass.classLoader.getResource("cordapps")!!.file,
             "-o", outputDir.absolutePath
         )
 
-        File(outputDir, "${OUTPUT_PATH.format("main")}/ObligationCordapp.kt").let {
+        File(outputDir, OUTPUT_PATH.format("main", "corda/core", "CordaCore", "")).also {
             assertThat(it).exists()
         }
 
-        File(outputDir, "${OUTPUT_PATH.format("test")}/ObligationCordappTest.kt").let {
+        File(outputDir, OUTPUT_PATH.format("test", "corda/core", "CordaCore", "Test")).also {
             assertThat(it).exists()
         }
     }
@@ -50,21 +50,21 @@ class CordaCommandTest {
     fun `generate Obligation from OpenAPI definition`() {
         CordaCommandMain.main(
             "generate",
-            "-p", "org.web3j.corda.examples.obligation",
+            "-p", "org.web3j",
             "-u", javaClass.classLoader.getResource("swagger.json")!!.toExternalForm(),
             "-o", outputDir.absolutePath
         )
 
-        File(outputDir, "${OUTPUT_PATH.format("main")}/CordaCore.kt").also {
+        File(outputDir, OUTPUT_PATH.format("main", "corda/core", "CordaCore", "")).also {
             assertThat(it).exists()
         }
 
-        File(outputDir, "${OUTPUT_PATH.format("test")}/CordaCoreTest.kt").also {
+        File(outputDir, OUTPUT_PATH.format("test", "corda/core", "CordaCore", "Test")).also {
             assertThat(it).exists()
         }
     }
 
     companion object {
-        const val OUTPUT_PATH = "src/%s/kotlin/org/web3j/corda/examples/obligation/api"
+        const val OUTPUT_PATH = "src/%s/kotlin/org/web3j/%s/api/%s%s.kt"
     }
 }

@@ -34,18 +34,26 @@ class CorDappGeneratorTest {
             File(file).readText()
         } ?: fail { "Obligation.json" }
 
-        CorDappGenerator("org.web3j.corda.examples.obligation", definition, outputDir).generate()
+        CorDappGenerator("org.web3j.corda", definition, outputDir).generate()
 
-        File(outputDir, "${OUTPUT_PATH.format("main")}/ObligationCordapp.kt").also {
+        File(outputDir, OUTPUT_PATH.format("main", "obligation", "ObligationCordapp", "")).also {
             assertThat(it).exists()
         }
 
-        File(outputDir, "${OUTPUT_PATH.format("test")}/ObligationCordappTest.kt").also {
+        File(outputDir, OUTPUT_PATH.format("test", "obligation", "ObligationCordapp", "Test")).also {
+            assertThat(it).exists()
+        }
+
+        File(outputDir, OUTPUT_PATH.format("main", "test", "TestCordapp", "")).also {
+            assertThat(it).exists()
+        }
+
+        File(outputDir, OUTPUT_PATH.format("test", "test", "TestCordapp", "Test")).also {
             assertThat(it).exists()
         }
     }
 
     companion object {
-        const val OUTPUT_PATH = "src/%s/kotlin/org/web3j/corda/examples/obligation/api"
+        const val OUTPUT_PATH = "src/%s/kotlin/org/web3j/corda/%s/cordapp/api/%s%s.kt"
     }
 }
