@@ -27,20 +27,20 @@ date = ""
 )
 interface {{classname}} : CorDapp {
 {{#operations}}
-    @get:Path("flows")
-    override val flows: FlowResource
+@get:Path("flows")
+override val flows: FlowResource
 
-    interface FlowResource : org.web3j.corda.api.FlowResource {
-    {{#flows}}
-        /**
+interface FlowResource : org.web3j.corda.api.FlowResource {
+{{#flows}}
+/**
 * Get the {{#titlecase}}{{#camelcase}}{{flowId}}{{/camelcase}}{{/titlecase}} flow.
-        */
-        @get:Path("{{flowPath}}")
+*/
+@get:Path("{{flowPath}}")
 val {{#camelcase}}{{flowId}}{{/camelcase}}: {{#titlecase}}{{#camelcase}}{{flowId}}{{/camelcase}}{{/titlecase}}
 
-        /**
+/**
 * {{classname}} {{#titlecase}}{{#camelcase}}{{flowId}}{{/camelcase}}{{/titlecase}} flow.
-        */
+*/
 interface {{#titlecase}}{{#camelcase}}{{flowId}}{{/camelcase}}{{/titlecase}} : Flow {
 
 /**
@@ -50,14 +50,14 @@ interface {{#titlecase}}{{#camelcase}}{{flowId}}{{/camelcase}}{{/titlecase}} : F
 @Produces("{{produces}}")
 @Consumes("{{consumes}}")
 fun start(@Valid parameters: {{inputClass}}): {{outputClass}}
-        }
-    {{/flows}}
-    }
+}
+{{/flows}}
+}
 
-    /**
-    * {{classname}} CorDapp lifecycle methods.
-    */
-    companion object : LifeCycle<{{classname}}> {
+/**
+* {{classname}} CorDapp lifecycle methods.
+*/
+companion object : LifeCycle<{{classname}}> {
 
 override fun upgrade(corda: Corda, file: File): {{classname}} = TODO("not implemented")
 
@@ -68,6 +68,6 @@ override fun deploy(corda: Corda, file: File): {{classname}} = TODO("not impleme
 */
 @JvmStatic
 override fun load(corda: Corda) = ProxyBuilder.build({{classname}}::class.java, corda.service)
-    }
+}
 {{/operations}}
 }
