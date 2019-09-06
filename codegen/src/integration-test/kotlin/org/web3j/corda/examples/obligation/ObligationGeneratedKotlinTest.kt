@@ -56,7 +56,7 @@ class ObligationGeneratedKotlinTest : DockerBasedIntegrationTest() {
 
         @BeforeAll
         @JvmStatic
-        fun setUpClass() {
+        internal fun setUpClass() {
             service = CordaService("http://localhost:9000/")
             corda = Corda.build(service)
         }

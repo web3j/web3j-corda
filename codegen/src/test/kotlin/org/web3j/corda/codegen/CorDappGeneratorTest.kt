@@ -12,13 +12,15 @@
  */
 package org.web3j.corda.codegen
 
+import assertk.assertThat
+import assertk.assertions.exists
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.fail
 import org.junit.jupiter.api.io.TempDir
 import java.io.File
 
 /**
- * TODO Assertions
+ * TODO Implement more tests and add assertions.
  */
 class CorDappGeneratorTest {
 
@@ -26,16 +28,26 @@ class CorDappGeneratorTest {
     lateinit var outputDir: File
 
     @Test
-    fun `generate with mustache`() {
+    fun `generate Obligation CorDapp`() {
 
-        val obligation = javaClass.classLoader.getResource("Obligation.json")!!.file
+        val definition = javaClass.classLoader.getResource("Obligation.json")?.run {
+            File(file).readText()
+        } ?: fail { "Obligation.json" }
 
-        CorDappGenerator(
-            "org.web3j.corda.codegen.generated.obligation",
-            File(obligation).readText() ?: fail { "Obligation.json" },
-            outputDir
-        ).apply {
+        CorDappGenerator("org.web3j.corda.examples.obligation", definition, outputDir).apply {
             generate()
         }
+
+        File(outputDir, "${OUTPUT_PATH.format("test")}/ObligationCordapp.kt").also {
+            assertThat(it).exists()
+        }
+
+        File(outputDir, "${OUTPUT_PATH.format("test")}/ObligationCordappTest.kt").also {
+            assertThat(it).exists()
+        }
+    }
+
+    companion object {
+        const val OUTPUT_PATH = "src/%s/kotlin/org/web3j/corda/examples/obligation/api"
     }
 }

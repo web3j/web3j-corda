@@ -18,6 +18,7 @@ import org.openapitools.codegen.CodegenOperation
 import org.openapitools.codegen.languages.AbstractKotlinCodegen
 import org.openapitools.codegen.templating.mustache.CamelCaseLambda
 import org.openapitools.codegen.templating.mustache.LowercaseLambda
+import org.openapitools.codegen.templating.mustache.TitlecaseLambda
 import org.openapitools.codegen.utils.StringUtils.camelize
 import org.web3j.corda.model.AbstractParty
 import org.web3j.corda.model.Amount
@@ -58,7 +59,6 @@ class CorDappCodegen(
     private val cordaMapping = mutableMapOf<String, String>()
 
     init {
-        this.artifactId = "web3j-corda"
         this.packageName = packageName
 
         // cliOptions default redefinition need to be updated
@@ -68,6 +68,7 @@ class CorDappCodegen(
         outputFolder = outputDir.absolutePath
         modelTemplateFiles["model.mustache"] = ".kt"
         apiTemplateFiles["cordapp.mustache"] = ".kt"
+        apiTestTemplateFiles["cordapp_test.mustache"] = ".kt"
         templateDir = TEMPLATE_DIR
         embeddedTemplateDir = TEMPLATE_DIR
 //        templatingEngine = TEMPLATE_ENGINE
@@ -82,6 +83,7 @@ class CorDappCodegen(
         additionalProperties["java8"] = true
         additionalProperties["lowercase"] = LowercaseLambda()
         additionalProperties["camelcase"] = CamelCaseLambda()
+        additionalProperties["titlecase"] = TitlecaseLambda()
 
         typeMapping["array"] = "kotlin.collections.List"
         typeMapping["list"] = "kotlin.collections.List"
