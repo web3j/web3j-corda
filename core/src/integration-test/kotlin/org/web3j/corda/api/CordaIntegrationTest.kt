@@ -75,8 +75,6 @@ class CordaIntegrationTest : DockerBasedIntegrationTest() {
 
     companion object {
 
-        private lateinit var corda: Corda
-
         private val party = Party(
             name = "O=Notary, L=London, C=GB",
             owningKey = "GfHq2tTVk9z4eXgyQKmUDm9Hyk7bB8yh6bMXvhmaikGFxUDrHhFnJhNiqN5Z"
@@ -108,7 +106,8 @@ class CordaIntegrationTest : DockerBasedIntegrationTest() {
                 .withNodeAddress("localhost:${container.getMappedPort(10006)}")
                 .startServer()
 
-            corda = Corda.build(CordaService("http://localhost:9000"))
+            service = CordaService("http://localhost:9000")
+            corda = Corda.build(service)
             Thread.sleep(10000)
         }
     }

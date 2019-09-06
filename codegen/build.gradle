@@ -19,10 +19,3 @@ dependencies {
     testRuntime "org.jetbrains.kotlin:kotlin-script-util"
 }
 
-sourceSets {
-    test {
-        kotlin {
-            srcDir { 'build/generated/src/main/kotlin' }
-        }
-    }
-}

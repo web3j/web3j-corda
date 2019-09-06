@@ -36,7 +36,7 @@ class CorDappGeneratorTest {
 
         CorDappGenerator("org.web3j.corda.examples.obligation", definition, outputDir).generate()
 
-        File(outputDir, "${OUTPUT_PATH.format("test")}/ObligationCordapp.kt").also {
+        File(outputDir, "${OUTPUT_PATH.format("main")}/ObligationCordapp.kt").also {
             assertThat(it).exists()
         }
 

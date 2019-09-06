@@ -14,6 +14,7 @@ package org.web3j.corda.testcontainers
 
 import com.samskivert.mustache.Mustache
 import io.bluebank.braid.server.Braid
+import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.io.TempDir
@@ -25,6 +26,7 @@ import org.testcontainers.junit.jupiter.Container
 import org.testcontainers.junit.jupiter.Testcontainers
 import org.web3j.corda.model.LoginRequest
 import org.web3j.corda.model.NotaryType
+import org.web3j.corda.protocol.Corda
 import org.web3j.corda.protocol.CordaService
 import org.web3j.corda.protocol.NetworkMap
 import java.io.File
@@ -72,6 +74,9 @@ open class DockerBasedIntegrationTest {
             ""
         }
 
+        lateinit var corda: Corda
+        lateinit var service: CordaService
+
         private const val NETWORK_MAP_ALIAS = "networkmap"
         private const val NETWORK_MAP_URL = "http://$NETWORK_MAP_ALIAS:8080"
 
@@ -83,6 +88,12 @@ open class DockerBasedIntegrationTest {
 
         private val network = Network.newNetwork()
         private val timeOut = Duration.ofMinutes(2)
+
+        @AfterAll
+        @JvmStatic
+        fun tearDown() {
+            service.close()
+        }
 
         private val nodeConfTemplate = Mustache.compiler().compile(
             InputStreamReader(

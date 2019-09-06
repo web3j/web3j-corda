@@ -1,40 +1,66 @@
-package org.web3j.corda.examples.obligation
+package {{apiPackage}}
 
-import assertk.assertThat
-import assertk.assertions.isEqualTo
+{{#imports}}import {{import}}
+{{/imports}}
+
+import io.bluebank.braid.server.Braid
 import org.junit.jupiter.api.AfterAll
+import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
-import org.web3j.corda.codegen.generated.obligation.api.Obligation
-import org.web3j.corda.codegen.generated.obligation.model.IssueObligationInitiatorParameters
-import org.web3j.corda.model.SignedTransaction
 import org.web3j.corda.protocol.Corda
 import org.web3j.corda.protocol.CordaService
 import org.web3j.corda.testcontainers.DockerBasedIntegrationTest
 import org.web3j.corda.util.convert
 import javax.annotation.Generated
 
-@Generated("org.web3j.corda.codegen.CorDappGenerator")
-class {{classname}}Test: DockerBasedIntegrationTest {
+@Generated(
+value = ["org.web3j.corda.codegen.CorDappGenerator"],
+date = ""
+)
+class {{classname}}Test: DockerBasedIntegrationTest() {
+
+{{#operations}}
+{{#flows}}
+lateinit var {{#camelcase}}{{inputClass}}{{/camelcase}}: {{inputClass}}
+
+fun `start the {{#titlecase}}{{#camelcase}}{{flowId}}{{/camelcase}}{{/titlecase}} flow`() {
+
+// TODO Initialize {{#camelcase}}{{inputClass}}{{/camelcase}}
+
+val result = {{#titlecase}}{{#camelcase}}{{flowId}}{{/camelcase}}{{/titlecase}}.load(corda)
+.flows.{{#camelcase}}{{flowId}}{{/camelcase}}.start({{#camelcase}}{{inputClass}}{{/camelcase}})
+
+Assertions.assertTrue(result != null)
+}
+{{/flows}}
+{{/operations}}
 
 companion object {
 
-@JvmStatic
-private lateinit var corda: Corda
-
-@JvmStatic
-private lateinit var service: CordaService
-
 @BeforeAll
 @JvmStatic
-internal fun setUpClass() {
-service = CordaService("http://localhost:9000/")
-corda = Corda.build(service)
+fun setUp() {
+val container = createNodeContainer(
+"Notary",
+"London",
+"GB",
+10005,
+10006,
+10007,
+true
+).apply {
+start()
 }
 
-@AfterAll
-internal fun tearDownClass() {
-service.close()
+Braid().withPort(9000)
+.withUserName("user1")
+.withPassword("test")
+.withNodeAddress("localhost:${container.getMappedPort(10006)}")
+.startServer()
+
+corda = Corda.build(CordaService("http://localhost:9000"))
+Thread.sleep(10000)
 }
 }
 }
