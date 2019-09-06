@@ -53,6 +53,14 @@ class NewCommand : CommonCommand() {
             outputDir.resolve("constants.properties").toPath(),
             StandardCopyOption.REPLACE_EXISTING
         )
+
+        GenerateCommand().apply {
+            cordaResource = GenerateCommand.CordaResource
+            cordaResource.openApiUrl = javaClass.classLoader.getResource("swagger.json")!!
+            packageName = this@NewCommand.packageName
+            outputDir = this@NewCommand.outputDir
+            run()
+        }
     }
 
     private fun mustacheTemplate(file: String): Template {
