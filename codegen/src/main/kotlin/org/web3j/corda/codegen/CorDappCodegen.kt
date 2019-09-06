@@ -71,7 +71,6 @@ class CorDappCodegen(
         apiTestTemplateFiles["cordapp_test.mustache"] = ".kt"
         templateDir = TEMPLATE_DIR
         embeddedTemplateDir = TEMPLATE_DIR
-//        templatingEngine = TEMPLATE_ENGINE
         apiPackage = "$packageName.api"
         modelPackage = "$packageName.model"
         allowUnicodeIdentifiers = true
