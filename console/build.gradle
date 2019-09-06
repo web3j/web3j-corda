@@ -20,11 +20,3 @@ dependencies {
     implementation "net.corda:corda-rpc:4.1"
     implementation "net.corda:corda-core:4.1"
 }
-
-sourceSets {
-    test {
-        kotlin {
-            srcDir { 'build/generated/src/main/kotlin' }
-        }
-    }
-}
