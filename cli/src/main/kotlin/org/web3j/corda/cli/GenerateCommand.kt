@@ -30,9 +30,9 @@ import java.nio.charset.StandardCharsets
 class GenerateCommand : CommonCommand() {
 
     @ArgGroup(exclusive = true, multiplicity = "1")
-    private lateinit var cordaResource: CordaResource
+    lateinit var cordaResource: CordaResource
 
-    private object CordaResource {
+    object CordaResource {
 
         @Option(
             names = ["-u", "--url"],

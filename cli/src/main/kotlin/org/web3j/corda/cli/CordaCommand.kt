@@ -26,7 +26,8 @@ import picocli.CommandLine.Spec
     sortOptions = false,
     mixinStandardHelpOptions = true,
     subcommands = [
-        GenerateCommand::class
+        GenerateCommand::class,
+        NewCommand::class
     ]
 )
 class CordaCommand : Runnable {
