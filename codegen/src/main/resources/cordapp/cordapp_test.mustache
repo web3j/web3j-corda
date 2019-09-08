@@ -29,7 +29,7 @@ fun `start the {{#titlecase}}{{#camelcase}}{{flowId}}{{/camelcase}}{{/titlecase}
 // TODO Initialize {{#camelcase}}{{inputClass}}{{/camelcase}}
 
 val result = {{#titlecase}}{{#camelcase}}{{flowId}}{{/camelcase}}{{/titlecase}}.load(corda)
-.flows.{{#camelcase}}{{flowId}}{{/camelcase}}.start({{#camelcase}}{{inputClass}}{{/camelcase}})
+.flows.{{classname}}.start({{#camelcase}}{{inputClass}}{{/camelcase}})
 
 Assertions.assertTrue(result != null)
 }
