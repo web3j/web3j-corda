@@ -12,6 +12,8 @@
  */
 package org.web3j.corda.codegen
 
+import io.github.classgraph.ClassGraph
+import io.github.classgraph.ClassInfoList
 import io.swagger.v3.oas.models.Operation
 import org.openapitools.codegen.CodegenConstants
 import org.openapitools.codegen.CodegenOperation
@@ -20,41 +22,12 @@ import org.openapitools.codegen.templating.mustache.CamelCaseLambda
 import org.openapitools.codegen.templating.mustache.LowercaseLambda
 import org.openapitools.codegen.templating.mustache.TitlecaseLambda
 import org.openapitools.codegen.utils.StringUtils.camelize
-import org.web3j.corda.model.AbstractParty
-import org.web3j.corda.model.Amount
-import org.web3j.corda.model.AmountCurrency
-import org.web3j.corda.model.AttachmentConstraint
-import org.web3j.corda.model.Command
-import org.web3j.corda.model.CommandObject
-import org.web3j.corda.model.ComponentGroup
-import org.web3j.corda.model.Constraint
-import org.web3j.corda.model.ContractState
-import org.web3j.corda.model.CoreTransaction
-import org.web3j.corda.model.Data
-import org.web3j.corda.model.LinearId
-import org.web3j.corda.model.LoginRequest
-import org.web3j.corda.model.MerkleTree
-import org.web3j.corda.model.NetworkHostAndPort
-import org.web3j.corda.model.NotaryChangeWireTransaction
-import org.web3j.corda.model.NotaryType
-import org.web3j.corda.model.Output
-import org.web3j.corda.model.Party
-import org.web3j.corda.model.Result
-import org.web3j.corda.model.SignedTransaction
-import org.web3j.corda.model.SimpleNodeInfo
-import org.web3j.corda.model.StateAndRef
-import org.web3j.corda.model.StateAndRefObject
-import org.web3j.corda.model.StateRef
-import org.web3j.corda.model.TimeWindow
-import org.web3j.corda.model.TransactionStateContractState
-import org.web3j.corda.model.TransactionStateObject
-import org.web3j.corda.model.WireTransaction
 import java.io.File
 import java.time.OffsetDateTime
 import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
 
-class CorDappCodegen(
+class CordaCodegen(
     packageName: String,
     outputDir: File
 ) : AbstractKotlinCodegen() {
@@ -90,8 +63,8 @@ class CorDappCodegen(
         typeMapping["list"] = "kotlin.collections.List"
 
         // Add Corda type mappings
-        CORDA_SERIALIZABLE.forEach {
-            cordaMapping[it.simpleName!!] = it.qualifiedName!!
+        CORDA_SERIALIZABLES.forEach {
+            cordaMapping[it.simpleName] = it.name
         }
     }
 
@@ -125,17 +98,17 @@ class CorDappCodegen(
         tag: String,
         resourcePath: String,
         operation: Operation,
-        co: CodegenOperation,
+        codegenOperation: CodegenOperation,
         operations: Map<String, List<CodegenOperation>>
     ) {
-        val path = CorDappGenerator.buildCorDappNameFromPath(co.path)
-        super.addOperationToGroup(path, resourcePath, operation, co, operations)
+        val path = CordaGenerator.buildCorDappNameFromPath(codegenOperation.path)
+        super.addOperationToGroup(path, resourcePath, operation, codegenOperation, operations)
     }
 
     override fun postProcessOperationsWithModels(
         objs: MutableMap<String, Any>,
-        allModels: MutableList<Any>
-    ): MutableMap<String, Any> {
+        allModels: List<Any>
+    ): Map<String, Any> {
 
         val operation = (objs["operations"] as Map<*, *>)["operation"] as List<*>
         val flows = operation.filterIsInstance<CodegenOperation>()
@@ -166,47 +139,29 @@ class CorDappCodegen(
         }
 
         objs["currentDate"] = OffsetDateTime.now(ZoneOffset.UTC).format(DateTimeFormatter.ISO_DATE_TIME)
-        
+
         return super.postProcessOperationsWithModels(objs, allModels)
     }
 
     companion object {
         const val TEMPLATE_DIR = "cordapp"
 
-        internal val CORDA_SERIALIZABLE = setOf(
-            AbstractParty::class,
-            Amount::class,
-            AmountCurrency::class,
-            AttachmentConstraint::class,
-            CommandObject::class,
-            Command::class,
-            ComponentGroup::class,
-            Constraint::class,
-            ContractState::class,
-            CoreTransaction::class,
-            Data::class,
-            LinearId::class,
-            LoginRequest::class,
-            MerkleTree::class,
-            NetworkHostAndPort::class,
-            NotaryChangeWireTransaction::class,
-            NotaryType::class,
-            Output::class,
-            Party::class,
-            Result::class,
-            SignedTransaction::class,
-            SimpleNodeInfo::class,
-            StateAndRef::class,
-            StateAndRefObject::class,
-            StateRef::class,
-            TimeWindow::class,
-            TransactionStateContractState::class,
-            TransactionStateObject::class,
-            WireTransaction::class
-        )
+        // Load model class dynamically to avoid re-generation
+        internal val CORDA_SERIALIZABLES: ClassInfoList by lazy {
+            ClassGraph().enableClassInfo().scan().allClasses.filter {
+                it.packageName == "org.web3j.corda.model"
+            }
+        }
 
-        private fun buildApiPackage(apiPackage: String, pathPrefix: String) =
-            "$apiPackage.${pathPrefix.replace("-", ".")}.api"
+        private fun buildApiPackage(apiPackage: String, pathPrefix: String): String {
+            val pathPackage = pathPrefix.split("-").filterNot {
+                // Remove overlapping sections between package and path
+                // to avoid cases like 'org.web3j.corda.corda.core'
+                apiPackage.endsWith(it)
+            }.joinToString(separator = ".")
+
+            return "$apiPackage.$pathPackage.api"
+        }
 
         private fun buildFlowId(path: String) = path.split("/".toRegex())[4]
             .split("\\.".toRegex())

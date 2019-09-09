@@ -26,14 +26,14 @@ import org.openapitools.codegen.DefaultGenerator
 import org.openapitools.codegen.config.GeneratorProperties.setProperty
 import java.io.File
 
-class CorDappGenerator(
+class CordaGenerator(
     private val packageName: String,
     private val openApiDef: String,
     private val outputDir: File
 ) : DefaultGenerator() {
 
     override fun generate(): List<File> {
-        val codegen = CorDappCodegen(packageName, outputDir).apply {
+        val codegen = CordaCodegen(packageName, outputDir).apply {
             // TODO setArtifactId("web3j-corda")
         }
 
@@ -76,7 +76,7 @@ class CorDappGenerator(
     }
 
     private fun configureGeneratorProperties(result: SwaggerParseResult) {
-        val cordaTypes = CorDappCodegen.CORDA_SERIALIZABLE.map {
+        val cordaTypes = CordaCodegen.CORDA_SERIALIZABLES.map {
             it.simpleName
         }
         val models = result.openAPI.components.schemas.keys.filter {
