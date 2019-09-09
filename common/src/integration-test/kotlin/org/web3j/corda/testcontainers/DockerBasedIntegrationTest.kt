@@ -14,6 +14,7 @@ package org.web3j.corda.testcontainers
 
 import com.samskivert.mustache.Mustache
 import io.bluebank.braid.server.Braid
+import net.corda.core.utilities.NetworkHostAndPort
 import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
@@ -54,11 +55,12 @@ open class DockerBasedIntegrationTest {
         val partyB = createNodeContainer("PartyB", "New York", "US", 10011, 10012, 10013, false)
         partyB.start()
 
-        Braid().withPort(9000)
-            .withUserName("user1")
-            .withPassword("test")
-            .withNodeAddress("localhost:${partyA.getMappedPort(10009)}")
-            .startServer()
+        Braid(
+            port = 9000,
+            userName = "user1",
+            password = "test",
+            nodeAddress = NetworkHostAndPort("localhost", partyA.getMappedPort(10009))
+        ).startServer()
 
         CountDownLatch(1).await()
         notary.stop()

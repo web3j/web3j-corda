@@ -54,11 +54,12 @@ true
 start()
 }
 
-Braid().withPort(9000)
-.withUserName("user1")
-.withPassword("test")
-.withNodeAddress("localhost:${container.getMappedPort(10006)}")
-.startServer()
+Braid(
+port = 9000,
+userName = "user1",
+password = "test",
+nodeAddress = NetworkHostAndPort("localhost", partyA.getMappedPort(10009))
+).startServer()
 
 corda = Corda.build(CordaService("http://localhost:9000"))
 Thread.sleep(10000)
