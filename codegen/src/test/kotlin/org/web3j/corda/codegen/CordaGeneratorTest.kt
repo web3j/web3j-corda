@@ -22,38 +22,38 @@ import java.io.File
 /**
  * TODO Implement more tests and add assertions.
  */
-class CorDappGeneratorTest {
+class CordaGeneratorTest {
 
     @TempDir
     lateinit var outputDir: File
 
     @Test
-    fun `generate Obligation CorDapp`() {
+    fun `generate from Corda API definition`() {
 
-        val definition = javaClass.classLoader.getResource("Obligation.json")?.run {
+        val definition = javaClass.classLoader.getResource("corda-api.json")?.run {
             File(file).readText()
-        } ?: fail { "Obligation.json" }
+        } ?: fail { "corda-api.json" }
 
-        CorDappGenerator("org.web3j.corda", definition, outputDir).generate()
+        CordaGenerator("org.web3j.corda", definition, outputDir).generate()
 
-        File(outputDir, OUTPUT_PATH.format("main", "obligation", "ObligationCordapp", "")).also {
+        File(outputDir, OUTPUT_PATH.format("main", "core", "CordaCore", "")).also {
             assertThat(it).exists()
         }
 
-        File(outputDir, OUTPUT_PATH.format("test", "obligation", "ObligationCordapp", "Test")).also {
+        File(outputDir, OUTPUT_PATH.format("test", "core", "CordaCore", "Test")).also {
             assertThat(it).exists()
         }
 
-        File(outputDir, OUTPUT_PATH.format("main", "test", "TestCordapp", "")).also {
+        File(outputDir, OUTPUT_PATH.format("main", "finance.workflows", "CordaFinanceWorkflows", "")).also {
             assertThat(it).exists()
         }
 
-        File(outputDir, OUTPUT_PATH.format("test", "test", "TestCordapp", "Test")).also {
+        File(outputDir, OUTPUT_PATH.format("test", "finance.workflows", "CordaFinanceWorkflows", "Test")).also {
             assertThat(it).exists()
         }
     }
 
     companion object {
-        const val OUTPUT_PATH = "src/%s/kotlin/org/web3j/corda/%s/cordapp/api/%s%s.kt"
+        const val OUTPUT_PATH = "src/%s/kotlin/org/web3j/corda/%s/api/%s%s.kt"
     }
 }
