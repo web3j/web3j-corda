@@ -44,11 +44,11 @@ class CordaGeneratorTest {
             assertThat(it).exists()
         }
 
-        File(outputDir, OUTPUT_PATH.format("main", "finance.workflows", "CordaFinanceWorkflows", "")).also {
+        File(outputDir, OUTPUT_PATH.format("main", "finance/workflows", "CordaFinanceWorkflows", "")).also {
             assertThat(it).exists()
         }
 
-        File(outputDir, OUTPUT_PATH.format("test", "finance.workflows", "CordaFinanceWorkflows", "Test")).also {
+        File(outputDir, OUTPUT_PATH.format("test", "finance/workflows", "CordaFinanceWorkflows", "Test")).also {
             assertThat(it).exists()
         }
     }

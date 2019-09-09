@@ -14,34 +14,41 @@ package org.web3j.corda.console
 
 import assertk.assertThat
 import assertk.assertions.exists
+import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.io.TempDir
 import java.io.File
+import java.nio.file.Files
 
 /**
  * TODO Update OpenAPI definition and add Obligation CorDapp assertions.
  */
 class CordaCommandTest {
 
-    @TempDir
-    lateinit var outputDir: File
-
     @Test
     @Disabled("Braid class loader issue")
     fun `generate Obligation from CorDapps directory`() {
         CordaCommandMain.main(
             "generate",
-            "-p", "org.web3j",
+            "-p", "org.web3j.corda",
             "-d", javaClass.classLoader.getResource("cordapps")!!.file,
             "-o", outputDir.absolutePath
         )
 
-        File(outputDir, OUTPUT_PATH.format("main", "corda/core", "CordaCore", "")).also {
+        File(outputDir, OUTPUT_PATH.format("main", "core", "CordaCore", "")).also {
             assertThat(it).exists()
         }
 
-        File(outputDir, OUTPUT_PATH.format("test", "corda/core", "CordaCore", "Test")).also {
+        File(outputDir, OUTPUT_PATH.format("test", "core", "CordaCore", "Test")).also {
+            assertThat(it).exists()
+        }
+
+        File(outputDir, OUTPUT_PATH.format("main", "finance/workflows", "CordaFinanceWorkflows", "")).also {
+            assertThat(it).exists()
+        }
+
+        File(outputDir, OUTPUT_PATH.format("test", "finance/workflows", "CordaFinanceWorkflows", "Test")).also {
             assertThat(it).exists()
         }
     }
@@ -50,21 +57,44 @@ class CordaCommandTest {
     fun `generate Obligation from OpenAPI definition`() {
         CordaCommandMain.main(
             "generate",
-            "-p", "org.web3j",
-            "-u", javaClass.classLoader.getResource("swagger.json")!!.toExternalForm(),
+            "-p", "org.web3j.corda",
+            "-u", definitionFile.absolutePath,
             "-o", outputDir.absolutePath
         )
 
-        File(outputDir, OUTPUT_PATH.format("main", "corda/core", "CordaCore", "")).also {
+        File(outputDir, OUTPUT_PATH.format("main", "core", "CordaCore", "")).also {
             assertThat(it).exists()
         }
 
-        File(outputDir, OUTPUT_PATH.format("test", "corda/core", "CordaCore", "Test")).also {
+        File(outputDir, OUTPUT_PATH.format("test", "core", "CordaCore", "Test")).also {
+            assertThat(it).exists()
+        }
+
+        File(outputDir, OUTPUT_PATH.format("main", "finance/workflows", "CordaFinanceWorkflows", "")).also {
+            assertThat(it).exists()
+        }
+
+        File(outputDir, OUTPUT_PATH.format("test", "finance/workflows", "CordaFinanceWorkflows", "Test")).also {
             assertThat(it).exists()
         }
     }
 
     companion object {
-        const val OUTPUT_PATH = "src/%s/kotlin/org/web3j/%s/api/%s%s.kt"
+        const val OUTPUT_PATH = "src/%s/kotlin/org/web3j/corda/%s/api/%s%s.kt"
+
+        @TempDir
+        lateinit var outputDir: File
+
+        private val definitionFile: File by lazy {
+            File(outputDir, "corda-api.json")
+        }
+
+        @BeforeAll
+        @JvmStatic
+        fun setUp() {
+            CordaCommandTest::class.java.classLoader.getResource("corda-api.json")!!.run {
+                Files.copy(openStream(), definitionFile.toPath())
+            }
+        }
     }
 }
