@@ -100,11 +100,14 @@ class CordaIntegrationTest : DockerBasedIntegrationTest() {
                 start()
             }
 
-            Braid().withPort(9000)
-                .withUserName("user1")
-                .withPassword("test")
-                .withNodeAddress("localhost:${container.getMappedPort(10006)}")
-                .startServer()
+            Braid(
+                port = 9000,
+                userName = "user1",
+                password = "test",
+                nodeAddress = net.corda.core.utilities.NetworkHostAndPort(
+                    "localhost", container.getMappedPort(10009)
+                )
+            ).startServer()
 
             service = CordaService("http://localhost:9000")
             corda = Corda.build(service)
