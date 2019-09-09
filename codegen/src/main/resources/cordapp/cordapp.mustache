@@ -65,7 +65,6 @@ override fun deploy(corda: Corda, file: File): {{classname}} = TODO("not impleme
 /**
 * Loads an existing {{classname}} CorDapp instance.
 */
-@JvmStatic
 override fun load(corda: Corda) = ProxyBuilder.build({{classname}}::class.java, corda.service)
 }
 {{/operations}}

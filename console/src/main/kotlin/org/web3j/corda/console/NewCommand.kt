@@ -77,6 +77,12 @@ class NewCommand : CommonCommand() {
             outputDir.resolve("README.md").toPath(),
             StandardCopyOption.REPLACE_EXISTING
         )
+
+        Files.copy(
+            javaClass.classLoader.getResource("repositories.gradle")?.openStream()!!,
+            outputDir.resolve("repositories.gradle").toPath(),
+            StandardCopyOption.REPLACE_EXISTING
+        )
     }
 
     private fun mustacheTemplate(file: String): Template {

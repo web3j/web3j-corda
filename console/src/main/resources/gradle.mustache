@@ -12,6 +12,7 @@ buildscript {
         log4j_version = constants.getProperty("log4jVersion")
         slf4j_version = constants.getProperty("slf4jVersion")
         corda_platform_version = constants.getProperty("platformVersion")
+        jersey_version = constants.getProperty("jerseyVersion")
     }
 
     repositories {
@@ -66,6 +67,15 @@ dependencies {
     testCompile "org.jetbrains.kotlin:kotlin-test:$kotlin_version"
     testCompile "junit:junit:$junit_version"
 
+
+    implementation group: 'org.glassfish.jersey.inject', name: 'jersey-hk2', version: jersey_version
+    implementation group: 'org.glassfish.jersey.core', name: 'jersey-client', version: jersey_version
+    implementation group: 'org.glassfish.jersey.media', name: 'jersey-media-json-jackson', version: jersey_version
+    implementation group: 'org.glassfish.jersey.ext', name: 'jersey-proxy-client', version: jersey_version
+    implementation group: 'org.glassfish.jersey.ext', name: 'jersey-bean-validation', version: jersey_version
+
+    implementation 'org.web3j.corda:web3j-corda-core:0.1.0-SNAPSHOT'
+
     // Corda dependencies.
     cordaCompile "$corda_release_group:corda-core:$corda_release_version"
     cordaCompile "$corda_release_group:corda-jackson:$corda_release_version"
@@ -76,6 +86,15 @@ dependencies {
     cordaRuntime "org.apache.logging.log4j:log4j-slf4j-impl:$log4j_version"
 
     // CorDapp dependencies.
+    testImplementation group: 'io.bluebank.braid', name: 'braid-server', version: '4.1.2-SNAPSHOT', changing: true
+
+    testImplementation "org.testcontainers:testcontainers:1.11.2"
+
+    testImplementation 'org.web3j.corda:web3j-corda-common:0.1.0-SNAPSHOT:integrationTest'
+
+    testImplementation "org.junit.jupiter:junit-jupiter-api:5.4.2"
+    testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:5.4.2"
+    testRuntimeOnly "org.junit.vintage:junit-vintage-engine:5.4.2"
 }
 
 jar {

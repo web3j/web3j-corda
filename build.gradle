@@ -178,6 +178,7 @@ subprojects {
                 version = project.version
                 from components.java
                 artifact sourcesJar
+                artifact integrationTestJar
                 pom {
                     name = project.name
                     description = project.description

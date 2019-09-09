@@ -28,13 +28,12 @@ fun `start the {{#titlecase}}{{#camelcase}}{{flowId}}{{/camelcase}}{{/titlecase}
 
 // TODO Initialize {{#camelcase}}{{inputClass}}{{/camelcase}}
 
-val result = {{#titlecase}}{{#camelcase}}{{flowId}}{{/camelcase}}{{/titlecase}}.load(corda)
-.flows.{{classname}}.start({{#camelcase}}{{inputClass}}{{/camelcase}})
+val result = {{classname}}.load(corda)
+.flows.{{#camelcase}}{{flowId}}{{/camelcase}}.start({{#camelcase}}{{inputClass}}{{/camelcase}})
 
 Assertions.assertTrue(result != null)
 }
 {{/flows}}
-
 {{/operations}}
 
 companion object {
