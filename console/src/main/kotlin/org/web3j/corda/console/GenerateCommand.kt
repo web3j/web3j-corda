@@ -12,15 +12,15 @@
  */
 package org.web3j.corda.console
 
-import io.bluebank.braid.server.BraidDocsMain
 import net.corda.core.internal.list
-import org.web3j.corda.codegen.CorDappGenerator
+import org.web3j.corda.codegen.CordaGenerator
 import picocli.CommandLine.ArgGroup
 import picocli.CommandLine.Command
+import picocli.CommandLine.ITypeConverter
 import picocli.CommandLine.Option
 import java.io.File
+import java.net.MalformedURLException
 import java.net.URL
-import java.net.URLClassLoader
 import java.nio.charset.StandardCharsets
 
 /**
@@ -37,6 +37,7 @@ class GenerateCommand : CommonCommand() {
         @Option(
             names = ["-u", "--url"],
             description = ["Corda node OpenAPI URL"],
+            converter = [URLConverter::class],
             required = true
         )
         lateinit var openApiUrl: URL
@@ -57,9 +58,19 @@ class GenerateCommand : CommonCommand() {
         if (cordaResource.isCorDappsDirInitialized) {
             generateOpenApiDef(cordaResource.corDappsDir)
         } else {
-            fetchOpenApiDef(cordaResource.openApiUrl)
+            fetchOpenApiDef(cordaResource.openApiUrl.toURI().toURL())
         }.apply {
-            CorDappGenerator(packageName, this, outputDir).generate()
+            CordaGenerator(packageName, this, outputDir).generate()
+        }
+    }
+
+    private class URLConverter : ITypeConverter<URL> {
+        override fun convert(value: String): URL {
+            return try {
+                URL(value)
+            } catch (e: MalformedURLException) {
+                URL("file:$value")
+            }
         }
     }
 
@@ -78,12 +89,8 @@ class GenerateCommand : CommonCommand() {
             return file.toPath().list().map {
                 it.toFile().toURI().toURL()
             }.run {
-                BraidDocsMain(
-                    URLClassLoader(
-                        toTypedArray(),
-                        BraidDocsMain::class.java.classLoader
-                    )
-                ).swaggerText()
+                ""
+//                FIXME main().swaggerText()
             }
         }
     }
