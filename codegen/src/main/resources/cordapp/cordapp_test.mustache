@@ -24,6 +24,7 @@ class {{classname}}Test: DockerBasedIntegrationTest() {
 {{#flows}}
 lateinit var {{#camelcase}}{{inputClass}}{{/camelcase}}: {{inputClass}}
 
+@Test
 fun `start the {{#titlecase}}{{#camelcase}}{{flowId}}{{/camelcase}}{{/titlecase}} flow`() {
 
 // TODO Initialize {{#camelcase}}{{inputClass}}{{/camelcase}}
@@ -31,7 +32,7 @@ fun `start the {{#titlecase}}{{#camelcase}}{{flowId}}{{/camelcase}}{{/titlecase}
 val result = {{classname}}.load(corda)
 .flows.{{#camelcase}}{{flowId}}{{/camelcase}}.start({{#camelcase}}{{inputClass}}{{/camelcase}})
 
-Assertions.assertTrue(result != null)
+// TODO Add assertions 
 }
 {{/flows}}
 {{/operations}}
