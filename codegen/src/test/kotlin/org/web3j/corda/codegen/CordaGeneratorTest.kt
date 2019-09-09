@@ -18,6 +18,7 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.fail
 import org.junit.jupiter.api.io.TempDir
 import java.io.File
+import java.io.InputStreamReader
 
 /**
  * TODO Implement more tests and add assertions.
@@ -31,7 +32,7 @@ class CordaGeneratorTest {
     fun `generate from Corda API definition`() {
 
         val definition = javaClass.classLoader.getResource("corda-api.json")?.run {
-            File(file).readText()
+            openStream().use { InputStreamReader(it).readText() }
         } ?: fail { "corda-api.json" }
 
         CordaGenerator("org.web3j.corda", definition, outputDir).generate()
