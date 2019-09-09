@@ -11,6 +11,7 @@
  * specific language governing permissions and limitations under the License.
  */
 @file:JvmName("CordaUtils")
+
 package org.web3j.corda.util
 
 import com.fasterxml.jackson.databind.ObjectMapper
