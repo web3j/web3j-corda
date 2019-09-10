@@ -18,6 +18,7 @@ import com.pinterest.ktlint.ruleset.standard.StandardRuleSetProvider
 import com.samskivert.mustache.Mustache
 import com.samskivert.mustache.Template
 import mu.KLogging
+import org.apache.commons.io.FileUtils
 import picocli.CommandLine.Command
 import picocli.CommandLine.Option
 import java.io.File
@@ -25,7 +26,6 @@ import java.io.FileOutputStream
 import java.io.InputStreamReader
 import java.io.OutputStreamWriter
 import java.io.PrintWriter
-import java.io.Writer
 import java.nio.file.Files
 import java.nio.file.StandardCopyOption
 
@@ -42,45 +42,48 @@ class NewCommand : CommonCommand() {
     )
     lateinit var corDappName: String
 
-    private val corDappTemplate = mustacheTemplate("CorDapp.mustache")
-    private val gradleTemplate = mustacheTemplate("gradle.mustache")
-
     override fun run() {
-        generateFlow()
-        generateGradleFile()
-        copyCommonFiles()
+        val context = mapOf(
+            "packageName" to packageName,
+            "corDappName" to corDappName
+        )
+        generateTemplateFlow(context)
+        generateTemplateContract(context)
+
+        copyProjectResources()
 
         GenerateCommand().apply {
             cordaResource = GenerateCommand.CordaResource
-            cordaResource.openApiUrl = javaClass.classLoader.getResource("swagger.json")!!
+            cordaResource.openApiUrl =
+                javaClass.classLoader.getResource("swagger.json")!! // FIXME - change to path of jar files
             packageName = this@NewCommand.packageName
-            outputDir = this@NewCommand.outputDir
+            outputDir = File("${this@NewCommand.outputDir}/clients")
             run()
         }
+
+        copyResource("clients/build.gradle", outputDir)
     }
 
-    private fun copyCommonFiles() {
-        Files.copy(
-            javaClass.classLoader.getResource("constants.properties")?.openStream()!!,
-            outputDir.resolve("constants.properties").toPath(),
-            StandardCopyOption.REPLACE_EXISTING
+    private fun copyProjectResources() {
+        copyResource("gradle.properties", outputDir)
+        copyResource("build.gradle", outputDir)
+        copyResource("settings.gradle", outputDir)
+        copyResource("gradlew", outputDir)
+        File("${outputDir.toURI().path}/gradlew").setExecutable(true)
+
+        FileUtils.copyDirectory(
+            File(javaClass.classLoader.getResource("gradle")?.toURI()!!.path),
+            outputDir.resolve("gradle")
         )
 
-        Files.copy(
-            javaClass.classLoader.getResource("gradlew")?.openStream()!!,
-            outputDir.resolve("gradlew").toPath(),
-            StandardCopyOption.REPLACE_EXISTING
-        )
 
-        Files.copy(
-            javaClass.classLoader.getResource("README.md")?.openStream()!!,
-            outputDir.resolve("README.md").toPath(),
-            StandardCopyOption.REPLACE_EXISTING
-        )
+        copyResource("README.md", outputDir)
+    }
 
+    private fun copyResource(name: String, outputDir: File) {
         Files.copy(
-            javaClass.classLoader.getResource("repositories.gradle")?.openStream()!!,
-            outputDir.resolve("repositories.gradle").toPath(),
+            javaClass.classLoader.getResource(name)?.openStream()!!,
+            outputDir.resolve(name).toPath(),
             StandardCopyOption.REPLACE_EXISTING
         )
     }
@@ -94,42 +97,84 @@ class NewCommand : CommonCommand() {
         )
     }
 
-    private fun generateFlow() {
-        File(outputDir, "src/main/kotlin/${packageName.replace(".", "/")}")
-            .apply { mkdirs() }
-            .resolve("$corDappName.kt")
-            .apply {
-                val context = mapOf(
-                    "lowercase" to LowercaseLambda,
-                    "PackageName" to packageName,
-                    "CorDappName" to corDappName
-                )
+    private fun generateTemplateContract(context: Map<String, Any>) {
+        generateFromTemplate(
+            "contracts/src/main/${packageName.replace(".", "/")}/contracts",
+            "${corDappName}Contract.kt",
+            mustacheTemplate("contract/contract.mustache"),
+            context
+        )
 
-                mustacheWriter(corDappTemplate, absolutePath, context)
+        generateFromTemplate(
+            "contracts/src/main/${packageName.replace(".", "/")}/states",
+            "${corDappName}State.kt",
+            mustacheTemplate("contract/state.mustache"),
+            context
+        )
 
-                KtLint.format(
-                    KtLint.Params(
-                        ruleSets = ruleSets,
-                        cb = { error, _ ->
-                            logger.warn { error }
-                        },
-                        text = readText(),
-                        debug = true
-                    )
-                ).run {
-                    writeText(this)
-                }
-            }
+        generateFromTemplate(
+            "contracts/src/test/${packageName.replace(".", "/")}",
+            "ContractTests.kt",
+            mustacheTemplate("contractTest.mustache"),
+            context
+        )
+        generateFromTemplate(
+            "contracts/src/",
+            "build.gradle",
+            mustacheTemplate("contract/contractGradle.mustache"),
+            context
+        )
     }
 
-    private fun generateGradleFile() {
-        mustacheWriter(
-            gradleTemplate,
-            "${outputDir}/build.gradle",
-            context = mapOf(
-                "CorDappName" to corDappName
-            )
+    private fun generateTemplateFlow(context: Map<String, Any>) {
+        generateFromTemplate(
+            "workflows/src/main/${packageName.replace(".", "/")}/flows",
+            "Flows.kt",
+            mustacheTemplate("workflows/flow.mustache"),
+            context
         )
+        generateFromTemplate(
+            "workflows/src/test/${packageName.replace(".", "/")}",
+            "FlowTests.kt",
+            mustacheTemplate("workflows/flowTest.mustache"),
+            context
+        )
+        generateFromTemplate(
+            "workflows/src/test/${packageName.replace(".", "/")}",
+            "ContractTests.kt",
+            mustacheTemplate("contractTest.mustache"),
+            context
+        )
+        generateFromTemplate(
+            "workflows/src/",
+            "build.gradle",
+            mustacheTemplate("workflows/flowGradle.mustache"),
+            context
+        )
+    }
+
+    private fun generateFromTemplate(path: String, name: String, template: Template, context: Map<String, Any>) {
+        File(outputDir, path)
+            .apply { mkdirs() }
+            .resolve(name)
+            .apply {
+                mustacheWriter(template, absolutePath, context)
+
+                if (name.endsWith(".kt")) {
+                    KtLint.format(
+                        KtLint.Params(
+                            ruleSets = ruleSets,
+                            cb = { error, _ ->
+                                logger.warn { error }
+                            },
+                            text = readText(),
+                            debug = true
+                        )
+                    ).run {
+                        writeText(this)
+                    }
+                }
+            }
     }
 
     private fun mustacheWriter(template: Template, filePath: String, context: Map<String, Any>) {
@@ -147,11 +192,5 @@ class NewCommand : CommonCommand() {
             StandardRuleSetProvider().get(),
             ExperimentalRuleSetProvider().get()
         )
-    }
-
-    object LowercaseLambda : Mustache.Lambda {
-        override fun execute(fragment: Template.Fragment, writer: Writer) {
-            writer.write(fragment.execute().toLowerCase())
-        }
     }
 }
