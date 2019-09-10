@@ -12,6 +12,7 @@
  */
 package org.web3j.corda.console
 
+import io.bluebank.braid.core.utils.tryWithClassLoader
 import net.corda.core.internal.list
 import org.web3j.corda.codegen.CordaGenerator
 import picocli.CommandLine.ArgGroup
@@ -21,6 +22,7 @@ import picocli.CommandLine.Option
 import java.io.File
 import java.net.MalformedURLException
 import java.net.URL
+import java.net.URLClassLoader
 import java.nio.charset.StandardCharsets
 
 /**
@@ -89,8 +91,12 @@ class GenerateCommand : CommonCommand() {
             return file.toPath().list().map {
                 it.toFile().toURI().toURL()
             }.run {
-                ""
-//                FIXME main().swaggerText()
+                // we call so as to initialise model converters etc
+                // before replacing the context class loader
+                Braid.init()
+                tryWithClassLoader(URLClassLoader(toTypedArray())) {
+                    BraidDocsMain().swaggerText()
+                }
             }
         }
     }
