@@ -13,6 +13,8 @@
 package org.web3j.corda.console
 
 import io.bluebank.braid.core.utils.tryWithClassLoader
+import io.bluebank.braid.server.Braid
+import io.bluebank.braid.server.BraidDocsMain
 import net.corda.core.internal.list
 import org.web3j.corda.codegen.CordaGenerator
 import picocli.CommandLine.ArgGroup
