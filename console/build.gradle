@@ -9,14 +9,13 @@ applicationName = 'web3j-corda'
 dependencies {
     api project(':web3j-corda-core')
     api project(':web3j-corda-codegen')
-    api ('javax.annotation:javax.annotation-api:1.3.2')
     
-    implementation(group: 'io.bluebank.braid', name:'braid-server', version:'4.1.2-SNAPSHOT', changing: true) {
+    api("javax.annotation:javax.annotation-api:${versions.annotationApi}")
+
+    implementation(group: 'io.bluebank.braid', name: 'braid-server', version: versions.braid, changing: true) {
         exclude group: 'org.slf4j', module: 'slf4j-log4j12'
+        exclude group: 'io.netty'
     }
-    implementation "net.corda:corda-jackson:4.1"
-    implementation "net.corda:corda-rpc:4.1"
-    implementation "net.corda:corda-core:4.1"
-    
+
     implementation "info.picocli:picocli:${versions.picocli}"
 }

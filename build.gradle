@@ -102,19 +102,33 @@ subprojects {
         implementation 'org.jetbrains.kotlin:kotlin-reflect'
         implementation 'org.jetbrains.kotlin:kotlin-noarg'
         implementation 'org.jetbrains.kotlin:kotlin-native-utils'
+        
+        implementation("org.jetbrains:annotations:${versions.annotations}") { force = true }
 
+        implementation("org.slf4j:slf4j-api:${versions.slf4j}") { force = true }
+        implementation("org.slf4j:slf4j-ext:${versions.slf4j}") { force = true }
+        implementation("org.slf4j:jcl-over-slf4j:${versions.slf4j}") { force = true }
+
+        // FIXME Move to specific modules, not all require those dependencies
+        implementation group: 'com.fasterxml.jackson.module', name: 'jackson-module-kotlin', version: versions.jackson, force: true
+        implementation group: 'com.fasterxml.jackson.module', name: 'jackson-module-jaxb-annotations', version: versions.jackson, force: true
+        implementation group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: versions.jackson, force: true
+        implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: versions.jackson, force: true
+        implementation group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: versions.jackson, force: true
+        implementation group: 'com.fasterxml.jackson.dataformat', name: 'jackson-dataformat-yaml', version: versions.jackson, force: true
+
+        implementation("net.bytebuddy:byte-buddy:1.9.10") { force = true }
+        implementation("com.google.errorprone:error_prone_annotations:2.2.0") { force = true }
+        implementation("com.google.guava:guava:28.1-jre") { force = true }
+        implementation("commons-io:commons-io:2.6") { force = true }
+        
         implementation "io.github.microutils:kotlin-logging:${versions.kLogging}"
-
-        implementation("org.jetbrains.kotlin:kotlin-compiler-embeddable:${versions.kotlin}") {
-            force = true
-        }
-
+        
         implementation("com.pinterest.ktlint:ktlint-core:${versions.ktlint}") {
             exclude group: 'org.apache.commons'
             exclude group: 'org.apache.httpcomponents'
             exclude group: 'org.slf4j'
         }
-
         implementation "com.pinterest.ktlint:ktlint-ruleset-standard:${versions.ktlint}"
         implementation "com.pinterest.ktlint:ktlint-ruleset-experimental:${versions.ktlint}"
 

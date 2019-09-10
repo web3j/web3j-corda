@@ -1,24 +1,14 @@
 dependencies {
-    api group: 'javax.validation', name: 'validation-api', version: '2.0.1.Final'
-    
-    implementation group: 'javax.activation', name: 'javax.activation-api', version: '1.2.0'
-    implementation group: 'javax.xml.bind', name: 'jaxb-api', version: '2.3.1'
-    implementation group: 'com.fasterxml.jackson.module', name: 'jackson-module-kotlin', version: versions.jackson, force: true
+    api group: 'javax.validation', name: 'validation-api', version: versions.validationApi
+
+    implementation group: 'javax.activation', name: 'javax.activation-api', version: versions.activationApi
+    implementation group: 'javax.xml.bind', name: 'jaxb-api', version: versions.jaxbApi
 
     integrationTestApi project(':web3j-corda-core')
-    integrationTestApi group: 'io.bluebank.braid', name: 'braid-server', version: versions.braid, changing: true
-
-    testImplementation group: 'net.corda', name: 'corda', version: versions.corda
-    testImplementation group: 'net.corda', name: 'corda-core', version: versions.corda
-    testImplementation group: 'net.corda', name: 'corda-jackson', version: versions.corda
-    testImplementation group: 'net.corda', name: 'corda-rpc', version: versions.corda
-    testImplementation group: 'net.corda', name: 'corda-webserver', version: versions.corda
-    testImplementation group: 'com.samskivert', name: 'jmustache', version: versions.jmustache
-}
-
-task copyGeneratedFiles(type: Copy, dependsOn: []) {
-    from "$rootDir/codegen/build/generated"
-    into "$rootDir/common/build/generated"
+    integrationTestApi(group: 'io.bluebank.braid', name: 'braid-server', version: versions.braid, changing: true) {
+        exclude group: 'org.slf4j', module: 'slf4j-log4j12'
+    }
+    integrationTestImplementation group: 'com.samskivert', name: 'jmustache', version: versions.jmustache
 }
 
 sourceSets {
