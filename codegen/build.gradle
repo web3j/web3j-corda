@@ -2,7 +2,7 @@ dependencies {
     api project(':web3j-corda-common')
     api "jakarta.ws.rs:jakarta.ws.rs-api:${versions.jaxRs}"
 
-    api ("org.openapitools:openapi-generator:${versions.openApiGenerator}") {
+    api("org.openapitools:openapi-generator:${versions.openApiGenerator}") {
         exclude group: 'com.fasterxml.jackson.datatype'
         exclude group: 'com.github.jknack'
         exclude group: 'javax.activation'
@@ -11,7 +11,7 @@ dependencies {
     }
 
     implementation "io.github.classgraph:classgraph:${versions.classgraph}"
-    
+
     integrationTestImplementation project(path: ':web3j-corda-common', configuration: 'integrationTest')
     integrationTestImplementation project(':web3j-corda-common').sourceSets.integrationTest.output // FIXME
 
