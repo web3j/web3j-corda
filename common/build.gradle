@@ -10,11 +10,3 @@ dependencies {
     }
     integrationTestImplementation group: 'com.samskivert', name: 'jmustache', version: versions.jmustache
 }
-
-sourceSets {
-    test {
-        kotlin {
-            srcDir { "build/generated/src/main/kotlin" }
-        }
-    }
-}
