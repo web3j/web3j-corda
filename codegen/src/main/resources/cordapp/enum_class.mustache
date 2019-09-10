@@ -3,6 +3,6 @@
 * Values: {{#allowableValues}}{{#enumVars}}{{{value}}}{{^-last}}, {{/-last}}{{/enumVars}}{{/allowableValues}}
 */
 enum class {{classname}} {
-{{#allowableValues}}{{#enumVars}}{{#uppercase}}{{&name}}{{/uppercase}}{{^-last}},{{/-last}}
+{{#allowableValues}}{{#enumVars}}{{#unquote}}{{{value}}}{{/unquote}}{{^-last}},{{/-last}}
 {{/enumVars}}{{/allowableValues}}
 }

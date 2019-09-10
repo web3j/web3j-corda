@@ -12,6 +12,7 @@
  */
 package org.web3j.corda.codegen
 
+import com.samskivert.mustache.Mustache
 import io.github.classgraph.ClassGraph
 import io.github.classgraph.ClassInfoList
 import io.swagger.v3.oas.models.Operation
@@ -21,6 +22,7 @@ import org.openapitools.codegen.languages.AbstractKotlinCodegen
 import org.openapitools.codegen.templating.mustache.CamelCaseLambda
 import org.openapitools.codegen.templating.mustache.LowercaseLambda
 import org.openapitools.codegen.templating.mustache.TitlecaseLambda
+import org.openapitools.codegen.templating.mustache.UppercaseLambda
 import org.openapitools.codegen.utils.StringUtils.camelize
 import java.io.File
 import java.time.OffsetDateTime
@@ -56,8 +58,12 @@ class CordaCodegen(
 
         additionalProperties["java8"] = true
         additionalProperties["lowercase"] = LowercaseLambda()
+        additionalProperties["uppercase"] = UppercaseLambda()
         additionalProperties["camelcase"] = CamelCaseLambda()
         additionalProperties["titlecase"] = TitlecaseLambda()
+        additionalProperties["unquote"] = Mustache.Lambda { fragment, out ->
+            out.write(fragment.execute().removeSurrounding("\""))
+        }
 
         typeMapping["array"] = "kotlin.collections.List"
         typeMapping["list"] = "kotlin.collections.List"
