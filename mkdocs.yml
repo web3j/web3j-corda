@@ -1,0 +1,23 @@
+site_name: Web3j Corda
+
+nav:
+  - Quickstart : quickstart.md
+  - Getting Started : getting_started.md
+  - Connect to Corda Node : connecting_to_node.md
+  - Command Line Tools: command_line_tools.md
+
+# Configuration
+theme:
+  name: "material"
+  language: "en"
+  feature:
+    tabs: true
+  palette:
+    primary: "white"
+    accent: "deep-orange"
+
+markdown_extensions:
+  - pymdownx.tasklist
+
+extra_css:
+  - "stylesheets/extra.css"
