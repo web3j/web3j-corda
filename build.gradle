@@ -58,6 +58,7 @@ subprojects {
                 snapshotsOnly()
             }
         }
+        maven { url 'https://repo.gradle.org/gradle/libs-releases' }
         maven {
             url "$rootProject.projectDir/lib"
         }

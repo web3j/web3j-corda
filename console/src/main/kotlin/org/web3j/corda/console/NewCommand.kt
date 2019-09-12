@@ -19,6 +19,7 @@ import com.samskivert.mustache.Mustache
 import com.samskivert.mustache.Template
 import mu.KLogging
 import org.apache.commons.io.FileUtils
+import org.gradle.tooling.GradleConnector
 import picocli.CommandLine.Command
 import picocli.CommandLine.Option
 import java.io.File
@@ -27,6 +28,7 @@ import java.io.InputStreamReader
 import java.io.OutputStreamWriter
 import java.io.PrintWriter
 import java.nio.file.Files
+import java.nio.file.Path
 import java.nio.file.StandardCopyOption
 
 /**
@@ -52,16 +54,29 @@ class NewCommand : CommonCommand() {
 
         copyProjectResources()
 
+        runGradleBuild(outputDir.toPath())
+
         GenerateCommand().apply {
             cordaResource = GenerateCommand.CordaResource
-            cordaResource.openApiUrl =
-                javaClass.classLoader.getResource("swagger.json")!! // FIXME - change to path of jar files
+            cordaResource.corDappsDir = File("${this@NewCommand.outputDir}/build/libs/")
             packageName = this@NewCommand.packageName
             outputDir = File("${this@NewCommand.outputDir}/clients")
             run()
         }
 
         copyResource("clients/build.gradle", outputDir)
+    }
+
+    private fun runGradleBuild(projectRoot: Path) {
+        GradleConnector.newConnector().apply {
+            useBuildDistribution()
+            forProjectDirectory(projectRoot.toFile())
+        }.connect().use {
+            it.newBuild().apply {
+                forTasks("jar")
+                run()
+            }
+        }
     }
 
     private fun copyProjectResources() {
