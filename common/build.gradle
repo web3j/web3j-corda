@@ -1,6 +1,4 @@
 dependencies {
-    api group: 'javax.validation', name: 'validation-api', version: versions.validationApi
-
     implementation group: 'javax.activation', name: 'javax.activation-api', version: versions.activationApi
     implementation group: 'javax.xml.bind', name: 'jaxb-api', version: versions.jaxbApi
 
