@@ -52,6 +52,8 @@ subprojects {
     repositories {
         mavenCentral()
         jcenter()
+        gradlePluginPortal()
+        maven { url 'https://repo.gradle.org/gradle/libs-releases' }
         maven {
             url 'https://oss.sonatype.org/content/repositories/snapshots/'
             mavenContent {
@@ -103,7 +105,7 @@ subprojects {
         implementation 'org.jetbrains.kotlin:kotlin-reflect'
         implementation 'org.jetbrains.kotlin:kotlin-noarg'
         implementation 'org.jetbrains.kotlin:kotlin-native-utils'
-        
+
         implementation("org.jetbrains:annotations:${versions.annotations}") { force = true }
 
         implementation("org.slf4j:slf4j-api:${versions.slf4j}") { force = true }
@@ -122,9 +124,9 @@ subprojects {
         implementation("com.google.errorprone:error_prone_annotations:2.2.0") { force = true }
         implementation("com.google.guava:guava:28.1-jre") { force = true }
         implementation("commons-io:commons-io:2.6") { force = true }
-        
+
         implementation "io.github.microutils:kotlin-logging:${versions.kLogging}"
-        
+
         implementation("com.pinterest.ktlint:ktlint-core:${versions.ktlint}") {
             exclude group: 'org.apache.commons'
             exclude group: 'org.apache.httpcomponents'
@@ -145,6 +147,7 @@ subprojects {
 
         testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:${versions.junit5}"
         testRuntimeOnly "org.junit.vintage:junit-vintage-engine:${versions.junit5}"
+        testRuntimeOnly "org.jetbrains.kotlin:kotlin-script-util"
 
         integrationTestImplementation "org.testcontainers:testcontainers:${versions.testcontainers}"
         integrationTestImplementation "org.testcontainers:junit-jupiter:${versions.testcontainers}"

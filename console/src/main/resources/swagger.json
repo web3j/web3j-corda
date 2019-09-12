@@ -1,188 +1,466 @@
 {
-  "swagger" : "2.0",
-  "info" : {
-    "description" : "",
-    "version" : "1.0.0",
-    "title" : "",
-    "contact" : { }
+  "swagger": "2.0",
+  "info": {
+    "description": "",
+    "version": "1.0.0",
+    "title": "",
+    "contact": {}
   },
-  "host" : "localhost:8080",
-  "basePath" : "/api/rest/",
-  "schemes" : [ "http" ],
-  "consumes" : [ "application/json" ],
-  "produces" : [ "application/json" ],
-  "paths" : {
-    "/network/nodes" : {
-      "get" : {
-        "tags" : [ "network" ],
-        "description" : "Retrieves all nodes if neither query parameter is supplied. Otherwise returns a list of one node matching the supplied query parameter.",
-        "consumes" : [ "application/json" ],
-        "produces" : [ "application/json" ],
-        "parameters" : [ {
-          "name" : "host-and-port",
-          "in" : "query",
-          "description" : "[host]:[port] for the Corda P2P of the node",
-          "required" : false,
-          "type" : "string",
-          "minItems" : 0,
-          "x-example" : "localhost:10000"
-        }, {
-          "name" : "x500-name",
-          "in" : "query",
-          "description" : "the X500 name for the node",
-          "required" : false,
-          "type" : "string",
-          "minItems" : 0,
-          "x-example" : "O=PartyB, L=New York, C=US"
-        } ],
-        "responses" : {
-          "default" : {
-            "description" : "default response",
-            "schema" : {
-              "type" : "array",
-              "items" : {
-                "$ref" : "#/definitions/SimpleNodeInfo"
-              }
-            }
+  "host": "localhost:8080",
+  "basePath": "/api/rest/",
+  "schemes": [
+    "http"
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/network/nodes": {
+      "get": {
+        "tags": [
+          "network"
+        ],
+        "description": "Retrieves all nodes if neither query parameter is supplied. Otherwise returns a list of one node matching the supplied query parameter.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "host-and-port",
+            "in": "query",
+            "description": "[host]:[port] for the Corda P2P of the node",
+            "required": false,
+            "type": "string",
+            "minItems": 0,
+            "x-example": "localhost:10000"
           },
-          "200" : {
-            "description" : "default response",
-            "schema" : {
-              "type" : "array",
-              "items" : {
-                "$ref" : "#/definitions/SimpleNodeInfo"
-              }
-            }
-          },
-          "500" : {
-            "description" : "server failure"
+          {
+            "name": "x500-name",
+            "in": "query",
+            "description": "the X500 name for the node",
+            "required": false,
+            "type": "string",
+            "minItems": 0,
+            "x-example": "O=PartyB, L=New York, C=US"
           }
-        }
-      }
-    },
-    "/network/notaries" : {
-      "get" : {
-        "tags" : [ "network" ],
-        "description" : "",
-        "consumes" : [ "application/json" ],
-        "produces" : [ "application/json" ],
-        "parameters" : [ {
-          "name" : "x500-name",
-          "in" : "query",
-          "description" : "the X500 name for the node",
-          "required" : false,
-          "type" : "string",
-          "minItems" : 0,
-          "x-example" : "O=PartyB, L=New York, C=US"
-        } ],
-        "responses" : {
-          "default" : {
-            "description" : "default response",
-            "schema" : {
-              "type" : "array",
-              "items" : {
-                "$ref" : "#/definitions/Party"
-              }
-            }
-          },
-          "200" : {
-            "description" : "default response",
-            "schema" : {
-              "type" : "array",
-              "items" : {
-                "$ref" : "#/definitions/Party"
-              }
-            }
-          },
-          "500" : {
-            "description" : "server failure"
-          }
-        }
-      }
-    },
-    "/network/nodes/self" : {
-      "get" : {
-        "tags" : [ "network" ],
-        "description" : "Retrieves all nodes if neither query parameter is supplied. Otherwise returns a list of one node matching the supplied query parameter.",
-        "consumes" : [ "application/json" ],
-        "produces" : [ "application/json" ],
-        "parameters" : [ ],
-        "responses" : {
-          "default" : {
-            "description" : "default response",
-            "schema" : {
-              "$ref" : "#/definitions/SimpleNodeInfo"
-            }
-          },
-          "200" : {
-            "description" : "default response",
-            "schema" : {
-              "$ref" : "#/definitions/SimpleNodeInfo"
-            }
-          },
-          "500" : {
-            "description" : "server failure"
-          }
-        }
-      }
-    },
-    "/cordapps/flows" : {
-      "get" : {
-        "tags" : [ "network" ],
-        "description" : "Retrieves a list of callable flows. Example [\"net.corda.core.flows.ContractUpgradeFlow$Authorise\"]",
-        "consumes" : [ "application/json" ],
-        "produces" : [ "application/json" ],
-        "parameters" : [ ],
-        "responses" : {
-          "default" : {
-            "description" : "default response",
-            "schema" : {
-              "type" : "array",
-              "items" : {
-                "type" : "string"
-              }
-            }
-          },
-          "200" : {
-            "description" : "default response",
-            "schema" : {
-              "type" : "array",
-              "items" : {
-                "type" : "string"
-              }
-            }
-          },
-          "500" : {
-            "description" : "server failure"
-          }
-        }
-      }
-    },
-    "/cordapps/sample-cordapp/flows/org.web3j.corda$Sample": {
-      "post" : {
-        "tags" : [ "network" ],
-        "description" : "",
-        "consumes" : [ "application/json" ],
-        "produces" : [ "application/plain" ],
-        "parameters" : [ {
-          "in" : "body",
-          "name" : "payload",
-          "required" : true,
-          "schema" : {
-            "$ref" : "#/definitions/Party"
-          }
-        } ],
+        ],
         "responses": {
           "default": {
             "description": "default response",
             "schema": {
-              "$ref": "#/definitions/SignedTransaction"
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/SimpleNodeInfo"
+              }
             }
           },
           "200": {
             "description": "default response",
             "schema": {
-              "$ref": "#/definitions/SignedTransaction"
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/SimpleNodeInfo"
+              }
+            }
+          },
+          "500": {
+            "description": "server failure"
+          }
+        }
+      }
+    },
+    "/network/notaries": {
+      "get": {
+        "tags": [
+          "network"
+        ],
+        "description": "",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "x500-name",
+            "in": "query",
+            "description": "the X500 name for the node",
+            "required": false,
+            "type": "string",
+            "minItems": 0,
+            "x-example": "O=PartyB, L=New York, C=US"
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": "default response",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Party"
+              }
+            }
+          },
+          "200": {
+            "description": "default response",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Party"
+              }
+            }
+          },
+          "500": {
+            "description": "server failure"
+          }
+        }
+      }
+    },
+    "/network/nodes/self": {
+      "get": {
+        "tags": [
+          "network"
+        ],
+        "description": "Retrieves all nodes if neither query parameter is supplied. Otherwise returns a list of one node matching the supplied query parameter.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [],
+        "responses": {
+          "default": {
+            "description": "default response",
+            "schema": {
+              "$ref": "#/definitions/SimpleNodeInfo"
+            }
+          },
+          "200": {
+            "description": "default response",
+            "schema": {
+              "$ref": "#/definitions/SimpleNodeInfo"
+            }
+          },
+          "500": {
+            "description": "server failure"
+          }
+        }
+      }
+    },
+    "/cordapps/flows": {
+      "get": {
+        "tags": [
+          "cordapps"
+        ],
+        "description": "Retrieves a list of callable flows. Example [\"net.corda.core.flows.ContractUpgradeFlow$Authorise\"]",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [],
+        "responses": {
+          "default": {
+            "description": "default response",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          "200": {
+            "description": "default response",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          "500": {
+            "description": "server failure"
+          }
+        }
+      }
+    },
+    "/cordapps/corda-core/flows/net.corda.core.flows.ContractUpgradeFlow$Authorise": {
+      "post": {
+        "tags": [
+          "cordapps"
+        ],
+        "description": "",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "text/plain"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "payload",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/ContractUpgradeFlow_AuthorisePayload"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": "empty response"
+          },
+          "200": {
+            "description": "empty response"
+          },
+          "500": {
+            "description": "server failure"
+          }
+        }
+      }
+    },
+    "/cordapps/corda-core/flows/net.corda.core.flows.ContractUpgradeFlow$Deauthorise": {
+      "post": {
+        "tags": [
+          "cordapps"
+        ],
+        "description": "",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "text/plain"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "payload",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/ContractUpgradeFlow_DeauthorisePayload"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": "empty response"
+          },
+          "200": {
+            "description": "empty response"
+          },
+          "500": {
+            "description": "server failure"
+          }
+        }
+      }
+    },
+    "/cordapps/corda-core/flows/net.corda.core.flows.ContractUpgradeFlow$Initiate": {},
+    "/cordapps/corda-finance-workflows/flows/net.corda.finance.flows.CashExitFlow": {
+      "post": {
+        "tags": [
+          "cordapps"
+        ],
+        "description": "",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "payload",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/CashExitFlowPayload"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": "default response",
+            "schema": {
+              "$ref": "#/definitions/Result"
+            }
+          },
+          "200": {
+            "description": "default response",
+            "schema": {
+              "$ref": "#/definitions/Result"
+            }
+          },
+          "500": {
+            "description": "server failure"
+          }
+        }
+      }
+    },
+    "/cordapps/corda-finance-workflows/flows/net.corda.finance.flows.CashIssueAndPaymentFlow": {
+      "post": {
+        "tags": [
+          "cordapps"
+        ],
+        "description": "",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "payload",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/CashIssueAndPaymentFlowPayload"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": "default response",
+            "schema": {
+              "$ref": "#/definitions/Result"
+            }
+          },
+          "200": {
+            "description": "default response",
+            "schema": {
+              "$ref": "#/definitions/Result"
+            }
+          },
+          "500": {
+            "description": "server failure"
+          }
+        }
+      }
+    },
+    "/cordapps/corda-finance-workflows/flows/net.corda.finance.flows.CashIssueFlow": {
+      "post": {
+        "tags": [
+          "cordapps"
+        ],
+        "description": "",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "payload",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/CashIssueFlowPayload"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": "default response",
+            "schema": {
+              "$ref": "#/definitions/Result"
+            }
+          },
+          "200": {
+            "description": "default response",
+            "schema": {
+              "$ref": "#/definitions/Result"
+            }
+          },
+          "500": {
+            "description": "server failure"
+          }
+        }
+      }
+    },
+    "/cordapps/corda-finance-workflows/flows/net.corda.finance.flows.CashPaymentFlow": {
+      "post": {
+        "tags": [
+          "cordapps"
+        ],
+        "description": "",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "payload",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/CashPaymentFlowPayload"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": "default response",
+            "schema": {
+              "$ref": "#/definitions/Result"
+            }
+          },
+          "200": {
+            "description": "default response",
+            "schema": {
+              "$ref": "#/definitions/Result"
+            }
+          },
+          "500": {
+            "description": "server failure"
+          }
+        }
+      }
+    },
+    "/cordapps/corda-finance-workflows/flows/net.corda.finance.internal.CashConfigDataFlow": {
+      "post": {
+        "tags": [
+          "cordapps"
+        ],
+        "description": "",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "payload",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/CashConfigDataFlowPayload"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": "default response",
+            "schema": {
+              "$ref": "#/definitions/CashConfiguration"
+            }
+          },
+          "200": {
+            "description": "default response",
+            "schema": {
+              "$ref": "#/definitions/CashConfiguration"
             }
           },
           "500": {
@@ -192,9 +470,237 @@
       }
     }
   },
-  "definitions" : {
-    "PartialTree": {
+  "definitions": {
+    "NetworkHostAndPort": {
+      "type": "object",
+      "properties": {
+        "host": {
+          "type": "string"
+        },
+        "port": {
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
+    "Party": {
+      "type": "object",
+      "properties": {
+        "owningKey": {
+          "type": "string",
+          "description": "Base 58 Encoded Public Key"
+        },
+        "name": {
+          "type": "string",
+          "description": "CordaX500Name encoded Party"
+        }
+      }
+    },
+    "SimpleNodeInfo": {
+      "type": "object",
+      "properties": {
+        "addresses": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/NetworkHostAndPort"
+          }
+        },
+        "legalIdentities": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Party"
+          }
+        }
+      }
+    },
+    "AbstractParty": {
+      "type": "object",
+      "properties": {
+        "owningKey": {
+          "type": "string",
+          "description": "Base 58 Encoded Public Key"
+        }
+      }
+    },
+    "AttachmentConstraint": {
       "type": "object"
+    },
+    "ContractState": {
+      "type": "object",
+      "properties": {
+        "participants": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/AbstractParty"
+          }
+        }
+      }
+    },
+    "ContractUpgradeFlow_AuthorisePayload": {
+      "type": "object",
+      "properties": {
+        "stateAndRef": {
+          "$ref": "#/definitions/StateAndRefObject"
+        }
+      }
+    },
+    "StateAndRef": {
+      "type": "object",
+      "properties": {
+        "state": {
+          "$ref": "#/definitions/TransactionStateContractState"
+        },
+        "ref": {
+          "$ref": "#/definitions/StateRef"
+        }
+      }
+    },
+    "StateAndRefObject": {
+      "type": "object",
+      "properties": {
+        "state": {
+          "$ref": "#/definitions/TransactionStateObject"
+        },
+        "ref": {
+          "$ref": "#/definitions/StateRef"
+        }
+      }
+    },
+    "StateRef": {
+      "type": "object",
+      "properties": {
+        "txhash": {
+          "type": "string",
+          "description": "Base 58 Encoded Secure Hash"
+        },
+        "index": {
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
+    "TransactionState": {
+      "type": "object",
+      "properties": {
+        "data": {
+          "$ref": "#/definitions/ContractState"
+        },
+        "contract": {
+          "type": "string"
+        },
+        "notary": {
+          "$ref": "#/definitions/Party"
+        },
+        "encumbrance": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "constraint": {
+          "$ref": "#/definitions/AttachmentConstraint"
+        }
+      }
+    },
+    "TransactionStateContractState": {
+      "type": "object",
+      "properties": {
+        "data": {
+          "$ref": "#/definitions/ContractState"
+        },
+        "contract": {
+          "type": "string"
+        },
+        "notary": {
+          "$ref": "#/definitions/Party"
+        },
+        "encumbrance": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "constraint": {
+          "$ref": "#/definitions/AttachmentConstraint"
+        }
+      }
+    },
+    "TransactionStateObject": {
+      "type": "object",
+      "properties": {
+        "data": {
+          "type": "object"
+        },
+        "contract": {
+          "type": "string"
+        },
+        "notary": {
+          "$ref": "#/definitions/Party"
+        },
+        "encumbrance": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "constraint": {
+          "$ref": "#/definitions/AttachmentConstraint"
+        }
+      }
+    },
+    "ContractUpgradeFlow_DeauthorisePayload": {
+      "type": "object",
+      "properties": {
+        "stateRef": {
+          "$ref": "#/definitions/StateRef"
+        }
+      }
+    },
+    "Command": {
+      "type": "object",
+      "properties": {
+        "value": {
+          "$ref": "#/definitions/CommandData"
+        },
+        "signers": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "example": "GfHq2tTVk9z4eXgyUuofmR16H6j7srXt8BCyidKdrZL5JEwFqHgDSuiinbTE",
+            "description": "Base 58 Encoded Public Key"
+          }
+        }
+      }
+    },
+    "CommandData": {
+      "type": "object"
+    },
+    "CommandObject": {
+      "type": "object",
+      "properties": {
+        "value": {
+          "type": "object"
+        },
+        "signers": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "example": "GfHq2tTVk9z4eXgyUuofmR16H6j7srXt8BCyidKdrZL5JEwFqHgDSuiinbTE",
+            "description": "Base 58 Encoded Public Key"
+          }
+        }
+      }
+    },
+    "ComponentGroup": {
+      "type": "object",
+      "properties": {
+        "groupIndex": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "components": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "example": "736F6D654279746573",
+            "description": "Hex encoded Byte Array"
+          }
+        }
+      }
     },
     "CoreTransaction": {
       "type": "object",
@@ -212,16 +718,17 @@
           }
         },
         "networkParametersHash": {
-          "$ref": "#/definitions/SecureHash"
-        },
-        "notary": {
-          "$ref": "#/definitions/Party"
+          "type": "string",
+          "description": "Base 58 Encoded Secure Hash"
         },
         "outputStates": {
           "type": "array",
           "items": {
             "$ref": "#/definitions/ContractState"
           }
+        },
+        "notary": {
+          "$ref": "#/definitions/Party"
         },
         "outputs": {
           "type": "array",
@@ -230,75 +737,42 @@
           }
         },
         "id": {
-          "$ref": "#/definitions/SecureHash"
+          "type": "string",
+          "description": "Base 58 Encoded Secure Hash"
         }
       }
     },
-    "PartialMerkleTree": {
+    "Duration": {
       "type": "object",
       "properties": {
-        "root": {
-          "$ref": "#/definitions/PartialTree"
-        }
-      }
-    },
-    "SignatureMetadata": {
-      "type": "object",
-      "properties": {
-        "platformVersion": {
+        "seconds": {
           "type": "integer",
-          "format": "int32"
+          "format": "int64"
         },
-        "schemeNumberID": {
-          "type": "integer",
-          "format": "int32"
-        }
-      }
-    },
-    "PublicKey": {
-      "type": "object",
-      "properties": {
-        "encoded": {
+        "zero": {
+          "type": "boolean"
+        },
+        "negative": {
+          "type": "boolean"
+        },
+        "units": {
           "type": "array",
           "items": {
-            "type": "string",
-            "format": "byte"
+            "$ref": "#/definitions/TemporalUnit"
           }
         },
-        "algorithm": {
-          "type": "string"
-        },
-        "format": {
-          "type": "string"
+        "nano": {
+          "type": "integer",
+          "format": "int32"
         }
       }
     },
-    "TransactionSignature": {
+    "MerkleTree": {
       "type": "object",
       "properties": {
-        "offset": {
-          "type": "integer",
-          "format": "int32"
-        },
-        "size": {
-          "type": "integer",
-          "format": "int32"
-        },
-        "bytes": {
-          "type": "array",
-          "items": {
-            "type": "string",
-            "format": "byte"
-          }
-        },
-        "by": {
-          "$ref": "#/definitions/PublicKey"
-        },
-        "signatureMetadata": {
-          "$ref": "#/definitions/SignatureMetadata"
-        },
-        "partialMerkleTree": {
-          "$ref": "#/definitions/PartialMerkleTree"
+        "hash": {
+          "type": "string",
+          "description": "Base 58 Encoded Secure Hash"
         }
       }
     },
@@ -326,14 +800,18 @@
         "serializedComponents": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/OpaqueBytes"
+            "type": "string",
+            "example": "736F6D654279746573",
+            "description": "Hex encoded Byte Array"
           }
         },
         "id": {
-          "$ref": "#/definitions/SecureHash"
+          "type": "string",
+          "description": "Base 58 Encoded Secure Hash"
         },
         "networkParametersHash": {
-          "$ref": "#/definitions/SecureHash"
+          "type": "string",
+          "description": "Base 58 Encoded Secure Hash"
         },
         "outputs": {
           "type": "array",
@@ -349,23 +827,121 @@
         }
       }
     },
-    "SecureHash": {
+    "Result": {
       "type": "object",
       "properties": {
-        "offset": {
-          "type": "integer",
-          "format": "int32"
+        "stx": {
+          "$ref": "#/definitions/SignedTransaction"
         },
-        "size": {
-          "type": "integer",
-          "format": "int32"
+        "recipient": {
+          "$ref": "#/definitions/AbstractParty"
+        }
+      }
+    },
+    "SignedTransaction": {
+      "type": "object",
+      "properties": {
+        "txBits": {
+          "type": "string",
+          "description": "Hex encoded Byte Array"
         },
-        "bytes": {
+        "sigs": {
           "type": "array",
           "items": {
             "type": "string",
-            "format": "byte"
+            "example": "736F6D654279746573",
+            "description": "Hex encoded Byte Array"
           }
+        },
+        "id": {
+          "type": "string",
+          "description": "Base 58 Encoded Secure Hash"
+        },
+        "tx": {
+          "$ref": "#/definitions/WireTransaction"
+        },
+        "coreTransaction": {
+          "$ref": "#/definitions/CoreTransaction"
+        },
+        "inputs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/StateRef"
+          }
+        },
+        "references": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/StateRef"
+          }
+        },
+        "notary": {
+          "$ref": "#/definitions/Party"
+        },
+        "networkParametersHash": {
+          "type": "string",
+          "description": "Base 58 Encoded Secure Hash"
+        },
+        "requiredSigningKeys": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "example": "GfHq2tTVk9z4eXgyUuofmR16H6j7srXt8BCyidKdrZL5JEwFqHgDSuiinbTE",
+            "description": "Base 58 Encoded Public Key"
+          }
+        },
+        "notaryChangeTx": {
+          "$ref": "#/definitions/NotaryChangeWireTransaction"
+        },
+        "notaryChangeTransaction": {
+          "type": "boolean"
+        },
+        "missingSigners": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "example": "GfHq2tTVk9z4eXgyUuofmR16H6j7srXt8BCyidKdrZL5JEwFqHgDSuiinbTE",
+            "description": "Base 58 Encoded Public Key"
+          }
+        }
+      }
+    },
+    "TemporalUnit": {
+      "type": "object",
+      "properties": {
+        "dateBased": {
+          "type": "boolean"
+        },
+        "timeBased": {
+          "type": "boolean"
+        },
+        "duration": {
+          "$ref": "#/definitions/Duration"
+        },
+        "durationEstimated": {
+          "type": "boolean"
+        }
+      }
+    },
+    "TimeWindow": {
+      "type": "object",
+      "properties": {
+        "length": {
+          "$ref": "#/definitions/Duration"
+        },
+        "fromTime": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "midpoint": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "untilTime": {
+          "type": "integer",
+          "format": "int64"
         }
       }
     },
@@ -375,7 +951,9 @@
         "attachments": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/SecureHash"
+            "type": "string",
+            "example": "GfHq2tTVk9z4eXgyUuofmR16H6j7srXt8BCyidKdrZL5JEwFqHgDSuiinbTE",
+            "description": "Base 58 Encoded Secure Hash"
           }
         },
         "inputs": {
@@ -409,7 +987,8 @@
           "$ref": "#/definitions/TimeWindow"
         },
         "networkParametersHash": {
-          "$ref": "#/definitions/SecureHash"
+          "type": "string",
+          "description": "Base 58 Encoded Secure Hash"
         },
         "componentGroups": {
           "type": "array",
@@ -418,16 +997,20 @@
           }
         },
         "privacySalt": {
-          "$ref": "#/definitions/PrivacySalt"
+          "type": "string",
+          "description": "Hex encoded Byte Array"
         },
         "id": {
-          "$ref": "#/definitions/SecureHash"
+          "type": "string",
+          "description": "Base 58 Encoded Secure Hash"
         },
         "requiredSigningKeys": {
           "type": "array",
           "uniqueItems": true,
           "items": {
-            "$ref": "#/definitions/PublicKey"
+            "type": "string",
+            "example": "GfHq2tTVk9z4eXgyUuofmR16H6j7srXt8BCyidKdrZL5JEwFqHgDSuiinbTE",
+            "description": "Base 58 Encoded Public Key"
           }
         },
         "merkleTree": {
@@ -436,13 +1019,17 @@
         "groupHashes$core": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/SecureHash"
+            "type": "string",
+            "example": "GfHq2tTVk9z4eXgyUuofmR16H6j7srXt8BCyidKdrZL5JEwFqHgDSuiinbTE",
+            "description": "Base 58 Encoded Secure Hash"
           }
         },
         "groupsMerkleRoots$core": {
           "type": "object",
           "additionalProperties": {
-            "$ref": "#/definitions/SecureHash"
+            "type": "string",
+            "example": "GfHq2tTVk9z4eXgyUuofmR16H6j7srXt8BCyidKdrZL5JEwFqHgDSuiinbTE",
+            "description": "Base 58 Encoded Secure Hash"
           }
         },
         "availableComponentNonces$core": {
@@ -450,7 +1037,9 @@
           "additionalProperties": {
             "type": "array",
             "items": {
-              "$ref": "#/definitions/SecureHash"
+              "type": "string",
+              "example": "GfHq2tTVk9z4eXgyUuofmR16H6j7srXt8BCyidKdrZL5JEwFqHgDSuiinbTE",
+              "description": "Base 58 Encoded Secure Hash"
             }
           }
         },
@@ -459,7 +1048,9 @@
           "additionalProperties": {
             "type": "array",
             "items": {
-              "$ref": "#/definitions/SecureHash"
+              "type": "string",
+              "example": "GfHq2tTVk9z4eXgyUuofmR16H6j7srXt8BCyidKdrZL5JEwFqHgDSuiinbTE",
+              "description": "Base 58 Encoded Secure Hash"
             }
           }
         },
@@ -480,7 +1071,718 @@
         }
       }
     },
-    "SerializedBytesCoreTransaction": {
+    "AmountCurrency": {
+      "type": "object",
+      "properties": {
+        "quantity": {
+          "type": "integer",
+          "format": "int32",
+          "example": 100,
+          "description": "total amount in minor units"
+        },
+        "displayTokenSize": {
+          "type": "number",
+          "example": 0.01
+        },
+        "token": {
+          "type": "string",
+          "example": "GBP"
+        }
+      }
+    },
+    "CashExitFlowPayload": {
+      "type": "object",
+      "properties": {
+        "amount": {
+          "$ref": "#/definitions/AmountCurrency"
+        },
+        "issuerRef": {
+          "type": "string",
+          "description": "Hex encoded Byte Array"
+        }
+      }
+    },
+    "CashIssueAndPaymentFlowPayload": {
+      "type": "object",
+      "properties": {
+        "amount": {
+          "$ref": "#/definitions/AmountCurrency"
+        },
+        "issueRef": {
+          "type": "string",
+          "description": "Hex encoded Byte Array"
+        },
+        "recipient": {
+          "$ref": "#/definitions/Party"
+        },
+        "anonymous": {
+          "type": "boolean"
+        },
+        "notary": {
+          "$ref": "#/definitions/Party"
+        }
+      }
+    },
+    "CashIssueFlowPayload": {
+      "type": "object",
+      "properties": {
+        "amount": {
+          "$ref": "#/definitions/AmountCurrency"
+        },
+        "issuerBankPartyRef": {
+          "type": "string",
+          "description": "Hex encoded Byte Array"
+        },
+        "notary": {
+          "$ref": "#/definitions/Party"
+        }
+      }
+    },
+    "CashPaymentFlowPayload": {
+      "type": "object",
+      "properties": {
+        "amount": {
+          "$ref": "#/definitions/AmountCurrency"
+        },
+        "recipient": {
+          "$ref": "#/definitions/Party"
+        },
+        "anonymous": {
+          "type": "boolean"
+        },
+        "issuerConstraint": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/definitions/Party"
+          }
+        },
+        "notary": {
+          "$ref": "#/definitions/Party"
+        }
+      }
+    },
+    "CashConfiguration": {
+      "type": "object",
+      "properties": {
+        "issuableCurrencies": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "example": "GBP",
+            "description": "3 digit ISO 4217 code of the currency"
+          }
+        },
+        "supportedCurrencies": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "example": "GBP",
+            "description": "3 digit ISO 4217 code of the currency"
+          }
+        }
+      }
+    },
+    "CashConfigDataFlowPayload": {
+      "type": "object"
+    },
+    "Utils": {
+      "type": "object"
+    },
+    "ConcurrencyUtils": {
+      "type": "object"
+    },
+    "Actor": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "$ref": "#/definitions/Id"
+        },
+        "serviceId": {
+          "$ref": "#/definitions/AuthServiceId"
+        },
+        "owningLegalIdentity": {
+          "type": "string",
+          "description": "CordaX500Name encoded Party"
+        }
+      }
+    },
+    "AuthServiceId": {
+      "type": "object",
+      "properties": {
+        "value": {
+          "type": "string"
+        }
+      }
+    },
+    "Id": {
+      "type": "object",
+      "properties": {
+        "value": {
+          "type": "string"
+        }
+      }
+    },
+    "InvocationContext": {
+      "type": "object",
+      "properties": {
+        "origin": {
+          "$ref": "#/definitions/InvocationOrigin"
+        },
+        "trace": {
+          "$ref": "#/definitions/Trace"
+        },
+        "actor": {
+          "$ref": "#/definitions/Actor"
+        },
+        "externalTrace": {
+          "$ref": "#/definitions/Trace"
+        },
+        "impersonatedActor": {
+          "$ref": "#/definitions/Actor"
+        }
+      }
+    },
+    "InvocationId": {
+      "type": "object",
+      "properties": {
+        "value": {
+          "type": "string"
+        },
+        "entityType": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "integer",
+          "format": "int64"
+        }
+      }
+    },
+    "InvocationOrigin": {
+      "type": "object"
+    },
+    "SessionId": {
+      "type": "object",
+      "properties": {
+        "value": {
+          "type": "string"
+        },
+        "entityType": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "integer",
+          "format": "int64"
+        }
+      }
+    },
+    "Trace": {
+      "type": "object",
+      "properties": {
+        "invocationId": {
+          "$ref": "#/definitions/InvocationId"
+        },
+        "sessionId": {
+          "$ref": "#/definitions/SessionId"
+        }
+      }
+    },
+    "Peer": {
+      "type": "object",
+      "properties": {
+        "party": {
+          "type": "string",
+          "description": "CordaX500Name encoded Party"
+        }
+      }
+    },
+    "RPC": {
+      "type": "object",
+      "properties": {
+        "actor": {
+          "$ref": "#/definitions/Actor"
+        }
+      }
+    },
+    "Scheduled": {
+      "type": "object",
+      "properties": {
+        "scheduledState": {
+          "$ref": "#/definitions/ScheduledStateRef"
+        }
+      }
+    },
+    "ScheduledStateRef": {
+      "type": "object",
+      "properties": {
+        "ref": {
+          "$ref": "#/definitions/StateRef"
+        },
+        "scheduledAt": {
+          "type": "integer",
+          "format": "int64"
+        }
+      }
+    },
+    "Service": {
+      "type": "object",
+      "properties": {
+        "serviceClassName": {
+          "type": "string"
+        },
+        "owningLegalIdentity": {
+          "type": "string",
+          "description": "CordaX500Name encoded Party"
+        }
+      }
+    },
+    "Shell": {
+      "type": "object"
+    },
+    "AmountTransfer": {
+      "type": "object",
+      "properties": {
+        "quantityDelta": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "token": {
+          "type": "object"
+        },
+        "source": {
+          "type": "object"
+        },
+        "destination": {
+          "type": "object"
+        }
+      }
+    },
+    "DefaultImpls": {
+      "type": "object"
+    },
+    "Amount": {
+      "type": "object",
+      "properties": {
+        "quantity": {
+          "type": "integer",
+          "format": "int32",
+          "example": 100,
+          "description": "total amount in minor units"
+        },
+        "displayTokenSize": {
+          "type": "number",
+          "example": 0.01
+        },
+        "token": {
+          "type": "string",
+          "example": "GBP"
+        },
+        "_tokenType": {
+          "type": "string",
+          "example": "net.corda.core.contracts.Issued"
+        }
+      }
+    },
+    "InsufficientBalanceException": {
+      "type": "object",
+      "properties": {
+        "cause": {
+          "$ref": "#/definitions/Throwable"
+        },
+        "stackTrace": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/StackTraceElement"
+          }
+        },
+        "originalExceptionClassName": {
+          "type": "string"
+        },
+        "originalErrorId": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "amountMissing": {
+          "$ref": "#/definitions/Amount"
+        },
+        "errorId": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "message": {
+          "type": "string"
+        },
+        "originalMessage": {
+          "type": "string"
+        },
+        "localizedMessage": {
+          "type": "string"
+        },
+        "suppressed": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Throwable"
+          }
+        }
+      }
+    },
+    "StackTraceElement": {
+      "type": "object",
+      "properties": {
+        "methodName": {
+          "type": "string"
+        },
+        "fileName": {
+          "type": "string"
+        },
+        "lineNumber": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "className": {
+          "type": "string"
+        },
+        "nativeMethod": {
+          "type": "boolean"
+        }
+      }
+    },
+    "Throwable": {
+      "type": "object",
+      "properties": {
+        "cause": {
+          "$ref": "#/definitions/Throwable"
+        },
+        "stackTrace": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/StackTraceElement"
+          }
+        },
+        "message": {
+          "type": "string"
+        },
+        "localizedMessage": {
+          "type": "string"
+        },
+        "suppressed": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Throwable"
+          }
+        }
+      }
+    },
+    "LinearPointer": {
+      "type": "object",
+      "properties": {
+        "pointer": {
+          "$ref": "#/definitions/UniqueIdentifier"
+        }
+      }
+    },
+    "UniqueIdentifier": {
+      "type": "object",
+      "properties": {
+        "externalId": {
+          "type": "string"
+        },
+        "id": {
+          "type": "string",
+          "format": "uuid"
+        }
+      }
+    },
+    "ReferencedStateAndRef": {
+      "type": "object",
+      "properties": {
+        "stateAndRef": {
+          "$ref": "#/definitions/StateAndRefContractState"
+        }
+      }
+    },
+    "StateAndRefContractState": {
+      "type": "object",
+      "properties": {
+        "state": {
+          "$ref": "#/definitions/TransactionStateContractState"
+        },
+        "ref": {
+          "$ref": "#/definitions/StateRef"
+        }
+      }
+    },
+    "SourceAndAmount": {
+      "type": "object",
+      "properties": {
+        "source": {
+          "type": "object"
+        },
+        "amount": {
+          "$ref": "#/definitions/Amount"
+        },
+        "ref": {
+          "type": "object"
+        }
+      }
+    },
+    "StaticPointer": {
+      "type": "object",
+      "properties": {
+        "pointer": {
+          "$ref": "#/definitions/StateRef"
+        }
+      }
+    },
+    "UnknownParametersException": {
+      "type": "object",
+      "properties": {
+        "cause": {
+          "$ref": "#/definitions/Throwable"
+        },
+        "stackTrace": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/StackTraceElement"
+          }
+        },
+        "originalExceptionClassName": {
+          "type": "string"
+        },
+        "originalErrorId": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "hash": {
+          "type": "string",
+          "description": "Base 58 Encoded Secure Hash"
+        },
+        "errorId": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "message": {
+          "type": "string"
+        },
+        "originalMessage": {
+          "type": "string"
+        },
+        "localizedMessage": {
+          "type": "string"
+        },
+        "suppressed": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Throwable"
+          }
+        }
+      }
+    },
+    "InvalidAttachmentException": {
+      "type": "object",
+      "properties": {
+        "cause": {
+          "$ref": "#/definitions/Throwable"
+        },
+        "stackTrace": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/StackTraceElement"
+          }
+        },
+        "originalExceptionClassName": {
+          "type": "string"
+        },
+        "originalErrorId": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "txId": {
+          "type": "string",
+          "description": "Base 58 Encoded Secure Hash"
+        },
+        "attachmentHash": {
+          "type": "string",
+          "description": "Base 58 Encoded Secure Hash"
+        },
+        "errorId": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "message": {
+          "type": "string"
+        },
+        "originalMessage": {
+          "type": "string"
+        },
+        "localizedMessage": {
+          "type": "string"
+        },
+        "suppressed": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Throwable"
+          }
+        }
+      }
+    },
+    "PackageOwnershipException": {
+      "type": "object",
+      "properties": {
+        "cause": {
+          "$ref": "#/definitions/Throwable"
+        },
+        "stackTrace": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/StackTraceElement"
+          }
+        },
+        "originalExceptionClassName": {
+          "type": "string"
+        },
+        "originalErrorId": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "txId": {
+          "type": "string",
+          "description": "Base 58 Encoded Secure Hash"
+        },
+        "attachmentHash": {
+          "type": "string",
+          "description": "Base 58 Encoded Secure Hash"
+        },
+        "invalidClassName": {
+          "type": "string"
+        },
+        "packageName": {
+          "type": "string"
+        },
+        "errorId": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "message": {
+          "type": "string"
+        },
+        "originalMessage": {
+          "type": "string"
+        },
+        "localizedMessage": {
+          "type": "string"
+        },
+        "suppressed": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Throwable"
+          }
+        }
+      }
+    },
+    "AddressFormatException": {
+      "type": "object",
+      "properties": {
+        "cause": {
+          "$ref": "#/definitions/Throwable"
+        },
+        "stackTrace": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/StackTraceElement"
+          }
+        },
+        "message": {
+          "type": "string"
+        },
+        "localizedMessage": {
+          "type": "string"
+        },
+        "suppressed": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Throwable"
+          }
+        }
+      }
+    },
+    "ByteArrayOutputStream": {
+      "type": "object"
+    },
+    "State": {
+      "type": "object",
+      "properties": {
+        "amount": {
+          "$ref": "#/definitions/Amount"
+        },
+        "exitKeys": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "example": "GfHq2tTVk9z4eXgyUuofmR16H6j7srXt8BCyidKdrZL5JEwFqHgDSuiinbTE",
+            "description": "Base 58 Encoded Public Key"
+          }
+        },
+        "dueBefore": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "participants": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/AbstractParty"
+          }
+        },
+        "owner": {
+          "$ref": "#/definitions/AbstractParty"
+        },
+        "lifecycle": {
+          "type": "string",
+          "enum": [
+            "NORMAL",
+            "DEFAULTED"
+          ]
+        },
+        "obligor": {
+          "$ref": "#/definitions/AbstractParty"
+        },
+        "template": {
+          "$ref": "#/definitions/TermsObject"
+        },
+        "quantity": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "beneficiary": {
+          "$ref": "#/definitions/AbstractParty"
+        },
+        "bilateralNetState": {
+          "$ref": "#/definitions/BilateralNetStateObject"
+        },
+        "multilateralNetState": {
+          "$ref": "#/definitions/MultilateralNetStateObject"
+        }
+      }
+    },
+    "NullPublicKey": {
+      "type": "object",
+      "properties": {
+        "encoded": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "byte"
+          }
+        },
+        "algorithm": {
+          "type": "string"
+        },
+        "format": {
+          "type": "string"
+        }
+      }
+    },
+    "SHA256": {
       "type": "object",
       "properties": {
         "offset": {
@@ -497,249 +1799,5365 @@
             "type": "string",
             "format": "byte"
           }
-        },
-        "hash": {
-          "$ref": "#/definitions/SecureHash"
         }
       }
     },
-    "SignedTransaction": {
+    "AliasPrivateKey": {
       "type": "object",
       "properties": {
-        "txBits": {
-          "$ref": "#/definitions/SerializedBytesCoreTransaction"
+        "alias": {
+          "type": "string"
         },
-        "sigs": {
+        "encoded": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/TransactionSignature"
+            "type": "string",
+            "format": "byte"
           }
         },
-        "id": {
-          "$ref": "#/definitions/SecureHash"
+        "algorithm": {
+          "type": "string"
         },
-        "tx": {
-          "$ref": "#/definitions/WireTransaction"
+        "format": {
+          "type": "string"
         },
-        "inputs": {
+        "destroyed": {
+          "type": "boolean"
+        }
+      }
+    },
+    "Instances": {
+      "type": "object"
+    },
+    "APPROVING": {
+      "type": "object",
+      "properties": {
+        "label": {
+          "type": "string"
+        },
+        "extraAuditData": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "changes": {
+          "$ref": "#/definitions/ObservableChange"
+        }
+      }
+    },
+    "Observable": {
+      "type": "object"
+    },
+    "ObservableChange": {
+      "type": "object"
+    },
+    "VERIFYING": {
+      "type": "object",
+      "properties": {
+        "label": {
+          "type": "string"
+        },
+        "extraAuditData": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "changes": {
+          "$ref": "#/definitions/ObservableChange"
+        }
+      }
+    },
+    "NOTARY": {
+      "type": "object",
+      "properties": {
+        "label": {
+          "type": "string"
+        },
+        "extraAuditData": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "changes": {
+          "$ref": "#/definitions/ObservableChange"
+        }
+      }
+    },
+    "SIGNING": {
+      "type": "object",
+      "properties": {
+        "label": {
+          "type": "string"
+        },
+        "extraAuditData": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "changes": {
+          "$ref": "#/definitions/ObservableChange"
+        }
+      }
+    },
+    "Proposal": {
+      "type": "object",
+      "properties": {
+        "stateRef": {
+          "$ref": "#/definitions/StateRef"
+        },
+        "modification": {
+          "type": "object"
+        }
+      }
+    },
+    "UpgradeTx": {
+      "type": "object",
+      "properties": {
+        "stx": {
+          "$ref": "#/definitions/SignedTransaction"
+        }
+      }
+    },
+    "COLLECTING": {
+      "type": "object",
+      "properties": {
+        "label": {
+          "type": "string"
+        },
+        "extraAuditData": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "changes": {
+          "$ref": "#/definitions/ObservableChange"
+        }
+      }
+    },
+    "ContractUpgradeFlow": {
+      "type": "object"
+    },
+    "DataVendingFlow$WhenMappings": {
+      "type": "object"
+    },
+    "BROADCASTING": {
+      "type": "object",
+      "properties": {
+        "label": {
+          "type": "string"
+        },
+        "extraAuditData": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "changes": {
+          "$ref": "#/definitions/ObservableChange"
+        }
+      }
+    },
+    "NOTARISING": {
+      "type": "object",
+      "properties": {
+        "label": {
+          "type": "string"
+        },
+        "extraAuditData": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "changes": {
+          "$ref": "#/definitions/ObservableChange"
+        }
+      }
+    },
+    "FlowException": {
+      "type": "object",
+      "properties": {
+        "cause": {
+          "$ref": "#/definitions/Throwable"
+        },
+        "stackTrace": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/StackTraceElement"
+          }
+        },
+        "originalExceptionClassName": {
+          "type": "string"
+        },
+        "originalErrorId": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "errorId": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "message": {
+          "type": "string"
+        },
+        "originalMessage": {
+          "type": "string"
+        },
+        "localizedMessage": {
+          "type": "string"
+        },
+        "suppressed": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Throwable"
+          }
+        }
+      }
+    },
+    "FlowInfo": {
+      "type": "object",
+      "properties": {
+        "flowVersion": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "appName": {
+          "type": "string"
+        }
+      }
+    },
+    "FlowStackSnapshot": {
+      "type": "object",
+      "properties": {
+        "time": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "flowClass": {
+          "type": "string"
+        },
+        "stackFrames": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Frame"
+          }
+        }
+      }
+    },
+    "Frame": {
+      "type": "object",
+      "properties": {
+        "stackTraceElement": {
+          "$ref": "#/definitions/StackTraceElement"
+        },
+        "stackObjects": {
+          "type": "array",
+          "items": {
+            "type": "object"
+          }
+        }
+      }
+    },
+    "IllegalFlowLogicException": {
+      "type": "object",
+      "properties": {
+        "cause": {
+          "$ref": "#/definitions/Throwable"
+        },
+        "stackTrace": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/StackTraceElement"
+          }
+        },
+        "type": {
+          "type": "string"
+        },
+        "message": {
+          "type": "string"
+        },
+        "localizedMessage": {
+          "type": "string"
+        },
+        "suppressed": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Throwable"
+          }
+        }
+      }
+    },
+    "NotarisationPayload": {
+      "type": "object",
+      "properties": {
+        "transaction": {
+          "type": "object"
+        },
+        "requestSignature": {
+          "$ref": "#/definitions/NotarisationRequestSignature"
+        },
+        "signedTransaction": {
+          "$ref": "#/definitions/SignedTransaction"
+        },
+        "coreTransaction": {
+          "$ref": "#/definitions/CoreTransaction"
+        }
+      }
+    },
+    "NotarisationRequestSignature": {
+      "type": "object",
+      "properties": {
+        "digitalSignature": {
+          "type": "string",
+          "description": "Hex encoded Byte Array"
+        },
+        "platformVersion": {
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
+    "NotarisationRequest": {
+      "type": "object",
+      "properties": {
+        "transactionId": {
+          "type": "string",
+          "description": "Base 58 Encoded Secure Hash"
+        },
+        "statesToConsume": {
           "type": "array",
           "items": {
             "$ref": "#/definitions/StateRef"
           }
+        }
+      }
+    },
+    "NotarisationResponse": {
+      "type": "object",
+      "properties": {
+        "signatures": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "example": "736F6D654279746573",
+            "description": "Hex encoded Byte Array"
+          }
+        }
+      }
+    },
+    "Conflict": {
+      "type": "object",
+      "properties": {
+        "txId": {
+          "type": "string",
+          "description": "Base 58 Encoded Secure Hash"
+        },
+        "consumedStates": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/definitions/StateConsumptionDetails"
+          }
+        }
+      }
+    },
+    "StateConsumptionDetails": {
+      "type": "object",
+      "properties": {
+        "hashOfTransactionId": {
+          "type": "string",
+          "description": "Base 58 Encoded Secure Hash"
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "INPUT_STATE",
+            "REFERENCE_INPUT_STATE"
+          ]
+        }
+      }
+    },
+    "General": {
+      "type": "object",
+      "properties": {
+        "cause": {
+          "$ref": "#/definitions/Throwable"
+        }
+      }
+    },
+    "RequestSignatureInvalid": {
+      "type": "object",
+      "properties": {
+        "cause": {
+          "$ref": "#/definitions/Throwable"
+        }
+      }
+    },
+    "TimeWindowInvalid": {
+      "type": "object",
+      "properties": {
+        "currentTime": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "txTimeWindow": {
+          "$ref": "#/definitions/TimeWindow"
+        }
+      }
+    },
+    "TransactionInvalid": {
+      "type": "object",
+      "properties": {
+        "cause": {
+          "$ref": "#/definitions/Throwable"
+        }
+      }
+    },
+    "WrongNotary": {
+      "type": "object"
+    },
+    "NotaryError": {
+      "type": "object"
+    },
+    "NotaryException": {
+      "type": "object",
+      "properties": {
+        "cause": {
+          "$ref": "#/definitions/Throwable"
+        },
+        "stackTrace": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/StackTraceElement"
+          }
+        },
+        "originalExceptionClassName": {
+          "type": "string"
+        },
+        "originalErrorId": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "error": {
+          "$ref": "#/definitions/NotaryError"
+        },
+        "txId": {
+          "type": "string",
+          "description": "Base 58 Encoded Secure Hash"
+        },
+        "errorId": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "message": {
+          "type": "string"
+        },
+        "originalMessage": {
+          "type": "string"
+        },
+        "localizedMessage": {
+          "type": "string"
+        },
+        "suppressed": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Throwable"
+          }
+        }
+      }
+    },
+    "NotaryFlow": {
+      "type": "object"
+    },
+    "AttachmentStorage": {
+      "type": "object"
+    },
+    "CertPath": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string"
+        },
+        "certificates": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Certificate"
+          }
+        },
+        "encoded": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "byte"
+          }
+        },
+        "encodings": {
+          "$ref": "#/definitions/IteratorString"
+        }
+      }
+    },
+    "CertStore": {
+      "type": "object",
+      "properties": {
+        "provider": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "type": {
+          "type": "string"
+        },
+        "certStoreParameters": {
+          "$ref": "#/definitions/CertStoreParameters"
+        }
+      }
+    },
+    "CertStoreParameters": {
+      "type": "object"
+    },
+    "Certificate": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string"
+        },
+        "encoded": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "byte"
+          }
+        },
+        "publicKey": {
+          "type": "string",
+          "description": "Base 58 Encoded Public Key"
+        }
+      }
+    },
+    "ClassLoader": {
+      "type": "object",
+      "properties": {
+        "parent": {
+          "$ref": "#/definitions/ClassLoader"
+        }
+      }
+    },
+    "Client": {
+      "type": "object",
+      "properties": {
+        "progressTracker": {
+          "$ref": "#/definitions/ProgressTracker"
+        },
+        "timeoutEnabled": {
+          "type": "boolean"
+        },
+        "stateMachine": {
+          "$ref": "#/definitions/FlowStateMachineObject"
+        },
+        "serviceHub": {
+          "$ref": "#/definitions/ServiceHub"
+        },
+        "runId": {
+          "$ref": "#/definitions/StateMachineRunId"
+        },
+        "ourIdentityAndCert": {
+          "$ref": "#/definitions/PartyAndCertificate"
+        },
+        "ourIdentity": {
+          "$ref": "#/definitions/Party"
+        },
+        "logger": {
+          "$ref": "#/definitions/Logger"
+        }
+      }
+    },
+    "Clock": {
+      "type": "object",
+      "properties": {
+        "zone": {
+          "$ref": "#/definitions/ZoneId"
+        }
+      }
+    },
+    "ContractUpgradeService": {
+      "type": "object"
+    },
+    "CordaFuture": {
+      "type": "object",
+      "properties": {
+        "cancelled": {
+          "type": "boolean"
+        },
+        "done": {
+          "type": "boolean"
+        }
+      }
+    },
+    "CordaFutureObject": {
+      "type": "object",
+      "properties": {
+        "cancelled": {
+          "type": "boolean"
+        },
+        "done": {
+          "type": "boolean"
+        }
+      }
+    },
+    "CordaFutureVoid": {
+      "type": "object",
+      "properties": {
+        "cancelled": {
+          "type": "boolean"
+        },
+        "done": {
+          "type": "boolean"
+        }
+      }
+    },
+    "Cordapp": {
+      "type": "object",
+      "properties": {
+        "contractClassNames": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "initiatedFlows": {
+          "type": "array"
+        },
+        "rpcFlows": {
+          "type": "array"
+        },
+        "serviceFlows": {
+          "type": "array"
+        },
+        "schedulableFlows": {
+          "type": "array"
+        },
+        "customSchemas": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/definitions/MappedSchema"
+          }
+        },
+        "serializationWhitelists": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/SerializationWhitelist"
+          }
+        },
+        "serializationCustomSerializers": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/SerializationCustomSerializerObjectObject"
+          }
+        },
+        "allFlows": {
+          "type": "array"
+        },
+        "jarPath": {
+          "type": "string",
+          "format": "url"
+        },
+        "cordappClasses": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "jarHash": {
+          "type": "string",
+          "description": "Base 58 Encoded Secure Hash"
+        },
+        "name": {
+          "type": "string"
+        },
+        "minimumPlatformVersion": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "services": {
+          "type": "array"
+        },
+        "info": {
+          "$ref": "#/definitions/Info"
+        },
+        "targetPlatformVersion": {
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
+    "CordappConfig": {
+      "type": "object"
+    },
+    "CordappContext": {
+      "type": "object",
+      "properties": {
+        "cordapp": {
+          "$ref": "#/definitions/Cordapp"
+        },
+        "attachmentId": {
+          "type": "string",
+          "description": "Base 58 Encoded Secure Hash"
+        },
+        "classLoader": {
+          "$ref": "#/definitions/ClassLoader"
+        },
+        "config": {
+          "$ref": "#/definitions/CordappConfig"
+        }
+      }
+    },
+    "CordappProvider": {
+      "type": "object",
+      "properties": {
+        "appContext": {
+          "$ref": "#/definitions/CordappContext"
+        }
+      }
+    },
+    "FlowLogic": {
+      "type": "object",
+      "properties": {
+        "progressTracker": {
+          "$ref": "#/definitions/ProgressTracker"
+        },
+        "serviceHub": {
+          "$ref": "#/definitions/ServiceHub"
+        },
+        "runId": {
+          "$ref": "#/definitions/StateMachineRunId"
+        },
+        "ourIdentityAndCert": {
+          "$ref": "#/definitions/PartyAndCertificate"
+        },
+        "ourIdentity": {
+          "$ref": "#/definitions/Party"
+        },
+        "logger": {
+          "$ref": "#/definitions/Logger"
+        }
+      }
+    },
+    "FlowLogicObject": {
+      "type": "object",
+      "properties": {
+        "progressTracker": {
+          "$ref": "#/definitions/ProgressTracker"
+        },
+        "serviceHub": {
+          "$ref": "#/definitions/ServiceHub"
+        },
+        "runId": {
+          "$ref": "#/definitions/StateMachineRunId"
+        },
+        "ourIdentityAndCert": {
+          "$ref": "#/definitions/PartyAndCertificate"
+        },
+        "ourIdentity": {
+          "$ref": "#/definitions/Party"
+        },
+        "logger": {
+          "$ref": "#/definitions/Logger"
+        }
+      }
+    },
+    "FlowStateMachine": {
+      "type": "object",
+      "properties": {
+        "context": {
+          "$ref": "#/definitions/InvocationContext"
+        },
+        "id": {
+          "$ref": "#/definitions/StateMachineRunId"
+        },
+        "serviceHub": {
+          "$ref": "#/definitions/ServiceHub"
+        },
+        "ourIdentity": {
+          "$ref": "#/definitions/Party"
+        },
+        "logic": {
+          "$ref": "#/definitions/FlowLogicObject"
+        },
+        "resultFuture": {
+          "$ref": "#/definitions/CordaFutureObject"
+        },
+        "ourSenderUUID": {
+          "type": "string"
+        },
+        "logger": {
+          "$ref": "#/definitions/Logger"
+        }
+      }
+    },
+    "FlowStateMachineObject": {
+      "type": "object",
+      "properties": {
+        "context": {
+          "$ref": "#/definitions/InvocationContext"
+        },
+        "id": {
+          "$ref": "#/definitions/StateMachineRunId"
+        },
+        "serviceHub": {
+          "$ref": "#/definitions/ServiceHub"
+        },
+        "ourIdentity": {
+          "$ref": "#/definitions/Party"
+        },
+        "logic": {
+          "$ref": "#/definitions/FlowLogicObject"
+        },
+        "resultFuture": {
+          "$ref": "#/definitions/CordaFutureObject"
+        },
+        "ourSenderUUID": {
+          "type": "string"
+        },
+        "logger": {
+          "$ref": "#/definitions/Logger"
+        }
+      }
+    },
+    "IdentityService": {
+      "type": "object",
+      "properties": {
+        "trustRoot": {
+          "$ref": "#/definitions/X509Certificate"
+        },
+        "caCertStore": {
+          "$ref": "#/definitions/CertStore"
+        },
+        "allIdentities": {
+          "$ref": "#/definitions/IterablePartyAndCertificate"
+        },
+        "trustAnchor": {
+          "$ref": "#/definitions/TrustAnchor"
+        }
+      }
+    },
+    "Info": {
+      "type": "object",
+      "properties": {
+        "vendor": {
+          "type": "string"
+        },
+        "licence": {
+          "type": "string"
+        },
+        "version": {
+          "type": "string"
+        },
+        "shortName": {
+          "type": "string"
+        }
+      }
+    },
+    "Iterable": {
+      "type": "object"
+    },
+    "IterableClass": {
+      "type": "object"
+    },
+    "IterablePartyAndCertificate": {
+      "type": "object"
+    },
+    "Iterator": {
+      "type": "object"
+    },
+    "IteratorString": {
+      "type": "object"
+    },
+    "KeyManagementService": {
+      "type": "object",
+      "properties": {
+        "keys": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "example": "GfHq2tTVk9z4eXgyUuofmR16H6j7srXt8BCyidKdrZL5JEwFqHgDSuiinbTE",
+            "description": "Base 58 Encoded Public Key"
+          }
+        }
+      }
+    },
+    "LocalTime": {
+      "type": "object",
+      "properties": {
+        "hour": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "minute": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "second": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "nano": {
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
+    "Logger": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "traceEnabled": {
+          "type": "boolean"
+        },
+        "debugEnabled": {
+          "type": "boolean"
+        },
+        "infoEnabled": {
+          "type": "boolean"
+        },
+        "warnEnabled": {
+          "type": "boolean"
+        },
+        "errorEnabled": {
+          "type": "boolean"
+        }
+      }
+    },
+    "MappedSchema": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "migrationResource": {
+          "type": "string"
+        },
+        "version": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "mappedTypes": {
+          "$ref": "#/definitions/IterableClass"
+        }
+      }
+    },
+    "NetworkMapCache": {
+      "type": "object",
+      "properties": {
+        "changed": {
+          "$ref": "#/definitions/ObservableMapChange"
+        },
+        "nodeReady": {
+          "$ref": "#/definitions/CordaFutureVoid"
+        },
+        "allNodes": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/NodeInfo"
+          }
+        },
+        "notaryIdentities": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Party"
+          }
+        }
+      }
+    },
+    "NetworkParameters": {
+      "type": "object",
+      "properties": {
+        "minimumPlatformVersion": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "notaries": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/NotaryInfo"
+          }
+        },
+        "maxMessageSize": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "maxTransactionSize": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "modifiedTime": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "epoch": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "whitelistedContractImplementations": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "example": "GfHq2tTVk9z4eXgyUuofmR16H6j7srXt8BCyidKdrZL5JEwFqHgDSuiinbTE",
+              "description": "Base 58 Encoded Secure Hash"
+            }
+          }
+        },
+        "eventHorizon": {
+          "$ref": "#/definitions/Duration"
+        },
+        "packageOwnership": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string",
+            "example": "GfHq2tTVk9z4eXgyUuofmR16H6j7srXt8BCyidKdrZL5JEwFqHgDSuiinbTE",
+            "description": "Base 58 Encoded Public Key"
+          }
+        }
+      }
+    },
+    "NetworkParametersService": {
+      "type": "object",
+      "properties": {
+        "currentHash": {
+          "type": "string",
+          "description": "Base 58 Encoded Secure Hash"
+        },
+        "defaultHash": {
+          "type": "string",
+          "description": "Base 58 Encoded Secure Hash"
+        }
+      }
+    },
+    "NodeInfo": {
+      "type": "object",
+      "properties": {
+        "addresses": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/NetworkHostAndPort"
+          }
+        },
+        "legalIdentitiesAndCerts": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/PartyAndCertificate"
+          }
+        },
+        "platformVersion": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "serial": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "legalIdentities": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Party"
+          }
+        }
+      }
+    },
+    "NotaryInfo": {
+      "type": "object",
+      "properties": {
+        "identity": {
+          "$ref": "#/definitions/Party"
+        },
+        "validating": {
+          "type": "boolean"
+        }
+      }
+    },
+    "ObservableInteger": {
+      "type": "object"
+    },
+    "ObservableListPairIntegerString": {
+      "type": "object"
+    },
+    "ObservableMapChange": {
+      "type": "object"
+    },
+    "ObservableSignedTransaction": {
+      "type": "object"
+    },
+    "ObservableUpdateContractState": {
+      "type": "object"
+    },
+    "Pair": {
+      "type": "object",
+      "properties": {
+        "first": {
+          "type": "object"
+        },
+        "second": {
+          "type": "object"
+        }
+      }
+    },
+    "PairIntegerStep": {
+      "type": "object",
+      "properties": {
+        "first": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "second": {
+          "$ref": "#/definitions/Step"
+        }
+      }
+    },
+    "PairIntegerString": {
+      "type": "object",
+      "properties": {
+        "first": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "second": {
+          "type": "string"
+        }
+      }
+    },
+    "PartyAndCertificate": {
+      "type": "object",
+      "properties": {
+        "certificate": {
+          "$ref": "#/definitions/X509Certificate"
+        },
+        "party": {
+          "$ref": "#/definitions/Party"
+        },
+        "certPath": {
+          "$ref": "#/definitions/CertPath"
+        },
+        "name": {
+          "type": "string",
+          "description": "CordaX500Name encoded Party"
+        },
+        "owningKey": {
+          "type": "string",
+          "description": "Base 58 Encoded Public Key"
+        }
+      }
+    },
+    "Principal": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        }
+      }
+    },
+    "ProgressTracker": {
+      "type": "object",
+      "properties": {
+        "steps": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Step"
+          }
+        },
+        "stepIndex": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "stepsTreeIndex": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "parent": {
+          "$ref": "#/definitions/ProgressTracker"
+        },
+        "currentStep": {
+          "$ref": "#/definitions/Step"
+        },
+        "changes": {
+          "$ref": "#/definitions/ObservableChange"
+        },
+        "stepsTreeIndexChanges": {
+          "$ref": "#/definitions/ObservableInteger"
+        },
+        "allStepsLabels": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/PairIntegerString"
+          }
+        },
+        "stepsTreeChanges": {
+          "$ref": "#/definitions/ObservableListPairIntegerString"
+        },
+        "hasEnded": {
+          "type": "boolean"
+        },
+        "currentStepRecursive": {
+          "$ref": "#/definitions/Step"
+        },
+        "topLevelTracker": {
+          "$ref": "#/definitions/ProgressTracker"
+        },
+        "allSteps": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/PairIntegerStep"
+          }
+        }
+      }
+    },
+    "SerializationCustomSerializer": {
+      "type": "object"
+    },
+    "SerializationCustomSerializerObjectObject": {
+      "type": "object"
+    },
+    "SerializationWhitelist": {
+      "type": "object",
+      "properties": {
+        "whitelist": {
+          "type": "array"
+        }
+      }
+    },
+    "ServiceHub": {
+      "type": "object",
+      "properties": {
+        "clock": {
+          "$ref": "#/definitions/Clock"
+        },
+        "appContext": {
+          "$ref": "#/definitions/CordappContext"
+        },
+        "vaultService": {
+          "$ref": "#/definitions/VaultService"
+        },
+        "networkMapCache": {
+          "$ref": "#/definitions/NetworkMapCache"
+        },
+        "contractUpgradeService": {
+          "$ref": "#/definitions/ContractUpgradeService"
+        },
+        "myInfo": {
+          "$ref": "#/definitions/NodeInfo"
+        },
+        "keyManagementService": {
+          "$ref": "#/definitions/KeyManagementService"
+        },
+        "validatedTransactions": {
+          "$ref": "#/definitions/TransactionStorage"
+        },
+        "transactionVerifierService": {
+          "$ref": "#/definitions/TransactionVerifierService"
+        },
+        "identityService": {
+          "$ref": "#/definitions/IdentityService"
+        },
+        "cordappProvider": {
+          "$ref": "#/definitions/CordappProvider"
+        },
+        "networkParameters": {
+          "$ref": "#/definitions/NetworkParameters"
+        },
+        "networkParametersService": {
+          "$ref": "#/definitions/NetworkParametersService"
+        },
+        "attachments": {
+          "$ref": "#/definitions/AttachmentStorage"
+        }
+      }
+    },
+    "StateMachineRunId": {
+      "type": "object",
+      "properties": {
+        "uuid": {
+          "type": "string",
+          "format": "uuid"
+        }
+      }
+    },
+    "Step": {
+      "type": "object",
+      "properties": {
+        "label": {
+          "type": "string"
+        },
+        "extraAuditData": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "changes": {
+          "$ref": "#/definitions/ObservableChange"
+        }
+      }
+    },
+    "TransactionStorage": {
+      "type": "object",
+      "properties": {
+        "updates": {
+          "$ref": "#/definitions/ObservableSignedTransaction"
+        }
+      }
+    },
+    "TransactionVerifierService": {
+      "type": "object"
+    },
+    "TrustAnchor": {
+      "type": "object",
+      "properties": {
+        "trustedCert": {
+          "$ref": "#/definitions/X509Certificate"
+        },
+        "ca": {
+          "$ref": "#/definitions/X500Principal"
+        },
+        "caname": {
+          "type": "string"
+        },
+        "capublicKey": {
+          "type": "string",
+          "description": "Base 58 Encoded Public Key"
+        },
+        "nameConstraints": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "byte"
+          }
+        }
+      }
+    },
+    "VaultService": {
+      "type": "object",
+      "properties": {
+        "rawUpdates": {
+          "$ref": "#/definitions/ObservableUpdateContractState"
+        },
+        "updates": {
+          "$ref": "#/definitions/ObservableUpdateContractState"
+        }
+      }
+    },
+    "X500Principal": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "encoded": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "byte"
+          }
+        }
+      }
+    },
+    "X509Certificate": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string"
+        },
+        "subjectX500Principal": {
+          "$ref": "#/definitions/X500Principal"
+        },
+        "issuerX500Principal": {
+          "$ref": "#/definitions/X500Principal"
+        },
+        "notBefore": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "notAfter": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "sigAlgName": {
+          "type": "string"
+        },
+        "sigAlgOID": {
+          "type": "string"
+        },
+        "sigAlgParams": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "byte"
+          }
+        },
+        "issuerUniqueID": {
+          "type": "array",
+          "items": {
+            "type": "boolean"
+          }
+        },
+        "subjectUniqueID": {
+          "type": "array",
+          "items": {
+            "type": "boolean"
+          }
+        },
+        "keyUsage": {
+          "type": "array",
+          "items": {
+            "type": "boolean"
+          }
+        },
+        "subjectAlternativeNames": {
+          "type": "array",
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "object"
+            }
+          }
+        },
+        "issuerAlternativeNames": {
+          "type": "array",
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "object"
+            }
+          }
+        },
+        "version": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "signature": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "byte"
+          }
+        },
+        "basicConstraints": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "issuerDN": {
+          "$ref": "#/definitions/Principal"
+        },
+        "subjectDN": {
+          "$ref": "#/definitions/Principal"
+        },
+        "serialNumber": {
+          "type": "integer"
+        },
+        "tbscertificate": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "byte"
+          }
+        },
+        "extendedKeyUsage": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "nonCriticalExtensionOIDs": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string"
+          }
+        },
+        "criticalExtensionOIDs": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string"
+          }
+        },
+        "encoded": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "byte"
+          }
+        },
+        "publicKey": {
+          "type": "string",
+          "description": "Base 58 Encoded Public Key"
+        }
+      }
+    },
+    "ZoneId": {
+      "type": "object",
+      "properties": {
+        "rules": {
+          "$ref": "#/definitions/ZoneRules"
+        },
+        "id": {
+          "type": "string"
+        }
+      }
+    },
+    "ZoneOffset": {
+      "type": "object",
+      "properties": {
+        "totalSeconds": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "id": {
+          "type": "string"
+        },
+        "rules": {
+          "$ref": "#/definitions/ZoneRules"
+        }
+      }
+    },
+    "ZoneOffsetTransition": {
+      "type": "object",
+      "properties": {
+        "offsetBefore": {
+          "$ref": "#/definitions/ZoneOffset"
+        },
+        "offsetAfter": {
+          "$ref": "#/definitions/ZoneOffset"
+        },
+        "gap": {
+          "type": "boolean"
+        },
+        "dateTimeAfter": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "duration": {
+          "$ref": "#/definitions/Duration"
+        },
+        "overlap": {
+          "type": "boolean"
+        },
+        "instant": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "dateTimeBefore": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "ZoneOffsetTransitionRule": {
+      "type": "object",
+      "properties": {
+        "month": {
+          "type": "string",
+          "enum": [
+            "JANUARY",
+            "FEBRUARY",
+            "MARCH",
+            "APRIL",
+            "MAY",
+            "JUNE",
+            "JULY",
+            "AUGUST",
+            "SEPTEMBER",
+            "OCTOBER",
+            "NOVEMBER",
+            "DECEMBER"
+          ]
+        },
+        "timeDefinition": {
+          "type": "string",
+          "enum": [
+            "UTC",
+            "WALL",
+            "STANDARD"
+          ]
+        },
+        "standardOffset": {
+          "$ref": "#/definitions/ZoneOffset"
+        },
+        "offsetBefore": {
+          "$ref": "#/definitions/ZoneOffset"
+        },
+        "offsetAfter": {
+          "$ref": "#/definitions/ZoneOffset"
+        },
+        "dayOfWeek": {
+          "type": "string",
+          "enum": [
+            "MONDAY",
+            "TUESDAY",
+            "WEDNESDAY",
+            "THURSDAY",
+            "FRIDAY",
+            "SATURDAY",
+            "SUNDAY"
+          ]
+        },
+        "dayOfMonthIndicator": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "localTime": {
+          "$ref": "#/definitions/LocalTime"
+        },
+        "midnightEndOfDay": {
+          "type": "boolean"
+        }
+      }
+    },
+    "ZoneRules": {
+      "type": "object",
+      "properties": {
+        "fixedOffset": {
+          "type": "boolean"
+        },
+        "transitions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ZoneOffsetTransition"
+          }
+        },
+        "transitionRules": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ZoneOffsetTransitionRule"
+          }
+        }
+      }
+    },
+    "REQUESTING": {
+      "type": "object",
+      "properties": {
+        "label": {
+          "type": "string"
+        },
+        "extraAuditData": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "changes": {
+          "$ref": "#/definitions/ObservableChange"
+        }
+      }
+    },
+    "VALIDATING": {
+      "type": "object",
+      "properties": {
+        "label": {
+          "type": "string"
+        },
+        "extraAuditData": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "changes": {
+          "$ref": "#/definitions/ObservableChange"
+        }
+      }
+    },
+    "RECEIVING": {
+      "type": "object",
+      "properties": {
+        "label": {
+          "type": "string"
+        },
+        "extraAuditData": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "changes": {
+          "$ref": "#/definitions/ObservableChange"
+        }
+      }
+    },
+    "StackFrameDataToken": {
+      "type": "object",
+      "properties": {
+        "className": {
+          "type": "string"
+        }
+      }
+    },
+    "StateReplacementException": {
+      "type": "object",
+      "properties": {
+        "cause": {
+          "$ref": "#/definitions/Throwable"
+        },
+        "stackTrace": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/StackTraceElement"
+          }
+        },
+        "originalExceptionClassName": {
+          "type": "string"
+        },
+        "originalErrorId": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "errorId": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "message": {
+          "type": "string"
+        },
+        "originalMessage": {
+          "type": "string"
+        },
+        "localizedMessage": {
+          "type": "string"
+        },
+        "suppressed": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Throwable"
+          }
+        }
+      }
+    },
+    "UnexpectedFlowEndException": {
+      "type": "object",
+      "properties": {
+        "cause": {
+          "$ref": "#/definitions/Throwable"
+        },
+        "stackTrace": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/StackTraceElement"
+          }
+        },
+        "originalExceptionClassName": {
+          "type": "string"
+        },
+        "originalErrorId": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "errorId": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "message": {
+          "type": "string"
+        },
+        "originalMessage": {
+          "type": "string"
+        },
+        "localizedMessage": {
+          "type": "string"
+        },
+        "suppressed": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Throwable"
+          }
+        }
+      }
+    },
+    "WaitTimeUpdate": {
+      "type": "object",
+      "properties": {
+        "waitTime": {
+          "$ref": "#/definitions/Duration"
+        }
+      }
+    },
+    "ATTEMPT": {
+      "type": "object",
+      "properties": {
+        "label": {
+          "type": "string"
+        },
+        "extraAuditData": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "changes": {
+          "$ref": "#/definitions/ObservableChange"
+        }
+      }
+    },
+    "RETRYING": {
+      "type": "object",
+      "properties": {
+        "label": {
+          "type": "string"
+        },
+        "extraAuditData": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "changes": {
+          "$ref": "#/definitions/ObservableChange"
+        }
+      }
+    },
+    "SUCCESS": {
+      "type": "object",
+      "properties": {
+        "label": {
+          "type": "string"
+        },
+        "extraAuditData": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "changes": {
+          "$ref": "#/definitions/ObservableChange"
+        }
+      }
+    },
+    "IdentityUtils": {
+      "type": "object"
+    },
+    "ClientRpcSslOptions": {
+      "type": "object",
+      "properties": {
+        "trustStorePath": {
+          "$ref": "#/definitions/Path"
+        },
+        "trustStorePassword": {
+          "type": "string"
+        },
+        "trustStoreProvider": {
+          "type": "string"
+        }
+      }
+    },
+    "FileSystem": {
+      "type": "object",
+      "properties": {
+        "separator": {
+          "type": "string"
+        },
+        "readOnly": {
+          "type": "boolean"
+        },
+        "open": {
+          "type": "boolean"
+        },
+        "rootDirectories": {
+          "$ref": "#/definitions/IterablePath"
+        },
+        "fileStores": {
+          "$ref": "#/definitions/IterableFileStore"
+        },
+        "userPrincipalLookupService": {
+          "$ref": "#/definitions/UserPrincipalLookupService"
+        }
+      }
+    },
+    "IterableFileStore": {
+      "type": "object"
+    },
+    "IterablePath": {
+      "type": "object"
+    },
+    "Path": {
+      "type": "object",
+      "properties": {
+        "parent": {
+          "$ref": "#/definitions/Path"
+        },
+        "absolute": {
+          "type": "boolean"
+        },
+        "root": {
+          "$ref": "#/definitions/Path"
+        },
+        "fileSystem": {
+          "$ref": "#/definitions/FileSystem"
+        },
+        "fileName": {
+          "$ref": "#/definitions/Path"
+        },
+        "nameCount": {
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
+    "UserPrincipalLookupService": {
+      "type": "object"
+    },
+    "DataFeed": {
+      "type": "object",
+      "properties": {
+        "snapshot": {
+          "type": "object"
+        },
+        "updates": {
+          "$ref": "#/definitions/ObservableObject"
+        }
+      }
+    },
+    "ObservableObject": {
+      "type": "object"
+    },
+    "FlowHandleImpl": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "$ref": "#/definitions/StateMachineRunId"
+        },
+        "returnValue": {
+          "$ref": "#/definitions/CordaFutureObject"
+        }
+      }
+    },
+    "DataFeedIntegerInteger": {
+      "type": "object",
+      "properties": {
+        "snapshot": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "updates": {
+          "$ref": "#/definitions/ObservableInteger"
+        }
+      }
+    },
+    "DataFeedListPairIntegerStringListPairIntegerString": {
+      "type": "object",
+      "properties": {
+        "snapshot": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/PairIntegerString"
+          }
+        },
+        "updates": {
+          "$ref": "#/definitions/ObservableListPairIntegerString"
+        }
+      }
+    },
+    "FlowProgressHandleImpl": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "$ref": "#/definitions/StateMachineRunId"
+        },
+        "returnValue": {
+          "$ref": "#/definitions/CordaFutureObject"
+        },
+        "progress": {
+          "$ref": "#/definitions/ObservableString"
+        },
+        "stepsTreeIndexFeed": {
+          "$ref": "#/definitions/DataFeedIntegerInteger"
+        },
+        "stepsTreeFeed": {
+          "$ref": "#/definitions/DataFeedListPairIntegerStringListPairIntegerString"
+        }
+      }
+    },
+    "ObservableString": {
+      "type": "object"
+    },
+    "ParametersUpdateInfo": {
+      "type": "object",
+      "properties": {
+        "hash": {
+          "type": "string",
+          "description": "Base 58 Encoded Secure Hash"
+        },
+        "parameters": {
+          "$ref": "#/definitions/NetworkParameters"
+        },
+        "description": {
+          "type": "string"
+        },
+        "updateDeadline": {
+          "type": "integer",
+          "format": "int64"
+        }
+      }
+    },
+    "DataFeedStringString": {
+      "type": "object",
+      "properties": {
+        "snapshot": {
+          "type": "string"
+        },
+        "updates": {
+          "$ref": "#/definitions/ObservableString"
+        }
+      }
+    },
+    "FlowInitiator": {
+      "type": "object",
+      "properties": {
+        "invocationContext": {
+          "$ref": "#/definitions/InvocationContext"
+        },
+        "name": {
+          "type": "string"
+        }
+      }
+    },
+    "StateMachineInfo": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "$ref": "#/definitions/StateMachineRunId"
+        },
+        "flowLogicClassName": {
+          "type": "string"
+        },
+        "initiator": {
+          "$ref": "#/definitions/FlowInitiator"
+        },
+        "progressTrackerStepAndUpdates": {
+          "$ref": "#/definitions/DataFeedStringString"
+        },
+        "invocationContext": {
+          "$ref": "#/definitions/InvocationContext"
+        }
+      }
+    },
+    "StateMachineTransactionMapping": {
+      "type": "object",
+      "properties": {
+        "stateMachineRunId": {
+          "$ref": "#/definitions/StateMachineRunId"
+        },
+        "transactionId": {
+          "type": "string",
+          "description": "Base 58 Encoded Secure Hash"
+        }
+      }
+    },
+    "Added": {
+      "type": "object",
+      "properties": {
+        "node": {
+          "$ref": "#/definitions/NodeInfo"
+        }
+      }
+    },
+    "Removed": {
+      "type": "object",
+      "properties": {
+        "node": {
+          "$ref": "#/definitions/NodeInfo"
+        }
+      }
+    },
+    "Try": {
+      "type": "object",
+      "properties": {
+        "failure": {
+          "type": "boolean"
+        },
+        "success": {
+          "type": "boolean"
+        },
+        "orThrow": {
+          "type": "object"
+        }
+      }
+    },
+    "TryObject": {
+      "type": "object",
+      "properties": {
+        "failure": {
+          "type": "boolean"
+        },
+        "success": {
+          "type": "boolean"
+        },
+        "orThrow": {
+          "type": "object"
+        }
+      }
+    },
+    "ZoneVersionTooLowException": {
+      "type": "object",
+      "properties": {
+        "cause": {
+          "$ref": "#/definitions/Throwable"
+        },
+        "stackTrace": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/StackTraceElement"
+          }
+        },
+        "originalExceptionClassName": {
+          "type": "string"
+        },
+        "message": {
+          "type": "string"
+        },
+        "originalMessage": {
+          "type": "string"
+        },
+        "localizedMessage": {
+          "type": "string"
+        },
+        "suppressed": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Throwable"
+          }
+        }
+      }
+    },
+    "Modified": {
+      "type": "object",
+      "properties": {
+        "node": {
+          "$ref": "#/definitions/NodeInfo"
+        },
+        "previousNode": {
+          "$ref": "#/definitions/NodeInfo"
+        }
+      }
+    },
+    "DistributedNode": {
+      "type": "object",
+      "properties": {
+        "party": {
+          "$ref": "#/definitions/Party"
+        }
+      }
+    },
+    "SingleNode": {
+      "type": "object",
+      "properties": {
+        "party": {
+          "$ref": "#/definitions/Party"
+        },
+        "addresses": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/NetworkHostAndPort"
+          }
+        }
+      }
+    },
+    "StatesNotAvailableException": {
+      "type": "object",
+      "properties": {
+        "cause": {
+          "$ref": "#/definitions/Throwable"
+        },
+        "stackTrace": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/StackTraceElement"
+          }
+        },
+        "originalExceptionClassName": {
+          "type": "string"
+        },
+        "originalErrorId": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "message": {
+          "type": "string"
+        },
+        "errorId": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "originalMessage": {
+          "type": "string"
+        },
+        "localizedMessage": {
+          "type": "string"
+        },
+        "suppressed": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Throwable"
+          }
+        }
+      }
+    },
+    "UnknownAnonymousPartyException": {
+      "type": "object",
+      "properties": {
+        "cause": {
+          "$ref": "#/definitions/Throwable"
+        },
+        "stackTrace": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/StackTraceElement"
+          }
+        },
+        "originalExceptionClassName": {
+          "type": "string"
+        },
+        "message": {
+          "type": "string"
+        },
+        "originalMessage": {
+          "type": "string"
+        },
+        "localizedMessage": {
+          "type": "string"
+        },
+        "suppressed": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Throwable"
+          }
+        }
+      }
+    },
+    "IterableStateAndRefContractState": {
+      "type": "object"
+    },
+    "Vault": {
+      "type": "object",
+      "properties": {
+        "states": {
+          "$ref": "#/definitions/IterableStateAndRefContractState"
+        }
+      }
+    },
+    "ConstraintInfo": {
+      "type": "object",
+      "properties": {
+        "constraint": {
+          "$ref": "#/definitions/AttachmentConstraint"
+        }
+      }
+    },
+    "Vault$ConstraintInfo$Companion$WhenMappings": {
+      "type": "object"
+    },
+    "Vault$ConstraintInfo$WhenMappings": {
+      "type": "object"
+    },
+    "Page": {
+      "type": "object",
+      "properties": {
+        "states": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/StateAndRefContractState"
+          }
+        },
+        "statesMetadata": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/StateMetadata"
+          }
+        },
+        "totalStatesAvailable": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "stateTypes": {
+          "type": "string",
+          "enum": [
+            "UNCONSUMED",
+            "CONSUMED",
+            "ALL"
+          ]
+        },
+        "otherResults": {
+          "type": "array",
+          "items": {
+            "type": "object"
+          }
+        }
+      }
+    },
+    "StateMetadata": {
+      "type": "object",
+      "properties": {
+        "ref": {
+          "$ref": "#/definitions/StateRef"
+        },
+        "contractStateClassName": {
+          "type": "string"
+        },
+        "recordedTime": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "consumedTime": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "UNCONSUMED",
+            "CONSUMED",
+            "ALL"
+          ]
+        },
+        "notary": {
+          "$ref": "#/definitions/AbstractParty"
+        },
+        "lockId": {
+          "type": "string"
+        },
+        "lockUpdateTime": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "relevancyStatus": {
+          "type": "string",
+          "enum": [
+            "RELEVANT",
+            "NOT_RELEVANT",
+            "ALL"
+          ]
+        },
+        "constraintInfo": {
+          "$ref": "#/definitions/ConstraintInfo"
+        }
+      }
+    },
+    "Update": {
+      "type": "object",
+      "properties": {
+        "consumed": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/definitions/StateAndRefContractState"
+          }
+        },
+        "produced": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/definitions/StateAndRefContractState"
+          }
+        },
+        "flowId": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "GENERAL",
+            "NOTARY_CHANGE",
+            "CONTRACT_UPGRADE"
+          ]
         },
         "references": {
           "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/definitions/StateAndRefContractState"
+          }
+        },
+        "empty": {
+          "type": "boolean"
+        }
+      }
+    },
+    "Vault$Update$WhenMappings": {
+      "type": "object"
+    },
+    "VaultQueryException": {
+      "type": "object",
+      "properties": {
+        "cause": {
+          "$ref": "#/definitions/Throwable"
+        },
+        "stackTrace": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/StackTraceElement"
+          }
+        },
+        "originalExceptionClassName": {
+          "type": "string"
+        },
+        "originalErrorId": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "errorId": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "message": {
+          "type": "string"
+        },
+        "originalMessage": {
+          "type": "string"
+        },
+        "localizedMessage": {
+          "type": "string"
+        },
+        "suppressed": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Throwable"
+          }
+        }
+      }
+    },
+    "AndComposition": {
+      "type": "object",
+      "properties": {
+        "a": {
+          "$ref": "#/definitions/QueryCriteria"
+        },
+        "b": {
+          "$ref": "#/definitions/QueryCriteria"
+        }
+      }
+    },
+    "AttachmentQueryCriteria": {
+      "type": "object"
+    },
+    "AttachmentsQueryCriteria": {
+      "type": "object",
+      "properties": {
+        "uploaderCondition": {
+          "$ref": "#/definitions/ColumnPredicateString"
+        },
+        "filenameCondition": {
+          "$ref": "#/definitions/ColumnPredicateString"
+        },
+        "uploadDateCondition": {
+          "$ref": "#/definitions/ColumnPredicateInstant"
+        },
+        "contractClassNamesCondition": {
+          "$ref": "#/definitions/ColumnPredicateListString"
+        },
+        "signersCondition": {
+          "$ref": "#/definitions/ColumnPredicateListPublicKey"
+        },
+        "versionCondition": {
+          "$ref": "#/definitions/ColumnPredicateInteger"
+        }
+      }
+    },
+    "ColumnPredicate": {
+      "type": "object"
+    },
+    "ColumnPredicateInstant": {
+      "type": "object"
+    },
+    "ColumnPredicateInteger": {
+      "type": "object"
+    },
+    "ColumnPredicateListPublicKey": {
+      "type": "object"
+    },
+    "ColumnPredicateListString": {
+      "type": "object"
+    },
+    "ColumnPredicateString": {
+      "type": "object"
+    },
+    "OrComposition": {
+      "type": "object",
+      "properties": {
+        "a": {
+          "$ref": "#/definitions/QueryCriteria"
+        },
+        "b": {
+          "$ref": "#/definitions/QueryCriteria"
+        }
+      }
+    },
+    "AttachmentSort": {
+      "type": "object",
+      "properties": {
+        "columns": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/AttachmentSortColumn"
+          }
+        }
+      }
+    },
+    "AttachmentSortColumn": {
+      "type": "object",
+      "properties": {
+        "sortAttribute": {
+          "type": "string",
+          "enum": [
+            "INSERTION_DATE",
+            "UPLOADER",
+            "FILENAME",
+            "VERSION"
+          ]
+        },
+        "direction": {
+          "type": "string",
+          "enum": [
+            "ASC",
+            "DESC"
+          ]
+        }
+      }
+    },
+    "Builder": {
+      "type": "object"
+    },
+    "Column": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        }
+      }
+    },
+    "AggregateFunction": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "COUNT",
+            "AVG",
+            "MIN",
+            "MAX",
+            "SUM"
+          ]
+        }
+      }
+    },
+    "Between": {
+      "type": "object",
+      "properties": {
+        "rightFromLiteral": {
+          "$ref": "#/definitions/Comparable"
+        },
+        "rightToLiteral": {
+          "$ref": "#/definitions/Comparable"
+        }
+      }
+    },
+    "Comparable": {
+      "type": "object"
+    },
+    "BinaryComparison": {
+      "type": "object",
+      "properties": {
+        "operator": {
+          "type": "string",
+          "enum": [
+            "LESS_THAN",
+            "LESS_THAN_OR_EQUAL",
+            "GREATER_THAN",
+            "GREATER_THAN_OR_EQUAL"
+          ]
+        },
+        "rightLiteral": {
+          "$ref": "#/definitions/Comparable"
+        }
+      }
+    },
+    "CollectionExpression": {
+      "type": "object",
+      "properties": {
+        "operator": {
+          "type": "string",
+          "enum": [
+            "IN",
+            "NOT_IN",
+            "IN_IGNORE_CASE",
+            "NOT_IN_IGNORE_CASE"
+          ]
+        },
+        "rightLiteral": {
+          "type": "array",
+          "items": {
+            "type": "object"
+          }
+        }
+      }
+    },
+    "EqualityComparison": {
+      "type": "object",
+      "properties": {
+        "operator": {
+          "type": "string",
+          "enum": [
+            "EQUAL",
+            "NOT_EQUAL",
+            "EQUAL_IGNORE_CASE",
+            "NOT_EQUAL_IGNORE_CASE"
+          ]
+        },
+        "rightLiteral": {
+          "type": "object"
+        }
+      }
+    },
+    "Likeness": {
+      "type": "object",
+      "properties": {
+        "operator": {
+          "type": "string",
+          "enum": [
+            "LIKE",
+            "NOT_LIKE",
+            "LIKE_IGNORE_CASE",
+            "NOT_LIKE_IGNORE_CASE"
+          ]
+        },
+        "rightLiteral": {
+          "type": "string"
+        }
+      }
+    },
+    "NullExpression": {
+      "type": "object",
+      "properties": {
+        "operator": {
+          "type": "string",
+          "enum": [
+            "IS_NULL",
+            "NOT_NULL"
+          ]
+        }
+      }
+    },
+    "AggregateFunctionExpression": {
+      "type": "object",
+      "properties": {
+        "column": {
+          "$ref": "#/definitions/ColumnObjectObject"
+        },
+        "predicate": {
+          "$ref": "#/definitions/ColumnPredicateObject"
+        },
+        "groupByColumns": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ColumnObjectObject"
+          }
+        },
+        "orderBy": {
+          "type": "string",
+          "enum": [
+            "ASC",
+            "DESC"
+          ]
+        }
+      }
+    },
+    "ColumnObjectObject": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        }
+      }
+    },
+    "ColumnPredicateObject": {
+      "type": "object"
+    },
+    "BinaryLogical": {
+      "type": "object",
+      "properties": {
+        "left": {
+          "$ref": "#/definitions/CriteriaExpressionObjectBoolean"
+        },
+        "right": {
+          "$ref": "#/definitions/CriteriaExpressionObjectBoolean"
+        },
+        "operator": {
+          "type": "string",
+          "enum": [
+            "AND",
+            "OR"
+          ]
+        }
+      }
+    },
+    "CriteriaExpression": {
+      "type": "object"
+    },
+    "CriteriaExpressionObjectBoolean": {
+      "type": "object"
+    },
+    "ColumnPredicateExpression": {
+      "type": "object",
+      "properties": {
+        "column": {
+          "$ref": "#/definitions/ColumnObjectObject"
+        },
+        "predicate": {
+          "$ref": "#/definitions/ColumnPredicateObject"
+        }
+      }
+    },
+    "Not": {
+      "type": "object",
+      "properties": {
+        "expression": {
+          "$ref": "#/definitions/CriteriaExpressionObjectBoolean"
+        }
+      }
+    },
+    "FieldInfo": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        }
+      }
+    },
+    "PageSpecification": {
+      "type": "object",
+      "properties": {
+        "pageNumber": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "pageSize": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "default": {
+          "type": "boolean"
+        }
+      }
+    },
+    "QueryCriteria": {
+      "type": "object"
+    },
+    "ColumnPredicateLong": {
+      "type": "object"
+    },
+    "FungibleAssetQueryCriteria": {
+      "type": "object",
+      "properties": {
+        "relevancyStatus": {
+          "type": "string",
+          "enum": [
+            "RELEVANT",
+            "NOT_RELEVANT",
+            "ALL"
+          ]
+        },
+        "constraintTypes": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "enum": [
+              "ALWAYS_ACCEPT",
+              "HASH",
+              "CZ_WHITELISTED",
+              "SIGNATURE"
+            ]
+          }
+        },
+        "constraints": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/definitions/ConstraintInfo"
+          }
+        },
+        "participants": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/AbstractParty"
+          }
+        },
+        "owner": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/AbstractParty"
+          }
+        },
+        "quantity": {
+          "$ref": "#/definitions/ColumnPredicateLong"
+        },
+        "issuer": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/AbstractParty"
+          }
+        },
+        "issuerRef": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "example": "736F6D654279746573",
+            "description": "Hex encoded Byte Array"
+          }
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "UNCONSUMED",
+            "CONSUMED",
+            "ALL"
+          ]
+        },
+        "contractStateTypes": {
+          "type": "array",
+          "uniqueItems": true
+        }
+      }
+    },
+    "FungibleStateQueryCriteria": {
+      "type": "object",
+      "properties": {
+        "relevancyStatus": {
+          "type": "string",
+          "enum": [
+            "RELEVANT",
+            "NOT_RELEVANT",
+            "ALL"
+          ]
+        },
+        "constraintTypes": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "enum": [
+              "ALWAYS_ACCEPT",
+              "HASH",
+              "CZ_WHITELISTED",
+              "SIGNATURE"
+            ]
+          }
+        },
+        "constraints": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/definitions/ConstraintInfo"
+          }
+        },
+        "participants": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/AbstractParty"
+          }
+        },
+        "quantity": {
+          "$ref": "#/definitions/ColumnPredicateLong"
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "UNCONSUMED",
+            "CONSUMED",
+            "ALL"
+          ]
+        },
+        "contractStateTypes": {
+          "type": "array",
+          "uniqueItems": true
+        }
+      }
+    },
+    "LinearStateQueryCriteria": {
+      "type": "object",
+      "properties": {
+        "relevancyStatus": {
+          "type": "string",
+          "enum": [
+            "RELEVANT",
+            "NOT_RELEVANT",
+            "ALL"
+          ]
+        },
+        "constraintTypes": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "enum": [
+              "ALWAYS_ACCEPT",
+              "HASH",
+              "CZ_WHITELISTED",
+              "SIGNATURE"
+            ]
+          }
+        },
+        "constraints": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/definitions/ConstraintInfo"
+          }
+        },
+        "participants": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/AbstractParty"
+          }
+        },
+        "uuid": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "uuid"
+          }
+        },
+        "externalId": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "UNCONSUMED",
+            "CONSUMED",
+            "ALL"
+          ]
+        },
+        "contractStateTypes": {
+          "type": "array",
+          "uniqueItems": true
+        }
+      }
+    },
+    "SoftLockingCondition": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "UNLOCKED_ONLY",
+            "LOCKED_ONLY",
+            "SPECIFIED",
+            "UNLOCKED_AND_SPECIFIED"
+          ]
+        },
+        "lockIds": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      }
+    },
+    "TimeCondition": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "RECORDED",
+            "CONSUMED"
+          ]
+        },
+        "predicate": {
+          "$ref": "#/definitions/ColumnPredicateInstant"
+        }
+      }
+    },
+    "CriteriaExpressionStatePersistableBoolean": {
+      "type": "object"
+    },
+    "VaultCustomQueryCriteria": {
+      "type": "object",
+      "properties": {
+        "relevancyStatus": {
+          "type": "string",
+          "enum": [
+            "RELEVANT",
+            "NOT_RELEVANT",
+            "ALL"
+          ]
+        },
+        "constraintTypes": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "enum": [
+              "ALWAYS_ACCEPT",
+              "HASH",
+              "CZ_WHITELISTED",
+              "SIGNATURE"
+            ]
+          }
+        },
+        "constraints": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/definitions/ConstraintInfo"
+          }
+        },
+        "participants": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/AbstractParty"
+          }
+        },
+        "expression": {
+          "$ref": "#/definitions/CriteriaExpressionStatePersistableBoolean"
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "UNCONSUMED",
+            "CONSUMED",
+            "ALL"
+          ]
+        },
+        "contractStateTypes": {
+          "type": "array",
+          "uniqueItems": true
+        }
+      }
+    },
+    "VaultQueryCriteria": {
+      "type": "object",
+      "properties": {
+        "relevancyStatus": {
+          "type": "string",
+          "enum": [
+            "RELEVANT",
+            "NOT_RELEVANT",
+            "ALL"
+          ]
+        },
+        "constraintTypes": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "enum": [
+              "ALWAYS_ACCEPT",
+              "HASH",
+              "CZ_WHITELISTED",
+              "SIGNATURE"
+            ]
+          }
+        },
+        "constraints": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/definitions/ConstraintInfo"
+          }
+        },
+        "participants": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/AbstractParty"
+          }
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "UNCONSUMED",
+            "CONSUMED",
+            "ALL"
+          ]
+        },
+        "contractStateTypes": {
+          "type": "array",
+          "uniqueItems": true
+        },
+        "stateRefs": {
+          "type": "array",
           "items": {
             "$ref": "#/definitions/StateRef"
           }
         },
-        "networkParametersHash": {
-          "$ref": "#/definitions/SecureHash"
+        "notary": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/AbstractParty"
+          }
+        },
+        "softLockingCondition": {
+          "$ref": "#/definitions/SoftLockingCondition"
+        },
+        "timeCondition": {
+          "$ref": "#/definitions/TimeCondition"
+        }
+      }
+    },
+    "QueryCriteriaUtils": {
+      "type": "object"
+    },
+    "Sort": {
+      "type": "object",
+      "properties": {
+        "columns": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/SortColumn"
+          }
+        }
+      }
+    },
+    "SortAttribute": {
+      "type": "object"
+    },
+    "SortColumn": {
+      "type": "object",
+      "properties": {
+        "sortAttribute": {
+          "$ref": "#/definitions/SortAttribute"
+        },
+        "direction": {
+          "type": "string",
+          "enum": [
+            "ASC",
+            "DESC"
+          ]
+        }
+      }
+    },
+    "Custom": {
+      "type": "object",
+      "properties": {
+        "entityStateColumnName": {
+          "type": "string"
+        }
+      }
+    },
+    "Attribute": {
+      "type": "object"
+    },
+    "Standard": {
+      "type": "object",
+      "properties": {
+        "attribute": {
+          "$ref": "#/definitions/Attribute"
+        }
+      }
+    },
+    "CommonSchema": {
+      "type": "object"
+    },
+    "CommonSchemaV1": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "migrationResource": {
+          "type": "string"
+        },
+        "version": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "mappedTypes": {
+          "$ref": "#/definitions/IterableClass"
+        }
+      }
+    },
+    "FungibleState": {
+      "type": "object",
+      "properties": {
+        "stateRef": {
+          "$ref": "#/definitions/PersistentStateRef"
+        },
+        "participants": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/definitions/AbstractParty"
+          }
+        },
+        "owner": {
+          "$ref": "#/definitions/AbstractParty"
+        },
+        "quantity": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "issuer": {
+          "$ref": "#/definitions/AbstractParty"
+        },
+        "issuerRef": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "byte"
+          }
+        }
+      }
+    },
+    "PersistentStateRef": {
+      "type": "object",
+      "properties": {
+        "txId": {
+          "type": "string"
+        },
+        "index": {
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
+    "LinearState": {
+      "type": "object",
+      "properties": {
+        "stateRef": {
+          "$ref": "#/definitions/PersistentStateRef"
+        },
+        "participants": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/definitions/AbstractParty"
+          }
+        },
+        "externalId": {
+          "type": "string"
+        },
+        "uuid": {
+          "type": "string",
+          "format": "uuid"
+        }
+      }
+    },
+    "MappedSchemaValidator": {
+      "type": "object"
+    },
+    "SchemaCrossReferenceReport": {
+      "type": "object"
+    },
+    "ByteSequence": {
+      "type": "object",
+      "properties": {
+        "offset": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "size": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "bytes": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "byte"
+          }
+        }
+      }
+    },
+    "ClassWhitelist": {
+      "type": "object"
+    },
+    "EncodingWhitelist": {
+      "type": "object"
+    },
+    "ObjectWithCompatibleContext": {
+      "type": "object",
+      "properties": {
+        "obj": {
+          "type": "object"
+        },
+        "context": {
+          "$ref": "#/definitions/SerializationContext"
+        }
+      }
+    },
+    "SerializationContext": {
+      "type": "object",
+      "properties": {
+        "whitelist": {
+          "$ref": "#/definitions/ClassWhitelist"
+        },
+        "properties": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "object"
+          }
+        },
+        "encoding": {
+          "$ref": "#/definitions/SerializationEncoding"
+        },
+        "encodingWhitelist": {
+          "$ref": "#/definitions/EncodingWhitelist"
+        },
+        "preferredSerializationVersion": {
+          "$ref": "#/definitions/ByteSequence"
+        },
+        "deserializationClassLoader": {
+          "$ref": "#/definitions/ClassLoader"
+        },
+        "objectReferencesEnabled": {
+          "type": "boolean"
+        },
+        "lenientCarpenterEnabled": {
+          "type": "boolean"
+        },
+        "carpenterDisabled": {
+          "type": "boolean"
+        },
+        "preventDataLoss": {
+          "type": "boolean"
+        },
+        "useCase": {
+          "type": "string",
+          "enum": [
+            "P2P",
+            "RPCServer",
+            "RPCClient",
+            "Storage",
+            "Testing"
+          ]
+        },
+        "customSerializers": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/definitions/SerializationCustomSerializerObjectObject"
+          }
+        }
+      }
+    },
+    "SerializationEncoding": {
+      "type": "object"
+    },
+    "AttachmentURLStreamHandlerFactory": {
+      "type": "object"
+    },
+    "AttachmentsClassLoader": {
+      "type": "object",
+      "properties": {
+        "parent": {
+          "$ref": "#/definitions/ClassLoader"
+        },
+        "params": {
+          "$ref": "#/definitions/NetworkParameters"
+        },
+        "urls": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "url"
+          }
+        }
+      }
+    },
+    "AttachmentsClassLoaderBuilder": {
+      "type": "object"
+    },
+    "CheckpointSerializationContext": {
+      "type": "object",
+      "properties": {
+        "whitelist": {
+          "$ref": "#/definitions/ClassWhitelist"
+        },
+        "properties": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "object"
+          }
+        },
+        "encoding": {
+          "$ref": "#/definitions/SerializationEncoding"
+        },
+        "encodingWhitelist": {
+          "$ref": "#/definitions/EncodingWhitelist"
+        },
+        "deserializationClassLoader": {
+          "$ref": "#/definitions/ClassLoader"
+        },
+        "objectReferencesEnabled": {
+          "type": "boolean"
+        }
+      }
+    },
+    "CheckpointSerializationDefaults": {
+      "type": "object",
+      "properties": {
+        "checkpoint_CONTEXT": {
+          "$ref": "#/definitions/CheckpointSerializationContext"
+        },
+        "checkpoint_SERIALIZER": {
+          "$ref": "#/definitions/CheckpointSerializer"
+        }
+      }
+    },
+    "CheckpointSerializer": {
+      "type": "object"
+    },
+    "FilteredComponent": {
+      "type": "object",
+      "properties": {
+        "component": {
+          "type": "string",
+          "description": "Hex encoded Byte Array"
+        },
+        "nonce": {
+          "type": "string",
+          "description": "Base 58 Encoded Secure Hash"
+        }
+      }
+    },
+    "Position": {
+      "type": "object",
+      "properties": {
+        "progressTracker": {
+          "$ref": "#/definitions/ProgressTracker"
+        },
+        "tracker": {
+          "$ref": "#/definitions/ProgressTracker"
+        },
+        "newStep": {
+          "$ref": "#/definitions/Step"
+        }
+      }
+    },
+    "Rendering": {
+      "type": "object",
+      "properties": {
+        "progressTracker": {
+          "$ref": "#/definitions/ProgressTracker"
+        },
+        "tracker": {
+          "$ref": "#/definitions/ProgressTracker"
+        },
+        "ofStep": {
+          "$ref": "#/definitions/Step"
+        }
+      }
+    },
+    "Structural": {
+      "type": "object",
+      "properties": {
+        "progressTracker": {
+          "$ref": "#/definitions/ProgressTracker"
+        },
+        "tracker": {
+          "$ref": "#/definitions/ProgressTracker"
+        },
+        "parent": {
+          "$ref": "#/definitions/Step"
+        }
+      }
+    },
+    "Currencies": {
+      "type": "object"
+    },
+    "BusinessCalendar": {
+      "type": "object",
+      "properties": {
+        "holidayDates": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "format": "date"
+          }
+        }
+      }
+    },
+    "CommercialPaper": {
+      "type": "object"
+    },
+    "Issue": {
+      "type": "object"
+    },
+    "Move": {
+      "type": "object"
+    },
+    "Redeem": {
+      "type": "object"
+    },
+    "PartyAndReference": {
+      "type": "object",
+      "properties": {
+        "party": {
+          "$ref": "#/definitions/AbstractParty"
+        },
+        "reference": {
+          "type": "string",
+          "description": "Hex encoded Byte Array"
+        }
+      }
+    },
+    "Commodity": {
+      "type": "object",
+      "properties": {
+        "commodityCode": {
+          "type": "string"
+        },
+        "displayName": {
+          "type": "string"
+        },
+        "defaultFractionDigits": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "displayTokenSize": {
+          "type": "number"
+        }
+      }
+    },
+    "Expression": {
+      "type": "object",
+      "properties": {
+        "expr": {
+          "type": "string"
+        }
+      }
+    },
+    "Fix": {
+      "type": "object",
+      "properties": {
+        "of": {
+          "$ref": "#/definitions/FixOf"
+        },
+        "value": {
+          "type": "number"
+        }
+      }
+    },
+    "FixOf": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "forDay": {
+          "type": "string",
+          "format": "date"
+        },
+        "ofTenor": {
+          "$ref": "#/definitions/Tenor"
+        }
+      }
+    },
+    "Tenor": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        }
+      }
+    },
+    "JavaCommercialPaper": {
+      "type": "object"
+    },
+    "Tenor$WhenMappings": {
+      "type": "object"
+    },
+    "BilateralNetState": {
+      "type": "object",
+      "properties": {
+        "partyKeys": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/definitions/AbstractParty"
+          }
+        },
+        "template": {
+          "$ref": "#/definitions/TermsObject"
+        }
+      }
+    },
+    "Issued": {
+      "type": "object",
+      "properties": {
+        "issuer": {
+          "$ref": "#/definitions/PartyAndReference"
+        },
+        "product": {
+          "type": "object"
+        },
+        "_productType": {
+          "type": "string",
+          "example": "java.util.Currency"
+        }
+      }
+    },
+    "Terms": {
+      "type": "object",
+      "properties": {
+        "acceptableContracts": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "example": "GfHq2tTVk9z4eXgyUuofmR16H6j7srXt8BCyidKdrZL5JEwFqHgDSuiinbTE",
+            "description": "Base 58 Encoded Secure Hash"
+          }
+        },
+        "acceptableIssuedProducts": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/definitions/Issued"
+          }
+        },
+        "dueBefore": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "timeTolerance": {
+          "$ref": "#/definitions/Duration"
+        },
+        "product": {
+          "type": "object"
+        }
+      }
+    },
+    "TermsObject": {
+      "type": "object",
+      "properties": {
+        "acceptableContracts": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "example": "GfHq2tTVk9z4eXgyUuofmR16H6j7srXt8BCyidKdrZL5JEwFqHgDSuiinbTE",
+            "description": "Base 58 Encoded Secure Hash"
+          }
+        },
+        "acceptableIssuedProducts": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/definitions/Issued"
+          }
+        },
+        "dueBefore": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "timeTolerance": {
+          "$ref": "#/definitions/Duration"
+        },
+        "product": {
+          "type": "object"
+        }
+      }
+    },
+    "Cash": {
+      "type": "object"
+    },
+    "Exit": {
+      "type": "object",
+      "properties": {
+        "amount": {
+          "$ref": "#/definitions/Amount"
+        }
+      }
+    },
+    "CashUtilities": {
+      "type": "object"
+    },
+    "MultilateralNetState": {
+      "type": "object",
+      "properties": {
+        "template": {
+          "$ref": "#/definitions/TermsObject"
+        }
+      }
+    },
+    "Obligation": {
+      "type": "object"
+    },
+    "Net": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "CLOSE_OUT",
+            "PAYMENT"
+          ]
+        }
+      }
+    },
+    "SetLifecycle": {
+      "type": "object",
+      "properties": {
+        "lifecycle": {
+          "type": "string",
+          "enum": [
+            "NORMAL",
+            "DEFAULTED"
+          ]
+        },
+        "inverse": {
+          "type": "string",
+          "enum": [
+            "NORMAL",
+            "DEFAULTED"
+          ]
+        }
+      }
+    },
+    "Obligation$Commands$SetLifecycle$WhenMappings": {
+      "type": "object"
+    },
+    "Settle": {
+      "type": "object",
+      "properties": {
+        "amount": {
+          "$ref": "#/definitions/Amount"
+        }
+      }
+    },
+    "BilateralNetStateObject": {
+      "type": "object",
+      "properties": {
+        "partyKeys": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/definitions/AbstractParty"
+          }
+        },
+        "template": {
+          "$ref": "#/definitions/TermsObject"
+        }
+      }
+    },
+    "MultilateralNetStateObject": {
+      "type": "object",
+      "properties": {
+        "template": {
+          "$ref": "#/definitions/TermsObject"
+        }
+      }
+    },
+    "Obligation$State$WhenMappings": {
+      "type": "object"
+    },
+    "Obligation$WhenMappings": {
+      "type": "object"
+    },
+    "PartyAndAmount": {
+      "type": "object",
+      "properties": {
+        "party": {
+          "$ref": "#/definitions/AbstractParty"
+        },
+        "amount": {
+          "$ref": "#/definitions/Amount"
+        }
+      }
+    },
+    "StateSumming": {
+      "type": "object"
+    },
+    "FINALISING_TX": {
+      "type": "object",
+      "properties": {
+        "label": {
+          "type": "string"
+        },
+        "extraAuditData": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "changes": {
+          "$ref": "#/definitions/ObservableChange"
+        }
+      }
+    },
+    "GENERATING_ID": {
+      "type": "object",
+      "properties": {
+        "label": {
+          "type": "string"
+        },
+        "extraAuditData": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "changes": {
+          "$ref": "#/definitions/ObservableChange"
+        }
+      }
+    },
+    "GENERATING_TX": {
+      "type": "object",
+      "properties": {
+        "label": {
+          "type": "string"
+        },
+        "extraAuditData": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "changes": {
+          "$ref": "#/definitions/ObservableChange"
+        }
+      }
+    },
+    "SIGNING_TX": {
+      "type": "object",
+      "properties": {
+        "label": {
+          "type": "string"
+        },
+        "extraAuditData": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "changes": {
+          "$ref": "#/definitions/ObservableChange"
+        }
+      }
+    },
+    "CashException": {
+      "type": "object",
+      "properties": {
+        "cause": {
+          "$ref": "#/definitions/Throwable"
+        },
+        "stackTrace": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/StackTraceElement"
+          }
+        },
+        "originalExceptionClassName": {
+          "type": "string"
+        },
+        "originalErrorId": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "errorId": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "message": {
+          "type": "string"
+        },
+        "originalMessage": {
+          "type": "string"
+        },
+        "localizedMessage": {
+          "type": "string"
+        },
+        "suppressed": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Throwable"
+          }
+        }
+      }
+    },
+    "ExitRequest": {
+      "type": "object",
+      "properties": {
+        "amount": {
+          "$ref": "#/definitions/AmountCurrency"
+        },
+        "issuerRef": {
+          "type": "string",
+          "description": "Hex encoded Byte Array"
+        }
+      }
+    },
+    "IssueAndPaymentRequest": {
+      "type": "object",
+      "properties": {
+        "amount": {
+          "$ref": "#/definitions/AmountCurrency"
+        },
+        "issueRef": {
+          "type": "string",
+          "description": "Hex encoded Byte Array"
+        },
+        "recipient": {
+          "$ref": "#/definitions/Party"
         },
         "notary": {
           "$ref": "#/definitions/Party"
         },
-        "requiredSigningKeys": {
-          "type": "array",
-          "uniqueItems": true,
-          "items": {
-            "$ref": "#/definitions/PublicKey"
-          }
+        "anonymous": {
+          "type": "boolean"
+        }
+      }
+    },
+    "IssueRequest": {
+      "type": "object",
+      "properties": {
+        "amount": {
+          "$ref": "#/definitions/AmountCurrency"
         },
-        "coreTransaction": {
-          "$ref": "#/definitions/CoreTransaction"
+        "issueRef": {
+          "type": "string",
+          "description": "Hex encoded Byte Array"
         },
-        "notaryChangeTx": {
-          "$ref": "#/definitions/NotaryChangeWireTransaction"
+        "notary": {
+          "$ref": "#/definitions/Party"
+        }
+      }
+    },
+    "PaymentRequest": {
+      "type": "object",
+      "properties": {
+        "amount": {
+          "$ref": "#/definitions/AmountCurrency"
         },
-        "notaryChangeTransaction": {
+        "recipient": {
+          "$ref": "#/definitions/Party"
+        },
+        "anonymous": {
           "type": "boolean"
         },
-        "missingSigners": {
+        "issuerConstraint": {
           "type": "array",
           "uniqueItems": true,
           "items": {
-            "$ref": "#/definitions/PublicKey"
+            "$ref": "#/definitions/Party"
+          }
+        },
+        "notary": {
+          "$ref": "#/definitions/Party"
+        }
+      }
+    },
+    "TwoPartyDealFlow": {
+      "type": "object"
+    },
+    "AutoOffer": {
+      "type": "object",
+      "properties": {
+        "notary": {
+          "$ref": "#/definitions/Party"
+        },
+        "dealBeingOffered": {
+          "$ref": "#/definitions/DealState"
+        }
+      }
+    },
+    "DealState": {
+      "type": "object",
+      "properties": {
+        "linearId": {
+          "$ref": "#/definitions/UniqueIdentifier"
+        },
+        "participants": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/AbstractParty"
           }
         }
       }
     },
-    "NetworkHostAndPort" : {
-      "type" : "object",
-      "properties" : {
-        "host" : {
-          "type" : "string"
-        },
-        "port" : {
-          "type" : "integer",
-          "format" : "int32"
+    "AnonymousParty": {
+      "type": "object",
+      "properties": {
+        "owningKey": {
+          "type": "string",
+          "description": "Base 58 Encoded Public Key"
         }
       }
     },
-    "Party" : {
-      "type" : "object",
-      "properties" : {
-        "owningKey" : {
-          "type" : "string",
-          "description" : "Base 58 Encoded Public Key"
+    "Handshake": {
+      "type": "object",
+      "properties": {
+        "payload": {
+          "type": "object"
         },
-        "name" : {
-          "type" : "string",
-          "description" : "CordaX500Name encoded Party"
+        "primaryIdentity": {
+          "$ref": "#/definitions/AnonymousParty"
+        },
+        "secondaryIdentity": {
+          "$ref": "#/definitions/AnonymousParty"
         }
       }
     },
-    "SimpleNodeInfo" : {
-      "type" : "object",
-      "properties" : {
-        "addresses" : {
-          "type" : "array",
-          "items" : {
-            "$ref" : "#/definitions/NetworkHostAndPort"
+    "SENDING_PROPOSAL": {
+      "type": "object",
+      "properties": {
+        "label": {
+          "type": "string"
+        },
+        "extraAuditData": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
           }
         },
-        "legalIdentities" : {
-          "type" : "array",
-          "items" : {
-            "$ref" : "#/definitions/Party"
+        "changes": {
+          "$ref": "#/definitions/ObservableChange"
+        }
+      }
+    },
+    "COLLECTING_SIGNATURES": {
+      "type": "object",
+      "properties": {
+        "label": {
+          "type": "string"
+        },
+        "extraAuditData": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "changes": {
+          "$ref": "#/definitions/ObservableChange"
+        }
+      }
+    },
+    "RECORDING": {
+      "type": "object",
+      "properties": {
+        "label": {
+          "type": "string"
+        },
+        "extraAuditData": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "changes": {
+          "$ref": "#/definitions/ObservableChange"
+        }
+      }
+    },
+    "TwoPartyTradeFlow": {
+      "type": "object"
+    },
+    "AssetMismatchException": {
+      "type": "object",
+      "properties": {
+        "cause": {
+          "$ref": "#/definitions/Throwable"
+        },
+        "stackTrace": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/StackTraceElement"
+          }
+        },
+        "originalExceptionClassName": {
+          "type": "string"
+        },
+        "originalErrorId": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "expectedTypeName": {
+          "type": "string"
+        },
+        "typeName": {
+          "type": "string"
+        },
+        "errorId": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "message": {
+          "type": "string"
+        },
+        "originalMessage": {
+          "type": "string"
+        },
+        "localizedMessage": {
+          "type": "string"
+        },
+        "suppressed": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Throwable"
           }
         }
       }
     },
-    "AbstractParty" : {
-      "type" : "object",
-      "properties" : {
-        "owningKey" : {
-          "type" : "string",
-          "description" : "Base 58 Encoded Public Key"
-        }
-      }
-    },
-    "AttachmentConstraint" : {
-      "type" : "object"
-    },
-    "ContractState" : {
-      "type" : "object",
-      "properties" : {
-        "participants" : {
-          "type" : "array",
-          "items" : {
-            "$ref" : "#/definitions/AbstractParty"
+    "SharedTx": {
+      "type": "object",
+      "properties": {
+        "tx": {
+          "$ref": "#/definitions/TransactionBuilder"
+        },
+        "cashSigningPubKeys": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "example": "GfHq2tTVk9z4eXgyUuofmR16H6j7srXt8BCyidKdrZL5JEwFqHgDSuiinbTE",
+            "description": "Base 58 Encoded Public Key"
           }
         }
       }
     },
-    "ContractUpgradeFlow_AuthorisePayload" : {
-      "type" : "object",
-      "properties" : {
-        "stateAndRef" : {
-          "$ref" : "#/definitions/StateAndRefObject"
+    "TransactionBuilder": {
+      "type": "object",
+      "properties": {
+        "notary": {
+          "$ref": "#/definitions/Party"
+        },
+        "lockId": {
+          "type": "string",
+          "format": "uuid"
         }
       }
     },
-    "StateAndRef" : {
-      "type" : "object",
-      "properties" : {
-        "state" : {
-          "$ref" : "#/definitions/TransactionStateContractState"
+    "AWAITING_PROPOSAL": {
+      "type": "object",
+      "properties": {
+        "label": {
+          "type": "string"
         },
-        "ref" : {
-          "$ref" : "#/definitions/StateRef"
+        "extraAuditData": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "changes": {
+          "$ref": "#/definitions/ObservableChange"
         }
       }
     },
-    "StateAndRefObject" : {
-      "type" : "object",
-      "properties" : {
-        "state" : {
-          "$ref" : "#/definitions/TransactionStateObject"
+    "VERIFYING_AND_SIGNING": {
+      "type": "object",
+      "properties": {
+        "label": {
+          "type": "string"
         },
-        "ref" : {
-          "$ref" : "#/definitions/StateRef"
+        "extraAuditData": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "changes": {
+          "$ref": "#/definitions/ObservableChange"
         }
       }
     },
-    "StateRef" : {
-      "type" : "object",
-      "properties" : {
-        "txhash" : {
-          "type" : "string",
-          "description" : "Base 58 Encoded Secure Hash"
+    "SellerTradeInfo": {
+      "type": "object",
+      "properties": {
+        "price": {
+          "$ref": "#/definitions/AmountCurrency"
         },
-        "index" : {
-          "type" : "integer",
-          "format" : "int32"
+        "payToIdentity": {
+          "$ref": "#/definitions/PartyAndCertificate"
         }
       }
     },
-    "TransactionState" : {
-      "type" : "object",
-      "properties" : {
-        "data" : {
-          "$ref" : "#/definitions/ContractState"
+    "UnacceptablePriceException": {
+      "type": "object",
+      "properties": {
+        "cause": {
+          "$ref": "#/definitions/Throwable"
         },
-        "contract" : {
-          "type" : "string"
+        "stackTrace": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/StackTraceElement"
+          }
         },
-        "notary" : {
-          "$ref" : "#/definitions/Party"
+        "originalExceptionClassName": {
+          "type": "string"
         },
-        "encumbrance" : {
-          "type" : "integer",
-          "format" : "int32"
+        "originalErrorId": {
+          "type": "integer",
+          "format": "int64"
         },
-        "constraint" : {
-          "$ref" : "#/definitions/AttachmentConstraint"
+        "errorId": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "message": {
+          "type": "string"
+        },
+        "originalMessage": {
+          "type": "string"
+        },
+        "localizedMessage": {
+          "type": "string"
+        },
+        "suppressed": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Throwable"
+          }
         }
       }
     },
-    "TransactionStateContractState" : {
-      "type" : "object",
-      "properties" : {
-        "data" : {
-          "$ref" : "#/definitions/ContractState"
+    "CashSchema": {
+      "type": "object"
+    },
+    "CashSchemaV1": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
         },
-        "contract" : {
-          "type" : "string"
+        "migrationResource": {
+          "type": "string"
         },
-        "notary" : {
-          "$ref" : "#/definitions/Party"
+        "version": {
+          "type": "integer",
+          "format": "int32"
         },
-        "encumbrance" : {
-          "type" : "integer",
-          "format" : "int32"
-        },
-        "constraint" : {
-          "$ref" : "#/definitions/AttachmentConstraint"
+        "mappedTypes": {
+          "$ref": "#/definitions/IterableClass"
         }
       }
     },
-    "TransactionStateObject" : {
-      "type" : "object",
-      "properties" : {
-        "data" : {
-          "type" : "object"
+    "PersistentCashState": {
+      "type": "object",
+      "properties": {
+        "stateRef": {
+          "$ref": "#/definitions/PersistentStateRef"
         },
-        "contract" : {
-          "type" : "string"
+        "owner": {
+          "$ref": "#/definitions/AbstractParty"
         },
-        "notary" : {
-          "$ref" : "#/definitions/Party"
+        "pennies": {
+          "type": "integer",
+          "format": "int64"
         },
-        "encumbrance" : {
-          "type" : "integer",
-          "format" : "int32"
+        "currency": {
+          "type": "string"
         },
-        "constraint" : {
-          "$ref" : "#/definitions/AttachmentConstraint"
+        "issuerPartyHash": {
+          "type": "string"
+        },
+        "issuerRef": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "byte"
+          }
         }
       }
     },
-    "ContractUpgradeFlow_DeauthorisePayload" : {
-      "type" : "object",
-      "properties" : {
-        "stateRef" : {
-          "$ref" : "#/definitions/StateRef"
+    "CommercialPaperSchema": {
+      "type": "object"
+    },
+    "CommercialPaperSchemaV1": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "migrationResource": {
+          "type": "string"
+        },
+        "version": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "mappedTypes": {
+          "$ref": "#/definitions/IterableClass"
+        }
+      }
+    },
+    "PersistentCommercialPaperState": {
+      "type": "object",
+      "properties": {
+        "stateRef": {
+          "$ref": "#/definitions/PersistentStateRef"
+        },
+        "issuancePartyHash": {
+          "type": "string"
+        },
+        "issuanceRef": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "byte"
+          }
+        },
+        "ownerHash": {
+          "type": "string"
+        },
+        "maturity": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "faceValue": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "currency": {
+          "type": "string"
+        },
+        "faceValueIssuerPartyHash": {
+          "type": "string"
+        },
+        "faceValueIssuerRef": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "byte"
+          }
+        }
+      }
+    },
+    "CommercialPaperUtils": {
+      "type": "object"
+    },
+    "GetBalances": {
+      "type": "object"
+    },
+    "CashUtils": {
+      "type": "object"
+    },
+    "ObligationUtils": {
+      "type": "object"
+    },
+    "ObligationUtils$WhenMappings": {
+      "type": "object"
+    },
+    "CashSelectionH2Impl": {
+      "type": "object"
+    },
+    "CashSelectionPostgreSQLImpl": {
+      "type": "object"
+    },
+    "CashSelectionSQLServerImpl": {
+      "type": "object"
+    },
+    "BusinessCalendarWrapper": {
+      "type": "object",
+      "properties": {
+        "holidayDates": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "format": "date"
+          }
+        }
+      }
+    },
+    "AnnotatedElement": {
+      "type": "object",
+      "properties": {
+        "annotations": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Annotation"
+          }
+        },
+        "declaredAnnotations": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Annotation"
+          }
+        }
+      }
+    },
+    "AnnotatedMember": {
+      "type": "object",
+      "properties": {
+        "typeContext": {
+          "$ref": "#/definitions/TypeResolutionContext"
+        },
+        "allAnnotations": {
+          "$ref": "#/definitions/AnnotationMap"
+        },
+        "member": {
+          "$ref": "#/definitions/Member"
+        },
+        "fullName": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "type": {
+          "$ref": "#/definitions/JavaType"
+        },
+        "genericType": {
+          "$ref": "#/definitions/Type"
+        },
+        "public": {
+          "type": "boolean"
+        },
+        "annotated": {
+          "$ref": "#/definitions/AnnotatedElement"
+        }
+      }
+    },
+    "Annotation": {
+      "type": "object"
+    },
+    "AnnotationMap": {
+      "type": "object"
+    },
+    "CalendarDeserializer": {
+      "type": "object",
+      "properties": {
+        "cachable": {
+          "type": "boolean"
+        },
+        "delegatee": {
+          "$ref": "#/definitions/JsonDeserializerObject"
+        },
+        "knownPropertyNames": {
+          "type": "array",
+          "items": {
+            "type": "object"
+          }
+        },
+        "nullValue": {
+          "$ref": "#/definitions/BusinessCalendar"
+        },
+        "nullAccessPattern": {
+          "type": "string",
+          "enum": [
+            "ALWAYS_NULL",
+            "CONSTANT",
+            "DYNAMIC"
+          ]
+        },
+        "emptyAccessPattern": {
+          "type": "string",
+          "enum": [
+            "ALWAYS_NULL",
+            "CONSTANT",
+            "DYNAMIC"
+          ]
+        },
+        "emptyValue": {
+          "type": "object"
+        },
+        "objectIdReader": {
+          "$ref": "#/definitions/ObjectIdReader"
+        }
+      }
+    },
+    "JavaType": {
+      "type": "object",
+      "properties": {
+        "interface": {
+          "type": "boolean"
+        },
+        "primitive": {
+          "type": "boolean"
+        },
+        "interfaces": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/JavaType"
+          }
+        },
+        "abstract": {
+          "type": "boolean"
+        },
+        "genericSignature": {
+          "type": "string"
+        },
+        "final": {
+          "type": "boolean"
+        },
+        "containerType": {
+          "type": "boolean"
+        },
+        "javaLangObject": {
+          "type": "boolean"
+        },
+        "concrete": {
+          "type": "boolean"
+        },
+        "throwable": {
+          "type": "boolean"
+        },
+        "arrayType": {
+          "type": "boolean"
+        },
+        "enumType": {
+          "type": "boolean"
+        },
+        "collectionLikeType": {
+          "type": "boolean"
+        },
+        "mapLikeType": {
+          "type": "boolean"
+        },
+        "keyType": {
+          "$ref": "#/definitions/JavaType"
+        },
+        "referencedType": {
+          "$ref": "#/definitions/JavaType"
+        },
+        "bindings": {
+          "$ref": "#/definitions/TypeBindings"
+        },
+        "superClass": {
+          "$ref": "#/definitions/JavaType"
+        },
+        "valueHandler": {
+          "type": "object"
+        },
+        "typeHandler": {
+          "type": "object"
+        },
+        "contentValueHandler": {
+          "type": "object"
+        },
+        "contentTypeHandler": {
+          "type": "object"
+        },
+        "erasedSignature": {
+          "type": "string"
+        },
+        "contentType": {
+          "$ref": "#/definitions/JavaType"
+        },
+        "typeName": {
+          "type": "string"
+        },
+        "referenceType": {
+          "type": "boolean"
+        }
+      }
+    },
+    "JsonDeserializer": {
+      "type": "object",
+      "properties": {
+        "cachable": {
+          "type": "boolean"
+        },
+        "knownPropertyNames": {
+          "type": "array",
+          "items": {
+            "type": "object"
+          }
+        },
+        "nullValue": {
+          "type": "object"
+        },
+        "nullAccessPattern": {
+          "type": "string",
+          "enum": [
+            "ALWAYS_NULL",
+            "CONSTANT",
+            "DYNAMIC"
+          ]
+        },
+        "emptyAccessPattern": {
+          "type": "string",
+          "enum": [
+            "ALWAYS_NULL",
+            "CONSTANT",
+            "DYNAMIC"
+          ]
+        },
+        "emptyValue": {
+          "type": "object"
+        },
+        "objectIdReader": {
+          "$ref": "#/definitions/ObjectIdReader"
+        }
+      }
+    },
+    "JsonDeserializerObject": {
+      "type": "object",
+      "properties": {
+        "cachable": {
+          "type": "boolean"
+        },
+        "delegatee": {
+          "$ref": "#/definitions/JsonDeserializerObject"
+        },
+        "knownPropertyNames": {
+          "type": "array",
+          "items": {
+            "type": "object"
+          }
+        },
+        "nullValue": {
+          "type": "object"
+        },
+        "nullAccessPattern": {
+          "type": "string",
+          "enum": [
+            "ALWAYS_NULL",
+            "CONSTANT",
+            "DYNAMIC"
+          ]
+        },
+        "emptyAccessPattern": {
+          "type": "string",
+          "enum": [
+            "ALWAYS_NULL",
+            "CONSTANT",
+            "DYNAMIC"
+          ]
+        },
+        "emptyValue": {
+          "type": "object"
+        },
+        "objectIdReader": {
+          "$ref": "#/definitions/ObjectIdReader"
+        }
+      }
+    },
+    "Member": {
+      "type": "object",
+      "properties": {
+        "modifiers": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "name": {
+          "type": "string"
+        },
+        "synthetic": {
+          "type": "boolean"
+        }
+      }
+    },
+    "MergeInfo": {
+      "type": "object",
+      "properties": {
+        "getter": {
+          "$ref": "#/definitions/AnnotatedMember"
+        },
+        "fromDefaults": {
+          "type": "boolean"
+        }
+      }
+    },
+    "NullValueProvider": {
+      "type": "object",
+      "properties": {
+        "nullAccessPattern": {
+          "type": "string",
+          "enum": [
+            "ALWAYS_NULL",
+            "CONSTANT",
+            "DYNAMIC"
+          ]
+        }
+      }
+    },
+    "ObjectIdGenerator": {
+      "type": "object"
+    },
+    "ObjectIdGeneratorObject": {
+      "type": "object"
+    },
+    "ObjectIdInfo": {
+      "type": "object",
+      "properties": {
+        "propertyName": {
+          "$ref": "#/definitions/PropertyName"
+        },
+        "alwaysAsId": {
+          "type": "boolean"
+        }
+      }
+    },
+    "ObjectIdReader": {
+      "type": "object",
+      "properties": {
+        "propertyName": {
+          "$ref": "#/definitions/PropertyName"
+        },
+        "generator": {
+          "$ref": "#/definitions/ObjectIdGeneratorObject"
+        },
+        "resolver": {
+          "$ref": "#/definitions/ObjectIdResolver"
+        },
+        "idProperty": {
+          "$ref": "#/definitions/SettableBeanProperty"
+        },
+        "idType": {
+          "$ref": "#/definitions/JavaType"
+        }
+      }
+    },
+    "ObjectIdResolver": {
+      "type": "object"
+    },
+    "PropertyMetadata": {
+      "type": "object",
+      "properties": {
+        "defaultValue": {
+          "type": "string"
+        },
+        "required": {
+          "type": "boolean"
+        },
+        "mergeInfo": {
+          "$ref": "#/definitions/MergeInfo"
+        },
+        "valueNulls": {
+          "type": "string",
+          "enum": [
+            "SET",
+            "SKIP",
+            "FAIL",
+            "AS_EMPTY",
+            "DEFAULT"
+          ]
+        },
+        "contentNulls": {
+          "type": "string",
+          "enum": [
+            "SET",
+            "SKIP",
+            "FAIL",
+            "AS_EMPTY",
+            "DEFAULT"
+          ]
+        },
+        "description": {
+          "type": "string"
+        },
+        "index": {
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
+    "PropertyName": {
+      "type": "object",
+      "properties": {
+        "namespace": {
+          "type": "string"
+        },
+        "empty": {
+          "type": "boolean"
+        },
+        "simpleName": {
+          "type": "string"
+        }
+      }
+    },
+    "SettableBeanProperty": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "type": {
+          "$ref": "#/definitions/JavaType"
+        },
+        "wrapperName": {
+          "$ref": "#/definitions/PropertyName"
+        },
+        "objectIdInfo": {
+          "$ref": "#/definitions/ObjectIdInfo"
+        },
+        "managedReferenceName": {
+          "type": "string"
+        },
+        "member": {
+          "$ref": "#/definitions/AnnotatedMember"
+        },
+        "ignorable": {
+          "type": "boolean"
+        },
+        "valueTypeDeserializer": {
+          "$ref": "#/definitions/TypeDeserializer"
+        },
+        "nullValueProvider": {
+          "$ref": "#/definitions/NullValueProvider"
+        },
+        "propertyIndex": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "creatorIndex": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "injectableValueId": {
+          "type": "object"
+        },
+        "fullName": {
+          "$ref": "#/definitions/PropertyName"
+        },
+        "required": {
+          "type": "boolean"
+        },
+        "metadata": {
+          "$ref": "#/definitions/PropertyMetadata"
+        },
+        "virtual": {
+          "type": "boolean"
+        }
+      }
+    },
+    "Type": {
+      "type": "object",
+      "properties": {
+        "typeName": {
+          "type": "string"
+        }
+      }
+    },
+    "TypeBindings": {
+      "type": "object",
+      "properties": {
+        "empty": {
+          "type": "boolean"
+        },
+        "typeParameters": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/JavaType"
+          }
+        }
+      }
+    },
+    "TypeDeserializer": {
+      "type": "object",
+      "properties": {
+        "typeIdResolver": {
+          "$ref": "#/definitions/TypeIdResolver"
+        },
+        "propertyName": {
+          "type": "string"
+        },
+        "typeInclusion": {
+          "type": "string",
+          "enum": [
+            "PROPERTY",
+            "WRAPPER_OBJECT",
+            "WRAPPER_ARRAY",
+            "EXTERNAL_PROPERTY",
+            "EXISTING_PROPERTY"
+          ]
+        }
+      }
+    },
+    "TypeIdResolver": {
+      "type": "object",
+      "properties": {
+        "descForKnownTypeIds": {
+          "type": "string"
+        },
+        "mechanism": {
+          "type": "string",
+          "enum": [
+            "NONE",
+            "CLASS",
+            "MINIMAL_CLASS",
+            "NAME",
+            "CUSTOM"
+          ]
+        }
+      }
+    },
+    "TypeResolutionContext": {
+      "type": "object"
+    },
+    "CalendarSerializer": {
+      "type": "object",
+      "properties": {
+        "delegatee": {
+          "$ref": "#/definitions/JsonSerializerObject"
+        },
+        "unwrappingSerializer": {
+          "type": "boolean"
+        }
+      }
+    },
+    "JsonSerializer": {
+      "type": "object",
+      "properties": {
+        "unwrappingSerializer": {
+          "type": "boolean"
+        }
+      }
+    },
+    "JsonSerializerObject": {
+      "type": "object",
+      "properties": {
+        "delegatee": {
+          "$ref": "#/definitions/JsonSerializerObject"
+        },
+        "unwrappingSerializer": {
+          "type": "boolean"
+        }
+      }
+    },
+    "ExpressionDeserializer": {
+      "type": "object",
+      "properties": {
+        "cachable": {
+          "type": "boolean"
+        },
+        "delegatee": {
+          "$ref": "#/definitions/JsonDeserializerObject"
+        },
+        "knownPropertyNames": {
+          "type": "array",
+          "items": {
+            "type": "object"
+          }
+        },
+        "nullValue": {
+          "$ref": "#/definitions/Expression"
+        },
+        "nullAccessPattern": {
+          "type": "string",
+          "enum": [
+            "ALWAYS_NULL",
+            "CONSTANT",
+            "DYNAMIC"
+          ]
+        },
+        "emptyAccessPattern": {
+          "type": "string",
+          "enum": [
+            "ALWAYS_NULL",
+            "CONSTANT",
+            "DYNAMIC"
+          ]
+        },
+        "emptyValue": {
+          "type": "object"
+        },
+        "objectIdReader": {
+          "$ref": "#/definitions/ObjectIdReader"
+        }
+      }
+    },
+    "ExpressionSerializer": {
+      "type": "object",
+      "properties": {
+        "delegatee": {
+          "$ref": "#/definitions/JsonSerializerObject"
+        },
+        "unwrappingSerializer": {
+          "type": "boolean"
+        }
+      }
+    },
+    "FinanceJSONSupport": {
+      "type": "object"
+    },
+    "BrokerRpcSslOptions": {
+      "type": "object",
+      "properties": {
+        "keyStorePath": {
+          "$ref": "#/definitions/Path"
+        },
+        "keyStorePassword": {
+          "type": "string"
+        }
+      }
+    },
+    "RPCApi": {
+      "type": "object",
+      "properties": {
+        "rpc_CLIENT_BINDING_REMOVAL_FILTER_EXPRESSION": {
+          "type": "string"
+        },
+        "rpc_CLIENT_BINDING_ADDITION_FILTER_EXPRESSION": {
+          "type": "string"
+        }
+      }
+    },
+    "RPCApi$ClientToServer$Companion$WhenMappings": {
+      "type": "object"
+    },
+    "ObservablesClosed": {
+      "type": "object",
+      "properties": {
+        "ids": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/InvocationId"
+          }
+        }
+      }
+    },
+    "RpcRequest": {
+      "type": "object",
+      "properties": {
+        "clientAddress": {
+          "$ref": "#/definitions/SimpleString"
+        },
+        "methodName": {
+          "type": "string"
+        },
+        "serialisedArguments": {
+          "type": "string",
+          "description": "Hex encoded Byte Array"
+        },
+        "replyId": {
+          "$ref": "#/definitions/InvocationId"
+        },
+        "sessionId": {
+          "$ref": "#/definitions/SessionId"
+        },
+        "externalTrace": {
+          "$ref": "#/definitions/Trace"
+        },
+        "impersonatedActor": {
+          "$ref": "#/definitions/Actor"
+        }
+      }
+    },
+    "SimpleString": {
+      "type": "object",
+      "properties": {
+        "data": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "byte"
+          }
+        },
+        "empty": {
+          "type": "boolean"
+        }
+      }
+    },
+    "RpcRequestOrObservableIdKey": {
+      "type": "object"
+    },
+    "RPCApi$ServerToClient$Companion$WhenMappings": {
+      "type": "object"
+    },
+    "FailedToDeserializeReply": {
+      "type": "object",
+      "properties": {
+        "cause": {
+          "$ref": "#/definitions/Throwable"
+        },
+        "stackTrace": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/StackTraceElement"
+          }
+        },
+        "id": {
+          "$ref": "#/definitions/InvocationId"
+        },
+        "message": {
+          "type": "string"
+        },
+        "localizedMessage": {
+          "type": "string"
+        },
+        "suppressed": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Throwable"
+          }
+        }
+      }
+    },
+    "Notification": {
+      "type": "object",
+      "properties": {
+        "kind": {
+          "type": "string",
+          "enum": [
+            "OnNext",
+            "OnError",
+            "OnCompleted"
+          ]
+        },
+        "throwable": {
+          "$ref": "#/definitions/Throwable"
+        },
+        "value": {
+          "type": "object"
+        },
+        "onNext": {
+          "type": "boolean"
+        },
+        "onError": {
+          "type": "boolean"
+        },
+        "onCompleted": {
+          "type": "boolean"
+        }
+      }
+    },
+    "NotificationObject": {
+      "type": "object",
+      "properties": {
+        "kind": {
+          "type": "string",
+          "enum": [
+            "OnNext",
+            "OnError",
+            "OnCompleted"
+          ]
+        },
+        "throwable": {
+          "$ref": "#/definitions/Throwable"
+        },
+        "value": {
+          "type": "object"
+        },
+        "onNext": {
+          "type": "boolean"
+        },
+        "onError": {
+          "type": "boolean"
+        },
+        "onCompleted": {
+          "type": "boolean"
+        }
+      }
+    },
+    "Observation": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "$ref": "#/definitions/InvocationId"
+        },
+        "content": {
+          "$ref": "#/definitions/NotificationObject"
+        },
+        "deduplicationIdentity": {
+          "type": "string"
+        }
+      }
+    },
+    "RpcReply": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "$ref": "#/definitions/InvocationId"
+        },
+        "result": {
+          "$ref": "#/definitions/TryObject"
+        },
+        "deduplicationIdentity": {
+          "type": "string"
+        }
+      }
+    },
+    "DuplicateAttachmentException": {
+      "type": "object",
+      "properties": {
+        "cause": {
+          "$ref": "#/definitions/Throwable"
+        },
+        "stackTrace": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/StackTraceElement"
+          }
+        },
+        "file": {
+          "type": "string"
+        },
+        "message": {
+          "type": "string"
+        },
+        "reason": {
+          "type": "string"
+        },
+        "otherFile": {
+          "type": "string"
+        },
+        "localizedMessage": {
+          "type": "string"
+        },
+        "suppressed": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Throwable"
+          }
+        }
+      }
+    },
+    "DuplicateContractClassException": {
+      "type": "object",
+      "properties": {
+        "cause": {
+          "$ref": "#/definitions/Throwable"
+        },
+        "stackTrace": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/StackTraceElement"
+          }
+        },
+        "message": {
+          "type": "string"
+        },
+        "localizedMessage": {
+          "type": "string"
+        },
+        "suppressed": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Throwable"
+          }
+        }
+      }
+    },
+    "InternalNodeException": {
+      "type": "object",
+      "properties": {
+        "cause": {
+          "$ref": "#/definitions/Throwable"
+        },
+        "stackTrace": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/StackTraceElement"
+          }
+        },
+        "originalExceptionClassName": {
+          "type": "string"
+        },
+        "errorId": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "message": {
+          "type": "string"
+        },
+        "originalMessage": {
+          "type": "string"
+        },
+        "localizedMessage": {
+          "type": "string"
+        },
+        "suppressed": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Throwable"
+          }
+        }
+      }
+    },
+    "NonRpcFlowException": {
+      "type": "object",
+      "properties": {
+        "cause": {
+          "$ref": "#/definitions/Throwable"
+        },
+        "stackTrace": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/StackTraceElement"
+          }
+        },
+        "message": {
+          "type": "string"
+        },
+        "localizedMessage": {
+          "type": "string"
+        },
+        "suppressed": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Throwable"
+          }
+        }
+      }
+    },
+    "OutdatedNetworkParameterHashException": {
+      "type": "object",
+      "properties": {
+        "cause": {
+          "$ref": "#/definitions/Throwable"
+        },
+        "stackTrace": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/StackTraceElement"
+          }
+        },
+        "originalExceptionClassName": {
+          "type": "string"
+        },
+        "message": {
+          "type": "string"
+        },
+        "originalMessage": {
+          "type": "string"
+        },
+        "localizedMessage": {
+          "type": "string"
+        },
+        "suppressed": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Throwable"
+          }
+        }
+      }
+    },
+    "RejectedCommandException": {
+      "type": "object",
+      "properties": {
+        "cause": {
+          "$ref": "#/definitions/Throwable"
+        },
+        "stackTrace": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/StackTraceElement"
+          }
+        },
+        "originalExceptionClassName": {
+          "type": "string"
+        },
+        "message": {
+          "type": "string"
+        },
+        "originalMessage": {
+          "type": "string"
+        },
+        "localizedMessage": {
+          "type": "string"
+        },
+        "suppressed": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Throwable"
+          }
         }
       }
     }

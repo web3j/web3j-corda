@@ -13,10 +13,12 @@
 package org.web3j.corda.testcontainers
 
 import com.samskivert.mustache.Mustache
-import io.bluebank.braid.server.Braid
-import net.corda.core.utilities.NetworkHostAndPort
+import net.corda.core.internal.list
+import net.corda.plugins.Cordform
+import org.gradle.tooling.GradleConnector
+import org.gradle.tooling.model.GradleProject
 import org.junit.jupiter.api.AfterAll
-import org.junit.jupiter.api.Disabled
+import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.io.TempDir
 import org.testcontainers.containers.BindMode.READ_WRITE
@@ -41,10 +43,10 @@ import java.time.Duration
 import java.util.concurrent.CountDownLatch
 
 @Testcontainers
-open class DockerBasedIntegrationTest {
+open abstract class DockerBasedIntegrationTest {
 
     @Test
-    @Disabled
+//    @Disabled
     fun `test to setup docker containers`() {
         val notary = createNodeContainer("Notary", "London", "GB", 10005, 10006, 10007, true)
         notary.start()
@@ -90,6 +92,31 @@ open class DockerBasedIntegrationTest {
 
         private val network = Network.newNetwork()
         private val timeOut = Duration.ofMinutes(2)
+
+        @BeforeAll
+        @JvmStatic
+        fun setUp() {
+            val userDir = File(System.getProperty("user.dir"))
+            val connection = GradleConnector.newConnector()
+                .useBuildDistribution()
+                .forProjectDirectory(userDir)
+                .connect()
+
+            // Run the jar task to create the CorDapp JAR
+            connection.newBuild().forTasks("jar").run()
+
+            // Copy JARs into cordapps classpath directory
+            val cordappsDir = File(userDir, "build/resources/integrationTest/cordapps").apply { mkdirs() }
+
+            File(userDir, "build/libs").toPath().list().forEach {
+                Files.copy(it, File(cordappsDir, it.toFile().name).toPath())
+            }
+
+            connection.getModel(GradleProject::class.java)
+                .tasks.all.filterIsInstance<Cordform>().forEach {
+                println(it.path)
+            }
+        }
 
         @AfterAll
         @JvmStatic

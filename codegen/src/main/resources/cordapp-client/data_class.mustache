@@ -4,6 +4,10 @@
 * @param {{name}} {{{description}}}
 {{/vars}}
 */
+@Generated(
+value = ["org.web3j.corda.codegen.CorDappClientGenerator"],
+date = "{{currentDate}}"
+)
 data class {{classname}} (
 {{#requiredVars}}
     {{>data_class_req_var}}{{^-last}},

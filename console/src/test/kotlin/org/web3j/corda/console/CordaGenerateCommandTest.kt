@@ -24,7 +24,7 @@ import java.nio.file.Files
 /**
  * TODO Update OpenAPI definition and add Obligation CorDapp assertions.
  */
-class CordaCommandTest {
+class CordaGenerateCommandTest {
 
     @Test
     @Disabled("Braid class loader issue")
@@ -92,7 +92,7 @@ class CordaCommandTest {
         @BeforeAll
         @JvmStatic
         fun setUp() {
-            CordaCommandTest::class.java.classLoader.getResource("corda-api.json")!!.run {
+            CordaGenerateCommandTest::class.java.classLoader.getResource("corda-api.json")!!.run {
                 Files.copy(openStream(), definitionFile.toPath())
             }
         }

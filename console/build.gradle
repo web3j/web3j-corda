@@ -20,4 +20,6 @@ dependencies {
     implementation "info.picocli:picocli:${versions.picocli}"
 
     implementation "org.gradle:gradle-tooling-api:${versions.gradle}"
+
+    testImplementation gradleTestKit()
 }

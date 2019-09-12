@@ -3,6 +3,8 @@ package {{modelPackage}}
 {{#imports}}import {{import}}
 {{/imports}}
 
+import javax.annotation.Generated
+
 {{#models}}
     {{#model}}
         {{#isEnum}}{{>enum_class}}{{/isEnum}}{{^isEnum}}{{#isAlias}}typealias {{classname}} = {{dataType}}{{/isAlias}}{{^isAlias}}{{>data_class}}{{/isAlias}}{{/isEnum}}
