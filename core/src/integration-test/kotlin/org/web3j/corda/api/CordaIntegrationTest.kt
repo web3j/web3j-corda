@@ -16,7 +16,7 @@ import assertk.assertThat
 import assertk.assertions.hasSize
 import assertk.assertions.isDataClassEqualTo
 import assertk.assertions.isEmpty
-import io.bluebank.braid.server.Braid
+import io.bluebank.braid.corda.server.Braid
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test

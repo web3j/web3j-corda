@@ -13,7 +13,8 @@
 package org.web3j.corda.testcontainers
 
 import com.samskivert.mustache.Mustache
-import net.corda.core.internal.list
+import io.bluebank.braid.corda.server.Braid
+import net.corda.core.utilities.NetworkHostAndPort
 import net.corda.plugins.Cordform
 import org.gradle.tooling.GradleConnector
 import org.gradle.tooling.model.GradleProject
@@ -41,9 +42,10 @@ import java.nio.file.Files
 import java.nio.file.Paths
 import java.time.Duration
 import java.util.concurrent.CountDownLatch
+import kotlin.streams.toList
 
 @Testcontainers
-open abstract class DockerBasedIntegrationTest {
+abstract class DockerBasedIntegrationTest {
 
     @Test
 //    @Disabled
@@ -108,7 +110,7 @@ open abstract class DockerBasedIntegrationTest {
             // Copy JARs into cordapps classpath directory
             val cordappsDir = File(userDir, "build/resources/integrationTest/cordapps").apply { mkdirs() }
 
-            File(userDir, "build/libs").toPath().list().forEach {
+            Files.list(File(userDir, "build/libs").toPath()).toList().forEach {
                 Files.copy(it, File(cordappsDir, it.toFile().name).toPath())
             }
 

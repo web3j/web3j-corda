@@ -12,10 +12,9 @@
  */
 package org.web3j.corda.console
 
+import io.bluebank.braid.corda.server.Braid
+import io.bluebank.braid.corda.server.BraidDocsMain
 import io.bluebank.braid.core.utils.tryWithClassLoader
-import io.bluebank.braid.server.Braid
-import io.bluebank.braid.server.BraidDocsMain
-import net.corda.core.internal.list
 import org.web3j.corda.codegen.CorDappClientGenerator
 import picocli.CommandLine.ArgGroup
 import picocli.CommandLine.Command
@@ -26,6 +25,8 @@ import java.net.MalformedURLException
 import java.net.URL
 import java.net.URLClassLoader
 import java.nio.charset.StandardCharsets
+import java.nio.file.Files
+import kotlin.streams.toList
 
 /**
  * Custom CLI interpreter to generate a new template web3j wrappers for given CordApp.
@@ -95,7 +96,7 @@ class GenerateCommand : CommonCommand() {
         }
 
         private fun generateOpenApiDef(file: File): String {
-            return file.toPath().list().map {
+            return Files.list(file.toPath()).toList().map {
                 it.toFile().toURI().toURL()
             }.run {
                 // we call so as to initialise model converters etc

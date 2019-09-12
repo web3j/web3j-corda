@@ -37,7 +37,7 @@ dependencies {
     // web3j-corda dependency
     implementation 'org.web3j.corda:web3j-corda-core:0.1.0-SNAPSHOT'
 
-    testImplementation group: 'io.bluebank.braid', name: 'braid-server', version: '4.1.2-SNAPSHOT', changing: true
+    testImplementation group: 'io.bluebank.braid', name: 'braid-corda', version: '4.1.2-SNAPSHOT', changing: true
 
     testImplementation "org.testcontainers:testcontainers:1.11.2"
 

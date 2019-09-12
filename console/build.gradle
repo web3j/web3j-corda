@@ -12,13 +12,13 @@ dependencies {
     
     api("javax.annotation:javax.annotation-api:${versions.annotationApi}")
 
-    implementation(group: 'io.bluebank.braid', name: 'braid-server', version: versions.braid, changing: true) {
+    implementation(group: 'io.bluebank.braid', name: 'braid-corda', version: versions.braid, changing: true) {
         exclude group: 'org.slf4j', module: 'slf4j-log4j12'
-        exclude group: 'io.netty'
+        exclude group: 'org.apache.logging.log4j'
+        exclude group: 'org.jetbrains.kotlin'
+        exclude group: 'net.corda.plugins'
     }
-
     implementation "info.picocli:picocli:${versions.picocli}"
-
     implementation "org.gradle:gradle-tooling-api:${versions.gradle}"
 
     testImplementation gradleTestKit()
