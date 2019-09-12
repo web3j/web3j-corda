@@ -17,7 +17,6 @@ import org.glassfish.jersey.client.ClientProperties
 import org.glassfish.jersey.jackson.internal.jackson.jaxrs.cfg.Annotations
 import org.glassfish.jersey.jackson.internal.jackson.jaxrs.json.JacksonJaxbJsonProvider
 import org.glassfish.jersey.logging.LoggingFeature
-import org.glassfish.jersey.server.validation.ValidationFeature
 import org.web3j.corda.util.mapper
 import javax.ws.rs.client.Client
 import javax.ws.rs.client.ClientBuilder
@@ -32,7 +31,6 @@ class CordaService(
 
         val config = ClientConfig().apply {
             register(LoggingFeature())
-            register(ValidationFeature())
             register(JacksonJaxbJsonProvider(mapper, arrayOf(Annotations.JACKSON)))
             property(ClientProperties.READ_TIMEOUT, readTimeout)
             property(ClientProperties.CONNECT_TIMEOUT, connectTimeout)
