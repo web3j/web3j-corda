@@ -12,7 +12,7 @@ class CorDappGenerator(
     private val packageName: String,
     private val corDappName: String,
     private val outputDir: File
-) : Generator {
+) : CordaGenerator {
 
     private val context = mutableMapOf<String, Any>()
 

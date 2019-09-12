@@ -29,7 +29,7 @@ class CorDappClientGenerator(
     private val openApiDef: String,
     private val outputDir: File,
     private val generateTests: Boolean
-) : DefaultGenerator(), Generator {
+) : DefaultGenerator(), CordaGenerator {
 
     override fun generate(): List<File> {
         val codegen = CorDappClientCodegen(packageName, outputDir).apply {

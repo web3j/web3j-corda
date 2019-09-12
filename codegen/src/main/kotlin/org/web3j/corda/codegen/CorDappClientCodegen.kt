@@ -135,7 +135,7 @@ class CorDappClientCodegen(
     }
 
     companion object {
-        const val TEMPLATE_DIR = "cordapp-client"
+        const val TEMPLATE_DIR = "cordapp/client"
 
         // Load model class dynamically to avoid re-generation
         internal val CORDA_SERIALIZABLES: ClassInfoList by lazy {
