@@ -39,7 +39,7 @@ class CorDappGenerator(
             generateFromTemplate(
                 "contracts/src/test/kotlin/${packageName.replace(".", "/")}/contracts",
                 "ContractTests.kt",
-                mustacheTemplate("contract_test.mustache")
+                mustacheTemplate("contracts/contract_test.mustache")
             ),
             generateFromTemplate(
                 "contracts",
@@ -64,12 +64,17 @@ class CorDappGenerator(
             generateFromTemplate(
                 "workflows/src/test/kotlin/${packageName.replace(".", "/")}",
                 "ContractTests.kt",
-                mustacheTemplate("contract_test.mustache")
+                mustacheTemplate("workflows/flow_contract_test.mustache")
             ),
             generateFromTemplate(
                 "workflows",
                 "build.gradle",
                 mustacheTemplate("workflows/gradle_build.mustache")
+            ),
+            generateFromTemplate(
+                "workflows",
+                "NodeDriver.kt",
+                mustacheTemplate("workflows/node_driver.mustache")
             )
         )
     }
