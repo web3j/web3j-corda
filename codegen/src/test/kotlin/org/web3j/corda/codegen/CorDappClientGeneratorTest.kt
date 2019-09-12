@@ -13,6 +13,7 @@
 package org.web3j.corda.codegen
 
 import assertk.assertThat
+import assertk.assertions.containsAll
 import assertk.assertions.exists
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.fail
@@ -23,7 +24,7 @@ import java.io.InputStreamReader
 /**
  * TODO Implement more tests and add assertions.
  */
-class CordaGeneratorTest {
+class CorDappClientGeneratorTest {
 
     @TempDir
     lateinit var outputDir: File
@@ -35,26 +36,25 @@ class CordaGeneratorTest {
             openStream().use { InputStreamReader(it).readText() }
         } ?: fail { "corda-api.json" }
 
-        CordaGenerator("org.web3j.corda", definition, outputDir).generate()
-
-        File(outputDir, OUTPUT_PATH.format("main", "core", "CordaCore", "")).also {
-            assertThat(it).exists()
-        }
-
-        File(outputDir, OUTPUT_PATH.format("test", "core", "CordaCore", "Test")).also {
-            assertThat(it).exists()
-        }
-
-        File(outputDir, OUTPUT_PATH.format("main", "finance/workflows", "CordaFinanceWorkflows", "")).also {
-            assertThat(it).exists()
-        }
-
-        File(outputDir, OUTPUT_PATH.format("test", "finance/workflows", "CordaFinanceWorkflows", "Test")).also {
-            assertThat(it).exists()
+        CorDappClientGenerator("org.web3j.corda", definition, outputDir, true).generate().apply {
+            assertThat(map { it.absolutePath }).containsAll(
+                File(outputDir, KOTLIN_SOURCE.format("main", "core", "CordaCore", "")).absolutePath,
+                File(outputDir, KOTLIN_SOURCE.format("test", "core", "CordaCore", "Test")).absolutePath,
+                File(
+                    outputDir,
+                    KOTLIN_SOURCE.format("main", "finance/workflows", "CordaFinanceWorkflows", "")
+                ).absolutePath,
+                File(
+                    outputDir,
+                    KOTLIN_SOURCE.format("test", "finance/workflows", "CordaFinanceWorkflows", "Test")
+                ).absolutePath
+            ).also {
+                forEach { assertThat(it).exists() }
+            }
         }
     }
 
     companion object {
-        const val OUTPUT_PATH = "src/%s/kotlin/org/web3j/corda/%s/api/%s%s.kt"
+        const val KOTLIN_SOURCE = "src/%s/kotlin/org/web3j/corda/%s/api/%s%s.kt"
     }
 }

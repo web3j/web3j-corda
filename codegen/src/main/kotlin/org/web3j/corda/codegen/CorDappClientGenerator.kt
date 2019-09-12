@@ -12,28 +12,27 @@
  */
 package org.web3j.corda.codegen
 
-import com.pinterest.ktlint.core.KtLint
-import com.pinterest.ktlint.ruleset.experimental.ExperimentalRuleSetProvider
-import com.pinterest.ktlint.ruleset.standard.StandardRuleSetProvider
 import io.swagger.parser.OpenAPIParser
 import io.swagger.v3.parser.core.models.ParseOptions
 import io.swagger.v3.parser.core.models.SwaggerParseResult
-import mu.KLogging
 import org.openapitools.codegen.ClientOptInput
 import org.openapitools.codegen.ClientOpts
-import org.openapitools.codegen.CodegenConstants
+import org.openapitools.codegen.CodegenConstants.APIS
+import org.openapitools.codegen.CodegenConstants.API_TESTS
+import org.openapitools.codegen.CodegenConstants.MODELS
 import org.openapitools.codegen.DefaultGenerator
 import org.openapitools.codegen.config.GeneratorProperties.setProperty
 import java.io.File
 
-class CordaGenerator(
+class CorDappClientGenerator(
     private val packageName: String,
     private val openApiDef: String,
-    private val outputDir: File
-) : DefaultGenerator() {
+    private val outputDir: File,
+    private val generateTests: Boolean
+) : DefaultGenerator(), Generator {
 
     override fun generate(): List<File> {
-        val codegen = CordaCodegen(packageName, outputDir).apply {
+        val codegen = CorDappClientCodegen(packageName, outputDir).apply {
             // TODO setArtifactId("web3j-corda")
         }
 
@@ -53,50 +52,28 @@ class CordaGenerator(
         setGenerateMetadata(false)
 
         return super.generate().onEach {
-            format(it)
-        }
-    }
-
-    /**
-     * Format a given Kotlin file using KtLint.
-     */
-    private fun format(file: File) {
-        KtLint.format(
-            KtLint.Params(
-                ruleSets = ruleSets,
-                cb = { error, _ ->
-                    logger.warn { error }
-                },
-                text = file.readText(),
-                debug = true
-            )
-        ).apply {
-            file.writeText(this)
+            CordaGeneratorUtils.kotlinFormat(it)
         }
     }
 
     private fun configureGeneratorProperties(result: SwaggerParseResult) {
-        val cordaTypes = CordaCodegen.CORDA_SERIALIZABLES.map {
+        val cordaTypes = CorDappClientCodegen.CORDA_SERIALIZABLES.map {
             it.simpleName
         }
         val models = result.openAPI.components.schemas.keys.filter {
             !cordaTypes.contains(it)
         }
         // Specify the list of model classes to generate
-        setProperty(CodegenConstants.MODELS, models.joinToString(separator = ","))
-        setProperty(CodegenConstants.APIS, result.openAPI.paths.keys.joinToString(separator = ",") {
+        setProperty(MODELS, models.joinToString(separator = ","))
+        setProperty(APIS, result.openAPI.paths.keys.joinToString(separator = ",") {
             buildCorDappNameFromPath(it)
         })
+        setProperty(API_TESTS, generateTests.toString())
     }
 
-    companion object : KLogging() {
+    companion object {
         private val parser = OpenAPIParser()
         private val parseOptions = ParseOptions()
-
-        private val ruleSets = listOf(
-            StandardRuleSetProvider().get(),
-            ExperimentalRuleSetProvider().get()
-        )
 
         fun buildCorDappNameFromPath(path: String): String {
             return (path.split("/".toRegex())[2])

@@ -16,7 +16,7 @@ import io.bluebank.braid.core.utils.tryWithClassLoader
 import io.bluebank.braid.server.Braid
 import io.bluebank.braid.server.BraidDocsMain
 import net.corda.core.internal.list
-import org.web3j.corda.codegen.CordaGenerator
+import org.web3j.corda.codegen.CorDappClientGenerator
 import picocli.CommandLine.ArgGroup
 import picocli.CommandLine.Command
 import picocli.CommandLine.ITypeConverter
@@ -64,7 +64,12 @@ class GenerateCommand : CommonCommand() {
         } else {
             fetchOpenApiDef(cordaResource.openApiUrl.toURI().toURL())
         }.apply {
-            CordaGenerator(packageName, this, outputDir).generate()
+            CorDappClientGenerator(
+                packageName,
+                this,
+                outputDir,
+                cordaResource.isCorDappsDirInitialized
+            ).generate()
         }
     }
 

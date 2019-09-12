@@ -1,0 +1,13 @@
+package {{packageName}}.states
+
+import {{packageName}}.{{#titlecase}}{{#camelcase}}{{corDappName}}{{/camelcase}}{{/titlecase}}Contract
+import net.corda.core.contracts.BelongsToContract
+import net.corda.core.contracts.ContractState
+import net.corda.core.identity.AbstractParty
+
+// *********
+// * State *
+// *********
+@BelongsToContract({{#titlecase}}{{#camelcase}}{{corDappName}}{{/camelcase}}{{/titlecase}}Contract::class)
+data class {{#titlecase}}{{#camelcase}}{{corDappName}}{{/camelcase}}{{/titlecase}}State(val data: String, override val participants: List
+<AbstractParty> = listOf()) : ContractState

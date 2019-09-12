@@ -14,6 +14,10 @@ package org.web3j.corda.console
 
 import assertk.assertThat
 import assertk.assertions.exists
+import assertk.assertions.isEqualTo
+import assertk.assertions.isNotNull
+import org.gradle.testkit.runner.GradleRunner
+import org.gradle.testkit.runner.TaskOutcome.SUCCESS
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.io.TempDir
 import java.io.File
@@ -35,6 +39,16 @@ class CordaNewCommandTest {
         File(outputDir, "build/libs").also {
             assertThat(it).exists()
         }
+
+        val testTask = GradleRunner.create()
+            .withProjectDir(outputDir)
+            .withArguments("test")
+            .forwardOutput()
+            .withDebug(false)
+            .build()
+
+        assertThat(testTask.task(":test")).isNotNull()
+        assertThat(testTask.task(":test")!!.outcome).isEqualTo(SUCCESS)
     }
 
     companion object {

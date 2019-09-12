@@ -2,6 +2,10 @@
 * {{{description}}}
 * Values: {{#allowableValues}}{{#enumVars}}{{{value}}}{{^-last}}, {{/-last}}{{/enumVars}}{{/allowableValues}}
 */
+@Generated(
+value = ["org.web3j.corda.codegen.CorDappClientGenerator"],
+date = "{{currentDate}}"
+)
 enum class {{classname}} {
 {{#allowableValues}}{{#enumVars}}{{#unquote}}{{{value}}}{{/unquote}}{{^-last}},{{/-last}}
 {{/enumVars}}{{/allowableValues}}

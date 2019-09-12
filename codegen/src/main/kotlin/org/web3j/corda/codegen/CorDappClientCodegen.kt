@@ -12,24 +12,19 @@
  */
 package org.web3j.corda.codegen
 
-import com.samskivert.mustache.Mustache
 import io.github.classgraph.ClassGraph
 import io.github.classgraph.ClassInfoList
 import io.swagger.v3.oas.models.Operation
 import org.openapitools.codegen.CodegenConstants
 import org.openapitools.codegen.CodegenOperation
 import org.openapitools.codegen.languages.AbstractKotlinCodegen
-import org.openapitools.codegen.templating.mustache.CamelCaseLambda
-import org.openapitools.codegen.templating.mustache.LowercaseLambda
-import org.openapitools.codegen.templating.mustache.TitlecaseLambda
-import org.openapitools.codegen.templating.mustache.UppercaseLambda
 import org.openapitools.codegen.utils.StringUtils.camelize
 import java.io.File
 import java.time.OffsetDateTime
 import java.time.ZoneOffset
-import java.time.format.DateTimeFormatter
+import java.time.format.DateTimeFormatter.ISO_DATE_TIME
 
-class CordaCodegen(
+class CorDappClientCodegen(
     packageName: String,
     outputDir: File
 ) : AbstractKotlinCodegen() {
@@ -45,8 +40,8 @@ class CordaCodegen(
 
         outputFolder = outputDir.absolutePath
         modelTemplateFiles["model.mustache"] = ".kt"
-        apiTemplateFiles["cordapp.mustache"] = ".kt"
-        apiTestTemplateFiles["cordapp_test.mustache"] = ".kt"
+        apiTemplateFiles["cordapp_client.mustache"] = ".kt"
+        apiTestTemplateFiles["cordapp_client_test.mustache"] = ".kt"
         templateDir = TEMPLATE_DIR
         embeddedTemplateDir = TEMPLATE_DIR
         modelPackage = "$packageName.model"
@@ -57,13 +52,7 @@ class CordaCodegen(
         super.processOpts()
 
         additionalProperties["java8"] = true
-        additionalProperties["lowercase"] = LowercaseLambda()
-        additionalProperties["uppercase"] = UppercaseLambda()
-        additionalProperties["camelcase"] = CamelCaseLambda()
-        additionalProperties["titlecase"] = TitlecaseLambda()
-        additionalProperties["unquote"] = Mustache.Lambda { fragment, out ->
-            out.write(fragment.execute().removeSurrounding("\""))
-        }
+        CordaGeneratorUtils.addLambdas(additionalProperties)
 
         typeMapping["array"] = "kotlin.collections.List"
         typeMapping["list"] = "kotlin.collections.List"
@@ -107,7 +96,7 @@ class CordaCodegen(
         codegenOperation: CodegenOperation,
         operations: Map<String, List<CodegenOperation>>
     ) {
-        val path = CordaGenerator.buildCorDappNameFromPath(codegenOperation.path)
+        val path = CorDappClientGenerator.buildCorDappNameFromPath(codegenOperation.path)
         super.addOperationToGroup(path, resourcePath, operation, codegenOperation, operations)
     }
 
@@ -115,7 +104,6 @@ class CordaCodegen(
         objs: MutableMap<String, Any>,
         allModels: List<Any>
     ): Map<String, Any> {
-
         val operation = (objs["operations"] as Map<*, *>)["operation"] as List<*>
         val flows = operation.filterIsInstance<CodegenOperation>()
 
@@ -123,7 +111,6 @@ class CordaCodegen(
             apiPackage = buildApiPackage(packageName, this)
             additionalProperties.put(CodegenConstants.API_PACKAGE, apiPackage)
         }
-
         objs["flows"] = flows.map {
             mutableMapOf<String, String>(
                 "flowPath" to buildFlowPath(it.path),
@@ -143,14 +130,12 @@ class CordaCodegen(
                 }
             }
         }
-
-        objs["currentDate"] = OffsetDateTime.now(ZoneOffset.UTC).format(DateTimeFormatter.ISO_DATE_TIME)
-
+        objs["currentDate"] = OffsetDateTime.now(ZoneOffset.UTC).format(ISO_DATE_TIME)
         return super.postProcessOperationsWithModels(objs, allModels)
     }
 
     companion object {
-        const val TEMPLATE_DIR = "cordapp"
+        const val TEMPLATE_DIR = "cordapp-client"
 
         // Load model class dynamically to avoid re-generation
         internal val CORDA_SERIALIZABLES: ClassInfoList by lazy {

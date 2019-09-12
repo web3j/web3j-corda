@@ -12,21 +12,12 @@
  */
 package org.web3j.corda.console
 
-import com.pinterest.ktlint.core.KtLint
-import com.pinterest.ktlint.ruleset.experimental.ExperimentalRuleSetProvider
-import com.pinterest.ktlint.ruleset.standard.StandardRuleSetProvider
-import com.samskivert.mustache.Mustache
-import com.samskivert.mustache.Template
-import mu.KLogging
 import org.apache.commons.io.FileUtils
 import org.gradle.tooling.GradleConnector
+import org.web3j.corda.codegen.CorDappGenerator
 import picocli.CommandLine.Command
 import picocli.CommandLine.Option
 import java.io.File
-import java.io.FileOutputStream
-import java.io.InputStreamReader
-import java.io.OutputStreamWriter
-import java.io.PrintWriter
 import java.nio.file.Files
 import java.nio.file.Path
 import java.nio.file.StandardCopyOption
@@ -45,20 +36,24 @@ class NewCommand : CommonCommand() {
     lateinit var corDappName: String
 
     override fun run() {
-        val context = mapOf(
-            "packageName" to packageName,
-            "corDappName" to corDappName
-        )
-        generateTemplateFlow(context)
-        generateTemplateContract(context)
+        // Generate CorDapp project
+        CorDappGenerator(
+            packageName = packageName,
+            corDappName = corDappName,
+            outputDir = outputDir
+        ).generate()
 
         copyProjectResources()
 
+        // Build CorDapp JAR for the client
         runGradleBuild(outputDir.toPath())
 
+        // Generate the CorDapp client classes
         GenerateCommand().apply {
             cordaResource = GenerateCommand.CordaResource
-            cordaResource.corDappsDir = File("${this@NewCommand.outputDir}/build/libs/")
+//            cordaResource.corDappsDir = File("${this@NewCommand.outputDir}/build/libs/")
+            cordaResource.openApiUrl = // FIXME - change to path of jar files
+                javaClass.classLoader.getResource("swagger.json")!!
             packageName = this@NewCommand.packageName
             outputDir = File("${this@NewCommand.outputDir}/clients")
             run()
@@ -84,14 +79,13 @@ class NewCommand : CommonCommand() {
         copyResource("build.gradle", outputDir)
         copyResource("settings.gradle", outputDir)
         copyResource("gradlew", outputDir)
+
         File("${outputDir.toURI().path}/gradlew").setExecutable(true)
 
         FileUtils.copyDirectory(
             File(javaClass.classLoader.getResource("gradle")?.toURI()!!.path),
             outputDir.resolve("gradle")
         )
-
-
         copyResource("README.md", outputDir)
     }
 
@@ -100,112 +94,6 @@ class NewCommand : CommonCommand() {
             javaClass.classLoader.getResource(name)?.openStream()!!,
             outputDir.resolve(name).toPath(),
             StandardCopyOption.REPLACE_EXISTING
-        )
-    }
-
-    private fun mustacheTemplate(file: String): Template {
-        return Mustache.compiler().compile(
-            InputStreamReader(
-                javaClass.classLoader
-                    .getResourceAsStream(file)!!
-            )
-        )
-    }
-
-    private fun generateTemplateContract(context: Map<String, Any>) {
-        generateFromTemplate(
-            "contracts/src/main/${packageName.replace(".", "/")}/contracts",
-            "${corDappName}Contract.kt",
-            mustacheTemplate("contract/contract.mustache"),
-            context
-        )
-
-        generateFromTemplate(
-            "contracts/src/main/${packageName.replace(".", "/")}/states",
-            "${corDappName}State.kt",
-            mustacheTemplate("contract/state.mustache"),
-            context
-        )
-
-        generateFromTemplate(
-            "contracts/src/test/${packageName.replace(".", "/")}",
-            "ContractTests.kt",
-            mustacheTemplate("contractTest.mustache"),
-            context
-        )
-        generateFromTemplate(
-            "contracts/src/",
-            "build.gradle",
-            mustacheTemplate("contract/contractGradle.mustache"),
-            context
-        )
-    }
-
-    private fun generateTemplateFlow(context: Map<String, Any>) {
-        generateFromTemplate(
-            "workflows/src/main/${packageName.replace(".", "/")}/flows",
-            "Flows.kt",
-            mustacheTemplate("workflows/flow.mustache"),
-            context
-        )
-        generateFromTemplate(
-            "workflows/src/test/${packageName.replace(".", "/")}",
-            "FlowTests.kt",
-            mustacheTemplate("workflows/flowTest.mustache"),
-            context
-        )
-        generateFromTemplate(
-            "workflows/src/test/${packageName.replace(".", "/")}",
-            "ContractTests.kt",
-            mustacheTemplate("contractTest.mustache"),
-            context
-        )
-        generateFromTemplate(
-            "workflows/src/",
-            "build.gradle",
-            mustacheTemplate("workflows/flowGradle.mustache"),
-            context
-        )
-    }
-
-    private fun generateFromTemplate(path: String, name: String, template: Template, context: Map<String, Any>) {
-        File(outputDir, path)
-            .apply { mkdirs() }
-            .resolve(name)
-            .apply {
-                mustacheWriter(template, absolutePath, context)
-
-                if (name.endsWith(".kt")) {
-                    KtLint.format(
-                        KtLint.Params(
-                            ruleSets = ruleSets,
-                            cb = { error, _ ->
-                                logger.warn { error }
-                            },
-                            text = readText(),
-                            debug = true
-                        )
-                    ).run {
-                        writeText(this)
-                    }
-                }
-            }
-    }
-
-    private fun mustacheWriter(template: Template, filePath: String, context: Map<String, Any>) {
-        PrintWriter(OutputStreamWriter(FileOutputStream(filePath))).use {
-            template.execute(
-                context,
-                it
-            )
-            it.flush()
-        }
-    }
-
-    companion object : KLogging() {
-        private val ruleSets = listOf(
-            StandardRuleSetProvider().get(),
-            ExperimentalRuleSetProvider().get()
         )
     }
 }
