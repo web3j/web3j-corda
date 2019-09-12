@@ -12,7 +12,6 @@
  */
 package org.web3j.corda.networkmap
 
-import javax.validation.constraints.NotNull
 import javax.ws.rs.Consumes
 import javax.ws.rs.GET
 import javax.ws.rs.POST
@@ -36,7 +35,7 @@ interface NetworkMapResource {
     @POST
     @Path("publish")
     @Consumes(APPLICATION_OCTET_STREAM)
-    fun publish(@NotNull nodeInfo: ByteArray)
+    fun publish(nodeInfo: ByteArray)
 
     /**
      * For the node operator to acknowledge network map that new parameters were accepted for future update.
@@ -44,7 +43,7 @@ interface NetworkMapResource {
     @POST
     @Path("ack-parameters")
     @Consumes(APPLICATION_OCTET_STREAM)
-    fun ackParameters(@NotNull signedSecureHash: ByteArray)
+    fun ackParameters(signedSecureHash: ByteArray)
 
     @get:Path("node-info")
     val nodeInfo: NodeInfoResource
