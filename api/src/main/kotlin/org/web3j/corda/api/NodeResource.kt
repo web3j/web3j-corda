@@ -14,8 +14,6 @@ package org.web3j.corda.api
 
 import org.web3j.corda.model.CordaX500Name
 import org.web3j.corda.model.SimpleNodeInfo
-import org.web3j.corda.validation.HostAndPort
-import org.web3j.corda.validation.X500Name
 import javax.validation.Valid
 import javax.ws.rs.GET
 import javax.ws.rs.Path
@@ -41,7 +39,6 @@ interface NodeResource {
     @GET
     fun findByHostAndPort(
         @Valid
-        @HostAndPort
         @QueryParam("host-and-port")
         hostAndPort: String
     ): List<SimpleNodeInfo>
@@ -54,7 +51,6 @@ interface NodeResource {
     @GET
     fun findByX500Name(
         @Valid
-        @X500Name
         @QueryParam("x500-name")
         x500Name: CordaX500Name
     ): List<SimpleNodeInfo>

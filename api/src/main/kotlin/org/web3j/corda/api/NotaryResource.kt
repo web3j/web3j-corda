@@ -14,7 +14,6 @@ package org.web3j.corda.api
 
 import org.web3j.corda.model.CordaX500Name
 import org.web3j.corda.model.Party
-import org.web3j.corda.validation.X500Name
 import javax.validation.Valid
 import javax.ws.rs.GET
 import javax.ws.rs.QueryParam
@@ -35,7 +34,6 @@ interface NotaryResource {
     @GET
     fun findByX500Name(
         @Valid
-        @X500Name
         @QueryParam("x500-name")
         x500Name: CordaX500Name
     ): List<Party>
