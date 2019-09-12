@@ -18,6 +18,7 @@ dependencies {
         exclude group: 'org.jetbrains.kotlin'
         exclude group: 'net.corda.plugins'
     }
+    implementation "net.corda:corda-node:${versions.corda}"
     implementation "info.picocli:picocli:${versions.picocli}"
     implementation "org.gradle:gradle-tooling-api:${versions.gradle}"
 
