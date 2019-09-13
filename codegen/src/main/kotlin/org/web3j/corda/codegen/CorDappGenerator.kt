@@ -72,7 +72,7 @@ class CorDappGenerator(
                 mustacheTemplate("workflows/gradle_build.mustache")
             ),
             generateFromTemplate(
-                "workflows",
+                "workflows/src/test/kotlin/${packageName.replace(".", "/")}",
                 "NodeDriver.kt",
                 mustacheTemplate("workflows/node_driver.mustache")
             )
