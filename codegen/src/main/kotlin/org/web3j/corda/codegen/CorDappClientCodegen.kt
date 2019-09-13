@@ -100,6 +100,15 @@ class CorDappClientCodegen(
         super.addOperationToGroup(path, resourcePath, operation, codegenOperation, operations)
     }
 
+    override fun postProcessAllModels(objs: MutableMap<String, Any>): MutableMap<String, Any> {
+        objs.values.forEach {
+            @Suppress("UNCHECKED_CAST")
+            val modelContext= it as MutableMap<String, Any>
+            modelContext["currentDate"] = OffsetDateTime.now(ZoneOffset.UTC).format(ISO_DATE_TIME)
+        }
+        return super.postProcessAllModels(objs)
+    }
+
     override fun postProcessOperationsWithModels(
         objs: MutableMap<String, Any>,
         allModels: List<Any>
