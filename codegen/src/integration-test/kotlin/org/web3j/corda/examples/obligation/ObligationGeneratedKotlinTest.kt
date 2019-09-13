@@ -14,56 +14,47 @@ package org.web3j.corda.examples.obligation
 
 import assertk.assertThat
 import assertk.assertions.isEqualTo
-import org.junit.jupiter.api.AfterAll
-import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
+import org.testcontainers.junit.jupiter.Testcontainers
 import org.web3j.corda.codegen.generated.obligation.api.Obligation
 import org.web3j.corda.codegen.generated.obligation.model.IssueObligationInitiatorParameters
-import org.web3j.corda.model.SignedTransaction
-import org.web3j.corda.protocol.Corda
-import org.web3j.corda.protocol.CordaService
-import org.web3j.corda.testcontainers.DockerBasedIntegrationTest
-import org.web3j.corda.util.convert
+import org.web3j.corda.network.CordaNetwork.Companion.network
+import java.io.File
 
-class ObligationGeneratedKotlinTest : DockerBasedIntegrationTest() {
+@Testcontainers
+class ObligationGeneratedKotlinTest {
 
     @Test
     fun `issue obligation`() {
-        val party = corda.network.nodes.findAll()[2].legalIdentities[0]
+        val party = network.nodes["PartyA"].api.network.nodes.findAll()[2].legalIdentities[0]
         val parameters = IssueObligationInitiatorParameters("$1", party.name!!, false)
 
-        // 1. Normal version, not type-safe
-        val issue = corda
-            .corDapps.findById("obligation-cordapp")
-            .flows.findById("issue-obligation")
-
-        // Potential runtime exception!
-        var signedTx = issue.start(parameters).convert<SignedTransaction>()
-        assertThat(signedTx.coreTransaction.outputs[0].data.participants.first().owningKey).isEqualTo(party.owningKey)
-
-        // 2. web3j generated version, 100% type-safe
-        signedTx = Obligation.load(corda).flows.issue.start(parameters)
+        val signedTx = Obligation.load(network.nodes["PartyA"].api).flows.issue.start(parameters)
         assertThat(signedTx.coreTransaction.outputs[0].data.participants.first().owningKey).isEqualTo(party.owningKey)
     }
 
     companion object {
 
-        @JvmStatic
-        private lateinit var corda: Corda
-
-        @JvmStatic
-        private lateinit var service: CordaService
-
-        @BeforeAll
-        @JvmStatic
-        internal fun setUpClass() {
-            service = CordaService("http://localhost:9000/")
-            corda = Corda.build(service)
-        }
-
-        @AfterAll
-        internal fun tearDownClass() {
-            service.close()
+        private val network = network {
+            baseDir = File("/Users/xavier/Development/Projects/Web3Labs/web3j-corda-samples/kotlin-source")
+            nodes {
+                node {
+                    name = "Notary"
+                    location = "London"
+                    country = "GB"
+                    isNotary = true
+                }
+                node {
+                    name = "PartyA"
+                    location = "Tokyo"
+                    country = "JP"
+                }
+                node {
+                    name = "PartyB"
+                    location = "New York"
+                    country = "US"
+                }
+            }
         }
     }
 }

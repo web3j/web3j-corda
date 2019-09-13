@@ -11,8 +11,6 @@ dependencies {
         exclude group: 'net.corda.plugins'
     }
     
-    integrationTestImplementation gradleApi()
     integrationTestImplementation "org.gradle:gradle-tooling-api:5.6.2"
-    integrationTestImplementation "net.corda.plugins:cordformation:4.0.42"
     integrationTestImplementation group: 'com.samskivert', name: 'jmustache', version: versions.jmustache
 }

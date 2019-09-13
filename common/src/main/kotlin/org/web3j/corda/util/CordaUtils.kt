@@ -29,3 +29,13 @@ val mapper: ObjectMapper = jacksonObjectMapper()
 fun <T> convert(value: Any, type: Class<T>): T = mapper.convertValue(value, type)
 
 inline fun <reified T : Any> Any.convert() = mapper.convertValue<T>(this)
+
+fun <K, V> Iterable<Pair<K, V>>.toNonNullMap(): NonNullMap<K, V> = NonNullMap(toMap())
+
+class NonNullMap<K, V>(private val map: Map<K, V>) : Map<K, V> by map {
+    override operator fun get(key: K): V {
+        return map[key] ?: error("Key not found: $key")
+    }
+}
+
+val isMac = System.getProperty("os.name").contains("Mac", true)
