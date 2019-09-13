@@ -14,6 +14,7 @@ package org.web3j.corda.console
 
 import assertk.assertThat
 import assertk.assertions.exists
+import assertk.assertions.isFalse
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
@@ -36,19 +37,19 @@ class CordaGenerateCommandTest {
             "-o", outputDir.absolutePath
         )
 
-        File(outputDir, OUTPUT_PATH.format("main", "core", "CordaCore", "")).also {
+        File(outputDir, KOTLIN_SOURCE.format("main", "core", "CordaCore", "")).also {
             assertThat(it).exists()
         }
 
-        File(outputDir, OUTPUT_PATH.format("test", "core", "CordaCore", "Test")).also {
+        File(outputDir, KOTLIN_SOURCE.format("test", "core", "CordaCore", "Test")).also {
             assertThat(it).exists()
         }
 
-        File(outputDir, OUTPUT_PATH.format("main", "finance/workflows", "CordaFinanceWorkflows", "")).also {
+        File(outputDir, KOTLIN_SOURCE.format("main", "finance/workflows", "CordaFinanceWorkflows", "")).also {
             assertThat(it).exists()
         }
 
-        File(outputDir, OUTPUT_PATH.format("test", "finance/workflows", "CordaFinanceWorkflows", "Test")).also {
+        File(outputDir, KOTLIN_SOURCE.format("test", "finance/workflows", "CordaFinanceWorkflows", "Test")).also {
             assertThat(it).exists()
         }
     }
@@ -62,25 +63,25 @@ class CordaGenerateCommandTest {
             "-o", outputDir.absolutePath
         )
 
-        File(outputDir, OUTPUT_PATH.format("main", "core", "CordaCore", "")).also {
+        File(outputDir, KOTLIN_SOURCE.format("main", "core", "CordaCore", "")).also {
             assertThat(it).exists()
         }
 
-        File(outputDir, OUTPUT_PATH.format("test", "core", "CordaCore", "Test")).also {
+        File(outputDir, KOTLIN_SOURCE.format("test", "core", "CordaCore", "Test")).also {
+            assertThat(it.exists()).isFalse()
+        }
+
+        File(outputDir, KOTLIN_SOURCE.format("main", "finance/workflows", "CordaFinanceWorkflows", "")).also {
             assertThat(it).exists()
         }
 
-        File(outputDir, OUTPUT_PATH.format("main", "finance/workflows", "CordaFinanceWorkflows", "")).also {
-            assertThat(it).exists()
-        }
-
-        File(outputDir, OUTPUT_PATH.format("test", "finance/workflows", "CordaFinanceWorkflows", "Test")).also {
-            assertThat(it).exists()
+        File(outputDir, KOTLIN_SOURCE.format("test", "finance/workflows", "CordaFinanceWorkflows", "Test")).also {
+            assertThat(it.exists()).isFalse()
         }
     }
 
     companion object {
-        const val OUTPUT_PATH = "src/%s/kotlin/org/web3j/corda/%s/api/%s%s.kt"
+        const val KOTLIN_SOURCE = "src/%s/kotlin/org/web3j/corda/%s/api/%s%s.kt"
 
         @TempDir
         lateinit var outputDir: File

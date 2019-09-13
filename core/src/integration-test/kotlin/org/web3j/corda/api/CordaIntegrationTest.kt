@@ -26,13 +26,12 @@ import org.web3j.corda.model.Party
 import org.web3j.corda.model.SimpleNodeInfo
 import org.web3j.corda.protocol.Corda
 import org.web3j.corda.protocol.CordaService
-import org.web3j.corda.testcontainers.DockerBasedIntegrationTest
 
 /**
  * TODO Implement tests for all routes and error cases.
  */
 @Testcontainers
-class CordaIntegrationTest : DockerBasedIntegrationTest() {
+class CordaIntegrationTest {
 
     @Test
     @Disabled("https://gitlab.com/bluebank/braid/issues/111")
@@ -75,6 +74,9 @@ class CordaIntegrationTest : DockerBasedIntegrationTest() {
 
     companion object {
 
+        lateinit var corda: Corda
+        lateinit var service: CordaService
+
         private val party = Party(
             name = "O=Notary, L=London, C=GB",
             owningKey = "GfHq2tTVk9z4eXgyQKmUDm9Hyk7bB8yh6bMXvhmaikGFxUDrHhFnJhNiqN5Z"
@@ -88,24 +90,13 @@ class CordaIntegrationTest : DockerBasedIntegrationTest() {
         @BeforeAll
         @JvmStatic
         fun setUp() {
-            val container = createNodeContainer(
-                "Notary",
-                "London",
-                "GB",
-                10005,
-                10006,
-                10007,
-                true
-            ).apply {
-                start()
-            }
 
             Braid(
                 port = 9000,
                 userName = "user1",
                 password = "test",
                 nodeAddress = net.corda.core.utilities.NetworkHostAndPort(
-                    "localhost", container.getMappedPort(10009)
+                    "localhost", 10009
                 )
             ).startServer()
 

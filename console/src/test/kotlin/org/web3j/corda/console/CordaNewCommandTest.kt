@@ -18,6 +18,7 @@ import assertk.assertions.isEqualTo
 import assertk.assertions.isNotNull
 import org.gradle.testkit.runner.GradleRunner
 import org.gradle.testkit.runner.TaskOutcome.SUCCESS
+import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.io.TempDir
 import java.io.File
@@ -28,6 +29,7 @@ import java.io.File
 class CordaNewCommandTest {
 
     @Test
+    @Disabled
     fun `generate Obligation from CorDapps directory`() {
         CordaCommandMain.main(
             "new",
