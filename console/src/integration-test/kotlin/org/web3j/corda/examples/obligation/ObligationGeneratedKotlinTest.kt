@@ -13,7 +13,6 @@
 package org.web3j.corda.examples.obligation
 
 import assertk.assertThat
-import assertk.assertions.isEqualTo
 import org.junit.jupiter.api.Test
 import org.testcontainers.junit.jupiter.Testcontainers
 import org.web3j.corda.codegen.generated.obligation.api.Obligation
