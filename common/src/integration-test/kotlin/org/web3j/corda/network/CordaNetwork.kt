@@ -104,7 +104,7 @@ class CordaNetwork {
             .connect()
 
         // Run the jar task to create the CorDapp JAR
-        connection.newBuild().forTasks("clean", "jar").run()
+        connection.newBuild().forTasks("jar").run()
 
         // Copy JARs into corDapps folder
         Files.list(File(baseDir, "build/libs").toPath()).toList().forEach {
