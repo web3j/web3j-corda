@@ -54,13 +54,11 @@ class GenerateCommand : CommonCommand() {
         )
         lateinit var corDappsDir: File
 
-        val isCorDappsDirInitialized: Boolean by lazy {
-            ::corDappsDir.isInitialized
-        }
+        fun isCorDappsDirInitialized(): Boolean = ::corDappsDir.isInitialized
     }
 
     override fun run() {
-        if (cordaResource.isCorDappsDirInitialized) {
+        if (cordaResource.isCorDappsDirInitialized()) {
             generateOpenApiDef(cordaResource.corDappsDir)
         } else {
             fetchOpenApiDef(cordaResource.openApiUrl.toURI().toURL())
@@ -69,7 +67,7 @@ class GenerateCommand : CommonCommand() {
                 packageName,
                 this,
                 outputDir,
-                cordaResource.isCorDappsDirInitialized
+                cordaResource.isCorDappsDirInitialized()
             ).generate()
         }
     }
