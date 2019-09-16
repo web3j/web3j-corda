@@ -14,9 +14,7 @@ package org.web3j.corda.console
 
 import assertk.assertThat
 import assertk.assertions.exists
-import assertk.assertions.isFalse
 import org.junit.jupiter.api.BeforeAll
-import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.io.TempDir
 import java.io.File
@@ -28,7 +26,6 @@ import java.nio.file.Files
 class CordaGenerateCommandTest {
 
     @Test
-    @Disabled("Braid class loader issue")
     fun `generate Obligation from CorDapps directory`() {
         CordaCommandMain.main(
             "generate",
@@ -36,6 +33,14 @@ class CordaGenerateCommandTest {
             "-d", javaClass.classLoader.getResource("cordapps")!!.file,
             "-o", outputDir.absolutePath
         )
+
+        File(outputDir, KOTLIN_SOURCE.format("main", "obligation", "Obligation", "")).also {
+            assertThat(it).exists()
+        }
+
+        File(outputDir, KOTLIN_SOURCE.format("test", "obligation", "Obligation", "Test")).also {
+            assertThat(it).exists()
+        }
 
         File(outputDir, KOTLIN_SOURCE.format("main", "core", "CordaCore", "")).also {
             assertThat(it).exists()
@@ -67,16 +72,8 @@ class CordaGenerateCommandTest {
             assertThat(it).exists()
         }
 
-        File(outputDir, KOTLIN_SOURCE.format("test", "core", "CordaCore", "Test")).also {
-            assertThat(it.exists()).isFalse()
-        }
-
         File(outputDir, KOTLIN_SOURCE.format("main", "finance/workflows", "CordaFinanceWorkflows", "")).also {
             assertThat(it).exists()
-        }
-
-        File(outputDir, KOTLIN_SOURCE.format("test", "finance/workflows", "CordaFinanceWorkflows", "Test")).also {
-            assertThat(it.exists()).isFalse()
         }
     }
 
