@@ -18,6 +18,7 @@ dependencies {
         exclude group: 'org.jetbrains.kotlin'
         exclude group: 'net.corda.plugins'
     }
+    
 //  FIXME Should be removed but for some reason Braid loads it
     implementation "net.corda:corda-webserver-impl:${versions.corda}"
     implementation("net.corda:corda-node:${versions.corda}") {
@@ -28,6 +29,37 @@ dependencies {
     implementation "org.gradle:gradle-tooling-api:${versions.gradle}"
 
     testImplementation gradleTestKit()
+
+    integrationTestImplementation project(path: ':web3j-corda-common', configuration: 'integrationTest')
+    integrationTestImplementation project(':web3j-corda-common').sourceSets.integrationTest.output // FIXME
 }
 
- 
+task generateCorDappWrappers(type: JavaExec, group: 'corda', dependsOn: []) {
+    classpath = sourceSets.integrationTest.runtimeClasspath
+    main = 'org.web3j.corda.console.CordaCommand'
+
+    args '--package', 'org.web3j.corda.obligation',
+            '--cordappsDir', "$projectDir/src/test/resources/cordapps",
+            '--outputDir', "$buildDir/generated/source/web3j-corda/integrationTest/kotlin"
+}
+
+sourceSets {
+    integrationTest {
+        kotlin {
+            srcDir {
+                "$buildDir/generated/source/web3j-corda/integrationTest/kotlin"
+            }
+        }
+    }
+}
+
+compileIntegrationTestJava {
+    source "$buildDir/generated/source/web3j-corda/integrationTest/java"
+    options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation"
+    mustRunAfter 'generateCorDappWrappers'
+}
+
+compileIntegrationTestKotlin {
+    source "$buildDir/generated/source/web3j-corda/integrationTest/kotlin"
+    mustRunAfter 'generateCorDappWrappers'
+}

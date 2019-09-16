@@ -14,7 +14,4 @@ dependencies {
     implementation("io.swagger:swagger-annotations:${versions.swagger}") { force = true }
     
     implementation "io.github.classgraph:classgraph:${versions.classgraph}"
-
-    integrationTestImplementation project(path: ':web3j-corda-common', configuration: 'integrationTest')
-    integrationTestImplementation project(':web3j-corda-common').sourceSets.integrationTest.output // FIXME
 }

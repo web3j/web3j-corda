@@ -15,9 +15,9 @@ package org.web3j.corda.examples.obligation
 import assertk.assertThat
 import org.junit.jupiter.api.Test
 import org.testcontainers.junit.jupiter.Testcontainers
-import org.web3j.corda.codegen.generated.obligation.api.Obligation
-import org.web3j.corda.codegen.generated.obligation.model.IssueObligationInitiatorParameters
 import org.web3j.corda.network.CordaNetwork.Companion.network
+import org.web3j.corda.obligation.api.Obligation
+import org.web3j.corda.obligation.model.IssueObligationInitiatorParameters
 import java.io.File
 
 @Testcontainers
