@@ -18,7 +18,7 @@ import java.io.File
 abstract class CommonCommand : Runnable {
 
     @Option(
-        names = ["-p", "--packageName"],
+        names = ["-p", "--package"],
         description = ["Generated code package"],
         required = true
     )
