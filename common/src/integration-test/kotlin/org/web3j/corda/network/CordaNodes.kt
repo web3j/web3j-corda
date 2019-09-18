@@ -12,20 +12,28 @@
  */
 package org.web3j.corda.network
 
+import java.util.function.Consumer
+
 class CordaNodes internal constructor(private val network: CordaNetwork) : Iterable<CordaNode> {
 
     private val nodes = mutableListOf<CordaNode>()
 
     override fun iterator() = nodes.iterator()
 
-    fun node(nodeBlock: CordaNode.() -> Unit) {
+    @JvmName("node")
+    fun nodeJava(nodeBlock: Consumer<CordaNode>) {
         CordaNode(network).also {
-            nodeBlock.invoke(it)
+            nodeBlock.accept(it)
             it.validate()
             nodes.add(it)
             if (it.autoStart) {
                 it.start()
             }
         }
+    }
+
+    @CordaDslMarker
+    fun node(nodeBlock: CordaNode.() -> Unit) {
+        nodeJava(Consumer { nodeBlock.invoke(it) })
     }
 }

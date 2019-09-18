@@ -34,12 +34,13 @@ import java.io.PrintWriter
 import java.nio.file.Files
 import java.nio.file.Paths
 import java.time.Duration
+import java.util.function.Consumer
 import kotlin.streams.toList
 
 /**
  * Corda network DSK for integration tests web3j CorDapp wrappers.
  */
-class CordaNetwork {
+class CordaNetwork private constructor() {
 
     /**
      * CorDapp base directory.
@@ -88,13 +89,19 @@ class CordaNetwork {
     /**
      * Defines a node in this network.
      */
-    fun nodes(nodesBlock: CordaNodes.() -> Unit) {
+    @JvmName("nodes")
+    fun nodesJava(nodesBlock: Consumer<CordaNodes>) {
         CordaNodes(this).apply {
-            nodesBlock.invoke(this)
-            nodes = map {
+            nodesBlock.accept(this)
+            this@CordaNetwork.nodes = map {
                 it.name to it
             }.toNonNullMap()
         }
+    }
+
+    @CordaDslMarker
+    fun nodes(nodesBlock: CordaNodes.() -> Unit) {
+        nodesJava(Consumer { nodesBlock.invoke(it) })
     }
 
     private fun createJarUsingGradle() {
@@ -157,7 +164,7 @@ class CordaNetwork {
     private fun createNodeConfFiles(node: CordaNode, file: File) {
         PrintWriter(OutputStreamWriter(FileOutputStream(file))).use {
             node.apply {
-                nodeConfTemplate.execute(
+                this@CordaNetwork.nodeConfTemplate.execute(
                     mapOf(
                         "name" to name,
                         "isNotary" to isNotary,
@@ -215,13 +222,23 @@ class CordaNetwork {
         private const val CORDA_ZULU_IMAGE = "corda/corda-zulu-4.1:latest"
 
         /**
-         * Corda network DSL entry point.
+         *  Corda network DSL entry point.
          */
-        fun network(networkBlock: CordaNetwork.() -> Unit): CordaNetwork {
+        @JvmStatic
+        @JvmName("network")
+        fun networkJava(networkBlock: Consumer<CordaNetwork>): CordaNetwork {
             return CordaNetwork().also {
-                networkBlock.invoke(it)
+                networkBlock.accept(it)
                 it.createJarUsingGradle()
             }
         }
     }
+}
+
+/**
+ * Corda network DSL entry point extension method.
+ */
+@CordaDslMarker
+fun CordaNetwork.Companion.network(networkBlock: CordaNetwork.() -> Unit): CordaNetwork {
+    return networkJava(Consumer { networkBlock.invoke(it) })
 }

@@ -12,81 +12,68 @@
  */
 package org.web3j.corda.examples.obligation;
 
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.web3j.corda.model.AbstractParty;
+import org.web3j.corda.model.AmountCurrency;
 import org.web3j.corda.model.Party;
 import org.web3j.corda.model.SignedTransaction;
+import org.web3j.corda.network.CordaNetwork;
 import org.web3j.corda.obligation.api.Obligation;
-import org.web3j.corda.obligation.model.IssueObligationInitiatorParameters;
+import org.web3j.corda.obligation.model.IssueObligationInitiatorPayload;
 import org.web3j.corda.protocol.Corda;
-import org.web3j.corda.protocol.CordaService;
 
-import java.util.Objects;
+import java.io.File;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.web3j.corda.util.CordaUtils.convert;
+import static org.web3j.corda.network.CordaNetwork.network;
 
 public class ObligationJavaTest {
 
-    private static Corda corda;
-    private static CordaService service;
-
-    @BeforeAll
-    static void setUpClass() throws Exception {
-        service = new CordaService("http://localhost:9000/", 5000, 5000);
-        corda = Corda.build(service);
-    }
-
+    private CordaNetwork network = network(net -> {
+        net.setBaseDir(new File("/Users/xavier/Development/Projects/Web3Labs/web3j-corda-samples/kotlin-source"));
+        net.nodes(nodes -> {
+            nodes.node(node -> {
+                node.setName("Notary");
+                node.setLocation("London");
+                node.setCountry("GB");
+                node.setNotary(true);
+            });
+            nodes.node(node -> {
+                node.setName("PartyA");
+                node.setLocation("Tokyo");
+                node.setCountry("JP");
+            });
+            nodes.node(node -> {
+                node.setName("PartyB");
+                node.setLocation("New York");
+                node.setCountry("US");
+            });
+        });
+    });
+    
     @Test
     public void issueObligation() {
-        corda.getNetwork().getNodes().findAll().forEach(System.out::println);
+        final Corda corda = network.getNodes().get("PartyA").getApi();
 
-        final Party party =
-                corda.getNetwork().getNodes().findAll().get(2).getLegalIdentities().get(0);
+        final Party party = corda.getNetwork()
+                .getNodes().findAll().get(2)
+                .getLegalIdentities().get(0);
 
-        final IssueObligationInitiatorParameters parameters =
-                new IssueObligationInitiatorParameters(
-                        "$1", Objects.requireNonNull(party.getName()), false);
+        final AmountCurrency amount = new AmountCurrency(100, 2, "GBP");
+        final IssueObligationInitiatorPayload parameters = new IssueObligationInitiatorPayload(amount, party, false);
 
-        // 1. Normal version, not type-safe
-        Object signedTxObject =
-                corda.getCorDapps()
-                        .findById("obligation-cordapp")
-                        .getFlows()
-                        .findById("issue-obligation")
-                        .start(parameters);
+        final Obligation.FlowResource.IssueObligationInitiator issue =
+                Obligation.load(corda).getFlows().getIssueObligationInitiator();
 
-        // Potential runtime exception!
-        SignedTransaction signedTx = convert(signedTxObject, SignedTransaction.class);
-        String name =
-                signedTx.getCoreTransaction()
-                        .getOutputs()
-                        .get(0)
-                        .getData()
-                        .getParticipants()
-                        .get(0)
-                        .getOwningKey();
-        assertEquals(name, party.getOwningKey());
+        final SignedTransaction signedTx = issue.start(parameters);
 
-        // 2. web3j generated version, 100% type-safe
-        final Obligation.ObligationFlowResource.Issue issue =
-                Obligation.load(corda).getFlows().getIssue();
-        signedTx = issue.start(parameters);
+        final AbstractParty abstractParty = signedTx.getCoreTransaction()
+                .getOutputs()
+                .get(0)
+                .getData()
+                .getParticipants()
+                .get(0);
 
-        name =
-                signedTx.getCoreTransaction()
-                        .getOutputs()
-                        .get(0)
-                        .getData()
-                        .getParticipants()
-                        .get(0)
-                        .getOwningKey();
-        assertEquals(name, party.getOwningKey());
-    }
-
-    @AfterAll
-    static void tearDownClass() {
-        service.close();
+        assertEquals(party.getOwningKey(), abstractParty.getOwningKey());
     }
 }
