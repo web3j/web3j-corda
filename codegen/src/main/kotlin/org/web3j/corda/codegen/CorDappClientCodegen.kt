@@ -103,7 +103,7 @@ class CorDappClientCodegen(
     override fun postProcessAllModels(objs: MutableMap<String, Any>): MutableMap<String, Any> {
         objs.values.forEach {
             @Suppress("UNCHECKED_CAST")
-            val modelContext= it as MutableMap<String, Any>
+            val modelContext = it as MutableMap<String, Any>
             modelContext["currentDate"] = OffsetDateTime.now(ZoneOffset.UTC).format(ISO_DATE_TIME)
         }
         return super.postProcessAllModels(objs)
@@ -160,7 +160,7 @@ class CorDappClientCodegen(
                 apiPackage.endsWith(it)
             }.joinToString(separator = ".")
 
-            return "$apiPackage.$pathPackage.api"
+            return "$apiPackage${if (pathPackage.isNotBlank()) ".$pathPackage" else ""}.api"
         }
 
         private fun buildFlowId(path: String) = path.split("/".toRegex())[4]
