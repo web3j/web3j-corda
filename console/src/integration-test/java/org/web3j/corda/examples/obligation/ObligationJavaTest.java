@@ -13,6 +13,7 @@
 package org.web3j.corda.examples.obligation;
 
 import org.junit.jupiter.api.Test;
+import org.testcontainers.junit.jupiter.Testcontainers;
 import org.web3j.corda.model.AbstractParty;
 import org.web3j.corda.model.AmountCurrency;
 import org.web3j.corda.model.Party;
@@ -27,9 +28,10 @@ import java.io.File;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.web3j.corda.network.CordaNetwork.network;
 
+@Testcontainers
 public class ObligationJavaTest {
 
-    private CordaNetwork network = network(net -> {
+    private static CordaNetwork network = network(net -> {
         net.setBaseDir(new File("/Users/xavier/Development/Projects/Web3Labs/web3j-corda-samples/kotlin-source"));
         net.nodes(nodes -> {
             nodes.node(node -> {
@@ -50,7 +52,7 @@ public class ObligationJavaTest {
             });
         });
     });
-    
+
     @Test
     public void issueObligation() {
         final Corda corda = network.getNodes().get("PartyA").getApi();
