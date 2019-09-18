@@ -9,7 +9,7 @@ applicationName = 'web3j-corda'
 dependencies {
     api project(':web3j-corda-core')
     api project(':web3j-corda-codegen')
-    
+
     api("javax.annotation:javax.annotation-api:${versions.annotationApi}")
 
     implementation(group: 'io.bluebank.braid', name: 'braid-corda', version: versions.braid, changing: true) {
@@ -18,7 +18,7 @@ dependencies {
         exclude group: 'org.jetbrains.kotlin'
         exclude group: 'net.corda.plugins'
     }
-    
+
 //  FIXME Should be removed but for some reason Braid loads it
     implementation "net.corda:corda-webserver-impl:${versions.corda}"
     implementation("net.corda:corda-node:${versions.corda}") {
@@ -34,11 +34,11 @@ dependencies {
     integrationTestImplementation project(':web3j-corda-common').sourceSets.integrationTest.output // FIXME
 }
 
-task generateCorDappWrappers(type: JavaExec, group: 'corda', dependsOn: []) {
+task generateCorDappWrappers(type: JavaExec, group: 'corda', dependsOn: 'clean') {
     classpath = sourceSets.integrationTest.runtimeClasspath
     main = 'org.web3j.corda.console.CordaCommand'
 
-    args '--package', 'org.web3j.corda.obligation',
+    args 'generate', '--package', 'org.web3j.corda.obligation',
             '--cordappsDir', "$projectDir/src/test/resources/cordapps",
             '--outputDir', "$buildDir/generated/source/web3j-corda/integrationTest/kotlin"
 }
