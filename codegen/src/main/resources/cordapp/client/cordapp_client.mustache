@@ -61,6 +61,7 @@ companion object : LifeCycle<{{classname}}> {
 /**
 * Loads an existing {{classname}} CorDapp instance.
 */
+@JvmStatic
 override fun load(corda: Corda) = ProxyBuilder.build({{classname}}::class.java, corda.service)
 }
 {{/operations}}
