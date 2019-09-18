@@ -15,6 +15,7 @@ package org.web3j.corda.console
 import io.bluebank.braid.corda.server.Braid
 import io.bluebank.braid.corda.server.BraidDocsMain
 import io.bluebank.braid.core.utils.tryWithClassLoader
+import io.vertx.core.Vertx
 import org.web3j.corda.codegen.CorDappClientGenerator
 import picocli.CommandLine.ArgGroup
 import picocli.CommandLine.Command
@@ -102,6 +103,9 @@ class GenerateCommand : CommonCommand() {
                 Braid.init()
                 tryWithClassLoader(URLClassLoader(toTypedArray())) {
                     BraidDocsMain().swaggerText(2)
+                }.also {
+                    // FIXME This should be closed by Braid 
+                    Vertx.currentContext().owner().close()
                 }
             }
         }
