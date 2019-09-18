@@ -3,7 +3,6 @@ package {{apiPackage}}
 {{#imports}}import {{import}}
 {{/imports}}
 
-import io.bluebank.braid.server.Braid
 import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeAll
@@ -18,7 +17,7 @@ import javax.annotation.Generated
 value = ["org.web3j.corda.codegen.CorDappClientGenerator"],
 date = "{{currentDate}}"
 )
-class {{classname}}Test: DockerBasedIntegrationTest() {
+class {{classname}}Test {
 
 {{#operations}}
 {{#flows}}
@@ -36,33 +35,4 @@ val result = {{classname}}.load(corda)
 }
 {{/flows}}
 {{/operations}}
-
-companion object {
-
-@BeforeAll
-@JvmStatic
-fun setUp() {
-val container = createNodeContainer(
-"Notary",
-"London",
-"GB",
-10005,
-10006,
-10007,
-true
-).apply {
-start()
-}
-
-Braid(
-port = 9000,
-userName = "user1",
-password = "test",
-nodeAddress = net.corda.core.utilities.NetworkHostAndPort("localhost", container.getMappedPort(10009))
-).startServer()
-
-corda = Corda.build(CordaService("http://localhost:9000"))
-Thread.sleep(10000)
-}
-}
 }
