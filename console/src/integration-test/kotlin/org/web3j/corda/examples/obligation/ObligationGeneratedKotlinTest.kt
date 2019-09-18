@@ -19,6 +19,8 @@ import org.testcontainers.junit.jupiter.Testcontainers
 import org.web3j.corda.model.AmountCurrency
 import org.web3j.corda.network.CordaNetwork
 import org.web3j.corda.network.network
+import org.web3j.corda.network.node
+import org.web3j.corda.network.nodes
 import org.web3j.corda.obligation.api.Obligation
 import org.web3j.corda.obligation.model.IssueObligationInitiatorPayload
 import java.io.File
@@ -46,7 +48,7 @@ class ObligationGeneratedKotlinTest {
     companion object {
         private val network = CordaNetwork.network {
             baseDir = File("/Users/xavier/Development/Projects/Web3Labs/web3j-corda-samples/kotlin-source")
-            nodes {                
+            nodes {
                 node {
                     name = "Notary"
                     location = "London"
