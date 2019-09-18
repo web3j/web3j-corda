@@ -7,6 +7,10 @@ import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
+import org.web3j.corda.network.CordaNetwork
+import org.web3j.corda.network.network
+import org.web3j.corda.network.nodes
+import org.web3j.corda.network.node
 import org.web3j.corda.protocol.Corda
 import org.web3j.corda.protocol.CordaService
 import org.web3j.corda.testcontainers.DockerBasedIntegrationTest
@@ -19,6 +23,9 @@ date = "{{currentDate}}"
 )
 class {{classname}}Test {
 
+// TODO Initialize network
+lateinit var network: CordaNetwork
+
 {{#operations}}
 {{#flows}}
 lateinit var {{#camelcase}}{{inputClass}}{{/camelcase}}: {{inputClass}}
@@ -28,7 +35,7 @@ fun `start the {{#titlecase}}{{#camelcase}}{{flowId}}{{/camelcase}}{{/titlecase}
 
 // TODO Initialize {{#camelcase}}{{inputClass}}{{/camelcase}}
 
-val result = {{classname}}.load(corda)
+val result = {{classname}}.load(network.nodes["TODO"].api)
 .flows.{{#camelcase}}{{flowId}}{{/camelcase}}.start({{#camelcase}}{{inputClass}}{{/camelcase}})
 
 // TODO Add assertions 

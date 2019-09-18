@@ -104,7 +104,7 @@ class GenerateCommand : CommonCommand() {
                 tryWithClassLoader(URLClassLoader(toTypedArray())) {
                     BraidDocsMain().swaggerText(2)
                 }.also {
-                    // FIXME This should be closed by Braid 
+                    // FIXME This should be closed by Braid
                     Vertx.currentContext().owner().close()
                 }
             }

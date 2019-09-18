@@ -63,3 +63,7 @@ compileIntegrationTestJava {
 compileIntegrationTestKotlin {
     mustRunAfter 'generateCorDappWrappers'
 }
+
+integrationTest {
+    dependsOn 'generateCorDappWrappers'
+}
