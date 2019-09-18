@@ -99,11 +99,6 @@ class CordaNetwork private constructor() {
         }
     }
 
-    @CordaDslMarker
-    fun nodes(nodesBlock: CordaNodes.() -> Unit) {
-        nodesJava(Consumer { nodesBlock.invoke(it) })
-    }
-
     private fun createJarUsingGradle() {
         val connection = GradleConnector.newConnector()
             .useBuildDistribution()
@@ -233,12 +228,4 @@ class CordaNetwork private constructor() {
             }
         }
     }
-}
-
-/**
- * Corda network DSL entry point extension method.
- */
-@CordaDslMarker
-fun CordaNetwork.Companion.network(networkBlock: CordaNetwork.() -> Unit): CordaNetwork {
-    return networkJava(Consumer { networkBlock.invoke(it) })
 }

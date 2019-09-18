@@ -31,9 +31,4 @@ class CordaNodes internal constructor(private val network: CordaNetwork) : Itera
             }
         }
     }
-
-    @CordaDslMarker
-    fun node(nodeBlock: CordaNode.() -> Unit) {
-        nodeJava(Consumer { nodeBlock.invoke(it) })
-    }
 }
