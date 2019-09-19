@@ -8,6 +8,7 @@
 
     <logger name="org.junit.jupiter" level="warn"/>
     <logger name="org.openapitools.codegen" level="warn"/>
+    <logger name="org.web3j.corda.protocol" level="debug"/>
 
     <root level="info">
         <appender-ref ref="CONSOLE"/>
