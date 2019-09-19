@@ -12,7 +12,10 @@
  */
 package org.web3j.corda.model
 
-data class StateAndRef(
-    val state: TransactionStateContractState,
-    val ref: StateRef
+data class Output(
+    val data: Data?,
+    val contract: String?,
+    val notary: Party?,
+    val encumbrance: String?,
+    val constraint: Constraint?
 )

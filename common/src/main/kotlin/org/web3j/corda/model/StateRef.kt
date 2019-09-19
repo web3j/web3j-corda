@@ -12,13 +12,10 @@
  */
 package org.web3j.corda.model
 
-/**
- *
- * @param txhash Base 58 Encoded Secure Hash
- * @param index
- */
 data class StateRef(
-    /* Base 58 Encoded Secure Hash */
-    val txhash: kotlin.String,
-    val index: kotlin.Int
+    /**
+     * Base 58 Encoded Secure Hash.
+     */
+    val txHash: String,
+    val index: Int
 )

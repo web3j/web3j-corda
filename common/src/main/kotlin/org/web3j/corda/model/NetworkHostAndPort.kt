@@ -12,12 +12,7 @@
  */
 package org.web3j.corda.model
 
-/**
- *
- * @param host
- * @param port
- */
 data class NetworkHostAndPort(
-    val host: kotlin.String,
-    val port: kotlin.Int
+    val host: String,
+    val port: Int
 )

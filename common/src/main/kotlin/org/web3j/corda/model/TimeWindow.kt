@@ -12,17 +12,11 @@
  */
 package org.web3j.corda.model
 
-/**
- *
- * @param untilTime JSR310 encoded time representation of Instant
- * @param midpoint JSR310 encoded time representation of Instant
- * @param fromTime JSR310 encoded time representation of Instant
- */
+import java.time.Duration
+
 data class TimeWindow(
-/* JSR310 encoded time representation of Instant */
-    val untilTime: kotlin.String? = null,
-/* JSR310 encoded time representation of Instant */
-    val midpoint: kotlin.String? = null,
-/* JSR310 encoded time representation of Instant */
-    val fromTime: kotlin.String? = null
+    val fromTime: Long,
+    val untilTime: Long,
+    val midpoint: Long,
+    val length: Duration
 )

@@ -12,12 +12,7 @@
  */
 package org.web3j.corda.model
 
-/**
- *
- * @param groupIndex
- * @param components
- */
 data class ComponentGroup(
-    val groupIndex: kotlin.Int,
-    val components: kotlin.collections.List<kotlin.String>
+    val groupIndex: Int,
+    val components: List<String>
 )

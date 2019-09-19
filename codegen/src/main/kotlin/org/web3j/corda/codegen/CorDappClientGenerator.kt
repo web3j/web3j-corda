@@ -12,7 +12,7 @@
  */
 package org.web3j.corda.codegen
 
-import io.swagger.v3.parser.OpenAPIV3Parser
+import io.swagger.parser.OpenAPIParser
 import io.swagger.v3.parser.core.models.ParseOptions
 import io.swagger.v3.parser.core.models.SwaggerParseResult
 import org.openapitools.codegen.ClientOptInput
@@ -40,7 +40,7 @@ class CorDappClientGenerator(
         val result = parser.readContents(openApiDef, listOf(), parseOptions).apply {
             openAPI.paths.entries.removeIf {
                 !it.key.startsWith("/cordapps") || it.key.endsWith("/flows")
-            }
+            }   
         }
 
         opts(
@@ -73,7 +73,7 @@ class CorDappClientGenerator(
     }
 
     companion object {
-        private val parser = OpenAPIV3Parser()
+        private val parser = OpenAPIParser()
         private val parseOptions = ParseOptions()
 
         fun buildCorDappNameFromPath(path: String): String {

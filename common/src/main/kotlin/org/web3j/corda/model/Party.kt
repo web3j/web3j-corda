@@ -12,14 +12,7 @@
  */
 package org.web3j.corda.model
 
-/**
- *
- * @param name CordaX500Name encoded Party
- * @param owningKey Base 58 Encoded Public Key
- */
 data class Party(
-    /* CordaX500Name encoded Party */
-    val name: kotlin.String,
-    /* Base 58 Encoded Public Key */
-    val owningKey: kotlin.String
+    val name: CordaX500Name?,
+    val owningKey: PublicKey
 )

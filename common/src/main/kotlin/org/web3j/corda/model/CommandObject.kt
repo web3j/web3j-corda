@@ -12,7 +12,7 @@
  */
 package org.web3j.corda.model
 
-data class StateAndRef(
-    val state: TransactionStateContractState,
-    val ref: StateRef
+data class CommandObject(
+    val value: Any, // FIXME
+    val signers: List<String>
 )

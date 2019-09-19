@@ -12,7 +12,17 @@
  */
 package org.web3j.corda.model
 
-data class StateAndRef(
-    val state: TransactionStateContractState,
-    val ref: StateRef
+data class NotaryChangeWireTransaction(
+    val inputs: StateRef,
+    val references: StateRef,
+    val notary: Party,
+    val newNotary: Party,
+    /**
+     * Hex encoded Byte Array, eg. `736F6D654279746573`.
+     */
+    val serializedComponents: List<String>,
+    val id: String,
+    val outputs: TransactionStateContractState,
+    val networkParametersHash: String,
+    val outputStates: List<ContractState>
 )
