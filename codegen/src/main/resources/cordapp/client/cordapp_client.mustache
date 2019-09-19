@@ -10,7 +10,6 @@ import org.web3j.corda.protocol.Corda
 import org.web3j.corda.protocol.ProxyBuilder
 import java.io.File
 import javax.annotation.Generated
-import javax.validation.Valid
 import javax.ws.rs.Consumes
 import javax.ws.rs.POST
 import javax.ws.rs.Path
@@ -48,7 +47,7 @@ interface {{#titlecase}}{{#camelcase}}{{flowId}}{{/camelcase}}{{/titlecase}} : F
 @POST
 @Produces("{{produces}}")
 @Consumes("{{consumes}}")
-fun start(@Valid parameters: {{inputClass}}): {{outputClass}}
+fun start(parameters: {{inputClass}}): {{outputClass}}
 }
 {{/flows}}
 }
