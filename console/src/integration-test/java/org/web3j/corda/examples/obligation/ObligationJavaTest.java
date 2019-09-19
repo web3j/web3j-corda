@@ -14,7 +14,6 @@ package org.web3j.corda.examples.obligation;
 
 import org.junit.jupiter.api.Test;
 import org.testcontainers.junit.jupiter.Testcontainers;
-import org.web3j.corda.model.AbstractParty;
 import org.web3j.corda.model.AmountCurrency;
 import org.web3j.corda.model.Party;
 import org.web3j.corda.model.SignedTransaction;
@@ -69,13 +68,13 @@ public class ObligationJavaTest {
 
         final SignedTransaction signedTx = issue.start(parameters);
 
-        final AbstractParty abstractParty = signedTx.getCoreTransaction()
+        final Party actualParty = signedTx.getCoreTransaction()
                 .getOutputs()
                 .get(0)
                 .getData()
                 .getParticipants()
                 .get(0);
 
-        assertEquals(party.getOwningKey(), abstractParty.getOwningKey());
+        assertEquals(party.getOwningKey(), actualParty.getOwningKey());
     }
 }

@@ -13,5 +13,5 @@
 package org.web3j.corda.model
 
 data class ContractState(
-    val participants: List<AbstractParty>
+    val participants: List<Party>
 )
