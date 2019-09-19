@@ -58,6 +58,7 @@ compileIntegrationTestJava {
 }
 
 compileIntegrationTestKotlin {
+    kotlinOptions.jvmTarget = '1.8'
     mustRunAfter 'generateCorDappWrappers'
 }
 
