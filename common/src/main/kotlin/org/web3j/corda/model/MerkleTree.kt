@@ -12,7 +12,9 @@
  */
 package org.web3j.corda.model
 
-data class StateAndRef(
-    val state: TransactionStateContractState,
-    val ref: StateRef
+data class MerkleTree(
+    /**
+     * Base 58 Encoded Secure Hash.
+     */
+    val hash: String
 )

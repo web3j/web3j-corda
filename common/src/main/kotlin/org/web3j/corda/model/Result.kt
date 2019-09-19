@@ -12,7 +12,7 @@
  */
 package org.web3j.corda.model
 
-data class StateAndRef(
-    val state: TransactionStateContractState,
-    val ref: StateRef
+data class Result(
+    val stx: SignedTransaction,
+    val recipient: AbstractParty
 )
