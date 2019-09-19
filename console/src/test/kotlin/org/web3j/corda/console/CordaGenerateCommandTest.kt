@@ -20,9 +20,6 @@ import org.junit.jupiter.api.io.TempDir
 import java.io.File
 import java.nio.file.Files
 
-/**
- * TODO Update OpenAPI definition and add Obligation CorDapp assertions.
- */
 class CordaGenerateCommandTest {
 
     @Test
