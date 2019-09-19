@@ -6,6 +6,10 @@
         </encoder>
     </appender>
 
+    <contextListener class="ch.qos.logback.classic.jul.LevelChangePropagator">
+        <resetJUL>true</resetJUL>
+    </contextListener>
+
     <logger name="org.junit.jupiter" level="warn"/>
     <logger name="org.openapitools.codegen" level="warn"/>
     <logger name="org.web3j.corda.protocol" level="debug"/>
