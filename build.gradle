@@ -63,9 +63,6 @@ subprojects {
                 snapshotsOnly()
             }
         }
-        maven {
-            url "$rootProject.projectDir/lib"
-        }
     }
 
     task sourcesJar(type: Jar) {
