@@ -107,6 +107,7 @@ subprojects {
 
         implementation("org.jetbrains:annotations:${versions.annotations}") { force = true }
 
+        implementation("ch.qos.logback:logback-classic:${versions.logback}") { force = true }
         implementation("org.slf4j:slf4j-api:${versions.slf4j}") { force = true }
         implementation("org.slf4j:slf4j-ext:${versions.slf4j}") { force = true }
         implementation("org.slf4j:jcl-over-slf4j:${versions.slf4j}") { force = true }
