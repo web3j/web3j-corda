@@ -17,7 +17,10 @@ import org.glassfish.jersey.client.ClientProperties
 import org.glassfish.jersey.jackson.internal.jackson.jaxrs.cfg.Annotations
 import org.glassfish.jersey.jackson.internal.jackson.jaxrs.json.JacksonJaxbJsonProvider
 import org.glassfish.jersey.logging.LoggingFeature
+import org.slf4j.bridge.SLF4JBridgeHandler
 import org.web3j.corda.util.mapper
+import java.util.logging.Level
+import java.util.logging.Logger
 import javax.ws.rs.client.Client
 import javax.ws.rs.client.ClientBuilder
 
@@ -30,7 +33,8 @@ class CordaService(
     internal val client: Client by lazy {
 
         val config = ClientConfig().apply {
-            register(LoggingFeature())
+            // Redirect ALL logs to SLFJ using logging.properties
+            register(LoggingFeature(logger.apply { level = Level.ALL }))
             register(JacksonJaxbJsonProvider(mapper, arrayOf(Annotations.JACKSON)))
             property(ClientProperties.READ_TIMEOUT, readTimeout)
             property(ClientProperties.CONNECT_TIMEOUT, connectTimeout)
@@ -44,5 +48,12 @@ class CordaService(
     companion object {
         const val DEFAULT_READ_TIMEOUT: Int = 5000
         const val DEFAULT_CONNECT_TIMEOUT: Int = 5000
+
+        init {
+            SLF4JBridgeHandler.removeHandlersForRootLogger()
+            SLF4JBridgeHandler.install()
+        }
+
+        private val logger = Logger.getLogger(CordaService::class.java.canonicalName)!!
     }
 }
