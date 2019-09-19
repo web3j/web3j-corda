@@ -101,7 +101,7 @@ class GenerateCommand : CommonCommand() {
                 // before replacing the context class loader
                 Braid.init()
                 tryWithClassLoader(URLClassLoader(toTypedArray())) {
-                    BraidDocsMain().swaggerText(2)
+                    BraidDocsMain().swaggerText(3)
                 }
             }
         }

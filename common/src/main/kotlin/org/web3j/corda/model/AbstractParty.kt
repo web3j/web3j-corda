@@ -12,9 +12,11 @@
  */
 package org.web3j.corda.model
 
+/**
+ *
+ * @param owningKey Base 58 Encoded Public Key
+ */
 data class AbstractParty(
-    /**
-     * Base 58 Encoded Public Key.
-     */
-    val owningKey: String
+    /* Base 58 Encoded Public Key */
+    val owningKey: kotlin.String
 )

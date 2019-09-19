@@ -12,7 +12,12 @@
  */
 package org.web3j.corda.model
 
+/**
+ *
+ * @param state
+ * @param ref
+ */
 data class StateAndRefObject(
-    val state: TransactionStateObject,
-    val ref: StateRef
+    val state: TransactionStateObject? = null,
+    val ref: StateRef? = null
 )
