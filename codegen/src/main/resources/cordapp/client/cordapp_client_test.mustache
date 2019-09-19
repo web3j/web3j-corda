@@ -35,7 +35,7 @@ fun `start the {{#titlecase}}{{#camelcase}}{{flowId}}{{/camelcase}}{{/titlecase}
 
 // TODO Initialize {{#camelcase}}{{inputClass}}{{/camelcase}}
 
-val result = {{classname}}.load(network.nodes["TODO"].api)
+{{classname}}.load(network.nodes["TODO"].api)
 .flows.{{#camelcase}}{{flowId}}{{/camelcase}}.start({{#camelcase}}{{inputClass}}{{/camelcase}})
 
 // TODO Add assertions 
