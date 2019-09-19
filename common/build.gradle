@@ -3,7 +3,9 @@ dependencies {
     implementation group: 'javax.xml.bind', name: 'jaxb-api', version: versions.jaxbApi
 
     integrationTestApi project(':web3j-corda-core')
-    integrationTestApi group: 'net.corda', name: 'corda-node', version: versions.corda
+    integrationTestApi(group: 'net.corda', name: 'corda-node', version: versions.corda) {
+        exclude group: 'org.apache.logging.log4j'
+    }
     integrationTestApi(group: 'io.bluebank.braid', name: 'braid-corda', version: versions.braid, changing: true) {
         exclude group: 'org.slf4j', module: 'slf4j-log4j12'
         exclude group: 'org.apache.logging.log4j'

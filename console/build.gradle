@@ -12,19 +12,16 @@ dependencies {
 
     api("javax.annotation:javax.annotation-api:${versions.annotationApi}")
 
+    implementation("net.corda:corda-node:${versions.corda}") {
+        exclude group: 'org.apache.logging.log4j'
+    }
     implementation(group: 'io.bluebank.braid', name: 'braid-corda', version: versions.braid, changing: true) {
         exclude group: 'org.slf4j', module: 'slf4j-log4j12'
         exclude group: 'org.apache.logging.log4j'
         exclude group: 'org.jetbrains.kotlin'
         exclude group: 'net.corda.plugins'
     }
-
-//  FIXME Should be removed but for some reason Braid loads it
-    implementation "net.corda:corda-webserver-impl:${versions.corda}"
-    implementation("net.corda:corda-node:${versions.corda}") {
-//  FIXME Should be uncommented but for some reason Braid loads it
-//  exclude group: 'org.apache.logging.log4j' 
-    }
+    
     implementation "info.picocli:picocli:${versions.picocli}"
     implementation "org.gradle:gradle-tooling-api:${versions.gradle}"
 
@@ -64,6 +61,6 @@ compileIntegrationTestKotlin {
     mustRunAfter 'generateCorDappWrappers'
 }
 
-integrationTest {
-    dependsOn 'generateCorDappWrappers'
-}
+//integrationTest {
+//    dependsOn 'generateCorDappWrappers'
+//}

@@ -110,6 +110,7 @@ subprojects {
         implementation("org.slf4j:slf4j-api:${versions.slf4j}") { force = true }
         implementation("org.slf4j:slf4j-ext:${versions.slf4j}") { force = true }
         implementation("org.slf4j:jcl-over-slf4j:${versions.slf4j}") { force = true }
+        implementation("org.slf4j:jul-to-slf4j:${versions.slf4j}") { force = true }
 
         // FIXME Move to specific modules, not all require those dependencies
         implementation group: 'com.fasterxml.jackson.module', name: 'jackson-module-kotlin', version: versions.jackson, force: true
@@ -118,6 +119,13 @@ subprojects {
         implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: versions.jackson, force: true
         implementation group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: versions.jackson, force: true
         implementation group: 'com.fasterxml.jackson.dataformat', name: 'jackson-dataformat-yaml', version: versions.jackson, force: true
+        implementation group: 'org.glassfish.jersey.inject', name: 'jersey-hk2', version: versions.jersey, force: true
+        implementation group: 'org.glassfish.jersey.core', name: 'jersey-client', version: versions.jersey, force: true
+        implementation group: 'org.glassfish.jersey.media', name: 'jersey-media-json-jackson', version: versions.jersey, force: true
+        implementation group: 'org.glassfish.jersey.ext', name: 'jersey-proxy-client', version: versions.jersey, force: true
+        implementation group: 'org.glassfish.jersey.containers', name: 'jersey-container-servlet-core', version: versions.jersey, force: true
+        implementation group: 'org.glassfish.jersey.containers', name: 'jersey-container-jetty-http', version: versions.jersey, force: true
+        implementation group: 'org.glassfish.jersey.containers', name: 'jersey-container-servlet', version: versions.jersey, force: true
 
         implementation("net.bytebuddy:byte-buddy:1.9.10") { force = true }
         implementation("com.google.errorprone:error_prone_annotations:2.2.0") { force = true }
@@ -140,9 +148,6 @@ subprojects {
         testImplementation("io.mockk:mockk:${versions.mockk}") {
             exclude group: 'org.jetbrains.kotlin'
         }
-
-        runtimeOnly "com.github.schnitker.logmanager:logmgr-factory:${versions.logmanager}"
-        runtimeOnly "com.github.schnitker.logmanager:logmgr-logback:${versions.logmanager}"
 
         testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:${versions.junit5}"
         testRuntimeOnly "org.junit.vintage:junit-vintage-engine:${versions.junit5}"
