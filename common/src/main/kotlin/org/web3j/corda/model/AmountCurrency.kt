@@ -12,18 +12,15 @@
  */
 package org.web3j.corda.model
 
+/**
+ *
+ * @param quantity total amount in minor units
+ * @param displayTokenSize
+ * @param token
+ */
 data class AmountCurrency(
-    /**
-     * Total amount in minor units, eg. 100.
-     */
-    val quantity: Int,
-    /**
-     * Number of decimals, eg. 0.01
-     * FIXME Should be Float
-     */
-    val displayTokenSize: Number,
-    /**
-     * ISO Code of the currency, eg. `GBP`.
-     */
-    val token: String
+    /* total amount in minor units */
+    val quantity: kotlin.Int,
+    val displayTokenSize: java.math.BigDecimal,
+    val token: kotlin.String
 )

@@ -13,6 +13,5 @@
 package org.web3j.corda.model
 
 typealias CordaX500Name = String
-typealias PublicKey = String
 typealias CorDappId = String
 typealias FlowId = String

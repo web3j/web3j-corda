@@ -12,12 +12,24 @@
  */
 package org.web3j.corda.model
 
+/**
+ *
+ * @param inputs
+ * @param references
+ * @param networkParametersHash Base 58 Encoded Secure Hash
+ * @param notary
+ * @param outputs
+ * @param outputStates
+ * @param id Base 58 Encoded Secure Hash
+ */
 data class CoreTransaction(
-    val inputs: List<StateRef>,
-    val references: List<StateRef>,
-    val networkParametersHash: String,
-    val outputs: List<TransactionStateContractState>,
-    val outputStates: List<ContractState>,
-    val notary: Party,
-    val id: String
+    val inputs: kotlin.collections.List<StateRef>,
+    val references: kotlin.collections.List<StateRef>,
+    val outputs: kotlin.collections.List<ContractState>,
+    val outputStates: kotlin.collections.List<ContractState>,
+    /* Base 58 Encoded Secure Hash */
+    val id: kotlin.String,
+/* Base 58 Encoded Secure Hash */
+    val networkParametersHash: kotlin.String? = null,
+    val notary: Party? = null
 )

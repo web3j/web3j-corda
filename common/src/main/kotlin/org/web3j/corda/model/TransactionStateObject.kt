@@ -12,10 +12,18 @@
  */
 package org.web3j.corda.model
 
+/**
+ *
+ * @param &#x60;data&#x60;
+ * @param contract
+ * @param notary
+ * @param encumbrance
+ * @param constraint
+ */
 data class TransactionStateObject(
-    val data: Any,
-    val contract: String,
-    val notary: Party,
-    val encumbrance: Int,
-    val constraint: AttachmentConstraint
+    val `data`: kotlin.Any,
+    val contract: kotlin.String,
+    val notary: Party? = null,
+    val encumbrance: kotlin.Int? = null,
+    val constraint: kotlin.Any? = null
 )

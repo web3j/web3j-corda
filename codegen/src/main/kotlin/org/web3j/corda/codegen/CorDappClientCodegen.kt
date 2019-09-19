@@ -63,12 +63,23 @@ class CorDappClientCodegen(
         }
     }
 
-    override fun toModelImport(name: String): String? {
+    override fun toModelImport(name: String): String {
         return when {
             modelPackage().isEmpty() -> name
-            cordaMapping.containsKey(name) -> cordaMapping[name]
+            cordaMapping.containsKey(name) -> cordaMapping[name]!!
             needToImport(name) -> return super.toModelImport(name)
             else -> "$modelPackage.$name"
+        }
+    }
+
+    override fun toModelName(name: String): String {
+        return if (!name.startsWith("kotlin.") && !name.startsWith("java.")) {
+            // Remove package name from schema
+            name.split(".").last()
+        } else {
+            name
+        }.apply {
+            super.toModelName(this)
         }
     }
 
@@ -166,7 +177,7 @@ class CorDappClientCodegen(
         private fun buildFlowId(path: String) = path.split("/".toRegex())[4]
             .split("\\.".toRegex())
             .last()
-            .replace("$", "")
+            .replace("$", "_")
 
         private fun buildFlowPath(path: String) = path.split("/".toRegex())[4]
             .replace("$", "\\$")

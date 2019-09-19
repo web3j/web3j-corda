@@ -12,6 +12,18 @@
  */
 package org.web3j.corda.model
 
+/**
+ *
+ * @param &#x60;data&#x60;
+ * @param contract
+ * @param notary
+ * @param encumbrance
+ * @param constraint
+ */
 data class ContractState(
-    val participants: List<AbstractParty>
+    val contract: kotlin.String,
+    val `data`: ContractState? = null,
+    val notary: Party? = null,
+    val encumbrance: kotlin.Int? = null,
+    val constraint: kotlin.Any? = null
 )

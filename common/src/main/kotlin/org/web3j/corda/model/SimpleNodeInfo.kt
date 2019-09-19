@@ -12,7 +12,12 @@
  */
 package org.web3j.corda.model
 
+/**
+ *
+ * @param addresses
+ * @param legalIdentities
+ */
 data class SimpleNodeInfo(
-    val addresses: List<NetworkHostAndPort>,
-    val legalIdentities: List<Party>
+    val addresses: kotlin.collections.List<NetworkHostAndPort>,
+    val legalIdentities: kotlin.collections.List<Party>
 )

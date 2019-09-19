@@ -12,11 +12,21 @@
  */
 package org.web3j.corda.model
 
+/**
+ *
+ * @param signatures
+ * @param coreTransaction
+ * @param references
+ * @param networkParametersHash Base 58 Encoded Secure Hash
+ * @param notaryChangeTransaction
+ * @param missingSigners
+ */
 data class SignedTransaction(
-    val signatures: List<String>,
-    val references: List<String>,
-    val networkParametersHash: String,
-    val coreTransaction: CoreTransaction,
-    val notaryChangeTransaction: Boolean,
-    val missingSigners: List<PublicKey>
+    val signatures: kotlin.collections.List<kotlin.String>,
+    val references: kotlin.collections.List<StateRef>,
+    val notaryChangeTransaction: kotlin.Boolean,
+    val missingSigners: kotlin.collections.List<kotlin.String>,
+    val coreTransaction: CoreTransaction? = null,
+/* Base 58 Encoded Secure Hash */
+    val networkParametersHash: kotlin.String? = null
 )
