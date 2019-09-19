@@ -61,6 +61,6 @@ compileIntegrationTestKotlin {
     mustRunAfter 'generateCorDappWrappers'
 }
 
-//integrationTest {
-//    dependsOn 'generateCorDappWrappers'
-//}
+integrationTest {
+    dependsOn 'generateCorDappWrappers'
+}
