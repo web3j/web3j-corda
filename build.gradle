@@ -115,24 +115,84 @@ subprojects {
 
         configurations.all {
             resolutionStrategy {
-                force(group: 'com.fasterxml.jackson.module', name: 'jackson-module-kotlin', version: versions.jackson)
-                force(group: 'com.fasterxml.jackson.module', name: 'jackson-module-jaxb-annotations', version: versions.jackson)
+                force(group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: versions.jackson)
                 force(group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: versions.jackson)
                 force(group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: versions.jackson)
-                force(group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: versions.jackson)
                 force(group: 'com.fasterxml.jackson.dataformat', name: 'jackson-dataformat-yaml', version: versions.jackson)
-                force(group: 'org.glassfish.jersey.inject', name: 'jersey-hk2', version: versions.jersey)
-                force(group: 'org.glassfish.jersey.core', name: 'jersey-client', version: versions.jersey)
-                force(group: 'org.glassfish.jersey.media', name: 'jersey-media-json-jackson', version: versions.jersey)
-                force(group: 'org.glassfish.jersey.ext', name: 'jersey-proxy-client', version: versions.jersey)
-                force(group: 'org.glassfish.jersey.containers', name: 'jersey-container-servlet-core', version: versions.jersey)
-                force(group: 'org.glassfish.jersey.containers', name: 'jersey-container-jetty-http', version: versions.jersey)
-                force(group: 'org.glassfish.jersey.containers', name: 'jersey-container-servlet', version: versions.jersey)
-                force(group: 'net.bytebuddy', name: 'byte-buddy', version: versions.byteBuddy)
+                force(group: 'com.fasterxml.jackson.module', name: 'jackson-module-jaxb-annotations', version: versions.jackson)
+                force(group: 'com.fasterxml.jackson.module', name: 'jackson-module-kotlin', version: versions.jackson)
                 force(group: 'com.google.errorprone', name: 'error_prone_annotations', version: versions.errorProneAnnotations)
                 force(group: 'com.google.guava', name: 'guava', version: versions.guava)
                 force(group: 'commons-io', name: 'commons-io', version: versions.commonsIo)
+                force(group: 'io.swagger.core.v3', name: 'swagger-annotations', version: versions.swagger3)
+                force(group: 'io.swagger.core.v3', name: 'swagger-core', version: versions.swagger3)
+                force(group: 'io.swagger.core.v3', name: 'swagger-models', version: versions.swagger3)
+                force(group: 'net.bytebuddy', name: 'byte-buddy', version: versions.byteBuddy)
+                force(group: 'org.glassfish.jersey.containers', name: 'jersey-container-jetty-http', version: versions.jersey)
+                force(group: 'org.glassfish.jersey.containers', name: 'jersey-container-servlet-core', version: versions.jersey)
+                force(group: 'org.glassfish.jersey.containers', name: 'jersey-container-servlet', version: versions.jersey)
+                force(group: 'org.glassfish.jersey.core', name: 'jersey-client', version: versions.jersey)
+                force(group: 'org.glassfish.jersey.ext', name: 'jersey-proxy-client', version: versions.jersey)
+                force(group: 'org.glassfish.jersey.inject', name: 'jersey-hk2', version: versions.jersey)
+                force(group: 'org.glassfish.jersey.media', name: 'jersey-media-json-jackson', version: versions.jersey)
             }
+            exclude group: 'com.ea.agentloader'
+            exclude group: 'com.github.ben-manes.caffeine'
+            exclude group: 'com.github.bft-smart'
+            exclude group: 'com.github.fge'
+            exclude group: 'com.github.java-json-tools'
+            exclude group: 'com.github.joschi.jackson'
+            exclude group: 'com.github.mifmif'
+            exclude group: 'com.google.code.findbugs'
+            exclude group: 'com.google.errorprone'
+            exclude group: 'com.google.j2objc'
+            exclude group: 'com.google.jimfs'
+            exclude group: 'com.googlecode.json-simple'
+            exclude group: 'com.googlecode.libphonenumber'
+            exclude group: 'com.h2database'
+            exclude group: 'com.intellij'
+            exclude group: 'com.jcabi'
+            exclude group: 'com.mattbertolini'
+            exclude group: 'com.palominolabs.metrics'
+            exclude group: 'com.squareup.okhttp3'
+            exclude group: 'com.squareup.okio'
+            exclude group: 'com.typesafe'
+            exclude group: 'com.zaxxer'
+            exclude group: 'io.atomix.catalyst'
+            exclude group: 'io.atomix.copycat'
+            exclude group: 'io.vertx', module: 'vertx-auth-jwt'
+            exclude group: 'io.vertx', module: 'vertx-auth-shiro'
+            exclude group: 'io.vertx', module: 'vertx-rx-gen'
+            exclude group: 'io.vertx', module: 'vertx-rx-java'
+            exclude group: 'net.corda.plugins'
+            exclude group: 'net.java.dev.jna'
+            exclude group: 'net.sf.jopt-simple'
+            exclude group: 'net.sf.jpam'
+            exclude group: 'org.apache.activemq'
+            exclude group: 'org.apache.logging.log4j'
+            exclude group: 'org.apache.mina'
+            exclude group: 'org.apache.qpid'
+            exclude group: 'org.apache.shiro'
+            exclude group: 'org.apache.sshd'
+            exclude group: 'org.apiguardian'
+            exclude group: 'org.checkerframework'
+            exclude group: 'org.codehaus.groovy'
+            exclude group: 'org.codehaus.mojo'
+            exclude group: 'org.fusesource.jansi'
+            exclude group: 'org.hdrhistogram'
+            exclude group: 'org.hibernate'
+            exclude group: 'org.iq80.snappy'
+            exclude group: 'org.jetbrains.kotlin', module: 'kotlin-stdlib-jre7'
+            exclude group: 'org.jetbrains.kotlin', module: 'kotlin-stdlib-jre8'
+            exclude group: 'org.latencyutils'
+            exclude group: 'org.liquibase'
+            exclude group: 'org.mozilla'
+            exclude group: 'org.postgresql'
+            exclude group: 'org.rnorth.duct-tape'
+            exclude group: 'org.rnorth.visible-assertions'
+            exclude group: 'org.rnorth'
+            exclude group: 'org.scijava:native-lib-loader'
+            exclude group: 'org.slf4j', module: 'slf4j-log4j12'
         }
 
         implementation "io.github.microutils:kotlin-logging:${versions.kLogging}"
