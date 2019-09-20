@@ -25,6 +25,7 @@ fun Any.toJson(): String = mapper
 
 val mapper: ObjectMapper = jacksonObjectMapper()
     .enable(SerializationFeature.WRITE_ENUMS_USING_TO_STRING)
+    .enable(SerializationFeature.INDENT_OUTPUT)
 
 fun <T> convert(value: Any, type: Class<T>): T = mapper.convertValue(value, type)
 

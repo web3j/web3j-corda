@@ -2,6 +2,9 @@ dependencies {
     implementation group: 'javax.activation', name: 'javax.activation-api', version: versions.activationApi
     implementation group: 'javax.xml.bind', name: 'jaxb-api', version: versions.jaxbApi
 
+    implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: versions.jackson
+    implementation group: 'com.fasterxml.jackson.module', name: 'jackson-module-kotlin', version: versions.jackson
+    
     integrationTestApi project(':web3j-corda-core')
     integrationTestApi group: 'net.corda', name: 'corda-node', version: versions.corda
     integrationTestApi group: 'io.bluebank.braid', name: 'braid-corda', version: versions.braid, changing: true

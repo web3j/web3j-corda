@@ -34,7 +34,7 @@ class CordaService(
 
         val config = ClientConfig().apply {
             // Redirect ALL logs to SLFJ using logging.properties
-            register(LoggingFeature(logger.apply { level = Level.ALL }))
+            register(LoggingFeature(logger.apply { level = Level.ALL }, Short.MAX_VALUE.toInt()))
             register(JacksonJaxbJsonProvider(mapper, arrayOf(Annotations.JACKSON)))
             property(ClientProperties.READ_TIMEOUT, readTimeout)
             property(ClientProperties.CONNECT_TIMEOUT, connectTimeout)
