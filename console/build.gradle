@@ -12,9 +12,37 @@ dependencies {
 
     api("javax.annotation:javax.annotation-api:${versions.annotationApi}")
 
-    implementation "net.corda:corda-node:${versions.corda}"
-    implementation group: 'io.bluebank.braid', name: 'braid-corda', version: versions.braid, changing: true
-    
+    implementation(group: 'net.corda', name: 'corda-node', version: versions.corda) {
+        exclude group: 'com.ea.agentloader'
+        exclude group: 'com.github.bft-smart'
+        exclude group: 'com.google.jimfs'
+        exclude group: 'com.h2database'
+        exclude group: 'com.intellij'
+        exclude group: 'com.lmax'
+        exclude group: 'com.mattbertolini'
+        exclude group: 'com.palominolabs.metrics'
+        exclude group: 'com.squareup.okhttp3'
+        exclude group: 'com.typesafe'
+        exclude group: 'com.zaxxer'
+        exclude group: 'com.jcabi'
+        exclude group: 'io.atomix.catalyst'
+        exclude group: 'io.atomix.copycat'
+        exclude group: 'org.apache.activemq'
+        exclude group: 'org.apache.logging.log4j'
+        exclude group: 'org.apache.shiro'
+        exclude group: 'org.hibernate'
+        exclude group: 'org.jolokia'
+        exclude group: 'org.liquibase'
+        exclude group: 'org.postgresql'
+        exclude group: 'org.fusesource.jansi'
+    }
+    implementation(group: 'io.bluebank.braid', name: 'braid-corda', version: versions.braid, changing: true) {
+        exclude group: 'io.vertx', module: 'vertx-auth-jwt'
+        exclude group: 'io.vertx', module: 'vertx-auth-shiro'
+        exclude group: 'io.vertx', module: 'vertx-rx-gen'
+        exclude group: 'io.vertx', module: 'vertx-rx-java'
+    }
+
     implementation "info.picocli:picocli:${versions.picocli}"
     implementation "org.gradle:gradle-tooling-api:${versions.gradle}"
 
