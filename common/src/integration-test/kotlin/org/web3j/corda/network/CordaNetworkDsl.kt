@@ -19,3 +19,8 @@ fun CordaNetwork.nodes(nodesBlock: CordaNodes.() -> Unit) {
 fun CordaNodes.node(nodeBlock: CordaNode.() -> Unit) {
     nodeJava(Consumer { nodeBlock.invoke(it) })
 }
+
+@DslMarker
+@Retention(AnnotationRetention.SOURCE)
+@Target(AnnotationTarget.CLASS, AnnotationTarget.FUNCTION)
+internal annotation class CordaDslMarker
