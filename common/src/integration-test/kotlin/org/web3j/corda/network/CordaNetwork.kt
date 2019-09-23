@@ -13,8 +13,8 @@
 package org.web3j.corda.network
 
 import com.samskivert.mustache.Mustache
-import mu.KLogging
 import org.gradle.tooling.GradleConnector
+import org.junit.platform.commons.logging.LoggerFactory
 import org.testcontainers.containers.BindMode
 import org.testcontainers.containers.Network
 import org.testcontainers.containers.wait.strategy.Wait
@@ -139,6 +139,8 @@ class CordaNetwork private constructor() {
             .withCreateContainerCmdModifier {
                 it.withHostName(node.name.toLowerCase())
                 it.withName(node.name.toLowerCase())
+            }.withLogConsumer {
+                logger.info { it.utf8String }
             }.apply {
                 if (node.isNotary) {
                     start()
@@ -209,7 +211,9 @@ class CordaNetwork private constructor() {
         networkMapApi.admin.notaries.create(NotaryType.NON_VALIDATING, Files.readAllBytes(Paths.get(nodeInfoPath)))
     }
 
-    companion object : KLogging() {
+    companion object {
+        private val logger = LoggerFactory.getLogger(CordaNetwork::class.java)
+
         private const val NETWORK_MAP_ALIAS = "networkmap"
         private const val NETWORK_MAP_URL = "http://$NETWORK_MAP_ALIAS:8080"
 
