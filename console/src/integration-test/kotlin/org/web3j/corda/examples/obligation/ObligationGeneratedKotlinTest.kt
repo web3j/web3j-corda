@@ -15,7 +15,6 @@ package org.web3j.corda.examples.obligation
 import assertk.assertThat
 import assertk.assertions.isEqualTo
 import org.junit.jupiter.api.Test
-import org.testcontainers.junit.jupiter.Testcontainers
 import org.web3j.corda.model.AmountCurrency
 import org.web3j.corda.network.CordaNetwork
 import org.web3j.corda.network.network
@@ -25,23 +24,22 @@ import org.web3j.corda.obligation.api.Obligation
 import org.web3j.corda.obligation.model.IssueObligationInitiatorPayload
 import java.io.File
 
-@Testcontainers
 class ObligationGeneratedKotlinTest {
 
     @Test
     fun `issue obligation`() {
-        val party = network.nodes["PartyA"].api.network.nodes.findAll()[2].legalIdentities[0]
+        val partyB = network.nodes["PartyA"].api.network.nodes.findAll()[2].legalIdentities[0]
 
         val parameters = IssueObligationInitiatorPayload(
             AmountCurrency(100, 2, "GBP"),
-            party,
+            partyB,
             false
         )
 
         Obligation.load(network.nodes["PartyA"].api)
             .flows.issueObligationInitiator.start(parameters).apply {
             assertThat(coreTransaction.outputs[0].data.participants.first().owningKey)
-                .isEqualTo(party.owningKey)
+                .isEqualTo(partyB.owningKey)
         }
     }
 
