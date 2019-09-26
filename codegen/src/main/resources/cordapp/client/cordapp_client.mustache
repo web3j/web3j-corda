@@ -30,20 +30,20 @@ override val flows: FlowResource
 
 interface FlowResource : org.web3j.corda.api.FlowResource {
 {{#flows}}
-/**
-* Get the {{#titlecase}}{{#camelcase}}{{flowId}}{{/camelcase}}{{/titlecase}} flow.
-*/
+    /**
+    * Get the {{#titlecase}}{{#camelcase}}{{flowId}}{{/camelcase}}{{/titlecase}} flow.
+    */
 @get:Path("{{flowPath}}")
 val {{#camelcase}}{{flowId}}{{/camelcase}}: {{#titlecase}}{{#camelcase}}{{flowId}}{{/camelcase}}{{/titlecase}}
 
-/**
-* {{classname}} {{#titlecase}}{{#camelcase}}{{flowId}}{{/camelcase}}{{/titlecase}} flow.
-*/
+    /**
+    * {{classname}} {{#titlecase}}{{#camelcase}}{{flowId}}{{/camelcase}}{{/titlecase}} flow.
+    */
 interface {{#titlecase}}{{#camelcase}}{{flowId}}{{/camelcase}}{{/titlecase}} : Flow {
 
-/**
-* Start the {{#titlecase}}{{#camelcase}}{{flowId}}{{/camelcase}}{{/titlecase}} flow.
-*/
+        /**
+        * Start the {{#titlecase}}{{#camelcase}}{{flowId}}{{/camelcase}}{{/titlecase}} flow.
+        */
 @POST
 @Produces("{{produces}}")
 @Consumes("{{consumes}}")
@@ -52,14 +52,14 @@ fun start(parameters: {{inputClass}}): {{outputClass}}
 {{/flows}}
 }
 
-/**
-* {{classname}} CorDapp lifecycle methods.
-*/
+    /**
+    * {{classname}} CorDapp lifecycle methods.
+    */
 companion object : LifeCycle<{{classname}}> {
 
-/**
-* Loads an existing {{classname}} CorDapp instance.
-*/
+        /**
+        * Loads an existing {{classname}} CorDapp instance.
+        */
 @JvmStatic
 override fun load(corda: Corda) = ProxyBuilder.build({{classname}}::class.java, corda.service)
 }
