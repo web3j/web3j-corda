@@ -9,7 +9,7 @@ The following functionality of web3j-corda is exposed from the command line:
 
 ### Using web3j-corda new command
 
-To generate a template CorDapp project with the client wrappers: 
+To generate a template CorDapp project along with the client wrappers: 
 
 ``` bash
 web3j-corda new -n=<corDappName> -o=<outputDir> -p=<packageName>

@@ -3,10 +3,11 @@ site_name: Web3j Corda
 nav:
   - Quickstart : quickstart.md
   - Getting Started : getting_started.md
-  - Modules : modules.md
-  - Client : client.md
   - Connect to Corda Node : connecting_to_node.md
+  - Client Wrappers : client.md
+  - Using the wrappers : usage.md
   - Command Line Tools: command_line_tools.md
+  - Modules : modules.md
 
 # Configuration
 theme:
