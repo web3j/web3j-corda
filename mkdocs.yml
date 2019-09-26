@@ -4,6 +4,7 @@ nav:
   - Quickstart : quickstart.md
   - Getting Started : getting_started.md
   - Connect to Corda Node : connecting_to_node.md
+  - Generating Client Wrappers : generating.md
   - Client Wrappers : client.md
   - Using the wrappers : usage.md
   - Command Line Tools: command_line_tools.md
