@@ -12,7 +12,6 @@
  */
 package org.web3j.corda.console
 
-import org.apache.commons.io.FileUtils
 import org.gradle.tooling.GradleConnector
 import org.web3j.corda.codegen.CorDappGenerator
 import picocli.CommandLine.Command
@@ -82,10 +81,9 @@ class NewCommand : CommonCommand() {
 
         File("${outputDir.toURI().path}/gradlew").setExecutable(true)
 
-        FileUtils.copyDirectory(
-            File(javaClass.classLoader.getResource("gradle")?.toURI()!!.path),
-            outputDir.resolve("gradle")
-        )
+        val gradleFolder = File("$outputDir/gradle/wrapper").apply { mkdirs() }
+        copyResource("gradle-wrapper.jar", gradleFolder)
+        copyResource("gradle-wrapper.properties", gradleFolder)
         copyResource("README.md", outputDir)
     }
 
