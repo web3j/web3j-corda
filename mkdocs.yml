@@ -4,6 +4,7 @@ nav:
   - Quickstart : quickstart.md
   - Getting Started : getting_started.md
   - Modules : modules.md
+  - Client : client.md
   - Connect to Corda Node : connecting_to_node.md
   - Command Line Tools: command_line_tools.md
 
