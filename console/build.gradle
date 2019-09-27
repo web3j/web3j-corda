@@ -72,14 +72,10 @@ task generateCorDappWrappers(type: JavaExec, group: 'corda') {
 }
 
 compileIntegrationTestJava {
-    mustRunAfter 'generateCorDappWrappers'
+    mustRunAfter 'compileIntegrationTestKotlin'
 }
 
 compileIntegrationTestKotlin {
     kotlinOptions.jvmTarget = '1.8'
-    mustRunAfter 'generateCorDappWrappers'
-}
-
-integrationTest {
     dependsOn 'generateCorDappWrappers'
 }
