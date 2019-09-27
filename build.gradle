@@ -96,6 +96,7 @@ subprojects {
     }
 
     testlogger {
+        showSimpleNames true
         showStandardStreams true
     }
 
