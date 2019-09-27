@@ -40,7 +40,7 @@ class CorDappClientGenerator(
         val result = parser.readContents(openApiDef, listOf(), parseOptions).apply {
             openAPI.paths.entries.removeIf {
                 !it.key.startsWith("/cordapps") || it.key.endsWith("/flows")
-            }   
+            }
         }
 
         opts(
