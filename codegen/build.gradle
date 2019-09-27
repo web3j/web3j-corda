@@ -3,7 +3,6 @@ dependencies {
     api "jakarta.ws.rs:jakarta.ws.rs-api:${versions.jaxRs}"
 
     api("org.openapitools:openapi-generator:${versions.openApiGenerator}") {
-        exclude group: 'com.fasterxml.jackson.datatype'
         exclude group: 'com.github.jknack'
         exclude group: 'javax.activation'
         exclude group: 'javax.validation'

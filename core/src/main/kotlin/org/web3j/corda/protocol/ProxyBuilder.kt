@@ -17,9 +17,7 @@ import org.web3j.corda.api.AuthenticationFilter
 
 object ProxyBuilder {
 
-    fun <T> build(type: Class<T>, service: CordaService) = build(type, service, null)
-
-    fun <T> build(type: Class<T>, service: CordaService, token: String?): T {
+    fun <T> build(type: Class<T>, service: CordaService, token: String? = null): T {
         require(type.isInterface) { "Proxy class must be an interface" }
 
         val target = service.client.target(service.uri)

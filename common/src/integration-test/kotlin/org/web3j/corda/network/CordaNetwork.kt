@@ -18,12 +18,13 @@ import org.junit.platform.commons.logging.LoggerFactory
 import org.testcontainers.containers.BindMode
 import org.testcontainers.containers.Network
 import org.testcontainers.containers.wait.strategy.Wait
-import org.web3j.corda.model.LoginRequest
-import org.web3j.corda.model.NotaryType
+import org.web3j.corda.networkmap.LoginRequest
+import org.web3j.corda.networkmap.NotaryType
 import org.web3j.corda.protocol.CordaService
 import org.web3j.corda.protocol.NetworkMap
 import org.web3j.corda.testcontainers.KGenericContainer
 import org.web3j.corda.util.NonNullMap
+import org.web3j.corda.util.OpenApiVersion.v3_0_1
 import org.web3j.corda.util.isMac
 import org.web3j.corda.util.toNonNullMap
 import java.io.File
@@ -41,6 +42,11 @@ import kotlin.streams.toList
  * Corda network DSK for integration tests web3j CorDapp wrappers.
  */
 class CordaNetwork private constructor() {
+
+    /**
+     * Open API version.
+     */
+    var version = v3_0_1
 
     /**
      * CorDapp base directory.
@@ -81,7 +87,7 @@ class CordaNetwork private constructor() {
                 it.withName(NETWORK_MAP_ALIAS)
             }.withNetwork(network)
             .withNetworkAliases(NETWORK_MAP_ALIAS)
-            .withEnv(mapOf(Pair("NMS_STORAGE_TYPE", "file")))
+            .withEnv(mapOf("NMS_STORAGE_TYPE" to "file"))
             .waitingFor(Wait.forHttp("").forPort(8080))
             .apply { start() }
     }

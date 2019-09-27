@@ -12,8 +12,7 @@
  */
 package org.web3j.corda.api
 
-import org.web3j.corda.model.CordaX500Name
-import org.web3j.corda.model.SimpleNodeInfo
+import org.web3j.braid.services.SimpleNodeInfo
 import javax.ws.rs.GET
 import javax.ws.rs.Path
 import javax.ws.rs.QueryParam
@@ -49,6 +48,6 @@ interface NodeResource {
     @GET
     fun findByX500Name(
         @QueryParam("x500-name")
-        x500Name: CordaX500Name
+        x500Name: String
     ): List<SimpleNodeInfo>
 }

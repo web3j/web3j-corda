@@ -56,10 +56,7 @@ sourceSets {
     integrationTest {
         kotlin {
             srcDir {
-                "$buildDir/generated/source/web3j-corda/src/main/kotlin"
-            }
-            srcDir {
-                "$buildDir/generated/source/web3j-corda/src/test/kotlin"
+                "$buildDir/generated/src/main/kotlin"
             }
         }
     }
@@ -69,9 +66,9 @@ task generateCorDappWrappers(type: JavaExec, group: 'corda') {
     classpath = sourceSets.main.runtimeClasspath
     main = 'org.web3j.corda.console.CordaCommandMain'
 
-    args 'generate', '--package', 'org.web3j.corda.obligation',
+    args 'generate', '--package', 'org.web3j.corda',
             '--cordappsDir', "$projectDir/src/test/resources/cordapps",
-            '--outputDir', "$buildDir/generated/source/web3j-corda"
+            '--outputDir', "$buildDir/generated"
 }
 
 compileIntegrationTestJava {
