@@ -46,8 +46,8 @@ class CordaService(
     override fun close() = client.close()
 
     companion object {
-        const val DEFAULT_READ_TIMEOUT: Int = 5000
-        const val DEFAULT_CONNECT_TIMEOUT: Int = 5000
+        const val DEFAULT_READ_TIMEOUT: Int = 30000
+        const val DEFAULT_CONNECT_TIMEOUT: Int = 30000
 
         init {
             SLF4JBridgeHandler.removeHandlersForRootLogger()
