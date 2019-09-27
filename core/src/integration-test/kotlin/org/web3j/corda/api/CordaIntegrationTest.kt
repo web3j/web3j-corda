@@ -21,9 +21,9 @@ import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import org.testcontainers.junit.jupiter.Testcontainers
-import org.web3j.corda.model.NetworkHostAndPort
-import org.web3j.corda.model.Party
-import org.web3j.corda.model.SimpleNodeInfo
+import org.web3j.braid.services.SimpleNodeInfo
+import org.web3j.corda.model.core.identity.Party
+import org.web3j.corda.model.core.utilities.NetworkHostAndPort
 import org.web3j.corda.protocol.Corda
 import org.web3j.corda.protocol.CordaService
 
