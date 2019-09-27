@@ -1,0 +1,10 @@
+build:
+  image: openjdk:8-jdk-alpine
+  stage: build
+  script:
+    - ./gradlew build #integrationTest
+  artifacts:
+    reports:
+      junit:
+        - build/test-results/test/TEST-*.xml
+        - build/test-results/integrationTest/TEST-*.xml
