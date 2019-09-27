@@ -12,27 +12,27 @@
  */
 package org.web3j.corda.codegen
 
-import io.github.classgraph.ClassGraph
-import io.github.classgraph.ClassInfoList
 import io.swagger.v3.oas.models.Operation
 import org.openapitools.codegen.CodegenConstants
+import org.openapitools.codegen.CodegenConstants.API_PACKAGE
+import org.openapitools.codegen.CodegenModel
 import org.openapitools.codegen.CodegenOperation
 import org.openapitools.codegen.languages.AbstractKotlinCodegen
 import org.openapitools.codegen.utils.StringUtils.camelize
 import java.io.File
 import java.time.OffsetDateTime
-import java.time.ZoneOffset
+import java.time.ZoneOffset.UTC
 import java.time.format.DateTimeFormatter.ISO_DATE_TIME
 
 class CorDappClientCodegen(
     packageName: String,
-    outputDir: File
+    outputDir: File,
+    typeMapping: Map<String, String>
 ) : AbstractKotlinCodegen() {
-
-    private val cordaMapping = mutableMapOf<String, String>()
 
     init {
         this.packageName = packageName
+        this.typeMapping.putAll(typeMapping)
 
         // cliOptions default redefinition need to be updated
         updateOption(CodegenConstants.ARTIFACT_ID, artifactId)
@@ -44,7 +44,6 @@ class CorDappClientCodegen(
         apiTestTemplateFiles["cordapp_client_test.mustache"] = ".kt"
         templateDir = TEMPLATE_DIR
         embeddedTemplateDir = TEMPLATE_DIR
-        modelPackage = "$packageName.model"
         allowUnicodeIdentifiers = true
     }
 
@@ -54,22 +53,39 @@ class CorDappClientCodegen(
         additionalProperties["java8"] = true
         CordaGeneratorUtils.addLambdas(additionalProperties)
 
+        // Kotlin native types
         typeMapping["array"] = "kotlin.collections.List"
         typeMapping["list"] = "kotlin.collections.List"
+    }
 
-        // Add Corda type mappings
-        CORDA_SERIALIZABLES.forEach {
-            cordaMapping[it.simpleName] = it.name
+    /**
+     * Force the order of imports if specified in the given mapping
+     */
+    override fun toModelImport(name: String): String {
+        return when {
+            typeMapping.containsKey(name) -> typeMapping[name]!!
+            needToImport(name) -> super.toModelImport(name)
+            modelPackage().isEmpty() -> name
+            else -> "${modelPackage()}.$name"
         }
     }
 
-    override fun toModelImport(name: String): String? {
-        return when {
-            modelPackage().isEmpty() -> name
-            cordaMapping.containsKey(name) -> cordaMapping[name]
-            needToImport(name) -> return super.toModelImport(name)
-            else -> "$modelPackage.$name"
+    /**
+     * Update the model name to incorporate the package name when specified
+     */
+    override fun toModelName(name: String): String {
+        return if (importMapping.containsKey(name)) {
+            importMapping[name]!!
+        } else {
+            name
         }
+    }
+
+    /**
+     * Create folder structure according to the given package structure
+     */
+    override fun toModelFilename(name: String): String {
+        return name.replace(".", "/")
     }
 
     override fun getOrGenerateOperationId(
@@ -104,9 +120,22 @@ class CorDappClientCodegen(
         objs.values.forEach {
             @Suppress("UNCHECKED_CAST")
             val modelContext = it as MutableMap<String, Any>
-            modelContext["currentDate"] = OffsetDateTime.now(ZoneOffset.UTC).format(ISO_DATE_TIME)
+            updateImportsPackage(modelContext)
+            updateCommonContext(modelContext)
         }
-        return super.postProcessAllModels(objs)
+        return super.postProcessAllModels(updateModelsPackage(objs))
+    }
+
+    override fun postProcessModels(objs: MutableMap<String, Any>): MutableMap<String, Any> {
+        @Suppress("UNCHECKED_CAST")
+        val nameProp = (((objs["models"] as MutableList<Any>)
+            .first() as MutableMap<String, Any>)["model"] as CodegenModel)::name
+
+        splitPackageFromClass(nameProp.get()).apply {
+            objs["package"] = first ?: packageName
+            nameProp.set(second)
+        }
+        return super.postProcessModels(objs)
     }
 
     override fun postProcessOperationsWithModels(
@@ -118,7 +147,7 @@ class CorDappClientCodegen(
 
         ((objs["operations"] as Map<*, *>)["pathPrefix"] as String).run {
             apiPackage = buildApiPackage(packageName, this)
-            additionalProperties.put(CodegenConstants.API_PACKAGE, apiPackage)
+            additionalProperties[API_PACKAGE] = apiPackage
         }
         objs["flows"] = flows.map {
             mutableMapOf<String, String>(
@@ -139,17 +168,62 @@ class CorDappClientCodegen(
                 }
             }
         }
-        objs["currentDate"] = OffsetDateTime.now(ZoneOffset.UTC).format(ISO_DATE_TIME)
+        updateCommonContext(objs)
         return super.postProcessOperationsWithModels(objs, allModels)
     }
 
-    companion object {
-        const val TEMPLATE_DIR = "cordapp/client"
+    /**
+     * Prepend the package name to the imports for schemas with an empty package.
+     */
+    @Suppress("UNCHECKED_CAST")
+    private fun updateImportsPackage(modelContext: MutableMap<String, Any>) {
+        (modelContext["imports"] as MutableList<Any>).forEach {
+            val import = it as MutableMap<String, String>
+            if (!import["import"]!!.contains(".") && packageName.isNotBlank()) {
+                import.replace("import", "$packageName.${import["import"]}")
+            }
+        }
+    }
 
-        // Load model class dynamically to avoid re-generation
-        internal val CORDA_SERIALIZABLES: ClassInfoList by lazy {
-            ClassGraph().enableClassInfo().scan().allClasses.filter {
-                it.packageName == "org.web3j.corda.model"
+    /**
+     * Prepend the package name to all schemas with an empty package.
+     */
+    private fun updateModelsPackage(objs: MutableMap<String, Any>): MutableMap<String, Any> {
+        return objs.map {
+            if (!it.key.contains(".") && packageName.isNotBlank()) {
+                "$packageName.${it.key}" to it.value
+            } else {
+                it.key to it.value
+            }
+        }.toMap().toMutableMap()
+    }
+
+    /**
+     * Add required context variables to any context, model or API.
+     */
+    private fun updateCommonContext(context: MutableMap<String, Any>) {
+        context["currentDate"] = OffsetDateTime.now(UTC).format(ISO_DATE_TIME)
+        context["generator"] = CorDappClientGenerator::class.qualifiedName!!
+    }
+
+    companion object {
+
+        /**
+         * Directory for Mustache tamplates.
+         */
+        private const val TEMPLATE_DIR = "cordapp/client"
+
+        /**
+         * Separate the package name and class name
+         */
+        private fun splitPackageFromClass(name: String): Pair<String?, String> {
+            val lastDotIndex = name.lastIndexOf('.')
+            return if (0 < lastDotIndex) {
+                val packageName = name.substring(0 until lastDotIndex)
+                val simpleName = name.substring(lastDotIndex + 1)
+                packageName to simpleName
+            } else {
+                null to name
             }
         }
 
@@ -166,7 +240,7 @@ class CorDappClientCodegen(
         private fun buildFlowId(path: String) = path.split("/".toRegex())[4]
             .split("\\.".toRegex())
             .last()
-            .replace("$", "")
+            .replace("$", "_")
 
         private fun buildFlowPath(path: String) = path.split("/".toRegex())[4]
             .replace("$", "\\$")

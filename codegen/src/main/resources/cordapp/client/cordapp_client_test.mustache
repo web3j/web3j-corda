@@ -3,22 +3,12 @@ package {{apiPackage}}
 {{#imports}}import {{import}}
 {{/imports}}
 
-import org.junit.jupiter.api.AfterAll
-import org.junit.jupiter.api.Assertions
-import org.junit.jupiter.api.BeforeAll
+import javax.annotation.Generated
 import org.junit.jupiter.api.Test
 import org.web3j.corda.network.CordaNetwork
-import org.web3j.corda.network.network
-import org.web3j.corda.network.nodes
-import org.web3j.corda.network.node
-import org.web3j.corda.protocol.Corda
-import org.web3j.corda.protocol.CordaService
-import org.web3j.corda.testcontainers.DockerBasedIntegrationTest
-import org.web3j.corda.util.convert
-import javax.annotation.Generated
 
 @Generated(
-value = ["org.web3j.corda.codegen.CorDappClientGenerator"],
+value = ["{{generator}}"],
 date = "{{currentDate}}"
 )
 class {{classname}}Test {
@@ -27,7 +17,7 @@ class {{classname}}Test {
 lateinit var network: CordaNetwork
 
 {{#operations}}
-{{#flows}}
+    {{#flows}}
 lateinit var {{#camelcase}}{{inputClass}}{{/camelcase}}: {{inputClass}}
 
 @Test
@@ -35,10 +25,8 @@ fun `start the {{#titlecase}}{{#camelcase}}{{flowId}}{{/camelcase}}{{/titlecase}
 
 // TODO Initialize {{#camelcase}}{{inputClass}}{{/camelcase}}
 
-{{classname}}.load(network.nodes["TODO"].api)
-.flows.{{#camelcase}}{{flowId}}{{/camelcase}}.start({{#camelcase}}{{inputClass}}{{/camelcase}})
-
-// TODO Add assertions 
+    {{classname}}.load(network.nodes["TODO"].api).flows.{{#camelcase}}{{flowId}}{{/camelcase}}.start({{#camelcase}}{{inputClass}}{{/camelcase}})
+// TODO Add assertions
 }
 {{/flows}}
 {{/operations}}

@@ -25,7 +25,7 @@ import java.nio.file.StandardCopyOption
  * Custom CLI interpreter to generate a new sample CordApp and web3j client.
  */
 @Command(name = "new")
-class NewCommand : CommonCommand() {
+class NewCommand : BaseCommand() {
 
     @Option(
         names = ["-n", "--name"],
@@ -49,15 +49,13 @@ class NewCommand : CommonCommand() {
 
         // Generate the CorDapp client classes
         GenerateCommand().apply {
-            cordaResource = GenerateCommand.CordaResource
-            cordaResource.corDappsDir = File("${this@NewCommand.outputDir}/build/libs/")
-//            cordaResource.openApiUrl = // FIXME - change to path of jar files
-//                javaClass.classLoader.getResource("swagger.json")!!
+            cordaResource = CordaResource().apply {
+                corDappsDir = File("${this@NewCommand.outputDir}/build/libs/")
+            }
             packageName = this@NewCommand.packageName
             outputDir = File("${this@NewCommand.outputDir}/clients")
             run()
         }
-
         copyResource("clients/build.gradle", outputDir)
     }
 

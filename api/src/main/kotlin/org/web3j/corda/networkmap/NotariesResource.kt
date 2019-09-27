@@ -12,7 +12,6 @@
  */
 package org.web3j.corda.networkmap
 
-import org.web3j.corda.model.NotaryType
 import javax.ws.rs.Consumes
 import javax.ws.rs.DELETE
 import javax.ws.rs.POST

@@ -21,7 +21,7 @@ import java.net.ServerSocket
 import java.time.Duration
 import java.util.concurrent.CompletableFuture.runAsync
 
-class CordaNode internal constructor(network: CordaNetwork) {
+class CordaNode internal constructor(private val network: CordaNetwork) {
 
     lateinit var name: String
     lateinit var location: String
@@ -51,9 +51,9 @@ class CordaNode internal constructor(network: CordaNetwork) {
     fun stop() = container.stop()
 
     internal fun validate() {
-        require(!name.isBlank()) { "Field 'name' cannot be blank" }
-        require(!location.isBlank()) { "Field 'location' cannot be blank" }
-        require(!country.isBlank()) { "Field 'country' cannot be blank" }
+        require(name.isNotBlank()) { "Field 'name' cannot be blank" }
+        require(location.isNotBlank()) { "Field 'location' cannot be blank" }
+        require(country.isNotBlank()) { "Field 'country' cannot be blank" }
         require(p2pPort.isPort()) { "Field 'p2pPort' is not a number between $portRange" }
         require(rpcPort.isPort()) { "Field 'rpcPort' is not a number between $portRange" }
         require(adminPort.isPort()) { "Field 'adminPort' is not a number between $portRange" }
@@ -64,6 +64,7 @@ class CordaNode internal constructor(network: CordaNetwork) {
             port = apiPort,
             userName = "user1",
             password = "test",
+            openApiVersion = network.version.toInt(),
             nodeAddress = NetworkHostAndPort(
                 "localhost",
                 container.getMappedPort(rpcPort)

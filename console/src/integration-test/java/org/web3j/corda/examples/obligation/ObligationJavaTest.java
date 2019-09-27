@@ -12,17 +12,20 @@
  */
 package org.web3j.corda.examples.obligation;
 
+import java.io.File;
+import java.math.BigDecimal;
+
+import generated.net.corda.examples.obligation.flows.IssueObligation_InitiatorPayload;
 import org.junit.jupiter.api.Test;
 import org.testcontainers.junit.jupiter.Testcontainers;
+
 import org.web3j.corda.model.AmountCurrency;
-import org.web3j.corda.model.Party;
-import org.web3j.corda.model.SignedTransaction;
+import org.web3j.corda.model.core.identity.AbstractParty;
+import org.web3j.corda.model.core.identity.Party;
+import org.web3j.corda.model.core.transactions.SignedTransaction;
 import org.web3j.corda.network.CordaNetwork;
 import org.web3j.corda.obligation.api.Obligation;
-import org.web3j.corda.obligation.model.IssueObligationInitiatorPayload;
 import org.web3j.corda.protocol.Corda;
-
-import java.io.File;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.web3j.corda.network.CordaNetwork.network;
@@ -67,16 +70,16 @@ public class ObligationJavaTest {
         final Party party =
                 corda.getNetwork().getNodes().findAll().get(2).getLegalIdentities().get(0);
 
-        final AmountCurrency amount = new AmountCurrency(100, 2, "GBP");
-        final IssueObligationInitiatorPayload parameters =
-                new IssueObligationInitiatorPayload(amount, party, false);
+        final AmountCurrency amount = new AmountCurrency(100, BigDecimal.ONE, "GBP");
+        final IssueObligation_InitiatorPayload parameters =
+                new IssueObligation_InitiatorPayload(amount, party, false);
 
         final Obligation.FlowResource.IssueObligationInitiator issue =
                 Obligation.load(corda).getFlows().getIssueObligationInitiator();
 
         final SignedTransaction signedTx = issue.start(parameters);
 
-        final Party actualParty =
+        final AbstractParty actualParty =
                 signedTx.getCoreTransaction()
                         .getOutputs()
                         .get(0)

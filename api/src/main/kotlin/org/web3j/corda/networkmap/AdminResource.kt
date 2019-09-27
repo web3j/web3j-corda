@@ -12,7 +12,6 @@
  */
 package org.web3j.corda.networkmap
 
-import org.web3j.corda.model.LoginRequest
 import javax.ws.rs.Consumes
 import javax.ws.rs.POST
 import javax.ws.rs.Path

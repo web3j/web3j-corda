@@ -5,10 +5,10 @@
 {{/vars}}
 */
 @Generated(
-value = ["org.web3j.corda.codegen.CorDappClientGenerator"],
+value = ["{{generator}}"],
 date = "{{currentDate}}"
 )
-data class {{classname}} (
+data class {{name}} (
 {{#requiredVars}}
     {{>data_class_req_var}}{{^-last}},
 {{/-last}}{{/requiredVars}}{{#hasRequired}}{{#hasOptional}},

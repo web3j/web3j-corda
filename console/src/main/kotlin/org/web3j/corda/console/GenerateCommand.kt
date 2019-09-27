@@ -16,15 +16,15 @@ import io.bluebank.braid.corda.server.Braid
 import io.bluebank.braid.corda.server.BraidDocsMain
 import io.bluebank.braid.core.utils.tryWithClassLoader
 import org.web3j.corda.codegen.CorDappClientGenerator
+import org.web3j.corda.util.OpenApiVersion
+import org.web3j.corda.util.OpenApiVersion.v3_0_1
 import picocli.CommandLine.ArgGroup
 import picocli.CommandLine.Command
 import picocli.CommandLine.ITypeConverter
 import picocli.CommandLine.Option
-import java.io.File
-import java.net.MalformedURLException
 import java.net.URL
 import java.net.URLClassLoader
-import java.nio.charset.StandardCharsets
+import java.nio.charset.StandardCharsets.UTF_8
 import java.nio.file.Files
 import kotlin.streams.toList
 
@@ -32,36 +32,24 @@ import kotlin.streams.toList
  * Custom CLI interpreter to generate a new template web3j wrappers for given CordApp.
  */
 @Command(name = "generate")
-class GenerateCommand : CommonCommand() {
+class GenerateCommand : BaseCommand() {
 
     @ArgGroup(exclusive = true, multiplicity = "1")
     lateinit var cordaResource: CordaResource
 
-    object CordaResource {
-
-        @Option(
-            names = ["-u", "--url"],
-            description = ["Corda node OpenAPI URL"],
-            converter = [URLConverter::class],
-            required = true
-        )
-        lateinit var openApiUrl: URL
-
-        @Option(
-            names = ["-d", "--cordappsDir"],
-            description = ["CorDapps node directory"],
-            required = true
-        )
-        lateinit var corDappsDir: File
-
-        fun isCorDappsDirInitialized(): Boolean = ::corDappsDir.isInitialized
-    }
+    @Option(
+        names = ["-v", "--version"],
+        description = ["OpenAPI version: \${COMPLETION-CANDIDATES} (default \${DEFAULT-VALUE})"],
+        converter = [OpenApiVersionConverter::class],
+        required = false
+    )
+    var openApiVersion = v3_0_1
 
     override fun run() {
         if (cordaResource.isCorDappsDirInitialized()) {
-            generateOpenApiDef(cordaResource.corDappsDir)
+            generateOpenApiDef()
         } else {
-            fetchOpenApiDef(cordaResource.openApiUrl.toURI().toURL())
+            fetchOpenApiDef()
         }.apply {
             CorDappClientGenerator(
                 packageName,
@@ -72,38 +60,30 @@ class GenerateCommand : CommonCommand() {
         }
     }
 
-    private class URLConverter : ITypeConverter<URL> {
-        override fun convert(value: String): URL {
-            return try {
-                URL(value)
-            } catch (e: MalformedURLException) {
-                URL("file:$value")
+    private fun fetchOpenApiDef(): String {
+        return cordaResource.openApiUrl.toURI().toURL().run {
+            if (!toExternalForm().endsWith(".json")) {
+                URL("$this/swagger.json")
+            } else {
+                this
+            }
+        }.openStream().readBytes().toString(UTF_8)
+    }
+
+    private fun generateOpenApiDef(): String {
+        return Files.list(cordaResource.corDappsDir.toPath()).toList().map {
+            it.toFile().toURI().toURL()
+        }.run {
+            // we call so as to initialise model converters etc
+            // before replacing the context class loader
+            Braid.init()
+            tryWithClassLoader(URLClassLoader(toTypedArray())) {
+                BraidDocsMain().swaggerText(openApiVersion.toInt())
             }
         }
     }
 
-    companion object {
-        private fun fetchOpenApiDef(url: URL): String {
-            return url.run {
-                if (!toExternalForm().endsWith(".json")) {
-                    URL("$url/swagger.json")
-                } else {
-                    this
-                }
-            }.openStream().readBytes().toString(StandardCharsets.UTF_8)
-        }
-
-        private fun generateOpenApiDef(file: File): String {
-            return Files.list(file.toPath()).toList().map {
-                it.toFile().toURI().toURL()
-            }.run {
-                // we call so as to initialise model converters etc
-                // before replacing the context class loader
-                Braid.init()
-                tryWithClassLoader(URLClassLoader(toTypedArray())) {
-                    BraidDocsMain().swaggerText(2)
-                }
-            }
-        }
+    private class OpenApiVersionConverter : ITypeConverter<OpenApiVersion> {
+        override fun convert(value: String) = OpenApiVersion.fromVersion(value)
     }
 }

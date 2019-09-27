@@ -12,7 +12,6 @@
  */
 package org.web3j.corda.api
 
-import org.web3j.corda.model.FlowId
 import javax.ws.rs.GET
 import javax.ws.rs.Path
 import javax.ws.rs.PathParam
@@ -24,11 +23,11 @@ interface FlowResource {
      * `["net.corda.core.flows.ContractUpgradeFlow$Authorise"]`
      */
     @GET
-    fun findAll(): List<FlowId>
+    fun findAll(): List<String>
 
     @Path("{flowId}")
     fun findById(
         @PathParam("flowId")
-        flowId: FlowId
+        flowId: String
     ): StartableFlow
 }
