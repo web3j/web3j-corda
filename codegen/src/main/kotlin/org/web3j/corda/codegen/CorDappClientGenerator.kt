@@ -42,7 +42,7 @@ class CorDappClientGenerator(
         // Filter common API endpoints
         val result = parser.readContents(openApiDef, listOf(), parseOptions).apply {
             openAPI.paths.entries.removeIf {
-                !it.key.startsWith("/cordapps") || it.key.endsWith("/flows")
+                it.key == "/cordapps" || !it.key.startsWith("/cordapps") || it.key.endsWith("/flows")
             }
         }
         configureTypeMappings()
@@ -96,8 +96,7 @@ class CorDappClientGenerator(
 
     private fun configureGeneratorProperties(result: SwaggerParseResult) {
         val models = result.openAPI.components.schemas.keys.filter {
-            !typeMapping.keys.contains(it) && // FIXME This shouldn't be required!
-                    !it.startsWith("net.corda.core.utilities.NonEmptySet")
+            !typeMapping.keys.contains(it)
         }
 
         // Specify the list of model classes to generate
