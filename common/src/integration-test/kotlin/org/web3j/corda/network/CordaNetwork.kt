@@ -66,14 +66,19 @@ class CordaNetwork private constructor() {
      * This is used to start the Braid server with all required endpoints.
      */
     internal val additionalPaths: List<String> by lazy {
-        connection.getModel(IdeaProject::class.java).modules.flatMap {
-            it.dependencies
-        }.map {
-            it as IdeaSingleEntryLibraryDependency
-        }.filter {
-            it.gradleModuleVersion.group.startsWith("net.corda")
-        }.map {
-            it.file.absolutePath
+        if (isGradleProject()) {
+            connection.getModel(IdeaProject::class.java).modules.flatMap {
+                it.dependencies
+            }.map {
+                it as IdeaSingleEntryLibraryDependency
+            }.filter {
+                it.gradleModuleVersion.group.startsWith("net.corda")
+            }.map {
+                it.file.absolutePath
+            }
+        } else {
+            // Not a valid Gradle project
+            listOf<String>()
         }
     }
 
@@ -195,6 +200,10 @@ class CordaNetwork private constructor() {
             }
     }
 
+    private fun isGradleProject(): Boolean {
+        return File(baseDir, "build.gradle").exists()
+    }
+
     private fun createNodeConfFiles(node: CordaNode, file: File) {
         PrintWriter(OutputStreamWriter(FileOutputStream(file))).use {
             node.apply {
@@ -265,7 +274,9 @@ class CordaNetwork private constructor() {
         fun networkJava(networkBlock: Consumer<CordaNetwork>): CordaNetwork {
             return CordaNetwork().also {
                 networkBlock.accept(it)
-                it.createJarUsingGradle()
+                if (it.isGradleProject()) {
+                    it.createJarUsingGradle()
+                }
             }
         }
     }
