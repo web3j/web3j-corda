@@ -96,7 +96,8 @@ class CorDappClientGenerator(
 
     private fun configureGeneratorProperties(result: SwaggerParseResult) {
         val models = result.openAPI.components.schemas.keys.filter {
-            !typeMapping.keys.contains(it)
+            !typeMapping.keys.contains(it) && // FIXME This shouldn't be required!
+                    !it.startsWith("net.corda.core.utilities.NonEmptySet")
         }
 
         // Specify the list of model classes to generate
