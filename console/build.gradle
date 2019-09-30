@@ -59,6 +59,11 @@ sourceSets {
                 "$buildDir/generated/src/main/kotlin"
             }
         }
+        resources {
+            srcDir {
+                "$buildDir/resources/test"
+            }
+        }
     }
 }
 
@@ -78,4 +83,8 @@ compileIntegrationTestJava {
 compileIntegrationTestKotlin {
     kotlinOptions.jvmTarget = '1.8'
     dependsOn 'generateCorDappWrappers'
+}
+
+integrationTest {
+    dependsOn 'processTestResources'
 }
