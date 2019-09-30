@@ -106,7 +106,7 @@ class CordaNetwork private constructor() {
             .forProjectDirectory(baseDir)
             .connect()
     }
-    
+
     /**
      * Cordite network map Docker container.
      */
