@@ -12,7 +12,6 @@
  */
 package org.web3j.corda.console
 
-import io.bluebank.braid.corda.server.Braid
 import io.bluebank.braid.corda.server.BraidDocsMain
 import io.bluebank.braid.core.utils.tryWithClassLoader
 import org.web3j.corda.codegen.CorDappClientGenerator
@@ -74,9 +73,6 @@ class GenerateCommand : BaseCommand() {
         return Files.list(cordaResource.corDappsDir.toPath()).toList().map {
             it.toFile().toURI().toURL()
         }.run {
-            // we call so as to initialise model converters etc
-            // before replacing the context class loader
-            Braid.init()
             tryWithClassLoader(URLClassLoader(toTypedArray())) {
                 BraidDocsMain().swaggerText(openApiVersion.toInt())
             }
