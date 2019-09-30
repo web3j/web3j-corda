@@ -14,6 +14,9 @@ package org.web3j.corda.network
 
 import com.samskivert.mustache.Mustache
 import org.gradle.tooling.GradleConnector
+import org.gradle.tooling.ProjectConnection
+import org.gradle.tooling.model.idea.IdeaProject
+import org.gradle.tooling.model.idea.IdeaSingleEntryLibraryDependency
 import org.junit.platform.commons.logging.LoggerFactory
 import org.testcontainers.containers.BindMode
 import org.testcontainers.containers.Network
@@ -59,7 +62,23 @@ class CordaNetwork private constructor() {
     lateinit var nodes: NonNullMap<String, CordaNode>
 
     /**
-     * The internal DOcker network.
+     * Dependencies of the [baseDir] CorDapp containing CorDapps JARs.
+     * This is used to start the Braid server with all required endpoints.
+     */
+    internal val additionalPaths: List<String> by lazy {
+        connection.getModel(IdeaProject::class.java).modules.flatMap {
+            it.dependencies
+        }.map {
+            it as IdeaSingleEntryLibraryDependency
+        }.filter {
+            it.gradleModuleVersion.group.startsWith("net.corda")
+        }.map {
+            it.file.absolutePath
+        }
+    }
+
+    /**
+     * The internal Docker network.
      */
     private val network = Network.newNetwork()
 
@@ -77,6 +96,17 @@ class CordaNetwork private constructor() {
             Mustache.compiler().compile(InputStreamReader(this))
         } ?: throw IllegalStateException("Template not found: node_conf.mustache")
 
+    /**
+     * Gradle connection to the CorDapp located in [baseDir].
+     */
+    private val connection: ProjectConnection by lazy {
+        require(this::baseDir.isInitialized)
+        GradleConnector.newConnector()
+            .useBuildDistribution()
+            .forProjectDirectory(baseDir)
+            .connect()
+    }
+    
     /**
      * Cordite network map Docker container.
      */
@@ -105,12 +135,10 @@ class CordaNetwork private constructor() {
         }
     }
 
+    /**
+     * Build the CorDapp located in [baseDir] using the `jar` task.
+     */
     private fun createJarUsingGradle() {
-        val connection = GradleConnector.newConnector()
-            .useBuildDistribution()
-            .forProjectDirectory(baseDir)
-            .connect()
-
         // Run the jar task to create the CorDapp JAR
         connection.newBuild().forTasks("jar").run()
 
@@ -120,6 +148,9 @@ class CordaNetwork private constructor() {
         }
     }
 
+    /**
+     * Create a Docker container for the given Corda node.
+     */
     internal fun createContainer(node: CordaNode): KGenericContainer {
 
         val nodeDir = File(cordappsDir, node.name).apply { mkdirs() }
