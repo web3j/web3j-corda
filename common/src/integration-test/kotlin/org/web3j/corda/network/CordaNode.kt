@@ -12,8 +12,7 @@
  */
 package org.web3j.corda.network
 
-import io.bluebank.braid.corda.server.Braid
-import net.corda.core.utilities.NetworkHostAndPort
+import io.bluebank.braid.corda.server.BraidMain
 import org.web3j.corda.protocol.Corda
 import org.web3j.corda.protocol.CordaService
 import org.web3j.corda.testcontainers.KGenericContainer
@@ -60,17 +59,16 @@ class CordaNode internal constructor(private val network: CordaNetwork) {
     }
 
     private fun startServer() = runAsync {
-        Braid(
-            port = apiPort,
-            userName = "user1",
-            password = "test",
-            openApiVersion = network.version.toInt(),
-            nodeAddress = NetworkHostAndPort(
-                "localhost",
-                container.getMappedPort(rpcPort)
-            )
-        ).startServer().apply {
+        BraidMain().start(
+            "localhost:${container.getMappedPort(rpcPort)}",
+            "user1",
+            "test",
+            apiPort,
+            network.version.toInt(),
+            listOf()
+        ).apply {
             do Thread.sleep(500) while (!isComplete)
+            if (failed()) assertk.fail(cause().message ?: "Unknwon")
         }
     }
 
