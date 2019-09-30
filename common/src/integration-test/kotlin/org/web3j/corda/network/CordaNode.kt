@@ -65,8 +65,7 @@ class CordaNode internal constructor(private val network: CordaNetwork) {
             "test",
             apiPort,
             network.version.toInt(),
-            // CorDapps to load include base dir plus dependencies if exist
-            network.additionalPaths + network.baseDir.absolutePath
+            network.additionalPaths
         ).apply {
             do Thread.sleep(500) while (!isComplete)
             if (failed()) assertk.fail(cause().message ?: cause()::class.qualifiedName!!)

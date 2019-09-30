@@ -77,8 +77,8 @@ class CordaNetwork private constructor() {
                 it.file.absolutePath
             }
         } else {
-            // Not a valid Gradle project
-            listOf<String>()
+            // Not a valid Gradle project, use baseDir contents
+            baseDir.listFiles()!!.map { it.absolutePath }
         }
     }
 
@@ -105,7 +105,7 @@ class CordaNetwork private constructor() {
      * Gradle connection to the CorDapp located in [baseDir].
      */
     private val connection: ProjectConnection by lazy {
-        require(this::baseDir.isInitialized)
+        require(::baseDir.isInitialized && baseDir.exists())
         GradleConnector.newConnector()
             .useBuildDistribution()
             .forProjectDirectory(baseDir)
