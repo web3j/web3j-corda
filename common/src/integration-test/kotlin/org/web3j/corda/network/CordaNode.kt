@@ -68,7 +68,7 @@ class CordaNode internal constructor(private val network: CordaNetwork) {
             listOf()
         ).apply {
             do Thread.sleep(500) while (!isComplete)
-            if (failed()) assertk.fail(cause().message ?: "Unknwon")
+            if (failed()) assertk.fail(cause().message ?: cause()::class.qualifiedName)
         }
     }
 
