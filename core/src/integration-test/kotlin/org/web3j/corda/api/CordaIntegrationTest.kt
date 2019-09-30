@@ -16,9 +16,8 @@ import assertk.assertThat
 import assertk.assertions.hasSize
 import assertk.assertions.isDataClassEqualTo
 import assertk.assertions.isEmpty
-import io.bluebank.braid.corda.server.Braid
+import io.bluebank.braid.corda.server.BraidMain
 import org.junit.jupiter.api.BeforeAll
-import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import org.testcontainers.junit.jupiter.Testcontainers
 import org.web3j.braid.services.SimpleNodeInfo
@@ -34,7 +33,6 @@ import org.web3j.corda.protocol.CordaService
 class CordaIntegrationTest {
 
     @Test
-    @Disabled("https://gitlab.com/bluebank/braid/issues/111")
     internal fun `corDapps resource`() {
 
         corda.corDapps.findAll().apply {
@@ -90,16 +88,14 @@ class CordaIntegrationTest {
         @BeforeAll
         @JvmStatic
         fun setUp() {
-
-            Braid(
-                port = 9000,
-                userName = "user1",
-                password = "test",
-                nodeAddress = net.corda.core.utilities.NetworkHostAndPort(
-                    "localhost", 10009
-                )
-            ).startServer()
-
+            BraidMain().start(
+                "localhost:10009",
+                "user1",
+                "test",
+                9000,
+                3,
+                listOf()
+            )
             service = CordaService("http://localhost:9000")
             corda = Corda.build(service)
             Thread.sleep(10000)
