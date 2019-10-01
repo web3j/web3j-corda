@@ -44,6 +44,8 @@ dependencies {
     testImplementation 'org.web3j.corda:web3j-corda-common:0.1.0-SNAPSHOT:integrationTest'
 
     testImplementation "org.junit.jupiter:junit-jupiter-api:5.4.2"
+    testImplementation "io.swagger.core.v3:swagger-core:2.0.9"
+
     testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:5.4.2"
     testRuntimeOnly "org.junit.vintage:junit-vintage-engine:5.4.2"
 }
