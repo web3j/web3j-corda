@@ -35,7 +35,7 @@ import java.math.BigDecimal
 class ObligationKotlinTest {
 
     @Test
-    internal fun `issue obligation`() {
+    fun `issue obligation`() {
         val partyB = network.nodes["PartyA"].api.network.nodes
             .findByX500Name("O=PartyB,L=New York,C=US")[0].legalIdentities[0]
 
@@ -51,7 +51,7 @@ class ObligationKotlinTest {
     }
 
     @Test
-    internal fun `authorise contract upgrade flow`() {
+    fun `authorise contract upgrade flow`() {
         val notary = network.nodes["PartyA"].api.network.notaries.findAll().first()
 
         CordaCore.load(network.nodes["PartyA"].api).flows.contractUpgradeFlowAuthorise.start(
@@ -70,10 +70,9 @@ class ObligationKotlinTest {
     }
 
     @Test
-    internal fun `cash issue flow`() {
+    fun `cash issue flow`() {
 
         val notary = network.nodes["PartyA"].api.network.notaries.findAll().first()
-
         val partyB = network.nodes["PartyA"].api.network.nodes
             .findByX500Name("O=PartyB,L=New York,C=US")[0].legalIdentities[0]
 
@@ -90,7 +89,7 @@ class ObligationKotlinTest {
 
     companion object {
         private val network = CordaNetwork.network {
-            baseDir = File("/Users/xavier/Development/Projects/Web3Labs/web3j-corda-samples/kotlin-source")
+            baseDir = File(javaClass.classLoader.getResource("cordapps")!!.file)
             nodes {
                 node {
                     name = "Notary"
