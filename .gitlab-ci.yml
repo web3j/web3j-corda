@@ -2,7 +2,7 @@ build:
   image: openjdk:8-jdk-alpine
   stage: build
   script:
-    - ./gradlew publishToMavenLocal build #integrationTest
+    - ./gradlew spotlessCheck publishToMavenLocal build #integrationTest
   artifacts:
     reports:
       junit:
