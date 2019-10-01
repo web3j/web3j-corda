@@ -75,7 +75,7 @@ public class ObligationJavaTest {
                 new IssueObligation_InitiatorPayload(amount, party, false);
 
         final Obligation.FlowResource.IssueObligationInitiator issue =
-                Obligation.load(corda).getFlows().getIssueObligationInitiator();
+                Obligation.Companion.load(corda).getFlows().getIssueObligationInitiator();
 
         final SignedTransaction signedTx = issue.start(parameters);
 
