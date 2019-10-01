@@ -59,11 +59,6 @@ sourceSets {
                 "$buildDir/generated/src/main/kotlin"
             }
         }
-        resources {
-            srcDir {
-                "$buildDir/resources/test"
-            }
-        }
     }
 }
 
@@ -85,6 +80,12 @@ compileIntegrationTestKotlin {
     dependsOn 'generateCorDappWrappers'
 }
 
-integrationTest {
+task copyIntegrationTestResources(type: Copy) {
+    from 'build/resources/test/cordapps'
+    into 'build/resources/integrationTest/cordapps'
     dependsOn 'processTestResources'
+}
+
+integrationTest {
+    dependsOn 'copyIntegrationTestResources'
 }
