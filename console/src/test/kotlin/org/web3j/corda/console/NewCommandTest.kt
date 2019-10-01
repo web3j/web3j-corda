@@ -25,7 +25,7 @@ import java.io.File
 /**
  * TODO Update OpenAPI definition assertions.
  */
-class CordaNewCommandTest {
+class NewCommandTest {
 
     @Test
     fun `generate Obligation from CorDapps directory`() {

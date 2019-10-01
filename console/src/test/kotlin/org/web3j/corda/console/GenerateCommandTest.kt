@@ -20,7 +20,7 @@ import org.junit.jupiter.api.io.TempDir
 import java.io.File
 import java.nio.file.Files
 
-class CordaGenerateCommandTest {
+class GenerateCommandTest {
 
     @Test
     fun `generate Obligation from CorDapps directory`() {
@@ -87,7 +87,7 @@ class CordaGenerateCommandTest {
         @BeforeAll
         @JvmStatic
         fun setUp() {
-            CordaGenerateCommandTest::class.java.classLoader.getResource("corda-api.json")!!.run {
+            GenerateCommandTest::class.java.classLoader.getResource("corda-api.json")!!.run {
                 Files.copy(openStream(), definitionFile.toPath())
             }
         }
