@@ -36,4 +36,4 @@ var signedTx = issue.start(parameters).convert<SignedTransaction>()
 
 ### Using the web3j CorDapp wrapper
 
-Refer to usage.md // link to be fixed
+Please refer on how to use client wrappers in a [type-safe way](usage.md)

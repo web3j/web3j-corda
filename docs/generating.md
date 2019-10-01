@@ -8,17 +8,21 @@ There are two ways to generate web3j client wrappers for given CorDapps.
 
 ## Using command-line tool
 
-// link to command line tool, generate
+Please refer to [command line tools](command_line_tools.md)
 
 ## Using gradle task
 
-We should add the dependency to import `web3-corda` to the CorDapp using the following:
+We should add the task to generate the CorDapp client wrappers using the following:
 
 ```groovy
-dependencies {
-    implementation 'org.web3j:web3j-corda-core:0.1.0-SNAPSHOT'
+task generateCorDappWrappers(type: JavaExec, group: 'corda') {
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'org.web3j.corda.console.CordaCommandMain'
+
+    args 'generate', '--package', 'org.web3j.corda',
+            '--cordappsDir', "$projectDir",
+            '--outputDir', "$projectDir/clients"
 }
 ```
 
-It exposes a gradle task `generateCorDappWrappers` which can be invoked to generate client wrappers for the CorDapps 
-in the folder `$projectDir/src/test/resources/cordapps` -> this has to be changed!
+It exposes a gradle task `generateCorDappWrappers` which can be invoked to generate client wrappers for the CorDapps.
