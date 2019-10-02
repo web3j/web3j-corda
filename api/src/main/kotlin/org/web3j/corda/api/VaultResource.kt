@@ -12,26 +12,21 @@
  */
 package org.web3j.corda.api
 
-import javax.ws.rs.Consumes
+import org.web3j.braid.services.vault.VaultQuery
+import org.web3j.corda.model.core.node.services.Vault_Page_net_corda_core_contracts_ContractState
 import javax.ws.rs.Path
-import javax.ws.rs.Produces
-import javax.ws.rs.core.MediaType
+import javax.ws.rs.QueryParam
 
-@Path("api/rest")
-@Produces(MediaType.APPLICATION_JSON)
-@Consumes(MediaType.APPLICATION_JSON)
-interface CordaApi {
+interface VaultResource {
 
-    /**
-     * Retrieves all nodes if neither query parameter is supplied.
-     * Otherwise returns a list of one node matching the supplied query parameter.
-     */
-    @get:Path("network")
-    val network: NetworkResource
+    @Path("vaultQuery")
+    fun queryByContractStateType(
+        @QueryParam("contract-state-type")
+        contractStateType: String
+    ): Vault_Page_net_corda_core_contracts_ContractState
 
-    @get:Path("vault")
-    val vault: VaultResource
-
-    @get:Path("cordapps")
-    val corDapps: CorDappResource
+    @Path("vaultQueryBy")
+    fun query(
+        query: VaultQuery
+    ): Vault_Page_net_corda_core_contracts_ContractState
 }

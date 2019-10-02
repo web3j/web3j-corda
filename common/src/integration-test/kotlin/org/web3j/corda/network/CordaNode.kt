@@ -18,7 +18,7 @@ import org.web3j.corda.protocol.CordaService
 import org.web3j.corda.testcontainers.KGenericContainer
 import java.net.ServerSocket
 import java.time.Duration
-import java.util.concurrent.CompletableFuture.runAsync
+import java.util.concurrent.CountDownLatch
 
 class CordaNode internal constructor(private val network: CordaNetwork) {
 
@@ -37,14 +37,15 @@ class CordaNode internal constructor(private val network: CordaNetwork) {
     var timeOut: Long = Duration.ofMinutes(2).toMillis()
 
     val api: Corda by lazy {
-        startServer().thenApply {
-            Corda.build(CordaService("http://localhost:$apiPort"))
-        }.get()
+        startBraid()
+        Corda.build(CordaService("http://localhost:$apiPort"))
     }
 
     private val container: KGenericContainer by lazy {
         network.createContainer(this)
     }
+
+    private val braid = BraidMain()
 
     fun start() = container.start()
     fun stop() = container.stop()
@@ -58,18 +59,29 @@ class CordaNode internal constructor(private val network: CordaNetwork) {
         require(adminPort.isPort()) { "Field 'adminPort' is not a number between $portRange" }
     }
 
-    private fun startServer() = runAsync {
-        BraidMain().start(
+    /**
+     * Start Braid server synchronously on port [apiPort].
+     */
+    private fun startBraid() {
+        val latch = CountDownLatch(1)
+        braid.start(
             "localhost:${container.getMappedPort(rpcPort)}",
             "user1",
             "test",
             apiPort,
             network.version.toInt(),
             network.additionalPaths
-        ).apply {
-            do Thread.sleep(500) while (!isComplete)
-            if (failed()) assertk.fail(cause().message ?: cause()::class.qualifiedName!!)
+        ).setHandler {
+            if (it.failed()) {
+                assertk.fail(
+                    it.cause().message
+                        ?: it.cause()::class.qualifiedName!!
+                )
+            } else {
+                latch.countDown()
+            }
         }
+        latch.await()
     }
 
     companion object {
