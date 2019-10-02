@@ -13,6 +13,7 @@ pages:
   image: python:alpine
   before_script:
     - pip install mkdocs
+    - pip install mkdocs-material
   stage: test
   script:
     - mkdocs build
