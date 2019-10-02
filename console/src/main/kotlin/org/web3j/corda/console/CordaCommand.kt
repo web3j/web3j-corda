@@ -12,19 +12,23 @@
  */
 package org.web3j.corda.console
 
+import org.web3j.corda.console.CordaCommand.VersionProvider
 import picocli.CommandLine.Command
+import picocli.CommandLine.IVersionProvider
 import picocli.CommandLine.Model.CommandSpec
 import picocli.CommandLine.ParameterException
 import picocli.CommandLine.Spec
+import java.lang.IllegalStateException
+import java.util.Properties
 
 /**
  * Custom CLI interpreter for Corda applications.
  */
 @Command(
-    version = ["1.0"],
     name = "web3j-corda",
     sortOptions = false,
     mixinStandardHelpOptions = true,
+    versionProvider = VersionProvider::class,
     subcommands = [
         GenerateCommand::class,
         NewCommand::class
@@ -37,5 +41,15 @@ class CordaCommand : Runnable {
 
     override fun run() {
         throw ParameterException(spec.commandLine(), "Missing required sub-command (see below)")
+    }
+
+    internal object VersionProvider : IVersionProvider {
+        override fun getVersion(): Array<String> {
+            val url = javaClass.classLoader.getResource("version.properties")
+                ?: throw IllegalStateException("No version.properties file found in the classpath.")
+            return arrayOf(Properties().apply {
+                load(url.openStream())
+            }.getProperty("version"))
+        }
     }
 }

@@ -52,7 +52,14 @@ dependencies {
     integrationTestImplementation project(':web3j-corda-common').sourceSets.integrationTest.output
 }
 
+def generatedResources = "$buildDir/generated-resources/main"
+
 sourceSets {
+    main {
+        //register an output folder on the main SourceSet:
+        output.dir(generatedResources, builtBy: 'generateVersionProperties')
+        //it is now a part of the 'main' classpath and will be a part of the jar
+    }
     integrationTest {
         kotlin {
             srcDir {
@@ -88,4 +95,13 @@ task copyIntegrationTestResources(type: Copy) {
 
 integrationTest {
     dependsOn 'copyIntegrationTestResources'
+}
+
+task generateVersionProperties {
+    description 'Creates a version.txt file with build info that is added to the root of the jar'
+    doLast {
+        new File(generatedResources).mkdirs()
+        def generated = new File(generatedResources, "version.properties")
+        generated.text = "version=$rootProject.version"
+    }
 }
