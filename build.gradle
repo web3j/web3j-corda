@@ -10,6 +10,7 @@ buildscript {
         classpath 'org.unbroken-dome.gradle-plugins:gradle-testsets-plugin:2.1.1'
         classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.4'
         classpath 'com.adarshr:gradle-test-logger-plugin:1.7.0'
+        classpath 'gradle.plugin.com.github.breadmoirai:github-release:2.2.9'
     }
 }
 
@@ -51,11 +52,11 @@ subprojects {
     apply plugin: 'org.unbroken-dome.test-sets'
     apply plugin: 'com.diffplug.gradle.spotless'
     apply plugin: 'com.adarshr.test-logger'
+    apply plugin: "com.github.breadmoirai.github-release"
 
     repositories {
         jcenter()
         mavenCentral()
-        gradlePluginPortal()
         maven { url 'https://repo.gradle.org/gradle/libs-releases' }
         maven { url 'https://ci-artifactory.corda.r3cev.com/artifactory/corda-releases' }
         maven { url 'http://ci-artifactory.corda.r3cev.com/artifactory/corda-dependencies' }
@@ -71,6 +72,11 @@ subprojects {
     task sourcesJar(type: Jar) {
         from sourceSets.main.allSource
         classifier = 'sources'
+    }
+
+    task javadocJar(type: Jar) {
+        classifier = 'javadoc'
+        from javadoc
     }
 
     testSets {
@@ -205,16 +211,14 @@ subprojects {
     publishing {
         publications {
             maven(MavenPublication) {
-                groupId = project.group
-                artifactId = project.name
-                version = project.version
                 from components.java
                 artifact sourcesJar
+                artifact javadocJar
                 artifact integrationTestJar
                 pom {
                     name = project.name
-                    description = project.description
-                    url = "https://github.com/web3j/web3j-corda"
+                    description = 'web3j integration with the Corda Platform.'
+                    url = "https://github.com/web3j/corda"
                     licenses {
                         license {
                             name = "The Apache License, Version 2.0"
@@ -224,6 +228,12 @@ subprojects {
                     }
                     developers {
                         developer {
+                            id = 'Puneetha17'
+                            name = 'Puneetha Karamsetty'
+                            email = 'puneetha@web3labs.com'
+                            organization = 'Web3 Labs'
+                        }
+                        developer {
                             id = 'xaviarias'
                             name = 'Xavier Arias'
                             email = 'xavier@web3labs.com'
@@ -231,9 +241,9 @@ subprojects {
                         }
                     }
                     scm {
-                        connection = "scm:git:https://github.com/web3j/web3j-corda.git"
-                        developerConnection = "scm:git://github.com/web3j/web3j-corda.git"
-                        url = "https://github.com/web3j/web3j-corda.git"
+                        connection = "scm:git:https://github.com/web3j/corda.git"
+                        developerConnection = "scm:git://github.com/web3j/corda.git"
+                        url = "https://github.com/web3j/corda.git"
                     }
                 }
             }
@@ -255,9 +265,9 @@ subprojects {
                     description rootProject.description
                     url 'https://web3j.io'
                     scm {
-                        connection 'scm:git:https://github.com/web3j/web3j-corda.git'
-                        url 'https://github.com/web3j/web3j-corda.git'
-                        developerConnection 'scm:git://github.com/web3j/web3j-corda.git'
+                        connection 'scm:git:https://github.com/web3j/corda.git'
+                        url 'https://github.com/web3j/corda.git'
+                        developerConnection 'scm:git://github.com/web3j/corda.git'
                     }
                     licenses {
                         license {
@@ -267,6 +277,12 @@ subprojects {
                         }
                     }
                     developers {
+                        developer {
+                            id = 'Puneetha17'
+                            name = 'Puneetha Karamsetty'
+                            email = 'puneetha@web3labs.com'
+                            organization = 'Web3 Labs'
+                        }
                         developer {
                             id = 'xaviarias'
                             name = 'Xavier Arias'
@@ -286,12 +302,12 @@ subprojects {
         publish = true
         pkg {
             repo = 'maven'
-            name = project.name
+            name = 'org.web3j.corda'
             desc = project.description
             userOrg = 'web3j'
             licenses = ['Apache-2.0']
-            issueTrackerUrl = 'https://github.com/web3j/web3j-corda/issues'
-            vcsUrl = 'https://github.com/web3j/web3j-corda.git'
+            issueTrackerUrl = 'https://github.com/web3j/corda/issues'
+            vcsUrl = 'https://github.com/web3j/corda.git'
             websiteUrl = 'https://web3j.io'
             publicDownloadNumbers = true
             version {
