@@ -17,7 +17,7 @@ import assertk.assertions.exists
 import assertk.assertions.isEqualTo
 import assertk.assertions.isNotNull
 import org.gradle.testkit.runner.GradleRunner
-import org.gradle.testkit.runner.TaskOutcome.NO_SOURCE
+import org.gradle.testkit.runner.TaskOutcome.SUCCESS
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.io.TempDir
 import java.io.File
@@ -40,15 +40,18 @@ class NewCommandTest {
             assertThat(it).exists()
         }
 
-        val testTask = GradleRunner.create()
+        GradleRunner.create()
             .withProjectDir(outputDir)
             .withArguments("test")
             .forwardOutput()
             .withDebug(false)
             .build()
-
-        assertThat(testTask.task(":test")).isNotNull()
-        assertThat(testTask.task(":test")!!.outcome).isEqualTo(NO_SOURCE) // FIXME: this should be success
+            .apply {
+                listOf("clients", "contracts", "workflows").forEach {
+                    assertThat(task(":$it:test")).isNotNull()
+                    assertThat(task(":$it:test")!!.outcome).isEqualTo(SUCCESS)
+                }
+            }
     }
 
     companion object {
