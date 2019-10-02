@@ -13,6 +13,7 @@ nav:
 # Configuration
 theme:
   name: "material"
+  logo: "img/web3j-corda-logo.png"
   language: "en"
   feature:
     tabs: true
