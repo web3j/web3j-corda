@@ -131,6 +131,7 @@ subprojects {
                 force(group: 'com.fasterxml.jackson.dataformat', name: 'jackson-dataformat-yaml', version: versions.jackson)
                 force(group: 'com.fasterxml.jackson.module', name: 'jackson-module-jaxb-annotations', version: versions.jackson)
                 force(group: 'com.fasterxml.jackson.module', name: 'jackson-module-kotlin', version: versions.jackson)
+                force(group: 'com.fasterxml.jackson.datatype', name: 'jackson-datatype-jsr310', version: versions.jackson)
                 force(group: 'com.google.errorprone', name: 'error_prone_annotations', version: versions.errorProneAnnotations)
                 force(group: 'com.google.guava', name: 'guava', version: versions.guava)
                 force(group: 'commons-io', name: 'commons-io', version: versions.commonsIo)
