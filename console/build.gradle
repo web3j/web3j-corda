@@ -49,6 +49,7 @@ dependencies {
     testImplementation gradleTestKit()
 
     integrationTestImplementation project(path: ':web3j-corda-common', configuration: 'integrationTest')
+    integrationTestImplementation project(':web3j-corda-common').sourceSets.integrationTest.output
 }
 
 sourceSets {
