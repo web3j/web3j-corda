@@ -1,6 +1,6 @@
 buildscript {
     ext {
-        web3_corda_version = '{{web3jCordaVersion}}'
+        web3j_corda_version = '{{web3jCordaVersion}}'
         corda_release_group = 'net.corda'
         corda_release_version = '4.1'
         corda_gradle_plugins_version = '4.0.45'
@@ -97,10 +97,10 @@ dependencies {
     implementation group: 'org.glassfish.jersey.ext', name: 'jersey-bean-validation', version: jersey_version
 
     // web3j-corda dependency
-    implementation group: 'org.web3j.corda', name: 'web3j-corda-core', version: web3_corda_version
+    implementation group: 'org.web3j.corda', name: 'web3j-corda-core', version: web3j_corda_version
 
     testImplementation group: 'io.bluebank.braid', name: 'braid-corda', version: '4.1.2-SNAPSHOT', changing: true
-    testImplementation 'org.web3j.corda:web3j-corda-common:{{web3jCordaVersion}}:integration-test'
+    testImplementation "org.web3j.corda:web3j-corda-common:${web3j_corda_version}:integration-test"
     testImplementation "org.testcontainers:testcontainers:1.11.2"
     testImplementation "org.junit.jupiter:junit-jupiter-api:5.4.2"
 
