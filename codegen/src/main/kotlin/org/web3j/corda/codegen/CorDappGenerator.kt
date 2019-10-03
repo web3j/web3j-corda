@@ -49,6 +49,11 @@ class CorDappGenerator(
                 "",
                 "gradle.properties",
                 mustacheTemplate("cordapp_gradle_properties.mustache")
+            ),
+            generateFromTemplate(
+                "clients",
+                "build.gradle",
+                mustacheTemplate("client/cordapp_client_gradle.mustache")
             )
         )
     }

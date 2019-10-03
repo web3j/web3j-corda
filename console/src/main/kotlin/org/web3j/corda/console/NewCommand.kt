@@ -62,7 +62,6 @@ class NewCommand : BaseCommand() {
             outputDir = File("${this@NewCommand.outputDir}/clients")
             run()
         }
-        copyResource("clients/build.gradle", outputDir)
     }
 
     private fun runGradleBuild(projectRoot: Path) {
