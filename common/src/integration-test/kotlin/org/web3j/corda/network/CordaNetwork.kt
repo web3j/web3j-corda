@@ -148,10 +148,10 @@ class CordaNetwork private constructor() {
         @JvmStatic
         @JvmName("network")
         fun networkJava(networkBlock: Consumer<CordaNetwork>): CordaNetwork {
-            return CordaNetwork().also {
-                networkBlock.accept(it)
-                if (it.isGradleProject()) {
-                    it.createJarUsingGradle()
+            return CordaNetwork().apply {
+                networkBlock.accept(this)
+                if (isGradleProject()) {
+                    createJarUsingGradle()
                 }
             }
         }
