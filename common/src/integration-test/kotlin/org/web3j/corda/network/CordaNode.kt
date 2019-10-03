@@ -25,7 +25,7 @@ class CordaNode internal constructor(private val network: CordaNetwork) {
     lateinit var name: String
     lateinit var location: String
     lateinit var country: String
-    
+
     var userName: String = "user1"
     var password: String = "test"
 
@@ -78,10 +78,7 @@ class CordaNode internal constructor(private val network: CordaNetwork) {
             network.additionalPaths
         ).setHandler {
             if (it.failed()) {
-                assertk.fail(
-                    it.cause().message
-                        ?: it.cause()::class.qualifiedName!!
-                )
+                assertk.fail(it.cause().message ?: it.cause()::class.qualifiedName!!)
             } else {
                 latch.countDown()
             }
