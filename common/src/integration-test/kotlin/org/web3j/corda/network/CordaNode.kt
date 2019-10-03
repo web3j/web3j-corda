@@ -23,36 +23,95 @@ import java.util.concurrent.CountDownLatch
 
 class CordaNode internal constructor(private val network: CordaNetwork) {
 
+    /**
+     * Name for this Corda node, eg. `PartyA`.
+     */
     lateinit var name: String
+
+    /**
+     * Location for this Corda node, eg. `London`.
+     */
     lateinit var location: String
+
+    /**
+     * Country for this Corda node, eg. `GB`.
+     */
     lateinit var country: String
 
+    /**
+     * Braid server username.
+     */
     var userName: String = "user1"
+
+    /**
+     * Braid server password.
+     */
     var password: String = "test"
 
+    /**
+     * Corda P2P port for this node.
+     */
     var p2pPort: Int = randomPort()
+
+    /**
+     * Corda RPC port for this node.
+     */
     var rpcPort: Int = randomPort()
+
+    /**
+     * Admin port for this Corda node.
+     */
     var adminPort: Int = randomPort()
+
+    /**
+     * Braid server API port.
+     */
     var apiPort: Int = randomPort()
 
+    /**
+     * Is this node a notary?
+     */
     var isNotary: Boolean = false
+
+    /**
+     * Start this node automatically?
+     */
     var autoStart: Boolean = true
 
+    /**
+     * Timeout for this Corda node to start.
+     */
     var timeOut: Long = Duration.ofMinutes(2).toMillis()
 
+    /**
+     * Corda API to interact with this node.
+     */
     val api: Corda by lazy {
         braid.start().thenApply {
             Corda.build(CordaService("http://localhost:$apiPort"))
         }.get()
     }
 
+    /**
+     * Docker container instance for this node.
+     */
     private val container: KGenericContainer by lazy {
         network.createContainer(this)
     }
 
+    /**
+     * Braid server for this Corda node.
+     */
     private val braid = BraidMain()
 
+    /**
+     * Start this Corda node.
+     */
     fun start() = container.start()
+
+    /**
+     * Stop this Corda node.
+     */
     fun stop() = container.stop()
 
     internal fun validate() {
@@ -71,7 +130,7 @@ class CordaNode internal constructor(private val network: CordaNetwork) {
      */
     private fun BraidMain.start() = runAsync {
         val latch = CountDownLatch(1)
-        braid.start(
+        start(
             "localhost:${container.getMappedPort(rpcPort)}",
             userName,
             password,
