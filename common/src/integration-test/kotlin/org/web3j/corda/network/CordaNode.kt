@@ -25,6 +25,9 @@ class CordaNode internal constructor(private val network: CordaNetwork) {
     lateinit var name: String
     lateinit var location: String
     lateinit var country: String
+    
+    var userName: String = "user1"
+    var password: String = "test"
 
     var p2pPort: Int = randomPort()
     var rpcPort: Int = randomPort()
@@ -52,11 +55,13 @@ class CordaNode internal constructor(private val network: CordaNetwork) {
 
     internal fun validate() {
         require(name.isNotBlank()) { "Field 'name' cannot be blank" }
+        require(userName.isNotBlank()) { "Field 'userName' cannot be blank" }
+        require(password.isNotBlank()) { "Field 'password' cannot be blank" }
         require(location.isNotBlank()) { "Field 'location' cannot be blank" }
         require(country.isNotBlank()) { "Field 'country' cannot be blank" }
-        require(p2pPort.isPort()) { "Field 'p2pPort' is not a number between $portRange" }
-        require(rpcPort.isPort()) { "Field 'rpcPort' is not a number between $portRange" }
-        require(adminPort.isPort()) { "Field 'adminPort' is not a number between $portRange" }
+        require(p2pPort.isPort()) { "Field 'p2pPort' is not in $portRange" }
+        require(rpcPort.isPort()) { "Field 'rpcPort' is not in $portRange" }
+        require(adminPort.isPort()) { "Field 'adminPort' is not in $portRange" }
     }
 
     /**
@@ -66,8 +71,8 @@ class CordaNode internal constructor(private val network: CordaNetwork) {
         val latch = CountDownLatch(1)
         braid.start(
             "localhost:${container.getMappedPort(rpcPort)}",
-            "user1",
-            "test",
+            userName,
+            password,
             apiPort,
             network.version.toInt(),
             network.additionalPaths
