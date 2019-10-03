@@ -56,7 +56,7 @@ class CordaIntegrationTest {
             assertThat(this).isDataClassEqualTo(notary)
         }
 
-        corda.network.nodes.findByX500Name(party.name!!).apply {
+        corda.network.nodes.findByX500Name(party.name).apply {
             assertThat(this).isDataClassEqualTo(notary)
         }
 
