@@ -18,6 +18,7 @@ import org.web3j.corda.protocol.CordaService
 import org.web3j.corda.testcontainers.KGenericContainer
 import java.net.ServerSocket
 import java.time.Duration
+import java.util.concurrent.CompletableFuture.runAsync
 import java.util.concurrent.CountDownLatch
 
 class CordaNode internal constructor(private val network: CordaNetwork) {
@@ -40,8 +41,9 @@ class CordaNode internal constructor(private val network: CordaNetwork) {
     var timeOut: Long = Duration.ofMinutes(2).toMillis()
 
     val api: Corda by lazy {
-        startBraid()
-        Corda.build(CordaService("http://localhost:$apiPort"))
+        braid.start().thenApply {
+            Corda.build(CordaService("http://localhost:$apiPort"))
+        }.get()
     }
 
     private val container: KGenericContainer by lazy {
@@ -65,9 +67,9 @@ class CordaNode internal constructor(private val network: CordaNetwork) {
     }
 
     /**
-     * Start Braid server synchronously on port [apiPort].
+     * Start Braid server synchronously.
      */
-    private fun startBraid() {
+    private fun BraidMain.start() = runAsync {
         val latch = CountDownLatch(1)
         braid.start(
             "localhost:${container.getMappedPort(rpcPort)}",
