@@ -12,32 +12,19 @@
  */
 package org.web3j.corda.network
 
-import com.samskivert.mustache.Mustache
 import org.gradle.tooling.GradleConnector
 import org.gradle.tooling.ProjectConnection
 import org.gradle.tooling.model.idea.IdeaProject
 import org.gradle.tooling.model.idea.IdeaSingleEntryLibraryDependency
-import org.junit.platform.commons.logging.LoggerFactory
-import org.testcontainers.containers.BindMode
 import org.testcontainers.containers.Network
 import org.testcontainers.containers.wait.strategy.Wait
-import org.web3j.corda.networkmap.LoginRequest
-import org.web3j.corda.networkmap.NotaryType
-import org.web3j.corda.protocol.CordaService
-import org.web3j.corda.protocol.NetworkMap
 import org.web3j.corda.testcontainers.KGenericContainer
 import org.web3j.corda.util.NonNullMap
 import org.web3j.corda.util.OpenApiVersion.v3_0_1
 import org.web3j.corda.util.isMac
 import org.web3j.corda.util.toNonNullMap
 import java.io.File
-import java.io.FileOutputStream
-import java.io.InputStreamReader
-import java.io.OutputStreamWriter
-import java.io.PrintWriter
 import java.nio.file.Files
-import java.nio.file.Paths
-import java.time.Duration
 import java.util.function.Consumer
 import kotlin.streams.toList
 
@@ -85,21 +72,28 @@ class CordaNetwork private constructor() {
     /**
      * The internal Docker network.
      */
-    private val network = Network.newNetwork()
+    internal val network = Network.newNetwork()
 
     /**
      * CorDapp Docker-mapped directory.
      */
-    private val cordappsDir = (if (isMac) "/private" else "") +
+    internal val cordappsDir = (if (isMac) "/private" else "") +
             Files.createTempDirectory("cordapps").toFile().absolutePath
 
     /**
-     * CorDapp `node.conf` template file.
+     * Cordite network map Docker container.
      */
-    private val nodeConfTemplate = CordaNetwork::class.java.classLoader
-        .getResourceAsStream("node_conf.mustache")?.run {
-            Mustache.compiler().compile(InputStreamReader(this))
-        } ?: throw IllegalStateException("Template not found: node_conf.mustache")
+    internal val networkMap: KGenericContainer by lazy {
+        KGenericContainer(NETWORK_MAP_IMAGE)
+            .withCreateContainerCmdModifier {
+                it.withHostName(NETWORK_MAP_ALIAS)
+                it.withName(NETWORK_MAP_ALIAS)
+            }.withNetwork(network)
+            .withNetworkAliases(NETWORK_MAP_ALIAS)
+            .withEnv(mapOf("NMS_STORAGE_TYPE" to "file"))
+            .waitingFor(Wait.forHttp("").forPort(8080))
+            .apply { start() }
+    }
 
     /**
      * Gradle connection to the CorDapp located in [baseDir].
@@ -110,21 +104,6 @@ class CordaNetwork private constructor() {
             .useBuildDistribution()
             .forProjectDirectory(baseDir)
             .connect()
-    }
-
-    /**
-     * Cordite network map Docker container.
-     */
-    private val networkMap: KGenericContainer by lazy {
-        KGenericContainer(NETWORK_MAP_IMAGE)
-            .withCreateContainerCmdModifier {
-                it.withHostName(NETWORK_MAP_ALIAS)
-                it.withName(NETWORK_MAP_ALIAS)
-            }.withNetwork(network)
-            .withNetworkAliases(NETWORK_MAP_ALIAS)
-            .withEnv(mapOf("NMS_STORAGE_TYPE" to "file"))
-            .waitingFor(Wait.forHttp("").forPort(8080))
-            .apply { start() }
     }
 
     /**
@@ -153,118 +132,15 @@ class CordaNetwork private constructor() {
         }
     }
 
-    /**
-     * Create a Docker container for the given Corda node.
-     */
-    internal fun createContainer(node: CordaNode): KGenericContainer {
-
-        val nodeDir = File(cordappsDir, node.name).apply { mkdirs() }
-        createNodeConfFiles(node, nodeDir.resolve("node.conf"))
-        saveCertificateFromNetworkMap(nodeDir)
-
-        return KGenericContainer(CORDA_ZULU_IMAGE)
-            .withNetwork(network)
-            .withExposedPorts(node.p2pPort, node.rpcPort, node.adminPort)
-            .withFileSystemBind(
-                nodeDir.absolutePath, "/etc/corda",
-                BindMode.READ_WRITE
-            ).withFileSystemBind(
-                nodeDir.resolve("certificates").absolutePath,
-                "/opt/corda/certificates",
-                BindMode.READ_WRITE
-            ).withEnv("NETWORKMAP_URL", NETWORK_MAP_URL)
-            .withEnv("DOORMAN_URL", NETWORK_MAP_URL)
-            .withEnv("NETWORK_TRUST_PASSWORD", "trustpass")
-            .withEnv("MY_PUBLIC_ADDRESS", "http://localhost:${node.p2pPort}")
-            .withCommand("config-generator --generic")
-            .withStartupTimeout(Duration.ofMillis(node.timeOut))
-            .withCreateContainerCmdModifier {
-                it.withHostName(node.name.toLowerCase())
-                it.withName(node.name.toLowerCase())
-            }.withLogConsumer {
-                logger.info { it.utf8String }
-            }.apply {
-                if (node.isNotary) {
-                    start()
-                    extractNotaryNodeInfo(this, nodeDir).also {
-                        updateNotaryInNetworkMap(nodeDir.resolve(it).absolutePath)
-                    }
-                    stop()
-                } else {
-                    withFileSystemBind(
-                        nodeDir.resolve("cordapps").absolutePath,
-                        "/opt/corda/cordapps",
-                        BindMode.READ_WRITE
-                    )
-                }
-            }
-    }
-
     private fun isGradleProject(): Boolean {
         return File(baseDir, "build.gradle").exists()
     }
 
-    private fun createNodeConfFiles(node: CordaNode, file: File) {
-        PrintWriter(OutputStreamWriter(FileOutputStream(file))).use {
-            node.apply {
-                this@CordaNetwork.nodeConfTemplate.execute(
-                    mapOf(
-                        "name" to name,
-                        "isNotary" to isNotary,
-                        "location" to location,
-                        "country" to country,
-                        "p2pPort" to p2pPort,
-                        "rpcPort" to rpcPort,
-                        "adminPort" to adminPort,
-                        "networkMapUrl" to NETWORK_MAP_URL
-                    ),
-                    it
-                )
-            }
-            it.flush()
-        }
-    }
-
-    private fun saveCertificateFromNetworkMap(nodeDir: File) {
-        val certificateFolder = File(nodeDir, "certificates").apply { mkdir() }
-        val certificateFile = certificateFolder.resolve("network-root-truststore.jks")
-        val networkMapUrl = "http://localhost:${networkMap.getMappedPort(8080)}"
-
-        NetworkMap.build(CordaService(networkMapUrl)).apply {
-            Files.write(certificateFile.toPath(), networkMap.truststore)
-        }
-    }
-
-    private fun extractNotaryNodeInfo(notary: KGenericContainer, notaryNodeDir: File): String {
-        return notary.run {
-            execInContainer("find", ".", "-maxdepth", "1", "-name", "nodeInfo*").stdout.run {
-                substring(2, length - 1) // remove relative path and the ending newline character
-            }.also {
-                copyFileFromContainer("/opt/corda/$it", notaryNodeDir.resolve(it).absolutePath)
-                execInContainer("rm", "network-parameters")
-            }
-        }
-    }
-
-    private fun updateNotaryInNetworkMap(nodeInfoPath: String) {
-        val networkMapUrl = "http://localhost:${networkMap.getMappedPort(8080)}"
-        var networkMapApi = NetworkMap.build(CordaService(networkMapUrl))
-
-        val loginRequest = LoginRequest("sa", "admin")
-        val token = networkMapApi.admin.login(loginRequest)
-
-        networkMapApi = NetworkMap.build(CordaService(networkMapUrl), token)
-        networkMapApi.admin.notaries.create(NotaryType.NON_VALIDATING, Files.readAllBytes(Paths.get(nodeInfoPath)))
-    }
-
     companion object {
-        private val logger = LoggerFactory.getLogger(CordaNetwork::class.java)
-
-        private const val NETWORK_MAP_ALIAS = "networkmap"
-        private const val NETWORK_MAP_URL = "http://$NETWORK_MAP_ALIAS:8080"
-
         private const val NETWORK_MAP_IMAGE = "cordite/network-map:latest"
-        private const val CORDA_ZULU_IMAGE = "corda/corda-zulu-4.1:latest"
+        private const val NETWORK_MAP_ALIAS = "networkmap"
+
+        internal const val NETWORK_MAP_URL = "http://$NETWORK_MAP_ALIAS:8080"
 
         /**
          *  Corda network DSL entry point.

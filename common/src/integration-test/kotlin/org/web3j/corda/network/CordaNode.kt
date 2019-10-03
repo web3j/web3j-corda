@@ -12,11 +12,24 @@
  */
 package org.web3j.corda.network
 
+import com.samskivert.mustache.Mustache
 import io.bluebank.braid.corda.server.BraidMain
+import mu.KLogging
+import org.testcontainers.containers.BindMode
+import org.web3j.corda.networkmap.LoginRequest
+import org.web3j.corda.networkmap.NotaryType
 import org.web3j.corda.protocol.Corda
 import org.web3j.corda.protocol.CordaService
+import org.web3j.corda.protocol.NetworkMap
 import org.web3j.corda.testcontainers.KGenericContainer
+import java.io.File
+import java.io.FileOutputStream
+import java.io.InputStreamReader
+import java.io.OutputStreamWriter
+import java.io.PrintWriter
 import java.net.ServerSocket
+import java.nio.file.Files
+import java.nio.file.Paths
 import java.time.Duration
 import java.util.concurrent.CompletableFuture.runAsync
 import java.util.concurrent.CountDownLatch
@@ -93,10 +106,57 @@ class CordaNode internal constructor(private val network: CordaNetwork) {
     }
 
     /**
+     * CorDapp `node.conf` template file.
+     */
+    private val nodeConfTemplate = CordaNetwork::class.java.classLoader
+        .getResourceAsStream("node_conf.mustache")?.run {
+            Mustache.compiler().compile(InputStreamReader(this))
+        } ?: throw IllegalStateException("Template not found: node_conf.mustache")
+
+    /**
      * Docker container instance for this node.
      */
     private val container: KGenericContainer by lazy {
-        network.createContainer(this)
+        val nodeDir = File(network.cordappsDir, name).apply { mkdirs() }
+        createNodeConfFiles(nodeDir.resolve("node.conf"))
+        saveCertificateFromNetworkMap(nodeDir)
+
+        KGenericContainer(CORDA_ZULU_IMAGE)
+            .withNetwork(network.network)
+            .withExposedPorts(p2pPort, rpcPort, adminPort)
+            .withFileSystemBind(
+                nodeDir.absolutePath, "/etc/corda",
+                BindMode.READ_WRITE
+            ).withFileSystemBind(
+                nodeDir.resolve("certificates").absolutePath,
+                "/opt/corda/certificates",
+                BindMode.READ_WRITE
+            ).withEnv("NETWORKMAP_URL", CordaNetwork.NETWORK_MAP_URL)
+            .withEnv("DOORMAN_URL", CordaNetwork.NETWORK_MAP_URL)
+            .withEnv("NETWORK_TRUST_PASSWORD", "trustpass")
+            .withEnv("MY_PUBLIC_ADDRESS", "http://localhost:${p2pPort}")
+            .withCommand("config-generator --generic")
+            .withStartupTimeout(Duration.ofMillis(timeOut))
+            .withCreateContainerCmdModifier {
+                it.withHostName(name.toLowerCase())
+                it.withName(name.toLowerCase())
+            }.withLogConsumer {
+                logger.info { it.utf8String }
+            }.apply {
+                if (isNotary) {
+                    start()
+                    extractNotaryNodeInfo(this, nodeDir).also {
+                        updateNotaryInNetworkMap(nodeDir.resolve(it).absolutePath)
+                    }
+                    stop()
+                } else {
+                    withFileSystemBind(
+                        nodeDir.resolve("cordapps").absolutePath,
+                        "/opt/corda/cordapps",
+                        BindMode.READ_WRITE
+                    )
+                }
+            }
     }
 
     /**
@@ -125,6 +185,57 @@ class CordaNode internal constructor(private val network: CordaNetwork) {
         require(adminPort.isPort()) { "Field 'adminPort' is not in $portRange" }
     }
 
+    private fun createNodeConfFiles(file: File) {
+        PrintWriter(OutputStreamWriter(FileOutputStream(file))).use {
+            nodeConfTemplate.execute(
+                mapOf(
+                    "name" to name,
+                    "isNotary" to isNotary,
+                    "location" to location,
+                    "country" to country,
+                    "p2pPort" to p2pPort,
+                    "rpcPort" to rpcPort,
+                    "adminPort" to adminPort,
+                    "networkMapUrl" to CordaNetwork.NETWORK_MAP_URL
+                ),
+                it
+            )
+            it.flush()
+        }
+    }
+
+    private fun saveCertificateFromNetworkMap(nodeDir: File) {
+        val certificateFolder = File(nodeDir, "certificates").apply { mkdir() }
+        val certificateFile = certificateFolder.resolve("network-root-truststore.jks")
+        val networkMapUrl = "http://localhost:${network.networkMap.getMappedPort(8080)}"
+
+        NetworkMap.build(CordaService(networkMapUrl)).apply {
+            Files.write(certificateFile.toPath(), networkMap.truststore)
+        }
+    }
+
+    private fun extractNotaryNodeInfo(notary: KGenericContainer, notaryNodeDir: File): String {
+        return notary.run {
+            execInContainer("find", ".", "-maxdepth", "1", "-name", "nodeInfo*").stdout.run {
+                substring(2, length - 1) // remove relative path and the ending newline character
+            }.also {
+                copyFileFromContainer("/opt/corda/$it", notaryNodeDir.resolve(it).absolutePath)
+                execInContainer("rm", "network-parameters")
+            }
+        }
+    }
+
+    private fun updateNotaryInNetworkMap(nodeInfoPath: String) {
+        val networkMapUrl = "http://localhost:${network.networkMap.getMappedPort(8080)}"
+        var networkMapApi = NetworkMap.build(CordaService(networkMapUrl))
+
+        val loginRequest = LoginRequest("sa", "admin")
+        val token = networkMapApi.admin.login(loginRequest)
+
+        networkMapApi = NetworkMap.build(CordaService(networkMapUrl), token)
+        networkMapApi.admin.notaries.create(NotaryType.NON_VALIDATING, Files.readAllBytes(Paths.get(nodeInfoPath)))
+    }
+
     /**
      * Start Braid server synchronously.
      */
@@ -147,7 +258,9 @@ class CordaNode internal constructor(private val network: CordaNetwork) {
         latch.await()
     }
 
-    companion object {
+    companion object : KLogging() {
+        private const val CORDA_ZULU_IMAGE = "corda/corda-zulu-4.1:latest"
+        
         private val portRange = 1024..65535
 
         private fun randomPort() = ServerSocket(0).localPort
