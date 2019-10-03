@@ -260,7 +260,7 @@ class CordaNode internal constructor(private val network: CordaNetwork) {
 
     companion object : KLogging() {
         private const val CORDA_ZULU_IMAGE = "corda/corda-zulu-4.1:latest"
-        
+
         private val portRange = 1024..65535
 
         private fun randomPort() = ServerSocket(0).localPort
