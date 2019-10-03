@@ -20,27 +20,6 @@ plugins {
 
 description = 'Integrates web3j with the Corda blockchain platform.'
 
-ext {
-    loadPropsFromFile = { String path ->
-        def props = new Properties()
-        def propsFile = file(path)
-        if (propsFile.exists()) {
-            propsFile.withReader { reader ->
-                props.load(reader)
-            }
-        }
-        props
-    }
-    versions = loadPropsFromFile("$rootDir/versions.properties")
-    ossrhUsername = project.hasProperty('ossrhUsername') ? project.property('ossrhUsername') : System.getenv('OSSRH_USERNAME')
-    ossrhPassword = project.hasProperty('ossrhPassword') ? project.property('ossrhPassword') : System.getenv('OSSRH_PASSWORD')
-    ossrhRepoUrl = project.hasProperty('ossrhRepoUrl') ? project.property('ossrhRepoUrl') : System.getenv('OSSRH_REPO_URL')
-    ossrhSnapshotRepoUrl = project.hasProperty('ossrhSnapshotRepoUrl') ? project.property('ossrhSnapshotRepoUrl') : System.getenv('OSSRH_SNAPSHOT_REPO_URL')
-    bintrayUser = project.hasProperty('bintrayUser') ? project.property('bintrayUser') : System.getenv('BINTRAY_USER')
-    bintrayKey = project.hasProperty('bintrayApiKey') ? project.property('bintrayApiKey') : System.getenv('BINTRAY_API_KEY')
-    bintrayGpgPassphrase = project.hasProperty('bintrayGpgPassphrase') ? project.property('bintrayGpgPassphrase') : System.getenv('BINTRAY_GPG_PASSPHRASE')
-}
-
 subprojects {
     apply plugin: 'java'
     apply plugin: 'idea'
@@ -54,29 +33,17 @@ subprojects {
     apply plugin: 'com.adarshr.test-logger'
     apply plugin: "com.github.breadmoirai.github-release"
 
-    repositories {
-        jcenter()
-        mavenCentral()
-        maven { url 'https://repo.gradle.org/gradle/libs-releases' }
-        maven { url 'https://ci-artifactory.corda.r3cev.com/artifactory/corda-releases' }
-        maven { url 'http://ci-artifactory.corda.r3cev.com/artifactory/corda-dependencies' }
-        maven { url 'https://dl.bintray.com/r3/corda/' }
-        maven {
-            url 'https://oss.sonatype.org/content/repositories/snapshots/'
-            mavenContent {
-                snapshotsOnly()
-            }
-        }
-    }
+    apply from: "$rootProject.projectDir/gradle/versions.gradle"
+    apply from: "$rootProject.projectDir/gradle/repositories.gradle"
 
     task sourcesJar(type: Jar) {
         from sourceSets.main.allSource
-        classifier = 'sources'
+        archiveClassifier = 'sources'
     }
 
     task javadocJar(type: Jar) {
-        classifier = 'javadoc'
         from javadoc
+        archiveClassifier = 'javadoc'
     }
 
     testSets {
@@ -96,6 +63,10 @@ subprojects {
     configurations {
         testOutput.extendsFrom(testCompile)
         integrationTestOutput.extendsFrom(integrationTestCompile)
+    }
+
+    integrationTestJar {
+        archiveClassifier = 'integration-test'
     }
 
     artifacts {
@@ -249,48 +220,24 @@ subprojects {
                 }
             }
         }
-    }
-
-    uploadArchives {
         repositories {
-            mavenDeployer {
-                repository(url: ossrhRepoUrl) {
-                    authentication(userName: ossrhUsername, password: ossrhPassword)
+            maven {
+                name = 'ossrh'
+                url = ossrhRepoUrl
+                credentials {
+                    username ossrhUsername
+                    password ossrhPassword
                 }
-                snapshotRepository(url: ossrhSnapshotRepoUrl) {
-                    authentication(userName: ossrhUsername, password: ossrhPassword)
+            }
+            maven {
+                name = 'ossrhSnapshots'
+                url = ossrhSnapshotRepoUrl
+                mavenContent {
+                    snapshotsOnly()
                 }
-                pom.project {
-                    packaging 'jar'
-                    name 'web3j Corda Integration'
-                    description rootProject.description
-                    url 'https://web3j.io'
-                    scm {
-                        connection 'scm:git:https://github.com/web3j/corda.git'
-                        url 'https://github.com/web3j/corda.git'
-                        developerConnection 'scm:git://github.com/web3j/corda.git'
-                    }
-                    licenses {
-                        license {
-                            name 'The Apache License, Version 2.0'
-                            url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
-                            distribution 'repo'
-                        }
-                    }
-                    developers {
-                        developer {
-                            id = 'Puneetha17'
-                            name = 'Puneetha Karamsetty'
-                            email = 'puneetha@web3labs.com'
-                            organization = 'Web3 Labs'
-                        }
-                        developer {
-                            id = 'xaviarias'
-                            name = 'Xavier Arias'
-                            email = 'xavier@web3labs.com'
-                            organization = 'Web3 Labs'
-                        }
-                    }
+                credentials {
+                    username ossrhUsername
+                    password ossrhPassword
                 }
             }
         }
