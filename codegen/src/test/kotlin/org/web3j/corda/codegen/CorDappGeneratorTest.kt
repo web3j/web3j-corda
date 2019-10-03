@@ -26,7 +26,7 @@ class CorDappGeneratorTest {
 
     @Test
     fun `generate from CordApp name and package`() {
-        CorDappGenerator("org.web3j.corda", "Sample", outputDir).generate().apply {
+        CorDappGenerator("org.web3j.corda", "Sample", outputDir, "0.1.0-SNAPSHOT").generate().apply {
             assertThat(map { it.absolutePath }).containsAll(
                 File(outputDir, KOTLIN_SOURCE.format("contracts", "main", "contracts/", "SampleContract")).absolutePath,
                 File(outputDir, KOTLIN_SOURCE.format("contracts", "test", "contracts/", "ContractTests")).absolutePath,

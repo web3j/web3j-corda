@@ -15,7 +15,9 @@ package org.web3j.corda.console
 import org.gradle.tooling.GradleConnector
 import org.web3j.corda.codegen.CorDappGenerator
 import picocli.CommandLine.Command
+import picocli.CommandLine.Model.CommandSpec
 import picocli.CommandLine.Option
+import picocli.CommandLine.Spec
 import java.io.File
 import java.nio.file.Files
 import java.nio.file.Path
@@ -26,6 +28,9 @@ import java.nio.file.StandardCopyOption
  */
 @Command(name = "new")
 class NewCommand : BaseCommand() {
+
+    @Spec
+    private lateinit var spec: CommandSpec
 
     @Option(
         names = ["-n", "--name"],
@@ -39,7 +44,8 @@ class NewCommand : BaseCommand() {
         CorDappGenerator(
             packageName = packageName,
             corDappName = corDappName,
-            outputDir = outputDir
+            outputDir = outputDir,
+            version = spec.parent().versionProvider().version.first()
         ).generate()
 
         copyProjectResources()
@@ -56,7 +62,6 @@ class NewCommand : BaseCommand() {
             outputDir = File("${this@NewCommand.outputDir}/clients")
             run()
         }
-        copyResource("clients/build.gradle", outputDir)
     }
 
     private fun runGradleBuild(projectRoot: Path) {
@@ -72,8 +77,6 @@ class NewCommand : BaseCommand() {
     }
 
     private fun copyProjectResources() {
-        copyResource("gradle.properties", outputDir)
-        copyResource("build.gradle", outputDir)
         copyResource("settings.gradle", outputDir)
         copyResource("gradlew", outputDir)
 

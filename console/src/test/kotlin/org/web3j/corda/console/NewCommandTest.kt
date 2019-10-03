@@ -28,7 +28,7 @@ import java.io.File
 class NewCommandTest {
 
     @Test
-    fun `generate Obligation from CorDapps directory`() {
+    fun `create a template CorDapp and verify build`() {
         CordaCommandMain.main(
             "new",
             "-p", "org.web3j.corda",
