@@ -13,7 +13,6 @@
 package org.web3j.corda.examples.obligation
 
 import assertk.assertThat
-import assertk.assertions.isEqualTo
 import generated.net.corda.core.flows.ContractUpgradeFlow_AuthorisePayload
 import generated.net.corda.examples.obligation.flows.IssueObligation_InitiatorPayload
 import generated.net.corda.finance.flows.CashIssueFlowPayload
@@ -92,20 +91,14 @@ class ObligationKotlinTest {
             baseDir = File(javaClass.classLoader.getResource("cordapps")!!.file)
             nodes {
                 node {
-                    name = "Notary"
-                    location = "London"
-                    country = "GB"
+                    name = "O=Notary,L=London,C=GB"
                     isNotary = true
                 }
                 node {
-                    name = "PartyA"
-                    location = "Tokyo"
-                    country = "JP"
+                    name = "O=PartyA,L=London,C=GB"
                 }
                 node {
-                    name = "PartyB"
-                    location = "New York"
-                    country = "US"
+                    name = "O=PartyB,L=New York,C=US"
                 }
             }
         }
