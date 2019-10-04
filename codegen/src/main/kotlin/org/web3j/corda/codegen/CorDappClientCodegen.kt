@@ -59,7 +59,7 @@ class CorDappClientCodegen(
     }
 
     /**
-     * Force the order of imports if specified in the given mapping
+     * Force the order of imports if specified in the given mapping.
      */
     override fun toModelImport(name: String): String {
         return when {
@@ -71,7 +71,7 @@ class CorDappClientCodegen(
     }
 
     /**
-     * Update the model name to incorporate the package name when specified
+     * Update the model name to incorporate the package name when specified.
      */
     override fun toModelName(name: String): String {
         return if (importMapping.containsKey(name)) {
@@ -82,7 +82,7 @@ class CorDappClientCodegen(
     }
 
     /**
-     * Create folder structure according to the given package structure
+     * Create folder structure according to the given package structure.
      */
     override fun toModelFilename(name: String): String {
         return name.replace(".", "/")
@@ -209,7 +209,7 @@ class CorDappClientCodegen(
     companion object {
 
         /**
-         * Directory for Mustache tamplates.
+         * Directory for Mustache templates.
          */
         private const val TEMPLATE_DIR = "cordapp/client"
 
