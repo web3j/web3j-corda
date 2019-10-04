@@ -10,8 +10,12 @@
         <resetJUL>true</resetJUL>
     </contextListener>
 
+    <logger name="io.vertx" level="error"/>
+    <logger name="io.bluebank.braid.corda" level="error"/>
+
     <logger name="org.junit.jupiter" level="warn"/>
     <logger name="org.openapitools.codegen" level="warn"/>
+
     <logger name="org.web3j.corda.protocol" level="debug"/>
 
     <root level="info">
