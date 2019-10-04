@@ -12,9 +12,13 @@
  */
 package org.web3j.corda.examples.obligation;
 
+import java.io.File;
+import java.math.BigDecimal;
+
 import generated.net.corda.examples.obligation.flows.IssueObligation_InitiatorPayload;
 import org.junit.jupiter.api.Test;
 import org.testcontainers.junit.jupiter.Testcontainers;
+
 import org.web3j.corda.model.AmountCurrency;
 import org.web3j.corda.model.core.identity.AbstractParty;
 import org.web3j.corda.model.core.identity.Party;
@@ -22,9 +26,6 @@ import org.web3j.corda.model.core.transactions.SignedTransaction;
 import org.web3j.corda.network.CordaNetwork;
 import org.web3j.corda.obligation.api.Obligation;
 import org.web3j.corda.protocol.Corda;
-
-import java.io.File;
-import java.math.BigDecimal;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.web3j.corda.network.CordaNetwork.network;
