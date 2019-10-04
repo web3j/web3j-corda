@@ -1,5 +1,6 @@
 buildscript {
     ext {
+        web3j_corda_version = '{{web3jCordaVersion}}'
         corda_release_group = 'net.corda'
         corda_release_version = '4.1'
         corda_gradle_plugins_version = '4.0.45'
@@ -12,13 +13,13 @@ buildscript {
         log4j_version = '2.11.2'
         corda_platform_version = '4'.toInteger()
         jersey_version = '2.29'
-}
+    }
 
     repositories {
         mavenLocal()
         mavenCentral()
         jcenter()
-        maven { url 'https://software.r3.com/artifactory/corda' }    
+        maven { url 'https://software.r3.com/artifactory/corda' }
     }
 
     dependencies {
@@ -34,15 +35,14 @@ allprojects {
     apply plugin: 'kotlin'
 
     repositories {
-        mavenLocal()
         jcenter()
         mavenCentral()
         maven { url 'https://software.r3.com/artifactory/corda' }
         maven { url 'https://jitpack.io' }
         maven {
-        url 'https://oss.sonatype.org/content/repositories/snapshots/'
-        mavenContent {
-            snapshotsOnly()
+            url 'https://oss.sonatype.org/service/local/repositories/snapshots/content'
+            mavenContent {
+                snapshotsOnly()
             }
         }
     }
@@ -72,8 +72,8 @@ sourceSets {
         resources {
             srcDir rootProject.file("config/dev")
         }
+        }
     }
-}
 
 dependencies {
     // Corda dependencies.
@@ -97,15 +97,13 @@ dependencies {
     implementation group: 'org.glassfish.jersey.ext', name: 'jersey-bean-validation', version: jersey_version
 
     // web3j-corda dependency
-    implementation 'org.web3j.corda:web3j-corda-core:0.1.0-SNAPSHOT'
+    implementation group: 'org.web3j.corda', name: 'web3j-corda-core', version: web3j_corda_version
 
     testImplementation group: 'io.bluebank.braid', name: 'braid-corda', version: '4.1.2-SNAPSHOT', changing: true
-
+    testImplementation "org.web3j.corda:web3j-corda-common:${web3j_corda_version}:integration-test"
     testImplementation "org.testcontainers:testcontainers:1.11.2"
-
-    testImplementation 'org.web3j.corda:web3j-corda-common:0.1.0-SNAPSHOT:integrationTest'
-
     testImplementation "org.junit.jupiter:junit-jupiter-api:5.4.2"
+
     testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:5.4.2"
     testRuntimeOnly "org.junit.vintage:junit-vintage-engine:5.4.2"
 }

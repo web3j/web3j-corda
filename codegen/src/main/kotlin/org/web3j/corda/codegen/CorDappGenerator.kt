@@ -23,7 +23,8 @@ import java.io.PrintWriter
 class CorDappGenerator(
     private val packageName: String,
     private val corDappName: String,
-    private val outputDir: File
+    private val outputDir: File,
+    private val version: String
 ) : CordaGenerator {
 
     private val context = mutableMapOf<String, Any>()
@@ -31,9 +32,30 @@ class CorDappGenerator(
     override fun generate(): List<File> {
         context["packageName"] = packageName
         context["corDappName"] = corDappName
+        context["web3jCordaVersion"] = version
         CordaGeneratorUtils.addLambdas(context)
 
-        return generateTemplateFlow() + generateTemplateContract()
+        return generateTemplateFlow() + generateTemplateContract() + generateGradleFiles()
+    }
+
+    private fun generateGradleFiles(): List<File> {
+        return listOf(
+            generateFromTemplate(
+                "",
+                "build.gradle",
+                mustacheTemplate("cordapp_gradle.mustache")
+            ),
+            generateFromTemplate(
+                "",
+                "gradle.properties",
+                mustacheTemplate("cordapp_gradle_properties.mustache")
+            ),
+            generateFromTemplate(
+                "clients",
+                "build.gradle",
+                mustacheTemplate("client/cordapp_client_gradle.mustache")
+            )
+        )
     }
 
     private fun generateTemplateContract(): List<File> {
