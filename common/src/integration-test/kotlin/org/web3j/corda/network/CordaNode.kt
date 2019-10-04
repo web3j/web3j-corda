@@ -141,7 +141,7 @@ class CordaNode internal constructor(private val network: CordaNetwork) {
                 it.withHostName(name.toLowerCase())
                 it.withName(name.toLowerCase())
             }.withLogConsumer {
-                logger.info { it.utf8String }
+                logger.info { it.utf8String.trimEnd() }
             }.apply {
                 if (isNotary) {
                     start()
