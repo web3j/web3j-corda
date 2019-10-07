@@ -18,6 +18,7 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.SerializationFeature
 import com.fasterxml.jackson.module.kotlin.convertValue
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import javax.security.auth.x500.X500Principal
 
 fun Any.toJson(): String = mapper
     .writerWithDefaultPrettyPrinter()
@@ -40,3 +41,7 @@ class NonNullMap<K, V>(private val map: Map<K, V>) : Map<K, V> by map {
 }
 
 val isMac = System.getProperty("os.name").contains("Mac", true)
+
+val X500Principal.canonicalName: String
+    get() = getName(X500Principal.CANONICAL)
+        .replace("[=,]".toRegex(), "_")

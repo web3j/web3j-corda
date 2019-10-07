@@ -96,6 +96,7 @@ subprojects {
 
         configurations.all {
             resolutionStrategy {
+                force(group: 'org.jetbrains.kotlin', name: 'kotlin-compiler-embeddable', version: versions.kotlin)
                 force(group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: versions.jackson)
                 force(group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: versions.jackson)
                 force(group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: versions.jackson)

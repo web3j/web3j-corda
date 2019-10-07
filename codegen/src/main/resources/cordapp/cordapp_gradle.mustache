@@ -20,6 +20,12 @@ buildscript {
         mavenCentral()
         jcenter()
         maven { url 'https://software.r3.com/artifactory/corda' }
+        maven {
+            url 'https://oss.sonatype.org/service/local/repositories/snapshots/content/'
+            mavenContent {
+                snapshotsOnly()
+            }
+        }
     }
 
     dependencies {
@@ -35,6 +41,7 @@ allprojects {
     apply plugin: 'kotlin'
 
     repositories {
+        mavenLocal()
         jcenter()
         mavenCentral()
         maven { url 'https://software.r3.com/artifactory/corda' }

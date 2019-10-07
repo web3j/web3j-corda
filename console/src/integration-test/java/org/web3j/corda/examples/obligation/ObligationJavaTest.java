@@ -38,7 +38,10 @@ public class ObligationJavaTest {
                     net -> {
                         net.setBaseDir(
                                 new File(
-                                        "/Users/xavier/Development/Projects/Web3Labs/web3j-corda-samples/kotlin-source"));
+                                        ObligationJavaTest.class
+                                                .getClassLoader()
+                                                .getResource("classes")
+                                                .getFile()));
                         net.nodes(
                                 nodes -> {
                                     nodes.node(
