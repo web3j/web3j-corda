@@ -22,6 +22,7 @@ import org.web3j.corda.protocol.Corda
 import org.web3j.corda.protocol.CordaService
 import org.web3j.corda.protocol.NetworkMap
 import org.web3j.corda.testcontainers.KGenericContainer
+import org.web3j.corda.util.canonicalName
 import java.io.File
 import java.io.FileOutputStream
 import java.io.InputStreamReader
@@ -33,23 +34,14 @@ import java.nio.file.Paths
 import java.time.Duration
 import java.util.concurrent.CompletableFuture.runAsync
 import java.util.concurrent.CountDownLatch
+import javax.security.auth.x500.X500Principal
 
 class CordaNode internal constructor(private val network: CordaNetwork) {
 
     /**
-     * Name for this Corda node, eg. `PartyA`.
+     * X.500 name for this Corda node, eg. `O=Notary, L=London, C=GB`.
      */
     lateinit var name: String
-
-    /**
-     * Location for this Corda node, eg. `London`.
-     */
-    lateinit var location: String
-
-    /**
-     * Country for this Corda node, eg. `GB`.
-     */
-    lateinit var country: String
 
     /**
      * Braid server username.
@@ -105,6 +97,11 @@ class CordaNode internal constructor(private val network: CordaNetwork) {
         }.get()
     }
 
+    val canonicalName: String by lazy {
+        require(::name.isInitialized)
+        X500Principal(name).canonicalName
+    }
+
     /**
      * CorDapp `node.conf` template file.
      */
@@ -117,7 +114,7 @@ class CordaNode internal constructor(private val network: CordaNetwork) {
      * Docker container instance for this node.
      */
     private val container: KGenericContainer by lazy {
-        val nodeDir = File(network.cordappsDir, name).apply { mkdirs() }
+        val nodeDir = File(network.cordappsDir, canonicalName).apply { mkdirs() }
         createNodeConfFiles(nodeDir.resolve("node.conf"))
         saveCertificateFromNetworkMap(nodeDir)
 
@@ -138,8 +135,8 @@ class CordaNode internal constructor(private val network: CordaNetwork) {
             .withCommand("config-generator --generic")
             .withStartupTimeout(Duration.ofMillis(timeOut))
             .withCreateContainerCmdModifier {
-                it.withHostName(name.toLowerCase())
-                it.withName(name.toLowerCase())
+                it.withHostName(canonicalName.toLowerCase())
+                it.withName(canonicalName.toLowerCase())
             }.withLogConsumer {
                 logger.info { it.utf8String.trimEnd() }
             }.apply {
@@ -178,8 +175,6 @@ class CordaNode internal constructor(private val network: CordaNetwork) {
         require(name.isNotBlank()) { "Field 'name' cannot be blank" }
         require(userName.isNotBlank()) { "Field 'userName' cannot be blank" }
         require(password.isNotBlank()) { "Field 'password' cannot be blank" }
-        require(location.isNotBlank()) { "Field 'location' cannot be blank" }
-        require(country.isNotBlank()) { "Field 'country' cannot be blank" }
         require(p2pPort.isPort()) { "Field 'p2pPort' is not in $portRange" }
         require(rpcPort.isPort()) { "Field 'rpcPort' is not in $portRange" }
         require(adminPort.isPort()) { "Field 'adminPort' is not in $portRange" }
@@ -191,8 +186,6 @@ class CordaNode internal constructor(private val network: CordaNetwork) {
                 mapOf(
                     "name" to name,
                     "isNotary" to isNotary,
-                    "location" to location,
-                    "country" to country,
                     "p2pPort" to p2pPort,
                     "rpcPort" to rpcPort,
                     "adminPort" to adminPort,
