@@ -13,6 +13,7 @@
 package org.web3j.corda.examples.obligation
 
 import assertk.assertThat
+import assertk.assertions.isEqualTo
 import generated.net.corda.core.flows.ContractUpgradeFlow_AuthorisePayload
 import generated.net.corda.examples.obligation.flows.IssueObligation_InitiatorPayload
 import generated.net.corda.finance.flows.CashIssueFlowPayload
