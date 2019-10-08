@@ -30,6 +30,21 @@ internal object CordaGeneratorUtils : KLogging() {
         ExperimentalRuleSetProvider().get()
     )
 
+    fun needToRepackage(name: String, mapping: Map<String, String> ): Boolean {
+        return mapping.keys.any { name.startsWith(it) }
+    }
+
+    /**
+     * Repackage a given Corda ort Braid class name onto a safe name.
+     */
+    fun repackage(name: String, mapping: Map<String, String> ): String {
+        return mapping.keys.firstOrNull {
+            name.startsWith(it)
+        }?.let {
+            name.replace(it, mapping[it] ?: error("key '$it' not found"))
+        } ?: name
+    }
+
     fun addLambdas(context: MutableMap<String, Any>) {
         context["lowercase"] = LowercaseLambda()
         context["uppercase"] = UppercaseLambda()

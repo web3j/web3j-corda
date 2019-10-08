@@ -19,6 +19,10 @@ import org.openapitools.codegen.CodegenModel
 import org.openapitools.codegen.CodegenOperation
 import org.openapitools.codegen.languages.AbstractKotlinCodegen
 import org.openapitools.codegen.utils.StringUtils.camelize
+import org.web3j.corda.codegen.CordaGeneratorUtils.addLambdas
+import org.web3j.corda.codegen.CordaGeneratorUtils.needToRepackage
+import org.web3j.corda.codegen.CordaGeneratorUtils.repackage
+import org.web3j.corda.util.NonNullMap
 import java.io.File
 import java.time.OffsetDateTime
 import java.time.ZoneOffset.UTC
@@ -27,7 +31,8 @@ import java.time.format.DateTimeFormatter.ISO_DATE_TIME
 class CorDappClientCodegen(
     packageName: String,
     outputDir: File,
-    typeMapping: Map<String, String>
+    typeMapping: Map<String, String>,
+    private val cordaMapping: Map<String, String>
 ) : AbstractKotlinCodegen() {
 
     init {
@@ -51,7 +56,7 @@ class CorDappClientCodegen(
         super.processOpts()
 
         additionalProperties["java8"] = true
-        CordaGeneratorUtils.addLambdas(additionalProperties)
+        addLambdas(additionalProperties)
 
         // Kotlin native types
         typeMapping["array"] = "kotlin.collections.List"
@@ -65,6 +70,7 @@ class CorDappClientCodegen(
         return when {
             typeMapping.containsKey(name) -> typeMapping[name]!!
             needToImport(name) -> super.toModelImport(name)
+            needToRepackage(name, cordaMapping) -> repackage(name, cordaMapping)
             modelPackage().isEmpty() -> name
             else -> "${modelPackage()}.$name"
         }
@@ -74,10 +80,19 @@ class CorDappClientCodegen(
      * Update the model name to incorporate the package name when specified.
      */
     override fun toModelName(name: String): String {
-        return if (importMapping.containsKey(name)) {
-            importMapping[name]!!
-        } else {
-            name
+        return when {
+            importMapping.containsKey(name) -> importMapping[name]!!
+            needToRepackage(name, cordaMapping) -> repackage(name, cordaMapping)
+            else -> name
+        }
+    }
+
+    override fun toVarName(name: String): String {
+        return when {
+            needToRepackage(name, cordaMapping) -> repackage(name, cordaMapping)
+            else -> name
+        }.let {
+            super.toVarName(it)
         }
     }
 
@@ -85,7 +100,10 @@ class CorDappClientCodegen(
      * Create folder structure according to the given package structure.
      */
     override fun toModelFilename(name: String): String {
-        return name.replace(".", "/")
+        return when {
+            needToRepackage(name, cordaMapping) -> repackage(name, cordaMapping)
+            else -> name
+        }.replace(".", "/")
     }
 
     override fun getOrGenerateOperationId(

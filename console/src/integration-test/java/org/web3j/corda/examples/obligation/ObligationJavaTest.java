@@ -15,10 +15,10 @@ package org.web3j.corda.examples.obligation;
 import java.io.File;
 import java.math.BigDecimal;
 
-import generated.net.corda.examples.obligation.flows.IssueObligation_InitiatorPayload;
 import org.junit.jupiter.api.Test;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
+import org.web3j.corda.examples.obligation.flows.IssueObligation_InitiatorPayload;
 import org.web3j.corda.model.AmountCurrency;
 import org.web3j.corda.model.core.identity.AbstractParty;
 import org.web3j.corda.model.core.identity.Party;
