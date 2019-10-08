@@ -44,4 +44,4 @@ val isMac = System.getProperty("os.name").contains("Mac", true)
 
 val X500Principal.canonicalName: String
     get() = getName(X500Principal.CANONICAL)
-        .replace("[=,]".toRegex(), "_")
+        .replace("[=, ]".toRegex(), "_")
