@@ -18,6 +18,8 @@ import org.gradle.tooling.model.idea.IdeaProject
 import org.gradle.tooling.model.idea.IdeaSingleEntryLibraryDependency
 import org.testcontainers.containers.Network
 import org.testcontainers.containers.wait.strategy.Wait
+import org.web3j.corda.protocol.CordaService
+import org.web3j.corda.protocol.NetworkMap
 import org.web3j.corda.testcontainers.KGenericContainer
 import org.web3j.corda.util.NonNullMap
 import org.web3j.corda.util.OpenApiVersion.v3_0_1
@@ -47,6 +49,10 @@ class CordaNetwork private constructor() {
      * The nodes in this network.
      */
     lateinit var nodes: NonNullMap<String, CordaNode>
+
+    val map: NetworkMap by lazy {
+        NetworkMap.build(CordaService("http://localhost:${mapContainer.getMappedPort(8080)}"))
+    }
 
     /**
      * Dependencies of the [baseDir] CorDapp containing CorDapps JARs.
@@ -82,7 +88,7 @@ class CordaNetwork private constructor() {
     /**
      * Cordite network map Docker container.
      */
-    internal val networkMap: KGenericContainer by lazy {
+    private val mapContainer: KGenericContainer by lazy {
         KGenericContainer(NETWORK_MAP_IMAGE)
             .withCreateContainerCmdModifier {
                 it.withHostName(NETWORK_MAP_ALIAS)
@@ -90,7 +96,7 @@ class CordaNetwork private constructor() {
             }.withNetwork(network)
             .withNetworkAliases(NETWORK_MAP_ALIAS)
             .withEnv(mapOf("NMS_STORAGE_TYPE" to "file"))
-            .waitingFor(Wait.forHttp("").forPort(8080))
+            .waitingFor(Wait.forHttp("").forPort(NETWORK_MAP_PORT))
             .apply { start() }
     }
 
@@ -137,8 +143,9 @@ class CordaNetwork private constructor() {
     companion object {
         private const val NETWORK_MAP_IMAGE = "cordite/network-map:latest"
         private const val NETWORK_MAP_ALIAS = "networkmap"
+        private const val NETWORK_MAP_PORT = 8080
 
-        internal const val NETWORK_MAP_URL = "http://$NETWORK_MAP_ALIAS:8080"
+        internal const val NETWORK_MAP_URL = "http://$NETWORK_MAP_ALIAS:$NETWORK_MAP_PORT"
 
         /**
          *  Corda network DSL entry point.

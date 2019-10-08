@@ -17,7 +17,7 @@ import io.bluebank.braid.corda.server.BraidMain
 import mu.KLogging
 import org.testcontainers.containers.BindMode
 import org.web3j.corda.networkmap.LoginRequest
-import org.web3j.corda.networkmap.NotaryType
+import org.web3j.corda.networkmap.NotaryType.NON_VALIDATING
 import org.web3j.corda.protocol.Corda
 import org.web3j.corda.protocol.CordaService
 import org.web3j.corda.protocol.NetworkMap
@@ -200,11 +200,7 @@ class CordaNode internal constructor(private val network: CordaNetwork) {
     private fun saveCertificateFromNetworkMap(nodeDir: File) {
         val certificateFolder = File(nodeDir, "certificates").apply { mkdir() }
         val certificateFile = certificateFolder.resolve("network-root-truststore.jks")
-        val networkMapUrl = "http://localhost:${network.networkMap.getMappedPort(8080)}"
-
-        NetworkMap.build(CordaService(networkMapUrl)).apply {
-            Files.write(certificateFile.toPath(), networkMap.truststore)
-        }
+        Files.write(certificateFile.toPath(), network.map.networkMap.truststore)
     }
 
     private fun extractNotaryNodeInfo(notary: KGenericContainer, notaryNodeDir: File): String {
@@ -219,14 +215,11 @@ class CordaNode internal constructor(private val network: CordaNetwork) {
     }
 
     private fun updateNotaryInNetworkMap(nodeInfoPath: String) {
-        val networkMapUrl = "http://localhost:${network.networkMap.getMappedPort(8080)}"
-        var networkMapApi = NetworkMap.build(CordaService(networkMapUrl))
-
         val loginRequest = LoginRequest("sa", "admin")
-        val token = networkMapApi.admin.login(loginRequest)
+        val token = network.map.admin.login(loginRequest)
 
-        networkMapApi = NetworkMap.build(CordaService(networkMapUrl), token)
-        networkMapApi.admin.notaries.create(NotaryType.NON_VALIDATING, Files.readAllBytes(Paths.get(nodeInfoPath)))
+        val authkMap = NetworkMap.build(CordaService(network.map.service.uri), token)
+        authMap.admin.notaries.create(NON_VALIDATING, Files.readAllBytes(Paths.get(nodeInfoPath)))
     }
 
     /**
