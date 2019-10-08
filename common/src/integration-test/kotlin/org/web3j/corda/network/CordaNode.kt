@@ -218,7 +218,7 @@ class CordaNode internal constructor(private val network: CordaNetwork) {
         val loginRequest = LoginRequest("sa", "admin")
         val token = network.map.admin.login(loginRequest)
 
-        val authkMap = NetworkMap.build(CordaService(network.map.service.uri), token)
+        val authMap = NetworkMap.build(CordaService(network.map.service.uri), token)
         authMap.admin.notaries.create(NON_VALIDATING, Files.readAllBytes(Paths.get(nodeInfoPath)))
     }
 
