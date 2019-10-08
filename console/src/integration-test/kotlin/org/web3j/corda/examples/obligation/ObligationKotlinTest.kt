@@ -36,10 +36,10 @@ class ObligationKotlinTest {
 
     @Test
     fun `issue obligation`() {
-        val partyB = network.nodes["PartyA"].api.network.nodes
+        val partyB = network.nodes["O=PartyA,L=London,C=GB"].api.network.nodes
             .findByX500Name("O=PartyB,L=New York,C=US")[0].legalIdentities[0]
 
-        Obligation.load(network.nodes["PartyA"].api).flows.issueObligationInitiator.start(
+        Obligation.load(network.nodes["O=PartyA,L=London,C=GB"].api).flows.issueObligationInitiator.start(
             IssueObligation_InitiatorPayload(
                 AmountCurrency(100, BigDecimal.ONE, "GBP"),
                 partyB,
@@ -98,9 +98,9 @@ class ObligationKotlinTest {
                 node {
                     name = "O=PartyA,L=London,C=GB"
                 }
-//                node {
-//                    name = "O=PartyB,L=New York,C=US"
-//                }
+                node {
+                    name = "O=PartyB,L=New York,C=US"
+                }
             }
         }
     }

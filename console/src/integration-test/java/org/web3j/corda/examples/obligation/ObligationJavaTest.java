@@ -62,7 +62,7 @@ public class ObligationJavaTest {
 
     @Test
     public void issueObligation() {
-        final Corda corda = network.getNodes().get("PartyA").getApi();
+        final Corda corda = network.getNodes().get("O=PartyA,L=London,C=GB").getApi();
 
         final Party party =
                 corda.getNetwork().getNodes().findAll().get(2).getLegalIdentities().get(0);
