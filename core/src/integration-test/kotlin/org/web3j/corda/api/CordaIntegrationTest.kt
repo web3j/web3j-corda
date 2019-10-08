@@ -13,92 +13,74 @@
 package org.web3j.corda.api
 
 import assertk.assertThat
+import assertk.assertions.containsOnly
 import assertk.assertions.hasSize
-import assertk.assertions.isDataClassEqualTo
-import assertk.assertions.isEmpty
-import io.bluebank.braid.corda.server.BraidMain
-import org.junit.jupiter.api.BeforeAll
+import assertk.assertions.isEqualTo
 import org.junit.jupiter.api.Test
-import org.testcontainers.junit.jupiter.Testcontainers
-import org.web3j.braid.services.SimpleNodeInfo
-import org.web3j.corda.model.core.identity.Party
-import org.web3j.corda.model.core.utilities.NetworkHostAndPort
+import org.web3j.corda.network.CordaNetwork
+import org.web3j.corda.network.network
+import org.web3j.corda.network.node
+import org.web3j.corda.network.nodes
 import org.web3j.corda.protocol.Corda
-import org.web3j.corda.protocol.CordaService
 
-/**
- * TODO Implement tests for all routes and error cases.
- */
-@Testcontainers
 class CordaIntegrationTest {
 
     @Test
     internal fun `corDapps resource`() {
+        assertThat(corda.corDapps.findAll()).containsOnly("corda-core")
 
-        corda.corDapps.findAll().apply {
-            assertThat(this).isEmpty()
-        }
-
-        corda.corDapps.findById("xyz").apply {
-            // TODO Assertion null or exception
+        corda.corDapps.findById("corda-core").apply {
+            assertThat(flows.findAll()).containsOnly(
+                "net.corda.core.flows.ContractUpgradeFlow\$Authorise",
+                "net.corda.core.flows.ContractUpgradeFlow\$Deauthorise"
+            )
         }
     }
 
     @Test
     internal fun `network resource`() {
-
         corda.network.nodes.self.apply {
             assertThat(legalIdentities).hasSize(1)
-            assertThat(legalIdentities.first()).isDataClassEqualTo(party)
+            assertThat(legalIdentities.first().name).isEqualTo(party)
         }
-
-        corda.network.nodes.findAll().apply {
-            assertThat(this).isDataClassEqualTo(notary)
+        corda.network.nodes.findAll().flatMap { node ->
+            node.legalIdentities.map { party -> party.name }
+        }.apply {
+            assertThat(this).containsOnly(party, notary)
         }
-
-        corda.network.nodes.findByX500Name(party.name).apply {
-            assertThat(this).isDataClassEqualTo(notary)
+        corda.network.nodes.findByX500Name(party).apply {
+            assertThat(this).hasSize(1)
+            assertThat(first().legalIdentities.map { it.name }).containsOnly(party)
         }
-
-        corda.network.nodes.findByHostAndPort("localhost:10005").apply {
-            assertThat(this).isDataClassEqualTo(notary)
+        corda.network.nodes.findByHostAndPort("localhost:${network.nodes[party].p2pPort}").apply {
+            assertThat(this).hasSize(1)
+            assertThat(first().legalIdentities.map { it.name }).containsOnly(party)
         }
-
         corda.network.notaries.findAll().apply {
             assertThat(this).hasSize(1)
-            assertThat(first()).isDataClassEqualTo(party)
+            assertThat(first().name).isEqualTo(notary)
         }
     }
 
     companion object {
 
-        lateinit var corda: Corda
-        lateinit var service: CordaService
+        private const val party = "O=Party, L=New York, C=US"
+        private const val notary = "O=Notary, L=London, C=GB"
 
-        private val party = Party(
-            name = "O=Notary, L=London, C=GB",
-            owningKey = "GfHq2tTVk9z4eXgyQKmUDm9Hyk7bB8yh6bMXvhmaikGFxUDrHhFnJhNiqN5Z"
-        )
+        private val corda: Corda by lazy {
+            network.nodes[party].api
+        }
 
-        private val notary = SimpleNodeInfo(
-            addresses = listOf(NetworkHostAndPort("localhost", 10005)),
-            legalIdentities = listOf(party)
-        )
-
-        @BeforeAll
-        @JvmStatic
-        fun setUp() {
-            BraidMain().start(
-                "localhost:10009",
-                "user1",
-                "test",
-                9000,
-                3,
-                listOf()
-            )
-            service = CordaService("http://localhost:9000")
-            corda = Corda.build(service)
-            Thread.sleep(10000)
+        private val network = CordaNetwork.network {
+            nodes {
+                node {
+                    name = notary
+                    isNotary = true
+                }
+                node {
+                    name = party
+                }
+            }
         }
     }
 }
