@@ -51,7 +51,6 @@ interface NetworkMapResource {
     @get:Path("network-parameters")
     val networkParameters: NetworkParametersResource
 
-
     /**
      * Retrieve this network-map's truststore.
      */

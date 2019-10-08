@@ -15,7 +15,7 @@ package org.web3j.corda.networkmap
 import javax.ws.rs.Path
 
 /**
- * Network Map Service client.
+ * Network Map Service client (partial implementation).
  *
  * **Please note:** The protected parts of this API require JWT authentication.
  *
