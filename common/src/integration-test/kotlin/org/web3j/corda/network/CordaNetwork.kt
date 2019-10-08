@@ -39,9 +39,9 @@ class CordaNetwork private constructor() {
     var version = v3_0_1
 
     /**
-     * CorDapp base directory.
+     * Directory where the CorDapp JARs are located.
      */
-    lateinit var baseDir: File
+    var baseDir: File = File("${System.getProperty("user.dir")}/build/libs")
 
     /**
      * The nodes in this network.
@@ -56,13 +56,12 @@ class CordaNetwork private constructor() {
         if (isGradleProject()) {
             connection.getModel(IdeaProject::class.java).modules.flatMap {
                 it.dependencies
-            }.map {
-                it as IdeaSingleEntryLibraryDependency
-            }.filter {
-                it.gradleModuleVersion.group.startsWith("net.corda")
-            }.map {
-                it.file.absolutePath
-            }
+            }.filterIsInstance<IdeaSingleEntryLibraryDependency>()
+                .filter {
+                    it.gradleModuleVersion.group.startsWith("net.corda")
+                }.map {
+                    it.file.absolutePath
+                }
         } else {
             // Not a valid Gradle project, use baseDir contents
             baseDir.listFiles()!!.map { it.absolutePath }
@@ -99,7 +98,6 @@ class CordaNetwork private constructor() {
      * Gradle connection to the CorDapp located in [baseDir].
      */
     private val connection: ProjectConnection by lazy {
-        require(::baseDir.isInitialized && baseDir.exists())
         GradleConnector.newConnector()
             .useBuildDistribution()
             .forProjectDirectory(baseDir)
