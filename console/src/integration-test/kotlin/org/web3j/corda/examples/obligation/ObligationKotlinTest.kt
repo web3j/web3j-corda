@@ -14,11 +14,11 @@ package org.web3j.corda.examples.obligation
 
 import assertk.assertThat
 import assertk.assertions.isEqualTo
-import generated.net.corda.core.flows.ContractUpgradeFlow_AuthorisePayload
-import generated.net.corda.examples.obligation.flows.IssueObligation_InitiatorPayload
-import generated.net.corda.finance.flows.CashIssueFlowPayload
 import org.junit.jupiter.api.Test
 import org.web3j.corda.core.api.CordaCore
+import org.web3j.corda.core.flows.ContractUpgradeFlow_AuthorisePayload
+import org.web3j.corda.examples.obligation.flows.IssueObligation_InitiatorPayload
+import org.web3j.corda.finance.flows.CashIssueFlowPayload
 import org.web3j.corda.finance.workflows.api.CordaFinanceWorkflows
 import org.web3j.corda.model.AmountCurrency
 import org.web3j.corda.model.core.contracts.StateAndRef_Object
@@ -91,16 +91,16 @@ class ObligationKotlinTest {
         private val network = CordaNetwork.network {
             baseDir = File(javaClass.classLoader.getResource("cordapps")!!.file)
             nodes {
-                node {
-                    name = "O=Notary,L=London,C=GB"
-                    isNotary = true
-                }
+//                node {
+//                    name = "O=Notary,L=London,C=GB"
+//                    isNotary = true
+//                }
                 node {
                     name = "O=PartyA,L=London,C=GB"
                 }
-                node {
-                    name = "O=PartyB,L=New York,C=US"
-                }
+//                node {
+//                    name = "O=PartyB,L=New York,C=US"
+//                }
             }
         }
     }

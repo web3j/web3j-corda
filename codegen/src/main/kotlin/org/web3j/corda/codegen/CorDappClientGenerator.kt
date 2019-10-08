@@ -25,10 +25,12 @@ import org.openapitools.codegen.CodegenConstants.MODEL_PACKAGE
 import org.openapitools.codegen.CodegenConstants.PACKAGE_NAME
 import org.openapitools.codegen.DefaultGenerator
 import org.openapitools.codegen.config.GeneratorProperties.setProperty
+import org.web3j.corda.codegen.CordaGeneratorUtils.repackage
 import org.web3j.corda.model.AmountCurrency
 import org.web3j.corda.model.Error
 import org.web3j.corda.model.core.contracts.Issued
 import org.web3j.corda.model.core.contracts.Issued_issuer
+import org.web3j.corda.util.toNonNullMap
 import java.io.File
 
 class CorDappClientGenerator(
@@ -49,7 +51,7 @@ class CorDappClientGenerator(
         configureTypeMappings()
         opts(
             ClientOptInput()
-                .config(CorDappClientCodegen(packageName, outputDir, typeMapping))
+                .config(CorDappClientCodegen(packageName, outputDir, typeMapping, cordaMapping))
                 .opts(ClientOpts())
                 .openAPI(result.openAPI)
         )
@@ -67,8 +69,8 @@ class CorDappClientGenerator(
         outputFilename: String
     ): File {
         templateData["package"].toString().let {
-            templateData[MODEL_PACKAGE] = it
-            templateData[PACKAGE_NAME] = it
+            templateData[MODEL_PACKAGE] = repackage(it, cordaMapping)
+            templateData[PACKAGE_NAME] = repackage(it, cordaMapping)
         }
         return super.processTemplateToFile(templateData, templateName, outputFilename)
     }
@@ -125,6 +127,12 @@ class CorDappClientGenerator(
         private val parseOptions = ParseOptions()
 
         private val typeMapping = mutableMapOf<String, String>()
+
+        private val cordaMapping = mapOf(
+            "generated.net.corda" to "org.web3j.corda",
+            "net.corda.core" to "org.web3j.corda.model.core",
+            "io.bluebank.braid.corda" to "org.web3j.braid"
+        )
 
         fun buildCorDappNameFromPath(path: String): String {
             return (path.split("/".toRegex())[2])
