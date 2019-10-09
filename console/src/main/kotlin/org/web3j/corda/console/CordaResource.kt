@@ -29,7 +29,7 @@ class CordaResource {
     lateinit var openApiUrl: URL
 
     @Option(
-        names = ["-d", "--cordappsDir"],
+        names = ["-d", "--cordapps-dir"],
         description = ["CorDapps node directory"],
         required = true
     )
