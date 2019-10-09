@@ -52,9 +52,9 @@ class ObligationKotlinTest {
 
     @Test
     fun `authorise contract upgrade flow`() {
-        val notary = network.nodes["PartyA"].api.network.notaries.findAll().first()
+        val notary = network.nodes["O=PartyA,L=London,C=GB"].api.network.notaries.findAll().first()
 
-        CordaCore.load(network.nodes["PartyA"].api).flows.contractUpgradeFlowAuthorise.start(
+        CordaCore.load(network.nodes["O=PartyA,L=London,C=GB"].api).flows.contractUpgradeFlowAuthorise.start(
             ContractUpgradeFlow_AuthorisePayload(
                 StateAndRef_Object(
                     TransactionState_Object(
@@ -72,11 +72,11 @@ class ObligationKotlinTest {
     @Test
     fun `cash issue flow`() {
 
-        val notary = network.nodes["PartyA"].api.network.notaries.findAll().first()
-        val partyB = network.nodes["PartyA"].api.network.nodes
+        val notary = network.nodes["O=PartyA,L=London,C=GB"].api.network.notaries.findAll().first()
+        val partyB = network.nodes["O=PartyA,L=London,C=GB"].api.network.nodes
             .findByX500Name("O=PartyB,L=New York,C=US")[0].legalIdentities[0]
 
-        CordaFinanceWorkflows.load(network.nodes["PartyA"].api).flows.cashIssueFlow.start(
+        CordaFinanceWorkflows.load(network.nodes["O=PartyA,L=London,C=GB"].api).flows.cashIssueFlow.start(
             CashIssueFlowPayload(
                 amount = AmountCurrency(500, BigDecimal.ONE, "ETH"),
                 issuerBankPartyRef = "O=PartyB,L=New York,C=US",
