@@ -22,12 +22,12 @@ class NetworkMap private constructor(
     companion object {
         @JvmStatic
         fun build(service: CordaService): NetworkMap {
-            return NetworkMap(ProxyBuilder.build(NetworkMapApi::class.java, service), service)
+            return NetworkMap(ClientBuilder.build(NetworkMapApi::class.java, service), service)
         }
 
         @JvmStatic
         fun build(service: CordaService, token: String): NetworkMap {
-            return NetworkMap(ProxyBuilder.build(NetworkMapApi::class.java, service, token), service)
+            return NetworkMap(ClientBuilder.build(NetworkMapApi::class.java, service, token), service)
         }
     }
 }

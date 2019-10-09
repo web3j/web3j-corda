@@ -13,23 +13,12 @@
 package org.web3j.corda.dapps
 
 import org.web3j.corda.api.CorDapp
-import org.web3j.corda.protocol.Corda
-import java.io.File
+import org.web3j.corda.protocol.CordaService
 
-interface LifeCycle<T: CorDapp> {
+interface LifeCycle<T : CorDapp> {
 
     /**
      * Loads a CorDapp of type [T] from a node.
      */
-    fun load(corda: Corda): T
-
-    /**
-     * Deploys a CorDapp of type [T] in a node.
-     */
-    fun deploy(corda: Corda, file: File): T = TODO("Deploy CorDapp not implemented")
-
-    /**
-     * Upgrades a CorDapp of type [T] in a node.
-     */
-    fun upgrade(corda: Corda, file: File): T = TODO("Upgrade CorDapp not implemented")
+    fun load(service: CordaService): T
 }

@@ -6,9 +6,9 @@ package {{apiPackage}}
 import org.web3j.corda.api.CorDapp
 import org.web3j.corda.api.Flow
 import org.web3j.corda.dapps.LifeCycle
-import org.web3j.corda.protocol.Corda
-import org.web3j.corda.protocol.ProxyBuilder
-import java.io.File
+import org.web3j.corda.protocol.ClientBuilder
+import org.web3j.corda.protocol.CordaException
+import org.web3j.corda.protocol.CordaService
 import javax.annotation.Generated
 import javax.ws.rs.Consumes
 import javax.ws.rs.POST
@@ -16,51 +16,54 @@ import javax.ws.rs.Path
 import javax.ws.rs.Produces
 
 /**
-* {{cordappName}} CorDapp wrapper.
-*/
+ * {{cordappName}} CorDapp wrapper.
+ */
 @Generated(
-value = ["{{generator}}"],
-date = "{{currentDate}}"
+    value = ["{{generator}}"],
+    date = "{{currentDate}}"
 )
 @Path("{{basePathWithoutHost}}/cordapps/{{classVarName}}/")
 interface {{classname}} : CorDapp {
-{{#operations}}
-@get:Path("flows")
-override val flows: FlowResource
+    {{#operations}}
+    @get:Path("flows")
+    override val flows: FlowResource
 
-interface FlowResource : org.web3j.corda.api.FlowResource {
-{{#flows}}
-    /**
-    * Get the {{#titlecase}}{{#camelcase}}{{flowId}}{{/camelcase}}{{/titlecase}} flow.
-    */
-@get:Path("{{flowPath}}")
-val {{#camelcase}}{{flowId}}{{/camelcase}}: {{#titlecase}}{{#camelcase}}{{flowId}}{{/camelcase}}{{/titlecase}}
-
-    /**
-    * {{classname}} {{#titlecase}}{{#camelcase}}{{flowId}}{{/camelcase}}{{/titlecase}} flow.
-    */
-interface {{#titlecase}}{{#camelcase}}{{flowId}}{{/camelcase}}{{/titlecase}} : Flow {
+    interface FlowResource : org.web3j.corda.api.FlowResource {
+    {{#flows}}
 
         /**
-        * Start the {{#titlecase}}{{#camelcase}}{{flowId}}{{/camelcase}}{{/titlecase}} flow.
-        */
-@POST
-@Produces("{{produces}}")
-@Consumes("{{consumes}}")
-fun start(parameters: {{inputClass}}): {{outputClass}}
-}
-{{/flows}}
-}
+         * Get the {{#titlecase}}{{#camelcase}}{{flowId}}{{/camelcase}}{{/titlecase}} flow.
+         */
+        @get:Path("{{flowPath}}")
+        val {{#camelcase}}{{flowId}}{{/camelcase}}: {{#titlecase}}{{#camelcase}}{{flowId}}{{/camelcase}}{{/titlecase}}
+    
+        /**
+         * {{classname}} {{#titlecase}}{{#camelcase}}{{flowId}}{{/camelcase}}{{/titlecase}} flow.
+         */
+        interface {{#titlecase}}{{#camelcase}}{{flowId}}{{/camelcase}}{{/titlecase}} : Flow {
+    
+            /**
+             * Start the {{#titlecase}}{{#camelcase}}{{flowId}}{{/camelcase}}{{/titlecase}} flow.
+             */
+            @POST
+            @Produces("{{produces}}")
+            @Consumes("{{consumes}}")
+            fun start(parameters: {{inputClass}}): {{outputClass}}
+        }
+    {{/flows}}
+    }
 
     /**
-    * {{classname}} CorDapp lifecycle methods.
-    */
-companion object : LifeCycle<{{classname}}> {
+     * {{classname}} CorDapp lifecycle methods.
+     */
+    companion object : LifeCycle<{{classname}}> {
 
         /**
-        * Loads an existing {{classname}} CorDapp instance.
-        */
-override fun load(corda: Corda) = ProxyBuilder.build({{classname}}::class.java, corda.service)
-}
+         * Loads an existing {{classname}} CorDapp instance.
+         */
+        override fun load(service: CordaService) = ClientBuilder.build(
+            {{classname}}::class.java, service, CordaException.Companion::of
+        )
+    }
 {{/operations}}
 }
