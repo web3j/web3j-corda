@@ -258,7 +258,7 @@ class CordaNode internal constructor(private val network: CordaNetwork) {
 
         private val portRange = 1024..65535
 
-        private fun randomPort() = ServerSocket(0).localPort
+        private fun randomPort() = ServerSocket(0).use { it.localPort }
         private fun Int?.isPort() = this != null && portRange.contains(this)
     }
 }
