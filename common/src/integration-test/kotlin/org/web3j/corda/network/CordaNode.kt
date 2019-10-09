@@ -23,6 +23,7 @@ import org.web3j.corda.protocol.CordaService
 import org.web3j.corda.protocol.NetworkMap
 import org.web3j.corda.testcontainers.KGenericContainer
 import org.web3j.corda.util.canonicalName
+import org.web3j.corda.util.isMac
 import java.io.File
 import java.io.FileOutputStream
 import java.io.InputStreamReader
@@ -86,7 +87,7 @@ class CordaNode internal constructor(private val network: CordaNetwork) {
     /**
      * Timeout for this Corda node to start.
      */
-    var timeOut: Long = Duration.ofMinutes(2).toMillis()
+    var timeOut: Long = Duration.ofMinutes(5).toMillis()
 
     /**
      * Corda API to interact with this node.
@@ -118,6 +119,14 @@ class CordaNode internal constructor(private val network: CordaNetwork) {
         createNodeConfFiles(nodeDir.resolve("node.conf"))
         saveCertificateFromNetworkMap(nodeDir)
 
+        val tempDir = (if (isMac) "/private" else "") +
+                Files.createTempDirectory("tempCordapps").toFile().absolutePath
+
+        network.additionalPaths.forEach {
+            val path = File(it).toPath()
+            Files.copy(path, File("$tempDir/${path.toFile().name}").toPath())
+        }
+
         KGenericContainer(CORDA_ZULU_IMAGE)
             .withNetwork(network.network)
             .withExposedPorts(p2pPort, rpcPort, adminPort)
@@ -148,7 +157,7 @@ class CordaNode internal constructor(private val network: CordaNetwork) {
                     stop()
                 } else {
                     withFileSystemBind(
-                        nodeDir.resolve("cordapps").absolutePath,
+                        tempDir,
                         "/opt/corda/cordapps",
                         BindMode.READ_WRITE
                     )
