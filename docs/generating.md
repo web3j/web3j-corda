@@ -19,9 +19,9 @@ task generateCorDappWrappers(type: JavaExec, group: 'corda') {
     classpath = sourceSets.main.runtimeClasspath
     main = 'org.web3j.corda.console.CordaCommandMain'
 
-    args 'generate', '--package', 'org.web3j.corda',
-            '--cordappsDir', "$projectDir",
-            '--outputDir', "$projectDir/clients"
+    args 'generate', '--package-name', 'org.web3j.corda',
+            '--cordapps-dir', "$projectDir",
+            '--output-dir', "$projectDir/clients"
 }
 ```
 
