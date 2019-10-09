@@ -37,7 +37,7 @@ class GenerateCommand : BaseCommand() {
     lateinit var cordaResource: CordaResource
 
     @Option(
-        names = ["-v", "--version"],
+        names = ["-v", "--open-api-version"],
         description = ["OpenAPI version: \${COMPLETION-CANDIDATES} (default \${DEFAULT-VALUE})"],
         converter = [OpenApiVersionConverter::class],
         required = false

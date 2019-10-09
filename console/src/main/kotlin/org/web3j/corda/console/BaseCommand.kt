@@ -18,14 +18,14 @@ import java.io.File
 abstract class BaseCommand : Runnable {
 
     @Option(
-        names = ["-p", "--package"],
-        description = ["Generated code package"],
+        names = ["-p", "--package-name"],
+        description = ["Generated code package name"],
         required = false
     )
     var packageName: String = ""
 
     @Option(
-        names = ["-o", "--outputDir"],
+        names = ["-o", "--output-dir"],
         description = ["Output directory"],
         required = true
     )
