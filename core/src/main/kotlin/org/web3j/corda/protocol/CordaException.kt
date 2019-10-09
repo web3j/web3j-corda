@@ -12,27 +12,29 @@
  */
 package org.web3j.corda.protocol
 
-import org.web3j.corda.api.CordaApi
+import org.web3j.corda.model.Error
+import javax.ws.rs.ClientErrorException
 
 /**
- * Entry class for the Corda API.
+ * Corda API exception containing error data.
  */
-class Corda private constructor(
-    private val api: CordaApi,
-    val service: CordaService
-) : CordaApi by api {
-
+class CordaException internal constructor(
+    val status: Int,
+    val type: String?,
+    message: String?
+) : RuntimeException(message) {
     companion object {
 
-        /**
-         * Build a new Corda instance with the specified service.
-         */
         @JvmStatic
-        fun build(service: CordaService): Corda {
-            return ClientBuilder.build(
-                CordaApi::class.java, service, CordaException.Companion::of
-            ).let {
-                Corda(it, service)
+        fun of(exception: ClientErrorException): CordaException {
+            with (exception.response) {
+                // Try to de-serialize the exception error
+                val error = if (hasEntity()) {
+                    readEntity(Error::class.java)
+                } else {
+                    null
+                }
+                return CordaException(status, error?.type, error?.message)
             }
         }
     }

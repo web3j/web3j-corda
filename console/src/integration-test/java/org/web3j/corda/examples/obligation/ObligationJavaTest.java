@@ -16,7 +16,6 @@ import java.io.File;
 import java.math.BigDecimal;
 
 import org.junit.jupiter.api.Test;
-import org.testcontainers.junit.jupiter.Testcontainers;
 
 import org.web3j.corda.examples.obligation.flows.IssueObligation_InitiatorPayload;
 import org.web3j.corda.model.AmountCurrency;
@@ -30,7 +29,6 @@ import org.web3j.corda.protocol.Corda;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.web3j.corda.network.CordaNetwork.network;
 
-@Testcontainers
 public class ObligationJavaTest {
 
     private static CordaNetwork network =
@@ -72,7 +70,9 @@ public class ObligationJavaTest {
                 new IssueObligation_InitiatorPayload(amount, party, false);
 
         final Obligation.FlowResource.IssueObligationInitiator issue =
-                Obligation.Companion.load(corda).getFlows().getIssueObligationInitiator();
+                Obligation.Companion.load(corda.getService())
+                        .getFlows()
+                        .getIssueObligationInitiator();
 
         final SignedTransaction signedTx = issue.start(parameters);
 
