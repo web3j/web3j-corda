@@ -23,6 +23,7 @@ import java.io.PrintWriter
 import java.net.ServerSocket
 import java.nio.file.Files
 import java.nio.file.Paths
+import java.nio.file.StandardCopyOption
 import java.time.Duration
 import java.util.concurrent.CountDownLatch
 import javax.security.auth.x500.X500Principal
@@ -122,7 +123,7 @@ class CordaNode internal constructor(private val network: CordaNetwork) {
 
         network.additionalPaths.forEach {
             val path = File(it).toPath()
-            Files.copy(path, File("$tempDir/${path.toFile().name}").toPath())
+            Files.copy(path, File("$tempDir/${path.toFile().name}").toPath(), StandardCopyOption.REPLACE_EXISTING)
         }
 
         KGenericContainer(CORDA_ZULU_IMAGE)
