@@ -12,6 +12,7 @@
  */
 package org.web3j.corda.network
 
+import io.vertx.core.Vertx
 import java.io.File
 import java.nio.file.Files
 import java.util.function.Consumer
@@ -84,6 +85,11 @@ class CordaNetwork private constructor() {
      */
     internal val cordappsDir = (if (isMac) "/private" else "") +
             Files.createTempDirectory("cordapps").toFile().absolutePath
+
+    /**
+     * Vertx instance shared by all Braid servers.
+     */
+    internal val vertx = Vertx.vertx()
 
     /**
      * Cordite network map Docker container.

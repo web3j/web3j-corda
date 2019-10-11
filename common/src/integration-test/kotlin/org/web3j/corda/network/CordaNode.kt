@@ -168,7 +168,11 @@ class CordaNode internal constructor(private val network: CordaNetwork) {
     /**
      * Braid server for this Corda node.
      */
-    private val braid = BraidMain()
+    private val braid = BraidMain(
+        network.additionalPaths,
+        network.version.toInt(),
+        network.vertx
+    )
 
     /**
      * Start this Corda node.
@@ -178,7 +182,10 @@ class CordaNode internal constructor(private val network: CordaNetwork) {
     /**
      * Stop this Corda node.
      */
-    fun stop() = container.stop()
+    fun stop() {
+        braid.shutdown()
+        container.stop()
+    }
 
     internal fun validate() {
         require(name.isNotBlank()) { "Field 'name' cannot be blank" }
@@ -240,9 +247,7 @@ class CordaNode internal constructor(private val network: CordaNetwork) {
             "localhost:${container.getMappedPort(rpcPort)}",
             userName,
             password,
-            apiPort,
-            network.version.toInt(),
-            network.additionalPaths
+            apiPort
         ).setHandler {
             if (it.failed()) {
                 assertk.fail(it.cause().message ?: it.cause()::class.qualifiedName!!)
