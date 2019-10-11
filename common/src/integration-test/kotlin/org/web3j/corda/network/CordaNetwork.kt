@@ -12,6 +12,7 @@
  */
 package org.web3j.corda.network
 
+import io.bluebank.braid.core.utils.toJarsClassLoader
 import io.vertx.core.Vertx
 import java.io.File
 import java.nio.file.Files
@@ -73,6 +74,13 @@ class CordaNetwork private constructor() {
             // Not a valid Gradle project, use baseDir contents
             baseDir.listFiles()!!.map { it.absolutePath }
         }
+    }
+
+    /**
+     * Class loader to be used with Braid instances.
+     */
+    internal val jarsClassLoader: ClassLoader by lazy {
+        additionalPaths.toJarsClassLoader()
     }
 
     /**

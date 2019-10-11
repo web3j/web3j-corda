@@ -171,7 +171,7 @@ class CordaNode internal constructor(private val network: CordaNetwork) {
      * Braid server for this Corda node.
      */
     private val braid = BraidMain(
-        network.additionalPaths,
+        network.jarsClassLoader,
         network.version.toInt(),
         network.vertx
     )
