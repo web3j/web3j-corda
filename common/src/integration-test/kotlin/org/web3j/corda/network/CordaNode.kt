@@ -14,6 +14,7 @@ package org.web3j.corda.network
 
 import com.samskivert.mustache.Mustache
 import io.bluebank.braid.corda.server.BraidMain
+import io.vertx.core.Future
 import java.io.File
 import java.io.FileOutputStream
 import java.io.InputStreamReader
@@ -93,9 +94,7 @@ class CordaNode internal constructor(private val network: CordaNetwork) {
      * Corda API to interact with this node.
      */
     val api: Corda by lazy {
-        braid.start().thenApply {
-            Corda.build(CordaService("http://localhost:$apiPort"))
-        }.get()
+        Corda.build(CordaService("http://localhost:$apiPort"))
     }
 
     val canonicalName: String by lazy {
@@ -150,11 +149,15 @@ class CordaNode internal constructor(private val network: CordaNetwork) {
                 logger.info { it.utf8String.trimEnd() }
             }.apply {
                 if (isNotary) {
+                    logger.info("Starting notary container $canonicalName...")
                     start()
+                    logger.info("Started notary container $canonicalName.")
                     extractNotaryNodeInfo(this, nodeDir).also {
                         updateNotaryInNetworkMap(nodeDir.resolve(it).absolutePath)
                     }
+                    logger.info("Stopping notary container $canonicalName...")
                     stop()
+                    logger.info("Stopped notary container $canonicalName.")
                 } else {
                     withFileSystemBind(
                         tempDir,
@@ -177,14 +180,21 @@ class CordaNode internal constructor(private val network: CordaNetwork) {
     /**
      * Start this Corda node.
      */
-    fun start() = container.start()
+    fun start() {
+        logger.info("Starting Corda node $canonicalName...")
+        container.start()
+        braid.start()
+        logger.info("Started Corda node $canonicalName.")
+    }
 
     /**
      * Stop this Corda node.
      */
     fun stop() {
+        logger.info("Stopping Corda node $canonicalName...")
         braid.shutdown()
         container.stop()
+        logger.info("Stopped Corda node $canonicalName.")
     }
 
     internal fun validate() {
@@ -220,12 +230,17 @@ class CordaNode internal constructor(private val network: CordaNetwork) {
     }
 
     private fun extractNotaryNodeInfo(notary: KGenericContainer, notaryNodeDir: File): String {
+        logger.info("Extracting notary info from container $canonicalName...")
         return notary.run {
             execInContainer("find", ".", "-maxdepth", "1", "-name", "nodeInfo*").stdout.run {
                 substring(2, length - 1) // remove relative path and the ending newline character
             }.also {
-                copyFileFromContainer("/opt/corda/$it", notaryNodeDir.resolve(it).absolutePath)
+                val nodeInfoPath = notaryNodeDir.resolve(it).absolutePath
+                logger.info("Copying notary folder from /opt/corda/$it to $nodeInfoPath")
+                copyFileFromContainer("/opt/corda/$it", nodeInfoPath)
+                logger.info("Removing folder from /opt/corda/$it")
                 execInContainer("rm", "network-parameters")
+                logger.info("Extracted notary info from container $canonicalName.")
             }
         }
     }
@@ -235,27 +250,30 @@ class CordaNode internal constructor(private val network: CordaNetwork) {
         val token = network.map.admin.login(loginRequest)
 
         val authMap = NetworkMap.build(CordaService(network.map.service.uri), token)
+
+        logger.info("Creating a non-validating notary in network map with node info $nodeInfoPath")
         authMap.admin.notaries.create(NON_VALIDATING, Files.readAllBytes(Paths.get(nodeInfoPath)))
     }
 
     /**
      * Start Braid server synchronously.
      */
-    private fun BraidMain.start() = runAsync {
+    private fun BraidMain.start() {
         val latch = CountDownLatch(1)
+        val result = Future.future<String>()
         start(
             "localhost:${container.getMappedPort(rpcPort)}",
             userName,
             password,
             apiPort
         ).setHandler {
-            if (it.failed()) {
-                assertk.fail(it.cause().message ?: it.cause()::class.qualifiedName!!)
-            } else {
-                latch.countDown()
-            }
+            result.handle(it)
+            latch.countDown()
         }
         latch.await()
+        if (result.failed()) {
+            assertk.fail(result.cause().message ?: result.cause()::class.qualifiedName!!)
+        }
     }
 
     companion object : KLogging() {

@@ -6,7 +6,10 @@ dependencies {
     implementation group: 'com.fasterxml.jackson.module', name: 'jackson-module-kotlin', version: versions.jackson
     
     integrationTestApi project(':web3j-corda-core')
-    integrationTestApi group: 'net.corda', name: 'corda-node', version: versions.corda
+    integrationTestApi(group: 'net.corda', name: 'corda-node', version: versions.corda){
+        exclude group: 'org.apache.logging.log4j'
+    }
+
     integrationTestApi group: 'io.bluebank.braid', name: 'braid-corda', version: versions.braid, changing: true
     
     integrationTestImplementation "org.gradle:gradle-tooling-api:5.6.2"
