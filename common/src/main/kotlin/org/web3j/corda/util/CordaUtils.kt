@@ -23,7 +23,7 @@ import com.fasterxml.jackson.module.kotlin.convertValue
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import javax.security.auth.x500.X500Principal
 
-internal fun Any.toJson(): String = mapper
+fun Any.toJson(): String = mapper
     .writerWithDefaultPrettyPrinter()
     .writeValueAsString(this)
 
@@ -37,7 +37,7 @@ fun <T> convert(value: Any, type: Class<T>): T = mapper.convertValue(value, type
 
 inline fun <reified T : Any> Any.convert() = mapper.convertValue<T>(this)
 
-internal fun <K, V> Iterable<Pair<K, V>>.toNonNullMap(): NonNullMap<K, V> = NonNullMap(toMap())
+fun <K, V> Iterable<Pair<K, V>>.toNonNullMap(): NonNullMap<K, V> = NonNullMap(toMap())
 
 class NonNullMap<K, V>(private val map: Map<K, V>) : Map<K, V> by map {
     override operator fun get(key: K): V {
@@ -45,8 +45,8 @@ class NonNullMap<K, V>(private val map: Map<K, V>) : Map<K, V> by map {
     }
 }
 
-internal val isMac = System.getProperty("os.name").contains("Mac", true)
+val isMac = System.getProperty("os.name").contains("Mac", true)
 
-internal val X500Principal.canonicalName: String
+val X500Principal.canonicalName: String
     get() = getName(X500Principal.CANONICAL)
         .replace("[=, ]".toRegex(), "_")
