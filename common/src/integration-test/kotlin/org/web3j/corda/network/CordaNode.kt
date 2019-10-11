@@ -24,7 +24,6 @@ import java.net.ServerSocket
 import java.nio.file.Files
 import java.nio.file.Paths
 import java.time.Duration
-import java.util.concurrent.CompletableFuture.runAsync
 import java.util.concurrent.CountDownLatch
 import javax.security.auth.x500.X500Principal
 import mu.KLogging
