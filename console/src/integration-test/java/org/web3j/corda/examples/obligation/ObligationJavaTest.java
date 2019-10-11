@@ -47,14 +47,8 @@ public class ObligationJavaTest {
                                                 node.setName("O=Notary,L=London,C=GB");
                                                 node.setNotary(true);
                                             });
-                                    nodes.node(
-                                            node -> {
-                                                node.setName("O=PartyA,L=London,C=GB");
-                                            });
-                                    nodes.node(
-                                            node -> {
-                                                node.setName("O=PartyB,L=New York,C=US");
-                                            });
+                                    nodes.node(node -> node.setName("O=PartyA,L=London,C=GB"));
+                                    nodes.node(node -> node.setName("O=PartyB,L=New York,C=US"));
                                 });
                     });
 

@@ -46,7 +46,7 @@ class ObligationKotlinTest {
                 false
             )
         ).apply {
-            assertThat(coreTransaction!!.outputs[0].data!!.participants.first().owningKey).isEqualTo(partyB.owningKey)
+            assertThat(coreTransaction!!.outputs[0].data!!.participants?.first()?.owningKey).isEqualTo(partyB.owningKey)
         }
     }
 
@@ -73,17 +73,16 @@ class ObligationKotlinTest {
     fun `cash issue flow`() {
 
         val notary = network.nodes["O=PartyA,L=London,C=GB"].api.network.notaries.findAll().first()
-        val partyB = network.nodes["O=PartyA,L=London,C=GB"].api.network.nodes
-            .findByX500Name("O=PartyB,L=New York,C=US")[0].legalIdentities[0]
+        val partyA = network.nodes["O=PartyA,L=London,C=GB"].api.network.nodes.self
 
         CordaFinanceWorkflows.load(network.nodes["O=PartyA,L=London,C=GB"].api.service).flows.cashIssueFlow.start(
             CashIssueFlowPayload(
-                amount = AmountCurrency(500, BigDecimal.ONE, "ETH"),
-                issuerBankPartyRef = "O=PartyB,L=New York,C=US",
+                amount = AmountCurrency(100, BigDecimal.valueOf(0.01), "GBP"),
+                issuerBankPartyRef = "736F6D654279746573",
                 notary = notary
             )
         ).apply {
-            assertThat(recipient!!.owningKey).isEqualTo(partyB.owningKey)
+            assertThat(recipient!!.owningKey).isEqualTo(partyA.legalIdentities.first().owningKey)
         }
     }
 
@@ -91,10 +90,10 @@ class ObligationKotlinTest {
         private val network = CordaNetwork.network {
             baseDir = File(javaClass.classLoader.getResource("cordapps")!!.file)
             nodes {
-//                node {
-//                    name = "O=Notary,L=London,C=GB"
-//                    isNotary = true
-//                }
+                node {
+                    name = "O=Notary,L=London,C=GB"
+                    isNotary = true
+                }
                 node {
                     name = "O=PartyA,L=London,C=GB"
                 }

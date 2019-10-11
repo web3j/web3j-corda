@@ -31,7 +31,7 @@ import javax.annotation.Generated
 data class CoreTransaction(
     val inputs: kotlin.collections.List<org.web3j.corda.model.core.contracts.StateRef>,
     val references: kotlin.collections.List<org.web3j.corda.model.core.contracts.StateRef>,
-    val outputStates: kotlin.collections.List<org.web3j.corda.model.core.contracts.ContractState>,
+    val outputStates: kotlin.collections.List<org.web3j.corda.model.core.contracts.ContractState>?,
     val outputs: kotlin.collections.List<org.web3j.corda.model.core.contracts.TransactionState_net_corda_core_contracts_ContractState>,
     /* Base 58 Encoded Secure Hash */
     val id: kotlin.String,
