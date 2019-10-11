@@ -12,8 +12,8 @@
  */
 package org.web3j.corda.console
 
-import picocli.CommandLine.Option
 import java.io.File
+import picocli.CommandLine.Option
 
 abstract class BaseCommand : Runnable {
 

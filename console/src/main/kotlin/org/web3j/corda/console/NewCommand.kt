@@ -12,16 +12,16 @@
  */
 package org.web3j.corda.console
 
+import java.io.File
+import java.nio.file.Files
+import java.nio.file.Path
+import java.nio.file.StandardCopyOption
 import org.gradle.tooling.GradleConnector
 import org.web3j.corda.codegen.CorDappGenerator
 import picocli.CommandLine.Command
 import picocli.CommandLine.Model.CommandSpec
 import picocli.CommandLine.Option
 import picocli.CommandLine.Spec
-import java.io.File
-import java.nio.file.Files
-import java.nio.file.Path
-import java.nio.file.StandardCopyOption
 
 /**
  * Custom CLI interpreter to generate a new sample CordApp and web3j client.

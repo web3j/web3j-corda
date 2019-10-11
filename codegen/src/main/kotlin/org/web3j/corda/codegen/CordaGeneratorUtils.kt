@@ -16,12 +16,12 @@ import com.pinterest.ktlint.core.KtLint
 import com.pinterest.ktlint.ruleset.experimental.ExperimentalRuleSetProvider
 import com.pinterest.ktlint.ruleset.standard.StandardRuleSetProvider
 import com.samskivert.mustache.Mustache
+import java.io.File
 import mu.KLogging
 import org.openapitools.codegen.templating.mustache.CamelCaseLambda
 import org.openapitools.codegen.templating.mustache.LowercaseLambda
 import org.openapitools.codegen.templating.mustache.TitlecaseLambda
 import org.openapitools.codegen.templating.mustache.UppercaseLambda
-import java.io.File
 
 internal object CordaGeneratorUtils : KLogging() {
 
@@ -30,14 +30,14 @@ internal object CordaGeneratorUtils : KLogging() {
         ExperimentalRuleSetProvider().get()
     )
 
-    fun needToRepackage(name: String, mapping: Map<String, String> ): Boolean {
+    fun needToRepackage(name: String, mapping: Map<String, String>): Boolean {
         return mapping.keys.any { name.startsWith(it) }
     }
 
     /**
      * Repackage a given Corda ort Braid class name onto a safe name.
      */
-    fun repackage(name: String, mapping: Map<String, String> ): String {
+    fun repackage(name: String, mapping: Map<String, String>): String {
         return mapping.keys.firstOrNull {
             name.startsWith(it)
         }?.let {

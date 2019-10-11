@@ -14,16 +14,6 @@ package org.web3j.corda.network
 
 import com.samskivert.mustache.Mustache
 import io.bluebank.braid.corda.server.BraidMain
-import mu.KLogging
-import org.testcontainers.containers.BindMode
-import org.web3j.corda.networkmap.LoginRequest
-import org.web3j.corda.networkmap.NotaryType.NON_VALIDATING
-import org.web3j.corda.protocol.Corda
-import org.web3j.corda.protocol.CordaService
-import org.web3j.corda.protocol.NetworkMap
-import org.web3j.corda.testcontainers.KGenericContainer
-import org.web3j.corda.util.canonicalName
-import org.web3j.corda.util.isMac
 import java.io.File
 import java.io.FileOutputStream
 import java.io.InputStreamReader
@@ -36,6 +26,16 @@ import java.time.Duration
 import java.util.concurrent.CompletableFuture.runAsync
 import java.util.concurrent.CountDownLatch
 import javax.security.auth.x500.X500Principal
+import mu.KLogging
+import org.testcontainers.containers.BindMode
+import org.web3j.corda.networkmap.LoginRequest
+import org.web3j.corda.networkmap.NotaryType.NON_VALIDATING
+import org.web3j.corda.protocol.Corda
+import org.web3j.corda.protocol.CordaService
+import org.web3j.corda.protocol.NetworkMap
+import org.web3j.corda.testcontainers.KGenericContainer
+import org.web3j.corda.util.canonicalName
+import org.web3j.corda.util.isMac
 
 class CordaNode internal constructor(private val network: CordaNetwork) {
 
@@ -140,7 +140,7 @@ class CordaNode internal constructor(private val network: CordaNetwork) {
             ).withEnv("NETWORKMAP_URL", CordaNetwork.NETWORK_MAP_URL)
             .withEnv("DOORMAN_URL", CordaNetwork.NETWORK_MAP_URL)
             .withEnv("NETWORK_TRUST_PASSWORD", "trustpass")
-            .withEnv("MY_PUBLIC_ADDRESS", "http://localhost:${p2pPort}")
+            .withEnv("MY_PUBLIC_ADDRESS", "http://localhost:$p2pPort")
             .withCommand("config-generator --generic")
             .withStartupTimeout(Duration.ofMillis(timeOut))
             .withCreateContainerCmdModifier {

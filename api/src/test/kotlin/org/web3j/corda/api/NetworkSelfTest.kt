@@ -22,13 +22,12 @@ import com.github.tomakehurst.wiremock.client.WireMock.stubFor
 import com.github.tomakehurst.wiremock.client.WireMock.urlMatching
 import com.github.tomakehurst.wiremock.client.WireMock.urlPathEqualTo
 import com.github.tomakehurst.wiremock.client.WireMock.verify
+import javax.ws.rs.core.MediaType
 import org.apache.http.client.methods.HttpGet
 import org.junit.jupiter.api.Test
 import org.web3j.braid.services.SimpleNodeInfo
 import org.web3j.corda.model.core.identity.Party
 import org.web3j.corda.model.core.utilities.NetworkHostAndPort
-import javax.ws.rs.core.MediaType
-
 
 class NetworkSelfTest : WireMockInterface() {
 
@@ -59,6 +58,5 @@ class NetworkSelfTest : WireMockInterface() {
             getRequestedFor(urlMatching("/api/rest/network/nodes/self"))
                 .withHeader("Content-Type", matching(MediaType.APPLICATION_JSON))
         )
-
     }
 }

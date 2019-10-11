@@ -12,8 +12,8 @@
  */
 package org.web3j.corda.model.core.contracts
 
-import org.web3j.corda.model.core.identity.AbstractParty
 import javax.annotation.Generated
+import org.web3j.corda.model.core.identity.AbstractParty
 
 /**
  *

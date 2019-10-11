@@ -16,6 +16,7 @@ import io.github.classgraph.ClassGraph
 import io.swagger.v3.parser.OpenAPIV3Parser
 import io.swagger.v3.parser.core.models.ParseOptions
 import io.swagger.v3.parser.core.models.SwaggerParseResult
+import java.io.File
 import org.openapitools.codegen.ClientOptInput
 import org.openapitools.codegen.ClientOpts
 import org.openapitools.codegen.CodegenConstants.APIS
@@ -30,8 +31,6 @@ import org.web3j.corda.model.AmountCurrency
 import org.web3j.corda.model.Error
 import org.web3j.corda.model.core.contracts.Issued
 import org.web3j.corda.model.core.contracts.Issued_issuer
-import org.web3j.corda.util.toNonNullMap
-import java.io.File
 
 class CorDappClientGenerator(
     private val packageName: String,

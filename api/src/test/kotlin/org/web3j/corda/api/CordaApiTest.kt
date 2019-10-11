@@ -18,10 +18,9 @@ import com.github.tomakehurst.wiremock.client.WireMock.getRequestedFor
 import com.github.tomakehurst.wiremock.client.WireMock.matching
 import com.github.tomakehurst.wiremock.client.WireMock.urlMatching
 import com.github.tomakehurst.wiremock.client.WireMock.verify
+import javax.ws.rs.core.MediaType
 import org.apache.http.client.methods.HttpGet
 import org.junit.jupiter.api.Test
-import javax.ws.rs.core.MediaType
-
 
 class CordaApiTest : WireMockInterface() {
 

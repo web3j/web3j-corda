@@ -16,12 +16,12 @@ import assertk.assertThat
 import assertk.assertions.exists
 import assertk.assertions.isEqualTo
 import assertk.assertions.isNotNull
+import java.io.File
 import org.gradle.testkit.runner.GradleRunner
 import org.gradle.testkit.runner.TaskOutcome.SUCCESS
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.io.TempDir
-import java.io.File
 
 /**
  * TODO Update OpenAPI definition assertions.

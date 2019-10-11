@@ -14,6 +14,8 @@ package org.web3j.corda.examples.obligation
 
 import assertk.assertThat
 import assertk.assertions.isEqualTo
+import java.io.File
+import java.math.BigDecimal
 import org.junit.jupiter.api.Test
 import org.web3j.corda.core.api.CordaCore
 import org.web3j.corda.core.flows.ContractUpgradeFlow_AuthorisePayload
@@ -29,8 +31,6 @@ import org.web3j.corda.network.network
 import org.web3j.corda.network.node
 import org.web3j.corda.network.nodes
 import org.web3j.corda.obligation.api.Obligation
-import java.io.File
-import java.math.BigDecimal
 
 class ObligationKotlinTest {
 

@@ -12,10 +12,10 @@
  */
 package org.web3j.corda.api
 
-import org.web3j.braid.services.vault.VaultQuery
-import org.web3j.corda.model.core.node.services.Vault_Page_net_corda_core_contracts_ContractState
 import javax.ws.rs.Path
 import javax.ws.rs.QueryParam
+import org.web3j.braid.services.vault.VaultQuery
+import org.web3j.corda.model.core.node.services.Vault_Page_net_corda_core_contracts_ContractState
 
 interface VaultResource {
 

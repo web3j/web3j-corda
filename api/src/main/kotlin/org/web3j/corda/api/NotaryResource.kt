@@ -12,9 +12,9 @@
  */
 package org.web3j.corda.api
 
-import org.web3j.corda.model.core.identity.Party
 import javax.ws.rs.GET
 import javax.ws.rs.QueryParam
+import org.web3j.corda.model.core.identity.Party
 
 interface NotaryResource {
 

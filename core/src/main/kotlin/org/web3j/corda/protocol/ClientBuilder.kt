@@ -12,12 +12,12 @@
  */
 package org.web3j.corda.protocol
 
-import org.glassfish.jersey.client.proxy.WebResourceFactory
-import org.web3j.corda.api.AuthenticationFilter
 import java.lang.reflect.InvocationHandler
 import java.lang.reflect.Method
 import java.lang.reflect.Proxy
 import javax.ws.rs.ClientErrorException
+import org.glassfish.jersey.client.proxy.WebResourceFactory
+import org.web3j.corda.api.AuthenticationFilter
 
 object ClientBuilder {
 

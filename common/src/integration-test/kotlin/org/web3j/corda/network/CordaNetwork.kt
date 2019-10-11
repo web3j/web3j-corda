@@ -12,6 +12,10 @@
  */
 package org.web3j.corda.network
 
+import java.io.File
+import java.nio.file.Files
+import java.util.function.Consumer
+import kotlin.streams.toList
 import org.gradle.tooling.GradleConnector
 import org.gradle.tooling.ProjectConnection
 import org.gradle.tooling.model.idea.IdeaProject
@@ -25,10 +29,6 @@ import org.web3j.corda.util.NonNullMap
 import org.web3j.corda.util.OpenApiVersion.v3_0_1
 import org.web3j.corda.util.isMac
 import org.web3j.corda.util.toNonNullMap
-import java.io.File
-import java.nio.file.Files
-import java.util.function.Consumer
-import kotlin.streams.toList
 
 /**
  * Corda network DSK for integration tests web3j CorDapp wrappers.

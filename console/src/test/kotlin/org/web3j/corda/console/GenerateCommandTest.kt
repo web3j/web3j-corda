@@ -14,11 +14,11 @@ package org.web3j.corda.console
 
 import assertk.assertThat
 import assertk.assertions.exists
+import java.io.File
+import java.nio.file.Files
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.io.TempDir
-import java.io.File
-import java.nio.file.Files
 
 class GenerateCommandTest {
 

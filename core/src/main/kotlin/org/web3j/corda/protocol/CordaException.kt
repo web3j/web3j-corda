@@ -12,8 +12,8 @@
  */
 package org.web3j.corda.protocol
 
-import org.web3j.corda.model.Error
 import javax.ws.rs.ClientErrorException
+import org.web3j.corda.model.Error
 
 /**
  * Corda API exception containing error data.
@@ -27,7 +27,7 @@ class CordaException internal constructor(
 
         @JvmStatic
         fun of(exception: ClientErrorException): CordaException {
-            with (exception.response) {
+            with(exception.response) {
                 // Try to de-serialize the exception error
                 val error = if (hasEntity()) {
                     readEntity(Error::class.java)

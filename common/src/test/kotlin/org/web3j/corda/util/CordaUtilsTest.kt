@@ -14,8 +14,8 @@ package org.web3j.corda.util
 
 import assertk.assertThat
 import assertk.assertions.isEqualTo
-import org.junit.jupiter.api.Test
 import javax.security.auth.x500.X500Principal
+import org.junit.jupiter.api.Test
 
 class CordaUtilsTest {
 

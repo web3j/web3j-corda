@@ -15,7 +15,7 @@ buildscript {
 }
 
 plugins {
-    id 'com.diffplug.gradle.spotless' version '3.24.3'
+    id 'com.diffplug.gradle.spotless' version '3.25.0'
 }
 
 description = 'Integrates web3j with the Corda blockchain platform.'
@@ -158,8 +158,7 @@ subprojects {
                 include '**/*.kt'
                 exclude '**/.gradle/**'
             }
-//            FIXME spotless breaks with ktlint version 0.32 + (https://github.com/diffplug/spotless/issues/419)
-//            ktlint(versions.ktlint)
+            ktlint(versions.ktlint)
             trimTrailingWhitespace()
             licenseHeaderFile "${rootDir}/gradle/spotless.license"
             endWithNewline()

@@ -22,7 +22,7 @@ import org.junit.jupiter.api.BeforeEach
 
 abstract class WireMockInterface {
 
-    private lateinit var wireMockServer : WireMockServer
+    private lateinit var wireMockServer: WireMockServer
     protected val objectMapper = jacksonObjectMapper()
     protected val httpClient: CloseableHttpClient = HttpClients.createDefault()
 
@@ -36,5 +36,4 @@ abstract class WireMockInterface {
     fun tearDown() {
         wireMockServer.stop()
     }
-
 }

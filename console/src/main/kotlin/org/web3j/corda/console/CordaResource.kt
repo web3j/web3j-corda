@@ -12,11 +12,11 @@
  */
 package org.web3j.corda.console
 
-import picocli.CommandLine.ITypeConverter
-import picocli.CommandLine.Option
 import java.io.File
 import java.net.MalformedURLException
 import java.net.URL
+import picocli.CommandLine.ITypeConverter
+import picocli.CommandLine.Option
 
 class CordaResource {
 

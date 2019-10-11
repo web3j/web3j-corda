@@ -12,10 +12,10 @@
  */
 package org.web3j.corda.api
 
-import org.web3j.braid.services.SimpleNodeInfo
 import javax.ws.rs.GET
 import javax.ws.rs.Path
 import javax.ws.rs.QueryParam
+import org.web3j.braid.services.SimpleNodeInfo
 
 interface NodeResource {
 

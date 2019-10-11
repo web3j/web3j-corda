@@ -12,14 +12,14 @@
  */
 package org.web3j.corda.console
 
+import java.lang.IllegalStateException
+import java.util.Properties
 import org.web3j.corda.console.CordaCommand.VersionProvider
 import picocli.CommandLine.Command
 import picocli.CommandLine.IVersionProvider
 import picocli.CommandLine.Model.CommandSpec
 import picocli.CommandLine.ParameterException
 import picocli.CommandLine.Spec
-import java.lang.IllegalStateException
-import java.util.Properties
 
 /**
  * Custom CLI interpreter for Corda applications.
