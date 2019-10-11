@@ -13,12 +13,8 @@
 package org.web3j.corda.console
 
 import io.bluebank.braid.corda.server.BraidDocsMain
+import io.bluebank.braid.core.utils.toJarsClassLoader
 import io.bluebank.braid.core.utils.tryWithClassLoader
-import java.net.URL
-import java.net.URLClassLoader
-import java.nio.charset.StandardCharsets.UTF_8
-import java.nio.file.Files
-import kotlin.streams.toList
 import org.web3j.corda.codegen.CorDappClientGenerator
 import org.web3j.corda.util.OpenApiVersion
 import org.web3j.corda.util.OpenApiVersion.v3_0_1
@@ -26,6 +22,10 @@ import picocli.CommandLine.ArgGroup
 import picocli.CommandLine.Command
 import picocli.CommandLine.ITypeConverter
 import picocli.CommandLine.Option
+import java.net.URL
+import java.nio.charset.StandardCharsets.UTF_8
+import java.nio.file.Files
+import kotlin.streams.toList
 
 /**
  * Custom CLI interpreter to generate a new template web3j wrappers for given CordApp.
@@ -70,13 +70,16 @@ class GenerateCommand : BaseCommand() {
     }
 
     private fun generateOpenApiDef(): String {
-        return Files.list(cordaResource.corDappsDir.toPath()).toList().map {
-            it.toFile().toURI().toURL()
-        }.run {
-            tryWithClassLoader(URLClassLoader(toTypedArray())) {
-                BraidDocsMain().swaggerText(openApiVersion.toInt())
+        return Files.list(cordaResource.corDappsDir.toPath()).toList()
+            .map {
+                it.toFile().toURI().toURL().toExternalForm()
+            }.filter {
+                it.endsWith(".jar")
+            }.run {
+                tryWithClassLoader(toJarsClassLoader()) {
+                    BraidDocsMain().swaggerText(openApiVersion.toInt())
+                }
             }
-        }
     }
 
     private class OpenApiVersionConverter : ITypeConverter<OpenApiVersion> {
