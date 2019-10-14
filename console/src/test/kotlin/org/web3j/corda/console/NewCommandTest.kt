@@ -23,16 +23,12 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.io.TempDir
 import java.io.File
 
-/**
- * TODO Update OpenAPI definition assertions.
- */
 class NewCommandTest {
 
     @TempDir
     lateinit var outputDir: File
 
     @Test
-    @Disabled // FIXME: the gitlab CI fails, but passes locally.
     fun `create a template CorDapp and verify build`() {
         CordaCommandMain.main(
             "new",
@@ -48,7 +44,7 @@ class NewCommandTest {
             .forProjectDirectory(outputDir)
             .connect()
             .newBuild()
-            .forTasks("test")
+            .forTasks("build")
             .run(object : ResultHandler<Void> {
                 override fun onFailure(failure: GradleConnectionException) {
                     fail(failure.message ?: failure.javaClass.canonicalName)
