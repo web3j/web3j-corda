@@ -12,6 +12,7 @@
  */
 package org.web3j.corda.network
 
+import io.bluebank.braid.corda.server.BraidMain
 import io.bluebank.braid.core.utils.toJarsClassLoader
 import io.vertx.core.Vertx
 import java.io.File
@@ -79,7 +80,7 @@ class CordaNetwork private constructor() {
     /**
      * Class loader to be used with Braid instances.
      */
-    internal val jarsClassLoader: ClassLoader by lazy {
+    private val jarsClassLoader: ClassLoader by lazy {
         additionalPaths.toJarsClassLoader()
     }
 
@@ -95,9 +96,19 @@ class CordaNetwork private constructor() {
             Files.createTempDirectory("cordapps").toFile().absolutePath
 
     /**
+     * Braid server for this Corda node.
+     */
+    internal val braid: BraidMain by lazy {
+        BraidMain(
+            jarsClassLoader,
+            version.toInt(),
+            vertx
+        )
+    }
+    /**
      * Vertx instance shared by all Braid servers.
      */
-    internal val vertx = Vertx.vertx()
+    private val vertx = Vertx.vertx()
 
     /**
      * Cordite network map Docker container.

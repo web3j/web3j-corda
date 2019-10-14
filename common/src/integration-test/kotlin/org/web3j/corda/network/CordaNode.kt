@@ -169,21 +169,12 @@ class CordaNode internal constructor(private val network: CordaNetwork) {
     }
 
     /**
-     * Braid server for this Corda node.
-     */
-    private val braid = BraidMain(
-        network.jarsClassLoader,
-        network.version.toInt(),
-        network.vertx
-    )
-
-    /**
      * Start this Corda node.
      */
     fun start() {
         logger.info("Starting Corda node $canonicalName...")
         container.start()
-        braid.start()
+        network.braid.start()
         logger.info("Started Corda node $canonicalName.")
     }
 
@@ -192,7 +183,7 @@ class CordaNode internal constructor(private val network: CordaNetwork) {
      */
     fun stop() {
         logger.info("Stopping Corda node $canonicalName...")
-        braid.shutdown()
+        network.braid.shutdown()
         container.stop()
         logger.info("Stopped Corda node $canonicalName.")
     }
