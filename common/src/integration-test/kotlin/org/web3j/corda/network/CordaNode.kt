@@ -38,7 +38,7 @@ import org.web3j.corda.testcontainers.KGenericContainer
 import org.web3j.corda.util.canonicalName
 import org.web3j.corda.util.isMac
 
-class CordaNode internal constructor(private val network: CordaNetwork) {
+class CordaNode internal constructor(private val network: CordaNetwork): AutoCloseable {
 
     /**
      * X.500 name for this Corda node, eg. `O=Notary, L=London, C=GB`.
@@ -181,7 +181,7 @@ class CordaNode internal constructor(private val network: CordaNetwork) {
     /**
      * Stop this Corda node.
      */
-    fun stop() {
+    override fun close() {
         logger.info("Stopping Corda node $canonicalName...")
         network.braid.shutdown()
         container.stop()
