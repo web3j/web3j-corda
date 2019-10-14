@@ -10,7 +10,7 @@ buildscript {
         spring_boot_version = '2.0.2.RELEASE'
         spring_boot_gradle_plugin_version = '2.0.2.RELEASE'
         slf4j_version = '1.7.25'
-        log4j_version = '2.11.2'
+        logback_version = '1.2.3'
         corda_platform_version = '4'.toInteger()
         jersey_version = '2.29'
     }
@@ -94,7 +94,7 @@ dependencies {
 
     // Logging dependencies
     cordaCompile "org.slf4j:jul-to-slf4j:$slf4j_version"
-    implementation("ch.qos.logback:logback-classic:${versions.logback}") { force = true }
+    implementation("ch.qos.logback:logback-classic:$logback_version") { force = true }
 
     // JAX-RS dependencies
     implementation group: 'org.glassfish.jersey.inject', name: 'jersey-hk2', version: jersey_version
