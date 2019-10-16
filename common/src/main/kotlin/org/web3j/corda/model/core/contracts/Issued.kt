@@ -26,6 +26,6 @@ import javax.annotation.Generated
 )
 data class Issued(
     val issuer: Issued_issuer,
-    val product: kotlin.Any,
-    val productType: kotlin.String
+    val product: Any,
+    val productType: String
 )

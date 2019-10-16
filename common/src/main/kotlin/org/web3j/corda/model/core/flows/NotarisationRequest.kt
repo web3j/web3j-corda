@@ -24,7 +24,7 @@ import javax.annotation.Generated
     date = "2019-09-25T12:12:09.608Z"
 )
 data class NotarisationRequest(
-    val statesToConsume: kotlin.collections.List<org.web3j.corda.model.core.contracts.StateRef>,
+    val statesToConsume: List<org.web3j.corda.model.core.contracts.StateRef>,
     /* Base 58 Encoded Secure Hash */
-    val transactionId: kotlin.String
+    val transactionId: String
 )

@@ -29,11 +29,11 @@ import javax.annotation.Generated
     date = "2019-09-25T12:12:09.609Z"
 )
 data class AttachmentQueryCriteria_AttachmentsQueryCriteria(
-    val uploaderCondition: kotlin.Any? = null,
-    val filenameCondition: kotlin.Any? = null,
-    val uploadDateCondition: kotlin.Any? = null,
-    val contractClassNamesCondition: kotlin.Any? = null,
-    val signersCondition: kotlin.Any? = null,
-    val isSignedCondition: kotlin.Any? = null,
-    val versionCondition: kotlin.Any? = null
+    val uploaderCondition: Any? = null,
+    val filenameCondition: Any? = null,
+    val uploadDateCondition: Any? = null,
+    val contractClassNamesCondition: Any? = null,
+    val signersCondition: Any? = null,
+    val isSignedCondition: Any? = null,
+    val versionCondition: Any? = null
 )

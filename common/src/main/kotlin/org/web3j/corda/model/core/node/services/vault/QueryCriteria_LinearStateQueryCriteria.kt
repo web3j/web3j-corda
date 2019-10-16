@@ -33,11 +33,11 @@ data class QueryCriteria_LinearStateQueryCriteria(
     val status: org.web3j.corda.model.core.node.services.vault.QueryCriteria_LinearStateQueryCriteria.Status,
     val relevancyStatus: org.web3j.corda.model.core.node.services.vault.QueryCriteria_LinearStateQueryCriteria.RelevancyStatus,
     val constraintTypes: org.web3j.corda.model.core.node.services.vault.QueryCriteria_LinearStateQueryCriteria.ConstraintTypes,
-    val constraints: kotlin.collections.List<org.web3j.corda.model.core.node.services.Vault_ConstraintInfo>,
-    val participants: kotlin.collections.List<org.web3j.corda.model.core.identity.AbstractParty>? = null,
-    val uuid: kotlin.collections.List<java.util.UUID>? = null,
-    val externalId: kotlin.collections.List<kotlin.String>? = null,
-    val contractStateTypes: kotlin.collections.List<kotlin.String>? = null
+    val constraints: List<org.web3j.corda.model.core.node.services.Vault_ConstraintInfo>,
+    val participants: List<org.web3j.corda.model.core.identity.AbstractParty>? = null,
+    val uuid: List<java.util.UUID>? = null,
+    val externalId: List<String>? = null,
+    val contractStateTypes: List<String>? = null
 ) {
     enum class Status {
         UNCONSUMED,

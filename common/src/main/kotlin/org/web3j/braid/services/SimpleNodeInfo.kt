@@ -12,18 +12,7 @@
  */
 package org.web3j.braid.services
 
-import javax.annotation.Generated
-
-/**
- *
- * @param addresses
- * @param legalIdentities
- */
-@Generated(
-    value = ["org.web3j.corda.codegen.CorDappClientGenerator"],
-    date = "2019-09-25T12:12:09.606Z"
-)
 data class SimpleNodeInfo(
-    val addresses: kotlin.collections.List<org.web3j.corda.model.core.utilities.NetworkHostAndPort>,
-    val legalIdentities: kotlin.collections.List<org.web3j.corda.model.core.identity.Party>
+    val addresses: List<org.web3j.corda.model.core.utilities.NetworkHostAndPort>,
+    val legalIdentities: List<org.web3j.corda.model.core.identity.Party>
 )

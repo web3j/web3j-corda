@@ -24,5 +24,5 @@ import javax.annotation.Generated
 )
 data class WaitTimeUpdate(
     /* JSR310 encoded time representation of Duration */
-    val waitTime: kotlin.String
+    val waitTime: String
 )

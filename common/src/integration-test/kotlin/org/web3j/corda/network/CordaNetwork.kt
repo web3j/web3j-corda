@@ -12,9 +12,12 @@
  */
 package org.web3j.corda.network
 
-import io.bluebank.braid.corda.server.BraidMain
-import io.bluebank.braid.core.utils.toJarsClassLoader
-import io.vertx.core.Vertx
+import java.io.File
+import java.nio.file.Files
+import java.nio.file.Path
+import java.nio.file.StandardCopyOption.REPLACE_EXISTING
+import java.util.function.Consumer
+import kotlin.streams.toList
 import org.gradle.tooling.GradleConnector
 import org.gradle.tooling.ProjectConnection
 import org.gradle.tooling.model.idea.IdeaProject
@@ -24,19 +27,13 @@ import org.testcontainers.containers.wait.strategy.Wait
 import org.web3j.corda.protocol.CordaService
 import org.web3j.corda.protocol.NetworkMap
 import org.web3j.corda.testcontainers.KGenericContainer
-import org.web3j.corda.util.NonNullMap
 import org.web3j.corda.util.OpenApiVersion.v3_0_1
 import org.web3j.corda.util.isMac
-import org.web3j.corda.util.toNonNullMap
-import java.io.File
-import java.nio.file.Files
-import java.util.function.Consumer
-import kotlin.streams.toList
 
 /**
  * Corda network DSK for integration tests web3j CorDapp wrappers.
  */
-class CordaNetwork private constructor() : AutoCloseable {
+class CordaNetwork private constructor() {
 
     /**
      * Open API version.
@@ -51,65 +48,42 @@ class CordaNetwork private constructor() : AutoCloseable {
     /**
      * The nodes in this network.
      */
-    lateinit var nodes: NonNullMap<String, CordaNode>
+    lateinit var notaries: List<CordaNotaryNode>
+
+    /**
+     * The nodes in this network.
+     */
+    lateinit var nodes: List<CordaPartyNode>
 
     val map: NetworkMap by lazy {
         NetworkMap.build(CordaService("http://localhost:${mapContainer.getMappedPort(8080)}"))
     }
 
     /**
-     * Dependencies of the [baseDir] CorDapp containing CorDapps JARs.
-     * This is used to start the Braid server with all required endpoints.
+     * CorDapp Docker-mapped directory.
      */
-    internal val additionalPaths: List<String> by lazy {
-        if (isGradleProject()) {
-            connection.getModel(IdeaProject::class.java).modules.flatMap {
-                it.dependencies
-            }.filterIsInstance<IdeaSingleEntryLibraryDependency>()
-                .filter {
-                    it.gradleModuleVersion.group.startsWith("net.corda")
-                }.map {
-                    it.file.absolutePath
+    internal val cordappsDir: File by lazy {
+        Files.createTempDirectory("cordapps").apply {
+            if (isGradleProject()) {
+                // Copy project JARs into cordapps dir
+                createJarUsingGradle(this)
+                copyGradleDependencies(this)
+            } else {
+                // Not a valid Gradle project, copy baseDir
+                Files.list(baseDir.toPath()).forEach {
+                    Files.copy(it, File(toFile(), it.toFile().name).toPath(), REPLACE_EXISTING)
                 }
-        } else {
-            // Not a valid Gradle project, use baseDir contents
-            baseDir.listFiles()!!.map { it.absolutePath }
-        }
+            }
+        }.toFile().absolutePath.run {
+            // Fix Mac temporary folder absolute path
+            File((if (isMac) "/private" else "") + this)
+        }.apply { deleteOnExit() }
     }
 
     /**
      * The internal Docker network.
      */
     internal val network = Network.newNetwork()
-
-    /**
-     * CorDapp Docker-mapped directory.
-     */
-    internal val cordappsDir = (if (isMac) "/private" else "") +
-        Files.createTempDirectory("cordapps").toFile().absolutePath
-
-    /**
-     * Braid server for this Corda node.
-     */
-    internal val braid: BraidMain by lazy {
-        BraidMain(
-            jarsClassLoader,
-            version.toInt(),
-            vertx
-        )
-    }
-
-    /**
-     * Class loader to be used with Braid instances.
-     */
-    private val jarsClassLoader: ClassLoader by lazy {
-        additionalPaths.toJarsClassLoader()
-    }
-    
-    /**
-     * Vertx instance shared by all Braid servers.
-     */
-    private val vertx = Vertx.vertx()
 
     /**
      * Cordite network map Docker container.
@@ -121,9 +95,11 @@ class CordaNetwork private constructor() : AutoCloseable {
                 it.withName(NETWORK_MAP_ALIAS)
             }.withNetwork(network)
             .withNetworkAliases(NETWORK_MAP_ALIAS)
-            .withEnv(mapOf("NMS_STORAGE_TYPE" to "file"))
+            .withEnv("NMS_STORAGE_TYPE", "file")
             .waitingFor(Wait.forHttp("").forPort(NETWORK_MAP_PORT))
-            .apply { start() }
+            .withLogConsumer {
+                CordaNode.logger.info { it.utf8String.trimEnd() }
+            }.apply { start() }
     }
 
     /**
@@ -143,28 +119,37 @@ class CordaNetwork private constructor() : AutoCloseable {
     fun nodesJava(nodesBlock: Consumer<CordaNodes>) {
         CordaNodes(this).apply {
             nodesBlock.accept(this)
-            this@CordaNetwork.nodes = map {
-                it.name to it
-            }.toNonNullMap()
+        }.also {
+            notaries = it.notaries
+            nodes = it.nodes
         }
-    }
-
-    override fun close() {
-        braid.shutdown()
-        vertx.close()
     }
 
     /**
-     * Build the CorDapp located in [baseDir] using the `jar` task.
+     * Build the CorDapp located in [baseDir] using the `jar` task and copy the resulting JAR into the given directory.
      */
-    private fun createJarUsingGradle() {
+    private fun createJarUsingGradle(cordappsDir: Path) {
         // Run the jar task to create the CorDapp JAR
         connection.newBuild().forTasks("jar").run()
 
-        // Copy JARs into corDapps folder
+        // Copy Gradle project JAR into cordapps folder
         Files.list(File(baseDir, "build/libs").toPath()).toList().forEach {
-            Files.copy(it, File(cordappsDir, it.toFile().name).toPath())
+            Files.copy(it, File(cordappsDir.toFile(), it.toFile().name).toPath(), REPLACE_EXISTING)
         }
+    }
+
+    /**
+     * Resolve and copy Gradle project dependencies into the given directory.
+     */
+    private fun copyGradleDependencies(cordappsDir: Path) {
+        connection.getModel(IdeaProject::class.java).modules.flatMap {
+            it.dependencies
+        }.filterIsInstance<IdeaSingleEntryLibraryDependency>()
+            .filter {
+                it.gradleModuleVersion.group.startsWith("net.corda")
+            }.forEach {
+                Files.copy(it.file.toPath(), File(cordappsDir.toFile(), it.file.name).toPath(), REPLACE_EXISTING)
+            }
     }
 
     private fun isGradleProject(): Boolean {
@@ -186,9 +171,6 @@ class CordaNetwork private constructor() : AutoCloseable {
         fun networkJava(networkBlock: Consumer<CordaNetwork>): CordaNetwork {
             return CordaNetwork().apply {
                 networkBlock.accept(this)
-                if (isGradleProject()) {
-                    createJarUsingGradle()
-                }
             }
         }
     }

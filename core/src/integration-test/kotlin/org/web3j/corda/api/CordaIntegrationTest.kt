@@ -15,72 +15,61 @@ package org.web3j.corda.api
 import assertk.assertThat
 import assertk.assertions.containsOnly
 import assertk.assertions.hasSize
+import assertk.assertions.isEmpty
 import assertk.assertions.isEqualTo
 import org.junit.jupiter.api.Test
-import org.web3j.corda.network.CordaNetwork
 import org.web3j.corda.network.network
-import org.web3j.corda.network.node
 import org.web3j.corda.network.nodes
-import org.web3j.corda.protocol.Corda
+import org.web3j.corda.network.notary
+import org.web3j.corda.network.party
 
 class CordaIntegrationTest {
 
-    @Test
-    internal fun `corDapps resource`() {
-        assertThat(corda.corDapps.findAll()).containsOnly("corda-core")
-
-        corda.corDapps.findById("corda-core").apply {
-            assertThat(flows.findAll()).containsOnly(
-                "net.corda.core.flows.ContractUpgradeFlow\$Authorise",
-                "net.corda.core.flows.ContractUpgradeFlow\$Deauthorise"
-            )
+    private val network = network {
+        nodes {
+            notary { name = NOTARY }
+            party { name = PARTY }
         }
     }
 
     @Test
-    internal fun `network resource`() {
-        corda.network.nodes.self.apply {
-            assertThat(legalIdentities).hasSize(1)
-            assertThat(legalIdentities.first().name).isEqualTo(party)
+    fun `corDapps resource`() {
+        with(network.nodes[0].api) {
+            assertThat(corDapps.findAll()).containsOnly("braid-server")
+            assertThat(corDapps.findById("braid-server").flows.findAll()).isEmpty()
         }
-        corda.network.nodes.findAll().flatMap { node ->
-            node.legalIdentities.map { party -> party.name }
-        }.apply {
-            assertThat(this).containsOnly(party, notary)
-        }
-        corda.network.nodes.findByX500Name(party).apply {
-            assertThat(this).hasSize(1)
-            assertThat(first().legalIdentities.map { it.name }).containsOnly(party)
-        }
-        corda.network.nodes.findByHostAndPort("localhost:${network.nodes[party].p2pPort}").apply {
-            assertThat(this).hasSize(1)
-            assertThat(first().legalIdentities.map { it.name }).containsOnly(party)
-        }
-        corda.network.notaries.findAll().apply {
-            assertThat(this).hasSize(1)
-            assertThat(first().name).isEqualTo(notary)
+    }
+
+    @Test
+    fun `network resource`() {
+        with(network.nodes[0].api) {
+            network.nodes.self.apply {
+                assertThat(legalIdentities).hasSize(1)
+                assertThat(legalIdentities.first().name).isEqualTo(PARTY)
+            }
+            network.nodes.findAll().flatMap { node ->
+                node.legalIdentities.map { party -> party.name }
+            }.apply {
+                assertThat(this).containsOnly(PARTY, NOTARY)
+            }
+            network.nodes.findByX500Name(PARTY).apply {
+                assertThat(this).hasSize(1)
+                assertThat(first().legalIdentities.map { it.name }).containsOnly(PARTY)
+            }
+            val p2pPort = this@CordaIntegrationTest.network.nodes[0].p2pPort
+            network.nodes.findByHostAndPort("party-new-york-us:$p2pPort").apply {
+                assertThat(this).hasSize(1)
+                assertThat(first().legalIdentities.map { it.name }).containsOnly(PARTY)
+            }
+            network.notaries.findAll().apply {
+                assertThat(this).hasSize(1)
+                assertThat(first().name).isEqualTo(NOTARY)
+            }
         }
     }
 
     companion object {
-
-        private const val party = "O=Party, L=New York, C=US"
-        private const val notary = "O=Notary, L=London, C=GB"
-
-        private val corda: Corda by lazy {
-            network.nodes[party].api
-        }
-
-        private val network = CordaNetwork.network {
-            nodes {
-                node {
-                    name = notary
-                    isNotary = true
-                }
-                node {
-                    name = party
-                }
-            }
-        }
+        private const val PARTY = "O=Party, L=New York, C=US"
+        private const val NOTARY = "O=Notary, L=London, C=GB"
     }
 }

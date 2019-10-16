@@ -24,7 +24,7 @@ import javax.annotation.Generated
     date = "2019-09-25T12:12:09.609Z"
 )
 data class Column_Object_Object(
-    val name: kotlin.String,
+    val name: String,
     /* Java class name */
-    val declaringClass: kotlin.String
+    val declaringClass: String
 )

@@ -25,6 +25,6 @@ import javax.annotation.Generated
 )
 data class NotaryError_TimeWindowInvalid(
     /* JSR310 encoded time representation of Instant */
-    val currentTime: kotlin.String,
+    val currentTime: String,
     val txTimeWindow: org.web3j.corda.model.core.contracts.TimeWindow? = null
 )

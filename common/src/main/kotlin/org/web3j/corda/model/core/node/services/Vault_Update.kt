@@ -28,11 +28,11 @@ import javax.annotation.Generated
     date = "2019-09-25T12:12:09.609Z"
 )
 data class Vault_Update(
-    val consumed: kotlin.collections.List<org.web3j.corda.model.core.contracts.StateAndRef_net_corda_core_contracts_ContractState>,
-    val produced: kotlin.collections.List<org.web3j.corda.model.core.contracts.StateAndRef_net_corda_core_contracts_ContractState>,
+    val consumed: List<org.web3j.corda.model.core.contracts.StateAndRef_net_corda_core_contracts_ContractState>,
+    val produced: List<org.web3j.corda.model.core.contracts.StateAndRef_net_corda_core_contracts_ContractState>,
     val type: org.web3j.corda.model.core.node.services.Vault_Update.Type,
-    val references: kotlin.collections.List<org.web3j.corda.model.core.contracts.StateAndRef_net_corda_core_contracts_ContractState>,
-    val empty: kotlin.Boolean,
+    val references: List<org.web3j.corda.model.core.contracts.StateAndRef_net_corda_core_contracts_ContractState>,
+    val empty: Boolean,
     val flowId: java.util.UUID? = null
 ) {
     enum class Type {

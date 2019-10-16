@@ -23,5 +23,5 @@ import javax.annotation.Generated
     date = "2019-09-25T12:12:09.607Z"
 )
 data class ContractState(
-    val participants: kotlin.collections.List<org.web3j.corda.model.core.identity.AbstractParty>?
+    val participants: List<org.web3j.corda.model.core.identity.AbstractParty>?
 )

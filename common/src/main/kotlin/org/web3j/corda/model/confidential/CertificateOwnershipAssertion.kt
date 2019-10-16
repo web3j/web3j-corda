@@ -25,7 +25,7 @@ import javax.annotation.Generated
 )
 data class CertificateOwnershipAssertion(
     /* CordaX500Name encoded Party */
-    val x500Name: kotlin.String,
+    val x500Name: String,
     /* Base 58 Encoded Public Key */
-    val publicKey: kotlin.String
+    val publicKey: String
 )

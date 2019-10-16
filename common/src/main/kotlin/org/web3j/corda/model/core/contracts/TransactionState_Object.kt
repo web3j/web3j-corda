@@ -27,9 +27,9 @@ import javax.annotation.Generated
     date = "2019-09-25T12:12:09.607Z"
 )
 data class TransactionState_Object(
-    val `data`: kotlin.Any,
-    val contract: kotlin.String,
+    val `data`: Any,
+    val contract: String,
     val notary: org.web3j.corda.model.core.identity.Party? = null,
-    val encumbrance: kotlin.Int? = null,
-    val constraint: kotlin.Any? = null
+    val encumbrance: Int? = null,
+    val constraint: Any? = null
 )

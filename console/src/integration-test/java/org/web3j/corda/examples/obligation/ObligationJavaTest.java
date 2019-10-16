@@ -31,30 +31,29 @@ import static org.web3j.corda.network.CordaNetwork.network;
 
 public class ObligationJavaTest {
 
-    private static CordaNetwork network =
+    private CordaNetwork network =
             network(
                     net -> {
                         net.setBaseDir(
                                 new File(
-                                        ObligationJavaTest.class
+                                        getClass()
                                                 .getClassLoader()
                                                 .getResource("classes")
                                                 .getFile()));
                         net.nodes(
                                 nodes -> {
-                                    nodes.node(
-                                            node -> {
-                                                node.setName("O=Notary,L=London,C=GB");
-                                                node.setNotary(true);
-                                            });
-                                    nodes.node(node -> node.setName("O=PartyA,L=London,C=GB"));
-                                    nodes.node(node -> node.setName("O=PartyB,L=New York,C=US"));
+                                    nodes.notary(
+                                            notary -> notary.setName("O=Notary, L=London, C=GB"));
+                                    nodes.party(
+                                            partyA -> partyA.setName("O=PartyA, L=London, C=GB"));
+                                    nodes.party(
+                                            partyB -> partyB.setName("O=PartyB, L=New York, C=US"));
                                 });
                     });
 
     @Test
     public void issueObligation() {
-        final Corda corda = network.getNodes().get("O=PartyA,L=London,C=GB").getApi();
+        final Corda corda = network.getNodes().get(1).getApi();
 
         final Party party =
                 corda.getNetwork().getNodes().findAll().get(2).getLegalIdentities().get(0);

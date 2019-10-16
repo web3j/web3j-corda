@@ -24,6 +24,6 @@ import javax.annotation.Generated
     date = "2019-09-25T12:12:09.608Z"
 )
 data class AbstractStateReplacementFlow_Proposal(
-    val modification: kotlin.Any,
+    val modification: Any,
     val stateRef: org.web3j.corda.model.core.contracts.StateRef? = null
 )

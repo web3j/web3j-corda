@@ -35,13 +35,13 @@ data class QueryCriteria_VaultQueryCriteria(
     val status: org.web3j.corda.model.core.node.services.vault.QueryCriteria_VaultQueryCriteria.Status,
     val relevancyStatus: org.web3j.corda.model.core.node.services.vault.QueryCriteria_VaultQueryCriteria.RelevancyStatus,
     val constraintTypes: org.web3j.corda.model.core.node.services.vault.QueryCriteria_VaultQueryCriteria.ConstraintTypes,
-    val constraints: kotlin.collections.List<org.web3j.corda.model.core.node.services.Vault_ConstraintInfo>,
-    val contractStateTypes: kotlin.collections.List<kotlin.String>? = null,
-    val stateRefs: kotlin.collections.List<org.web3j.corda.model.core.contracts.StateRef>? = null,
-    val notary: kotlin.collections.List<org.web3j.corda.model.core.identity.AbstractParty>? = null,
+    val constraints: List<org.web3j.corda.model.core.node.services.Vault_ConstraintInfo>,
+    val contractStateTypes: List<String>? = null,
+    val stateRefs: List<org.web3j.corda.model.core.contracts.StateRef>? = null,
+    val notary: List<org.web3j.corda.model.core.identity.AbstractParty>? = null,
     val softLockingCondition: org.web3j.corda.model.core.node.services.vault.QueryCriteria_SoftLockingCondition? = null,
     val timeCondition: org.web3j.corda.model.core.node.services.vault.QueryCriteria_TimeCondition? = null,
-    val participants: kotlin.collections.List<org.web3j.corda.model.core.identity.AbstractParty>? = null
+    val participants: List<org.web3j.corda.model.core.identity.AbstractParty>? = null
 ) {
     enum class Status {
         UNCONSUMED,

@@ -25,6 +25,6 @@ import javax.annotation.Generated
 )
 data class StateRef(
     /* Base 58 Encoded Secure Hash */
-    val txhash: kotlin.String,
-    val index: kotlin.Int
+    val txhash: String,
+    val index: Int
 )

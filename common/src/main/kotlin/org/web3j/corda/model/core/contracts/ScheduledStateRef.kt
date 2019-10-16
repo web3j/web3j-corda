@@ -25,6 +25,6 @@ import javax.annotation.Generated
 )
 data class ScheduledStateRef(
     /* JSR310 encoded time representation of Instant */
-    val scheduledAt: kotlin.String,
+    val scheduledAt: String,
     val ref: org.web3j.corda.model.core.contracts.StateRef? = null
 )

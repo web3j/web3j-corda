@@ -25,7 +25,7 @@ import javax.annotation.Generated
 )
 data class ContractUpgradeFilteredTransaction_FilteredComponent(
     /* Hex encoded Byte Array */
-    val component: kotlin.String,
+    val component: String,
     /* Base 58 Encoded Secure Hash */
-    val nonce: kotlin.String
+    val nonce: String
 )

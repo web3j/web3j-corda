@@ -31,13 +31,13 @@ import javax.annotation.Generated
 )
 data class TransactionVerificationException_InvalidAttachmentException(
     /* Base 58 Encoded Secure Hash */
-    val txId: kotlin.String,
+    val txId: String,
     /* Base 58 Encoded Secure Hash */
-    val attachmentHash: kotlin.String,
-    val originalExceptionClassName: kotlin.String? = null,
-    val originalErrorId: kotlin.Long? = null,
-    val errorId: kotlin.Long? = null,
-    val message: kotlin.String? = null,
-    val originalMessage: kotlin.String? = null,
-    val localizedMessage: kotlin.String? = null
+    val attachmentHash: String,
+    val originalExceptionClassName: String? = null,
+    val originalErrorId: Long? = null,
+    val errorId: Long? = null,
+    val message: String? = null,
+    val originalMessage: String? = null,
+    val localizedMessage: String? = null
 )

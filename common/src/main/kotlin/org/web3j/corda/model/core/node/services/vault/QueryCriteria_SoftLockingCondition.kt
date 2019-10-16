@@ -25,7 +25,7 @@ import javax.annotation.Generated
 )
 data class QueryCriteria_SoftLockingCondition(
     val type: org.web3j.corda.model.core.node.services.vault.QueryCriteria_SoftLockingCondition.Type,
-    val lockIds: kotlin.collections.List<java.util.UUID>
+    val lockIds: List<java.util.UUID>
 ) {
     enum class Type {
         UNLOCKED_ONLY,

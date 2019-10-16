@@ -12,16 +12,6 @@
  */
 package org.web3j.corda.model.core.context
 
-import javax.annotation.Generated
-
-/**
- *
- * @param scheduledState
- */
-@Generated(
-    value = ["org.web3j.corda.codegen.CorDappClientGenerator"],
-    date = "2019-09-25T12:12:09.606Z"
-)
 data class InvocationOrigin_Scheduled(
     val scheduledState: org.web3j.corda.model.core.contracts.ScheduledStateRef? = null
 )

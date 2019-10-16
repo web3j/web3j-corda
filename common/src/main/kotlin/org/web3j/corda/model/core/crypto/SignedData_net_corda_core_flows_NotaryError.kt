@@ -25,7 +25,7 @@ import javax.annotation.Generated
 )
 data class SignedData_net_corda_core_flows_NotaryError(
     /* Hex encoded Byte Array */
-    val raw: kotlin.String,
+    val raw: String,
     /* Hex encoded Byte Array */
-    val sig: kotlin.String
+    val sig: String
 )

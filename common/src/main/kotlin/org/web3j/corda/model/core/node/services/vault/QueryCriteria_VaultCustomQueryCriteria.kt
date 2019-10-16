@@ -32,10 +32,10 @@ data class QueryCriteria_VaultCustomQueryCriteria(
     val status: org.web3j.corda.model.core.node.services.vault.QueryCriteria_VaultCustomQueryCriteria.Status,
     val relevancyStatus: org.web3j.corda.model.core.node.services.vault.QueryCriteria_VaultCustomQueryCriteria.RelevancyStatus,
     val constraintTypes: org.web3j.corda.model.core.node.services.vault.QueryCriteria_VaultCustomQueryCriteria.ConstraintTypes,
-    val constraints: kotlin.collections.List<org.web3j.corda.model.core.node.services.Vault_ConstraintInfo>,
-    val expression: kotlin.Any? = null,
-    val contractStateTypes: kotlin.collections.List<kotlin.String>? = null,
-    val participants: kotlin.collections.List<org.web3j.corda.model.core.identity.AbstractParty>? = null
+    val constraints: List<org.web3j.corda.model.core.node.services.Vault_ConstraintInfo>,
+    val expression: Any? = null,
+    val contractStateTypes: List<String>? = null,
+    val participants: List<org.web3j.corda.model.core.identity.AbstractParty>? = null
 ) {
     enum class Status {
         UNCONSUMED,

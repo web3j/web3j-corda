@@ -25,7 +25,7 @@ import javax.annotation.Generated
 )
 data class Sort_SortColumn(
     val direction: org.web3j.corda.model.core.node.services.vault.Sort_SortColumn.Direction,
-    val sortAttribute: kotlin.Any? = null
+    val sortAttribute: Any? = null
 ) {
     enum class Direction {
         ASC,

@@ -27,11 +27,11 @@ import javax.annotation.Generated
     date = "2019-09-25T12:12:09.609Z"
 )
 data class Vault_Page(
-    val states: kotlin.collections.List<org.web3j.corda.model.core.contracts.StateAndRef_net_corda_core_contracts_ContractState>,
-    val statesMetadata: kotlin.collections.List<org.web3j.corda.model.core.node.services.Vault_StateMetadata>,
-    val totalStatesAvailable: kotlin.Long,
+    val states: List<org.web3j.corda.model.core.contracts.StateAndRef_net_corda_core_contracts_ContractState>,
+    val statesMetadata: List<org.web3j.corda.model.core.node.services.Vault_StateMetadata>,
+    val totalStatesAvailable: Long,
     val stateTypes: org.web3j.corda.model.core.node.services.Vault_Page.StateTypes,
-    val otherResults: kotlin.collections.List<kotlin.Any>
+    val otherResults: List<Any>
 ) {
     enum class StateTypes {
         UNCONSUMED,

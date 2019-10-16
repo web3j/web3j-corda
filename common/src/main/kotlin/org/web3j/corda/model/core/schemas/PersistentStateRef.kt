@@ -24,6 +24,6 @@ import javax.annotation.Generated
     date = "2019-09-25T12:12:09.61Z"
 )
 data class PersistentStateRef(
-    val txId: kotlin.String,
-    val index: kotlin.Int
+    val txId: String,
+    val index: Int
 )

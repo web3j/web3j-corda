@@ -28,12 +28,12 @@ import javax.annotation.Generated
 )
 data class PartyAndCertificate(
     /* X509 encoded certificate PKI path */
-    val certPath: kotlin.ByteArray,
+    val certPath: ByteArray,
     /* X509 encoded certificate */
-    val certificate: kotlin.ByteArray,
+    val certificate: ByteArray,
     /* CordaX500Name encoded Party */
-    val name: kotlin.String,
+    val name: String,
     /* Base 58 Encoded Public Key */
-    val owningKey: kotlin.String,
+    val owningKey: String,
     val party: org.web3j.corda.model.core.identity.Party? = null
 )

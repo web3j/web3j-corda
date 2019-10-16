@@ -23,5 +23,5 @@ import javax.annotation.Generated
     date = "2019-09-25T12:12:09.611Z"
 )
 data class BFTSmart_ClusterResponse_Error(
-    val errors: kotlin.collections.List<org.web3j.corda.model.core.crypto.SignedData_net_corda_core_flows_NotaryError>
+    val errors: List<org.web3j.corda.model.core.crypto.SignedData_net_corda_core_flows_NotaryError>
 )

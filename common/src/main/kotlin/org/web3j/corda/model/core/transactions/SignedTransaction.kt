@@ -28,11 +28,11 @@ import javax.annotation.Generated
     date = "2019-09-25T12:12:09.61Z"
 )
 data class SignedTransaction(
-    val signatures: kotlin.collections.List<kotlin.String>,
-    val references: kotlin.collections.List<org.web3j.corda.model.core.contracts.StateRef>,
-    val notaryChangeTransaction: kotlin.Boolean,
-    val missingSigners: kotlin.collections.List<kotlin.String>,
+    val signatures: List<String>,
+    val references: List<org.web3j.corda.model.core.contracts.StateRef>,
+    val notaryChangeTransaction: Boolean,
+    val missingSigners: List<String>,
     val coreTransaction: org.web3j.corda.model.core.transactions.CoreTransaction? = null,
 /* Base 58 Encoded Secure Hash */
-    val networkParametersHash: kotlin.String? = null
+    val networkParametersHash: String? = null
 )

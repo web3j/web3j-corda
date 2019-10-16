@@ -12,16 +12,6 @@
  */
 package org.web3j.corda.model.core.context
 
-import javax.annotation.Generated
-
-/**
- *
- * @param value
- */
-@Generated(
-    value = ["org.web3j.corda.codegen.CorDappClientGenerator"],
-    date = "2019-09-25T12:12:09.606Z"
-)
 data class Actor_Id(
-    val value: kotlin.String
+    val value: String
 )

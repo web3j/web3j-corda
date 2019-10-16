@@ -23,5 +23,5 @@ import javax.annotation.Generated
     date = "2019-09-25T12:12:09.608Z"
 )
 data class NotarisationResponse(
-    val signatures: kotlin.collections.List<kotlin.String>
+    val signatures: List<String>
 )

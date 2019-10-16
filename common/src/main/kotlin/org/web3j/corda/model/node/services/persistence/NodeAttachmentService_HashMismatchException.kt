@@ -29,11 +29,11 @@ import javax.annotation.Generated
 )
 data class NodeAttachmentService_HashMismatchException(
     /* Base 58 Encoded Secure Hash */
-    val expected: kotlin.String,
+    val expected: String,
     /* Base 58 Encoded Secure Hash */
-    val actual: kotlin.String,
-    val originalExceptionClassName: kotlin.String? = null,
-    val message: kotlin.String? = null,
-    val originalMessage: kotlin.String? = null,
-    val localizedMessage: kotlin.String? = null
+    val actual: String,
+    val originalExceptionClassName: String? = null,
+    val message: String? = null,
+    val originalMessage: String? = null,
+    val localizedMessage: String? = null
 )

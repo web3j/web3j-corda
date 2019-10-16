@@ -25,6 +25,6 @@ import javax.annotation.Generated
 )
 data class NotaryError_Conflict(
     /* Base 58 Encoded Secure Hash */
-    val txId: kotlin.String,
-    val consumedStates: kotlin.collections.Map<kotlin.String, org.web3j.corda.model.core.flows.StateConsumptionDetails>
+    val txId: String,
+    val consumedStates: Map<String, org.web3j.corda.model.core.flows.StateConsumptionDetails>
 )

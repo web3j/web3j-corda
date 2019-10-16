@@ -25,8 +25,8 @@ import javax.annotation.Generated
     date = "2019-09-25T12:12:09.607Z"
 )
 data class Trace_SessionId(
-    val value: kotlin.String,
+    val value: String,
     /* JSR310 encoded time representation of Instant */
-    val timestamp: kotlin.String,
-    val entityType: kotlin.String? = null
+    val timestamp: String,
+    val entityType: String? = null
 )

@@ -33,19 +33,19 @@ import javax.annotation.Generated
     date = "2019-09-25T12:12:09.611Z"
 )
 data class VaultSchemaV1_VaultStates(
-    val contractStateClassName: kotlin.String,
+    val contractStateClassName: String,
     val stateStatus: org.web3j.corda.model.node.services.vault.VaultSchemaV1_VaultStates.StateStatus,
     /* JSR310 encoded time representation of Instant */
-    val recordedTime: kotlin.String,
+    val recordedTime: String,
     val relevancyStatus: org.web3j.corda.model.node.services.vault.VaultSchemaV1_VaultStates.RelevancyStatus,
     val constraintType: org.web3j.corda.model.node.services.vault.VaultSchemaV1_VaultStates.ConstraintType,
     val notary: org.web3j.corda.model.core.identity.Party? = null,
 /* JSR310 encoded time representation of Instant */
-    val consumedTime: kotlin.String? = null,
-    val lockId: kotlin.String? = null,
+    val consumedTime: String? = null,
+    val lockId: String? = null,
 /* JSR310 encoded time representation of Instant */
-    val lockUpdateTime: kotlin.String? = null,
-    val constraintData: kotlin.collections.List<kotlin.ByteArray>? = null,
+    val lockUpdateTime: String? = null,
+    val constraintData: List<ByteArray>? = null,
     val stateRef: org.web3j.corda.model.core.schemas.PersistentStateRef? = null
 ) {
     enum class StateStatus {

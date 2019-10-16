@@ -27,8 +27,8 @@ import javax.annotation.Generated
 )
 data class CriteriaExpression_AggregateFunctionExpression(
     val column: org.web3j.corda.model.core.node.services.vault.Column_Object_Object? = null,
-    val predicate: kotlin.Any? = null,
-    val groupByColumns: kotlin.collections.List<org.web3j.corda.model.core.node.services.vault.Column_Object_Object>? = null,
+    val predicate: Any? = null,
+    val groupByColumns: List<org.web3j.corda.model.core.node.services.vault.Column_Object_Object>? = null,
     val orderBy: org.web3j.corda.model.core.node.services.vault.CriteriaExpression_AggregateFunctionExpression.OrderBy? = null
 ) {
     enum class OrderBy {

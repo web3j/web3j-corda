@@ -12,20 +12,9 @@
  */
 package org.web3j.corda.model.confidential
 
-import javax.annotation.Generated
-
-/**
- *
- * @param identity Hex encoded Byte Array
- * @param signature Hex encoded Byte Array
- */
-@Generated(
-    value = ["org.web3j.corda.codegen.CorDappClientGenerator"],
-    date = "2019-09-25T12:12:09.606Z"
-)
 data class SwapIdentitiesFlow_IdentityWithSignature(
     /* Hex encoded Byte Array */
-    val identity: kotlin.String,
+    val identity: String,
     /* Hex encoded Byte Array */
-    val signature: kotlin.String
+    val signature: String
 )

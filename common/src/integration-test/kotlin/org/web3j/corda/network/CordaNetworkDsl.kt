@@ -18,8 +18,8 @@ import java.util.function.Consumer
  * Corda network DSL entry point extension method.
  */
 @CordaDslMarker
-fun CordaNetwork.Companion.network(networkBlock: CordaNetwork.() -> Unit): CordaNetwork {
-    return networkJava(Consumer { networkBlock.invoke(it) })
+fun network(networkBlock: CordaNetwork.() -> Unit): CordaNetwork {
+    return CordaNetwork.networkJava(Consumer { networkBlock.invoke(it) })
 }
 
 @CordaDslMarker
@@ -28,8 +28,13 @@ fun CordaNetwork.nodes(nodesBlock: CordaNodes.() -> Unit) {
 }
 
 @CordaDslMarker
-fun CordaNodes.node(nodeBlock: CordaNode.() -> Unit) {
-    nodeJava(Consumer { nodeBlock.invoke(it) })
+fun CordaNodes.party(partyBlock: CordaPartyNode.() -> Unit) {
+    partyJava(Consumer { partyBlock.invoke(it) })
+}
+
+@CordaDslMarker
+fun CordaNodes.notary(notaryBlock: CordaNotaryNode.() -> Unit) {
+    notaryJava(Consumer { notaryBlock.invoke(it) })
 }
 
 @DslMarker

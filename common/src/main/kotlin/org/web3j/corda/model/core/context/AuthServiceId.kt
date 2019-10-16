@@ -23,5 +23,5 @@ import javax.annotation.Generated
     date = "2019-09-25T12:12:09.606Z"
 )
 data class AuthServiceId(
-    val value: kotlin.String
+    val value: String
 )

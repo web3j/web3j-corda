@@ -26,5 +26,5 @@ import org.web3j.corda.model.core.identity.AbstractParty
 )
 data class Issued_issuer(
     val party: AbstractParty,
-    val reference: kotlin.String
+    val reference: String
 )

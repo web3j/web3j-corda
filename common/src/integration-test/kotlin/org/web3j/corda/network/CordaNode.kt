@@ -13,8 +13,6 @@
 package org.web3j.corda.network
 
 import com.samskivert.mustache.Mustache
-import io.bluebank.braid.corda.server.BraidMain
-import io.vertx.core.Future
 import java.io.File
 import java.io.FileOutputStream
 import java.io.InputStreamReader
@@ -22,38 +20,22 @@ import java.io.OutputStreamWriter
 import java.io.PrintWriter
 import java.net.ServerSocket
 import java.nio.file.Files
-import java.nio.file.Paths
-import java.nio.file.StandardCopyOption
 import java.time.Duration
-import java.util.concurrent.CountDownLatch
 import javax.security.auth.x500.X500Principal
 import mu.KLogging
 import org.testcontainers.containers.BindMode
-import org.web3j.corda.networkmap.LoginRequest
-import org.web3j.corda.networkmap.NotaryType.NON_VALIDATING
-import org.web3j.corda.protocol.Corda
-import org.web3j.corda.protocol.CordaService
-import org.web3j.corda.protocol.NetworkMap
 import org.web3j.corda.testcontainers.KGenericContainer
 import org.web3j.corda.util.canonicalName
-import org.web3j.corda.util.isMac
 
-class CordaNode internal constructor(private val network: CordaNetwork): AutoCloseable {
+/**
+ * Corda network node exposing a Corda API through a Braid container.
+ */
+abstract class CordaNode internal constructor(protected val network: CordaNetwork) {
 
     /**
      * X.500 name for this Corda node, eg. `O=Notary, L=London, C=GB`.
      */
     lateinit var name: String
-
-    /**
-     * Braid server username.
-     */
-    var userName: String = "user1"
-
-    /**
-     * Braid server password.
-     */
-    var password: String = "test"
 
     /**
      * Corda P2P port for this node.
@@ -71,16 +53,6 @@ class CordaNode internal constructor(private val network: CordaNetwork): AutoClo
     var adminPort: Int = randomPort()
 
     /**
-     * Braid server API port.
-     */
-    var apiPort: Int = randomPort()
-
-    /**
-     * Is this node a notary?
-     */
-    var isNotary: Boolean = false
-
-    /**
      * Start this node automatically?
      */
     var autoStart: Boolean = true
@@ -88,14 +60,7 @@ class CordaNode internal constructor(private val network: CordaNetwork): AutoClo
     /**
      * Timeout for this Corda node to start.
      */
-    var timeOut: Long = Duration.ofMinutes(5).toMillis()
-
-    /**
-     * Corda API to interact with this node.
-     */
-    val api: Corda by lazy {
-        Corda.build(CordaService("http://localhost:$apiPort"))
-    }
+    var timeOut: Duration = Duration.ofMinutes(5)
 
     val canonicalName: String by lazy {
         require(::name.isInitialized)
@@ -118,14 +83,6 @@ class CordaNode internal constructor(private val network: CordaNetwork): AutoClo
         createNodeConfFiles(nodeDir.resolve("node.conf"))
         saveCertificateFromNetworkMap(nodeDir)
 
-        val tempDir = (if (isMac) "/private" else "") +
-                Files.createTempDirectory("tempCordapps").toFile().absolutePath
-
-        network.additionalPaths.forEach {
-            val path = File(it).toPath()
-            Files.copy(path, File("$tempDir/${path.toFile().name}").toPath(), StandardCopyOption.REPLACE_EXISTING)
-        }
-
         KGenericContainer(CORDA_ZULU_IMAGE)
             .withNetwork(network.network)
             .withExposedPorts(p2pPort, rpcPort, adminPort)
@@ -141,69 +98,51 @@ class CordaNode internal constructor(private val network: CordaNetwork): AutoClo
             .withEnv("NETWORK_TRUST_PASSWORD", "trustpass")
             .withEnv("MY_PUBLIC_ADDRESS", "http://localhost:$p2pPort")
             .withCommand("config-generator --generic")
-            .withStartupTimeout(Duration.ofMillis(timeOut))
+            .withStartupTimeout(timeOut)
             .withCreateContainerCmdModifier {
-                it.withHostName(canonicalName.toLowerCase())
-                it.withName(canonicalName.toLowerCase())
+                it.withHostName(canonicalName)
+                it.withName(canonicalName)
             }.withLogConsumer {
                 logger.info { it.utf8String.trimEnd() }
             }.apply {
-                if (isNotary) {
-                    logger.info("Starting notary container $canonicalName...")
-                    start()
-                    logger.info("Started notary container $canonicalName.")
-                    extractNotaryNodeInfo(this, nodeDir).also {
-                        updateNotaryInNetworkMap(nodeDir.resolve(it).absolutePath)
-                    }
-                    logger.info("Stopping notary container $canonicalName...")
-                    stop()
-                    logger.info("Stopped notary container $canonicalName.")
-                } else {
-                    withFileSystemBind(
-                        tempDir,
-                        "/opt/corda/cordapps",
-                        BindMode.READ_WRITE
-                    )
-                }
+                configure(nodeDir)
             }
     }
 
     /**
      * Start this Corda node.
      */
-    fun start() {
+    open fun start() {
         logger.info("Starting Corda node $canonicalName...")
         container.start()
-        network.braid.start()
         logger.info("Started Corda node $canonicalName.")
     }
 
     /**
      * Stop this Corda node.
      */
-    override fun close() {
+    open fun stop() {
         logger.info("Stopping Corda node $canonicalName...")
-        network.braid.shutdown()
         container.stop()
         logger.info("Stopped Corda node $canonicalName.")
     }
 
-    internal fun validate() {
+    internal open fun validate() {
         require(name.isNotBlank()) { "Field 'name' cannot be blank" }
-        require(userName.isNotBlank()) { "Field 'userName' cannot be blank" }
-        require(password.isNotBlank()) { "Field 'password' cannot be blank" }
         require(p2pPort.isPort()) { "Field 'p2pPort' is not in $portRange" }
         require(rpcPort.isPort()) { "Field 'rpcPort' is not in $portRange" }
         require(adminPort.isPort()) { "Field 'adminPort' is not in $portRange" }
     }
+
+    protected abstract fun KGenericContainer.configure(nodeDir: File)
 
     private fun createNodeConfFiles(file: File) {
         PrintWriter(OutputStreamWriter(FileOutputStream(file))).use {
             nodeConfTemplate.execute(
                 mapOf(
                     "name" to name,
-                    "isNotary" to isNotary,
-                    "p2pPort" to p2pPort,
+                    "isNotary" to (this is CordaNotaryNode),
+                    "p2pAddress" to "$canonicalName:$p2pPort",
                     "rpcPort" to rpcPort,
                     "adminPort" to adminPort,
                     "networkMapUrl" to CordaNetwork.NETWORK_MAP_URL
@@ -220,59 +159,15 @@ class CordaNode internal constructor(private val network: CordaNetwork): AutoClo
         Files.write(certificateFile.toPath(), network.map.networkMap.truststore)
     }
 
-    private fun extractNotaryNodeInfo(notary: KGenericContainer, notaryNodeDir: File): String {
-        logger.info("Extracting notary info from container $canonicalName...")
-        return notary.run {
-            execInContainer("find", ".", "-maxdepth", "1", "-name", "nodeInfo*").stdout.run {
-                substring(2, length - 1) // remove relative path and the ending newline character
-            }.also {
-                val nodeInfoPath = notaryNodeDir.resolve(it).absolutePath
-                logger.info("Copying notary folder from /opt/corda/$it to $nodeInfoPath")
-                copyFileFromContainer("/opt/corda/$it", nodeInfoPath)
-                logger.info("Removing folder from /opt/corda/$it")
-                execInContainer("rm", "network-parameters")
-                logger.info("Extracted notary info from container $canonicalName.")
-            }
-        }
-    }
-
-    private fun updateNotaryInNetworkMap(nodeInfoPath: String) {
-        val loginRequest = LoginRequest("sa", "admin")
-        val token = network.map.admin.login(loginRequest)
-
-        val authMap = NetworkMap.build(CordaService(network.map.service.uri), token)
-
-        logger.info("Creating a non-validating notary in network map with node info $nodeInfoPath")
-        authMap.admin.notaries.create(NON_VALIDATING, Files.readAllBytes(Paths.get(nodeInfoPath)))
-    }
-
-    /**
-     * Start Braid server synchronously.
-     */
-    private fun BraidMain.start() {
-        val latch = CountDownLatch(1)
-        val result = Future.future<String>()
-        start(
-            "localhost:${container.getMappedPort(rpcPort)}",
-            userName,
-            password,
-            apiPort
-        ).setHandler {
-            result.handle(it)
-            latch.countDown()
-        }
-        latch.await()
-        if (result.failed()) {
-            assertk.fail(result.cause().message ?: result.cause()::class.qualifiedName!!)
-        }
-    }
-
     companion object : KLogging() {
         private const val CORDA_ZULU_IMAGE = "corda/corda-zulu-4.1:latest"
 
         private val portRange = 1024..65535
 
-        private fun randomPort() = ServerSocket(0).use { it.localPort }
-        private fun Int?.isPort() = this != null && portRange.contains(this)
+        @JvmStatic
+        protected fun randomPort() = ServerSocket(0).use { it.localPort }
+
+        @JvmStatic
+        protected fun Int?.isPort() = this != null && portRange.contains(this)
     }
 }

@@ -96,7 +96,7 @@ integrationTest {
 }
 
 task generateVersionProperties {
-    description 'Creates a version.txt file with build info that is added to the root of the jar'
+    description 'Creates a version.properties file with build info that is added to the root of the jar'
     doLast {
         new File(generatedResources).mkdirs()
         def generated = new File(generatedResources, "version.properties")

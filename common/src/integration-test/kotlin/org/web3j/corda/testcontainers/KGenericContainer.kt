@@ -14,4 +14,9 @@ package org.web3j.corda.testcontainers
 
 import org.testcontainers.containers.GenericContainer
 
-class KGenericContainer(imageName: String) : GenericContainer<KGenericContainer>(imageName)
+class KGenericContainer(imageName: String) : GenericContainer<KGenericContainer>(imageName) {
+
+    val ports: Map<Int, Int> by lazy {
+        exposedPorts.map { it to getMappedPort(it) }.toMap()
+    }
+}

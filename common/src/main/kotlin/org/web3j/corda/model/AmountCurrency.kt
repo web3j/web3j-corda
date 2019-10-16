@@ -12,21 +12,13 @@
  */
 package org.web3j.corda.model
 
-import javax.annotation.Generated
+import java.math.BigDecimal
 
-/**
- *
- * @param quantity total amount in minor units
- * @param displayTokenSize
- * @param token
- */
-@Generated(
-    value = ["org.web3j.corda.codegen.CorDappClientGenerator"],
-    date = "2019-09-25T12:12:09.603Z"
-)
 data class AmountCurrency(
-    /* total amount in minor units */
-    val quantity: kotlin.Int,
-    val displayTokenSize: java.math.BigDecimal,
-    val token: kotlin.String
+    /**
+     *  total amount in minor units
+     */
+    val quantity: Int,
+    val displayTokenSize: BigDecimal,
+    val token: String
 )
