@@ -1,14 +1,21 @@
+services:
+  - docker:dind
+
+variables:
+  DOCKER_HOST: "tcp://docker:2375"
+  DOCKER_DRIVER: overlay2
+  
 build:
-  image: gradle:5.6.2-jdk8
+  image: openjdk:8-jdk-alpine
   stage: build
   script:
-    - gradle spotlessCheck build -x test
+    - ./gradlew spotlessCheck build -x test
 
 test:
-  image: gradle:5.6.2-jdk8
+  image: openjdk:8-jdk-alpine
   stage: test
   script:
-    - gradle publishToMavenLocal test
+    - ./gradlew publishToMavenLocal test
   artifacts:
     reports:
       junit:
@@ -16,18 +23,19 @@ test:
         - build/test-results/integrationTest/TEST-*.xml
 
 integration-test:
-  image: gradle:5.6.2-jdk8
+  image: openjdk:8-jdk-alpine
   stage: test
   script:
-    - gradle integrationTest
+    - apk add docker
+    - ./gradlew integrationTest
 
 coverage:
-  image: gradle:5.6.2-jdk8
+  image: openjdk:8-jdk-alpine
   stage: test
   script:
-    - gradle jacocoTestReport
+    - ./gradlew jacocoTestReport
 
-pages:
+publish-docs:
   image: python:alpine
   before_script:
     - pip install mkdocs
@@ -42,14 +50,14 @@ pages:
     paths:
       - public
 
-publish:
-  image: gradle:5.6.2-jdk8
+publish-snapshot:
+  image: openjdk:8-jdk-alpine
   stage: deploy
   script:
-    - gradle publishAllPublicationsToOssrhRepository
+    - ./gradlew publishAllPublicationsToOssrhRepository
 
 cache:
   key: $CI_PROJECT_ID
   paths:
-    - .gradle/caches
-    - .gradle/wrapper
+    - $CI_PROJECT_DIR/.gradle/caches
+    - $CI_PROJECT_DIR/.gradle/wrapper
