@@ -26,9 +26,9 @@ import javax.annotation.Generated
 )
 data class TimeWindow(
 /* JSR310 encoded time representation of Instant */
-    val untilTime: kotlin.String? = null,
+    val untilTime: String? = null,
 /* JSR310 encoded time representation of Instant */
-    val midpoint: kotlin.String? = null,
+    val midpoint: String? = null,
 /* JSR310 encoded time representation of Instant */
-    val fromTime: kotlin.String? = null
+    val fromTime: String? = null
 )

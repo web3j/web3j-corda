@@ -35,13 +35,13 @@ data class QueryCriteria_FungibleAssetQueryCriteria(
     val status: org.web3j.corda.model.core.node.services.vault.QueryCriteria_FungibleAssetQueryCriteria.Status,
     val relevancyStatus: org.web3j.corda.model.core.node.services.vault.QueryCriteria_FungibleAssetQueryCriteria.RelevancyStatus,
     val constraintTypes: org.web3j.corda.model.core.node.services.vault.QueryCriteria_FungibleAssetQueryCriteria.ConstraintTypes,
-    val constraints: kotlin.collections.List<org.web3j.corda.model.core.node.services.Vault_ConstraintInfo>,
-    val participants: kotlin.collections.List<org.web3j.corda.model.core.identity.AbstractParty>? = null,
-    val owner: kotlin.collections.List<org.web3j.corda.model.core.identity.AbstractParty>? = null,
-    val quantity: kotlin.Any? = null,
-    val issuer: kotlin.collections.List<org.web3j.corda.model.core.identity.AbstractParty>? = null,
-    val issuerRef: kotlin.collections.List<kotlin.String>? = null,
-    val contractStateTypes: kotlin.collections.List<kotlin.String>? = null
+    val constraints: List<org.web3j.corda.model.core.node.services.Vault_ConstraintInfo>,
+    val participants: List<org.web3j.corda.model.core.identity.AbstractParty>? = null,
+    val owner: List<org.web3j.corda.model.core.identity.AbstractParty>? = null,
+    val quantity: Any? = null,
+    val issuer: List<org.web3j.corda.model.core.identity.AbstractParty>? = null,
+    val issuerRef: List<String>? = null,
+    val contractStateTypes: List<String>? = null
 ) {
     enum class Status {
         UNCONSUMED,

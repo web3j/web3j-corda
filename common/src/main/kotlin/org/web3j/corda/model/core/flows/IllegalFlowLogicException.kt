@@ -29,11 +29,11 @@ import javax.annotation.Generated
     date = "2019-09-25T12:12:09.608Z"
 )
 data class IllegalFlowLogicException(
-    val type: kotlin.String,
-    val msg: kotlin.String? = null,
-    val cause: kotlin.Any? = null,
-    val stackTrace: kotlin.collections.List<kotlin.Any>? = null,
-    val message: kotlin.String? = null,
-    val localizedMessage: kotlin.String? = null,
-    val suppressed: kotlin.collections.List<kotlin.Any>? = null
+    val type: String,
+    val msg: String? = null,
+    val cause: Any? = null,
+    val stackTrace: List<Any>? = null,
+    val message: String? = null,
+    val localizedMessage: String? = null,
+    val suppressed: List<Any>? = null
 )

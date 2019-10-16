@@ -25,7 +25,7 @@ import javax.annotation.Generated
 )
 data class QueryCriteria_TimeCondition(
     val type: org.web3j.corda.model.core.node.services.vault.QueryCriteria_TimeCondition.Type,
-    val predicate: kotlin.Any? = null
+    val predicate: Any? = null
 ) {
     enum class Type {
         RECORDED,

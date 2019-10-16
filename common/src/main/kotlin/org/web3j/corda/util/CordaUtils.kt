@@ -21,6 +21,7 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.SerializationFeature
 import com.fasterxml.jackson.module.kotlin.convertValue
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import javax.naming.ldap.LdapName
 import javax.security.auth.x500.X500Principal
 
 fun Any.toJson(): String = mapper
@@ -37,16 +38,11 @@ fun <T> convert(value: Any, type: Class<T>): T = mapper.convertValue(value, type
 
 inline fun <reified T : Any> Any.convert() = mapper.convertValue<T>(this)
 
-fun <K, V> Iterable<Pair<K, V>>.toNonNullMap(): NonNullMap<K, V> = NonNullMap(toMap())
-
-class NonNullMap<K, V>(private val map: Map<K, V>) : Map<K, V> by map {
-    override operator fun get(key: K): V {
-        return map[key] ?: error("Key not found: $key")
-    }
-}
-
 val isMac = System.getProperty("os.name").contains("Mac", true)
 
 val X500Principal.canonicalName: String
-    get() = getName(X500Principal.CANONICAL)
-        .replace("[=, ]".toRegex(), "_")
+    get() = getName(X500Principal.CANONICAL).run {
+        LdapName(this).rdns.toMutableList().apply { reverse() }
+            .joinToString("-") { it.value.toString() }
+            .replace(' ', '-')
+    }

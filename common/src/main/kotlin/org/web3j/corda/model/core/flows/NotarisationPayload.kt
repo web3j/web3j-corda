@@ -26,7 +26,7 @@ import javax.annotation.Generated
     date = "2019-09-25T12:12:09.608Z"
 )
 data class NotarisationPayload(
-    val transaction: kotlin.Any,
+    val transaction: Any,
     val requestSignature: org.web3j.corda.model.core.flows.NotarisationRequestSignature? = null,
     val coreTransaction: org.web3j.corda.model.core.transactions.CoreTransaction? = null,
     val signedTransaction: org.web3j.corda.model.core.transactions.SignedTransaction? = null

@@ -23,5 +23,5 @@ import javax.annotation.Generated
     date = "2019-09-25T12:12:09.61Z"
 )
 data class SortAttribute_Standard(
-    val attribute: kotlin.Any? = null
+    val attribute: Any? = null
 )

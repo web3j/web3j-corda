@@ -25,5 +25,5 @@ import javax.annotation.Generated
 )
 data class CriteriaExpression_ColumnPredicateExpression(
     val column: org.web3j.corda.model.core.node.services.vault.Column_Object_Object? = null,
-    val predicate: kotlin.Any? = null
+    val predicate: Any? = null
 )

@@ -25,7 +25,7 @@ import javax.annotation.Generated
 )
 data class Party(
     /* CordaX500Name encoded Party */
-    val name: kotlin.String,
+    val name: String,
     /* Base 58 Encoded Public Key */
-    val owningKey: kotlin.String
+    val owningKey: String
 )

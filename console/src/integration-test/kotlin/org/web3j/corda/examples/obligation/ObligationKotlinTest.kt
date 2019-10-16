@@ -17,29 +17,42 @@ import assertk.assertions.isEqualTo
 import java.io.File
 import java.math.BigDecimal
 import org.junit.jupiter.api.Test
-import org.web3j.corda.core.api.CordaCore
-import org.web3j.corda.core.flows.ContractUpgradeFlow_AuthorisePayload
 import org.web3j.corda.examples.obligation.flows.IssueObligation_InitiatorPayload
+import org.web3j.corda.finance.flows.CashIssueAndPaymentFlowPayload
 import org.web3j.corda.finance.flows.CashIssueFlowPayload
 import org.web3j.corda.finance.workflows.api.CordaFinanceWorkflows
 import org.web3j.corda.model.AmountCurrency
-import org.web3j.corda.model.core.contracts.StateAndRef_Object
-import org.web3j.corda.model.core.contracts.StateRef
-import org.web3j.corda.model.core.contracts.TransactionState_Object
-import org.web3j.corda.network.CordaNetwork
+import org.web3j.corda.model.core.utilities.OpaqueBytes
 import org.web3j.corda.network.network
-import org.web3j.corda.network.node
 import org.web3j.corda.network.nodes
+import org.web3j.corda.network.notary
+import org.web3j.corda.network.party
 import org.web3j.corda.obligation.api.Obligation
 
 class ObligationKotlinTest {
 
+    private val network = network {
+        baseDir = File(javaClass.classLoader.getResource("cordapps")!!.file)
+        nodes {
+            notary {
+                name = "O=Notary, L=London, C=GB"
+            }
+            party {
+                name = "O=PartyA, L=London, C=GB"
+            }
+            party {
+                name = "O=PartyB, L=New York, C=US"
+            }
+        }
+    }
+
     @Test
     fun `issue obligation`() {
-        val partyB = network.nodes["O=PartyA,L=London,C=GB"].api.network.nodes
+
+        val partyB = network.nodes[0].api.network.nodes
             .findByX500Name("O=PartyB,L=New York,C=US")[0].legalIdentities[0]
 
-        Obligation.load(network.nodes["O=PartyA,L=London,C=GB"].api.service).flows.issueObligationInitiator.start(
+        Obligation.load(network.nodes[0].api.service).flows.issueObligationInitiator.start(
             IssueObligation_InitiatorPayload(
                 AmountCurrency(100, BigDecimal.ONE, "GBP"),
                 partyB,
@@ -51,56 +64,34 @@ class ObligationKotlinTest {
     }
 
     @Test
-    fun `authorise contract upgrade flow`() {
-        val notary = network.nodes["O=PartyA,L=London,C=GB"].api.network.notaries.findAll().first()
-
-        CordaCore.load(network.nodes["O=PartyA,L=London,C=GB"].api.service).flows.contractUpgradeFlowAuthorise.start(
-            ContractUpgradeFlow_AuthorisePayload(
-                StateAndRef_Object(
-                    TransactionState_Object(
-                        data = "authorise payload data",
-                        contract = "My Contract",
-                        encumbrance = 1,
-                        notary = notary
-                    ),
-                    StateRef("hash", 1)
-                )
-            )
-        )
-    }
-
-    @Test
     fun `cash issue flow`() {
 
-        val notary = network.nodes["O=PartyA,L=London,C=GB"].api.network.notaries.findAll().first()
-        val partyA = network.nodes["O=PartyA,L=London,C=GB"].api.network.nodes.self
+        val notary = network.nodes[0].api.network.notaries.findAll().first()
+        val partyA = network.nodes[0].api.network.nodes.self
 
-        CordaFinanceWorkflows.load(network.nodes["O=PartyA,L=London,C=GB"].api.service).flows.cashIssueFlow.start(
+        val partyB = network.nodes[0].api.network.nodes
+            .findByX500Name("O=PartyB,L=New York,C=US")[0].legalIdentities[0]
+
+        CordaFinanceWorkflows.load(network.nodes[0].api.service).flows.cashIssueFlow.start(
             CashIssueFlowPayload(
                 amount = AmountCurrency(100, BigDecimal.valueOf(0.01), "GBP"),
-                issuerBankPartyRef = "736F6D654279746573",
+                issuerBankPartyRef = OpaqueBytes("736F6D654279746573"),
                 notary = notary
             )
         ).apply {
             assertThat(recipient!!.owningKey).isEqualTo(partyA.legalIdentities.first().owningKey)
         }
-    }
 
-    companion object {
-        private val network = CordaNetwork.network {
-            baseDir = File(javaClass.classLoader.getResource("cordapps")!!.file)
-            nodes {
-                node {
-                    name = "O=Notary,L=London,C=GB"
-                    isNotary = true
-                }
-                node {
-                    name = "O=PartyA,L=London,C=GB"
-                }
-                node {
-                    name = "O=PartyB,L=New York,C=US"
-                }
-            }
+        CordaFinanceWorkflows.load(network.nodes[0].api.service).flows.cashIssueAndPaymentFlow.start(
+            CashIssueAndPaymentFlowPayload(
+                amount = AmountCurrency(100, BigDecimal.valueOf(0.01), "GBP"),
+                issueRef = OpaqueBytes("736F6D654279746573"),
+                recipient = partyB,
+                anonymous = false,
+                notary = notary
+            )
+        ).apply {
+            assertThat(recipient!!.owningKey).isEqualTo(partyB.owningKey)
         }
     }
 }

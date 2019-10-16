@@ -24,7 +24,7 @@ import javax.annotation.Generated
     date = "2019-09-25T12:12:09.606Z"
 )
 data class InvocationOrigin_Service(
-    val serviceClassName: kotlin.String,
+    val serviceClassName: String,
     /* CordaX500Name encoded Party */
-    val owningLegalIdentity: kotlin.String
+    val owningLegalIdentity: String
 )

@@ -20,8 +20,8 @@ import org.junit.jupiter.api.Test
 class CordaUtilsTest {
 
     @Test
-    internal fun `X500 canonical name`() {
-        val name = X500Principal("O=Notary, L=London, C=GB")
-        assertThat(name.canonicalName).isEqualTo("o_notary_l_london_c_gb")
+    fun `X500 canonical name`() {
+        val name = X500Principal("O=Notary, L=New York, C=US")
+        assertThat(name.canonicalName).isEqualTo("notary-new-york-us")
     }
 }

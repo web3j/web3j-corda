@@ -24,6 +24,6 @@ import javax.annotation.Generated
     date = "2019-09-25T12:12:09.61Z"
 )
 data class NetworkHostAndPort(
-    val host: kotlin.String,
-    val port: kotlin.Int
+    val host: String,
+    val port: Int
 )

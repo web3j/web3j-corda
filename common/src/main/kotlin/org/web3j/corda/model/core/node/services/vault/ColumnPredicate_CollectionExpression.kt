@@ -25,7 +25,7 @@ import javax.annotation.Generated
 )
 data class ColumnPredicate_CollectionExpression(
     val `operator`: org.web3j.corda.model.core.node.services.vault.ColumnPredicate_CollectionExpression.`Operator`,
-    val rightLiteral: kotlin.collections.List<kotlin.Any>
+    val rightLiteral: List<Any>
 ) {
     enum class `Operator` {
         IN,

@@ -25,5 +25,5 @@ import javax.annotation.Generated
 )
 data class UniqueIdentifier(
     val id: java.util.UUID,
-    val externalId: kotlin.String? = null
+    val externalId: String? = null
 )

@@ -24,6 +24,6 @@ import javax.annotation.Generated
     date = "2019-09-25T12:12:09.607Z"
 )
 data class AmountTransfer(
-    val quantityDelta: kotlin.Long,
-    val destination: kotlin.Any
+    val quantityDelta: Long,
+    val destination: Any
 )

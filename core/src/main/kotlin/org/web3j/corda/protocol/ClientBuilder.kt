@@ -13,6 +13,7 @@
 package org.web3j.corda.protocol
 
 import java.lang.reflect.InvocationHandler
+import java.lang.reflect.InvocationTargetException
 import java.lang.reflect.Method
 import java.lang.reflect.Proxy
 import javax.ws.rs.ClientErrorException
@@ -57,9 +58,27 @@ object ClientBuilder {
         override fun invoke(proxy: Any, method: Method, args: Array<out Any>?): Any? {
             try {
                 // Invoke the original method on the client
-                return method.invoke(client, *(args ?: arrayOf()))
+                return method.invoke(client, *(args ?: arrayOf())).let {
+                    if (Proxy.isProxyClass(it.javaClass)) {
+                        // The result is a Jersey web resource
+                        // so we need to wrap it again
+                        Proxy.newProxyInstance(
+                            method.returnType.classLoader,
+                            arrayOf(method.returnType),
+                            ClientErrorHandler(it, mapper)
+                        )
+                    } else {
+                        it
+                    }
+                }
             } catch (e: ClientErrorException) {
                 throw mapper.invoke(e)
+            } catch (e: InvocationTargetException) {
+                throw if (e.targetException is ClientErrorException) {
+                    mapper.invoke(e.targetException as ClientErrorException)
+                } else {
+                    e.targetException
+                }
             }
         }
     }

@@ -13,6 +13,7 @@
 package org.web3j.corda.networkmap
 
 import javax.ws.rs.Consumes
+import javax.ws.rs.GET
 import javax.ws.rs.POST
 import javax.ws.rs.Path
 import javax.ws.rs.Produces
@@ -31,4 +32,9 @@ interface AdminResource {
 
     @get:Path("notaries")
     val notaries: NotariesResource
+
+    @GET
+    @Path("network-map")
+    @Produces(MediaType.APPLICATION_JSON)
+    fun networkMap(): NetworkMapType
 }

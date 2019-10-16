@@ -27,7 +27,7 @@ import javax.annotation.Generated
     date = "2019-09-25T12:12:09.606Z"
 )
 data class InvocationContext(
-    val origin: kotlin.Any? = null,
+    val origin: Any? = null,
     val trace: org.web3j.corda.model.core.context.Trace? = null,
     val actor: org.web3j.corda.model.core.context.Actor? = null,
     val externalTrace: org.web3j.corda.model.core.context.Trace? = null,

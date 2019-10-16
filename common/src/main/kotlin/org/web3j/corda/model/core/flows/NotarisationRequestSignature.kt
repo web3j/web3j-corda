@@ -25,6 +25,6 @@ import javax.annotation.Generated
 )
 data class NotarisationRequestSignature(
     /* Hex encoded Byte Array */
-    val digitalSignature: kotlin.String,
-    val platformVersion: kotlin.Int
+    val digitalSignature: String,
+    val platformVersion: Int
 )

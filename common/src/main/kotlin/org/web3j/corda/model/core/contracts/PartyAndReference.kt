@@ -26,5 +26,5 @@ import javax.annotation.Generated
 data class PartyAndReference(
     val party: org.web3j.corda.model.core.identity.AbstractParty,
     /* Hex encoded Byte Array */
-    val reference: kotlin.String
+    val reference: String
 )

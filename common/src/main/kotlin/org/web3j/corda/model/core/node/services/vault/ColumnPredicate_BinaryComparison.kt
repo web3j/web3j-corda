@@ -25,7 +25,7 @@ import javax.annotation.Generated
 )
 data class ColumnPredicate_BinaryComparison(
     val `operator`: org.web3j.corda.model.core.node.services.vault.ColumnPredicate_BinaryComparison.`Operator`,
-    val rightLiteral: kotlin.Any
+    val rightLiteral: Any
 ) {
     enum class `Operator` {
         LESS_THAN,

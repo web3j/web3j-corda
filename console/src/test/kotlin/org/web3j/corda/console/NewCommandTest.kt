@@ -15,13 +15,12 @@ package org.web3j.corda.console
 import assertk.assertThat
 import assertk.assertions.exists
 import assertk.fail
+import java.io.File
 import org.gradle.tooling.GradleConnectionException
 import org.gradle.tooling.GradleConnector
 import org.gradle.tooling.ResultHandler
-import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.io.TempDir
-import java.io.File
 
 class NewCommandTest {
 

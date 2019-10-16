@@ -12,17 +12,7 @@
  */
 package org.web3j.corda.model.core.context
 
-import javax.annotation.Generated
-
-/**
- *
- * @param party CordaX500Name encoded Party
- */
-@Generated(
-    value = ["org.web3j.corda.codegen.CorDappClientGenerator"],
-    date = "2019-09-25T12:12:09.606Z"
-)
 data class InvocationOrigin_Peer(
     /* CordaX500Name encoded Party */
-    val party: kotlin.String
+    val party: String
 )

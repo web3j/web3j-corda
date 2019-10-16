@@ -32,10 +32,10 @@ data class QueryCriteria_FungibleStateQueryCriteria(
     val status: org.web3j.corda.model.core.node.services.vault.QueryCriteria_FungibleStateQueryCriteria.Status,
     val relevancyStatus: org.web3j.corda.model.core.node.services.vault.QueryCriteria_FungibleStateQueryCriteria.RelevancyStatus,
     val constraintTypes: org.web3j.corda.model.core.node.services.vault.QueryCriteria_FungibleStateQueryCriteria.ConstraintTypes,
-    val constraints: kotlin.collections.List<org.web3j.corda.model.core.node.services.Vault_ConstraintInfo>,
-    val participants: kotlin.collections.List<org.web3j.corda.model.core.identity.AbstractParty>? = null,
-    val quantity: kotlin.Any? = null,
-    val contractStateTypes: kotlin.collections.List<kotlin.String>? = null
+    val constraints: List<org.web3j.corda.model.core.node.services.Vault_ConstraintInfo>,
+    val participants: List<org.web3j.corda.model.core.identity.AbstractParty>? = null,
+    val quantity: Any? = null,
+    val contractStateTypes: List<String>? = null
 ) {
     enum class Status {
         UNCONSUMED,

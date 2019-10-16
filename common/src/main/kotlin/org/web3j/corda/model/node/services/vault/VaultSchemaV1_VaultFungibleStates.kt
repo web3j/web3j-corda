@@ -27,9 +27,9 @@ import javax.annotation.Generated
     date = "2019-09-25T12:12:09.611Z"
 )
 data class VaultSchemaV1_VaultFungibleStates(
-    val quantity: kotlin.Long,
+    val quantity: Long,
     val owner: org.web3j.corda.model.core.identity.AbstractParty? = null,
     val issuer: org.web3j.corda.model.core.identity.AbstractParty? = null,
-    val issuerRef: kotlin.collections.List<kotlin.ByteArray>? = null,
+    val issuerRef: List<ByteArray>? = null,
     val stateRef: org.web3j.corda.model.core.schemas.PersistentStateRef? = null
 )

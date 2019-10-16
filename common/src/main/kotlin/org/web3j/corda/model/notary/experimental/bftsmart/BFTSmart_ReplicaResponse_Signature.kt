@@ -24,5 +24,5 @@ import javax.annotation.Generated
 )
 data class BFTSmart_ReplicaResponse_Signature(
     /* Hex encoded Byte Array */
-    val txSignature: kotlin.String
+    val txSignature: String
 )

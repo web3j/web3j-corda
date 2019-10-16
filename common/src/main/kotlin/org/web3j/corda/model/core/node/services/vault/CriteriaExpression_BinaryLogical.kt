@@ -26,8 +26,8 @@ import javax.annotation.Generated
 )
 data class CriteriaExpression_BinaryLogical(
     val `operator`: org.web3j.corda.model.core.node.services.vault.CriteriaExpression_BinaryLogical.`Operator`,
-    val left: kotlin.Any? = null,
-    val right: kotlin.Any? = null
+    val left: Any? = null,
+    val right: Any? = null
 ) {
     enum class `Operator` {
         AND,

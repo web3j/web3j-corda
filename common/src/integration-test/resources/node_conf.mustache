@@ -5,7 +5,7 @@ notary {
 validating=false
 }
 {{/isNotary}}
-p2pAddress="localhost:{{p2pPort}}"
+p2pAddress="{{&p2pAddress}}"
 rpcSettings {
 address="0.0.0.0:{{rpcPort}}"
 adminAddress="0.0.0.0:{{adminPort}}"

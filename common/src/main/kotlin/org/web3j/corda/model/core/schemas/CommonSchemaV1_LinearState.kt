@@ -27,7 +27,7 @@ import javax.annotation.Generated
 )
 data class CommonSchemaV1_LinearState(
     val uuid: java.util.UUID,
-    val participants: kotlin.collections.List<org.web3j.corda.model.core.identity.AbstractParty>? = null,
-    val externalId: kotlin.String? = null,
+    val participants: List<org.web3j.corda.model.core.identity.AbstractParty>? = null,
+    val externalId: String? = null,
     val stateRef: org.web3j.corda.model.core.schemas.PersistentStateRef? = null
 )

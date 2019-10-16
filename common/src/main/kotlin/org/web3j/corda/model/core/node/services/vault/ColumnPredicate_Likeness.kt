@@ -25,7 +25,7 @@ import javax.annotation.Generated
 )
 data class ColumnPredicate_Likeness(
     val `operator`: org.web3j.corda.model.core.node.services.vault.ColumnPredicate_Likeness.`Operator`,
-    val rightLiteral: kotlin.String
+    val rightLiteral: String
 ) {
     enum class `Operator` {
         LIKE,

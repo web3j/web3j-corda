@@ -26,6 +26,6 @@ import javax.annotation.Generated
 )
 data class VaultSchemaV1_VaultLinearStates(
     val uuid: java.util.UUID,
-    val externalId: kotlin.String? = null,
+    val externalId: String? = null,
     val stateRef: org.web3j.corda.model.core.schemas.PersistentStateRef? = null
 )

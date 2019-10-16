@@ -27,10 +27,10 @@ import javax.annotation.Generated
     date = "2019-09-25T12:12:09.611Z"
 )
 data class PersistentUniquenessProvider_Request(
-    val requestSignature: kotlin.collections.List<kotlin.ByteArray>,
+    val requestSignature: List<ByteArray>,
     /* JSR310 encoded time representation of Instant */
-    val requestDate: kotlin.String,
-    val id: kotlin.Int? = null,
-    val consumingTxHash: kotlin.String? = null,
-    val partyName: kotlin.String? = null
+    val requestDate: String,
+    val id: Int? = null,
+    val consumingTxHash: String? = null,
+    val partyName: String? = null
 )

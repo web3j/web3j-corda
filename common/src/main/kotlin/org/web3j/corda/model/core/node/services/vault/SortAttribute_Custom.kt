@@ -25,6 +25,6 @@ import javax.annotation.Generated
 )
 data class SortAttribute_Custom(
     /* Java class name */
-    val entityStateClass: kotlin.String,
-    val entityStateColumnName: kotlin.String
+    val entityStateClass: String,
+    val entityStateColumnName: String
 )

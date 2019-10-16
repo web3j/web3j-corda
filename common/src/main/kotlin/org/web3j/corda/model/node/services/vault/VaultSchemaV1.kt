@@ -26,8 +26,8 @@ import javax.annotation.Generated
     date = "2019-09-25T12:12:09.611Z"
 )
 data class VaultSchemaV1(
-    val name: kotlin.String,
-    val migrationResource: kotlin.String,
-    val version: kotlin.Int,
-    val mappedTypes: kotlin.Any
+    val name: String,
+    val migrationResource: String,
+    val version: Int,
+    val mappedTypes: Any
 )

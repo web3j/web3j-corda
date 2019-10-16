@@ -25,7 +25,7 @@ import javax.annotation.Generated
     date = "2019-09-25T12:12:09.609Z"
 )
 data class PageSpecification(
-    val pageNumber: kotlin.Int,
-    val pageSize: kotlin.Int,
-    val default: kotlin.Boolean
+    val pageNumber: Int,
+    val pageSize: Int,
+    val default: Boolean
 )

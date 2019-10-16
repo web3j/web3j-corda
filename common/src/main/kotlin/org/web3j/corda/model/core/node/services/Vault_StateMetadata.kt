@@ -32,17 +32,17 @@ import javax.annotation.Generated
     date = "2019-09-25T12:12:09.609Z"
 )
 data class Vault_StateMetadata(
-    val contractStateClassName: kotlin.String,
+    val contractStateClassName: String,
     /* JSR310 encoded time representation of Instant */
-    val recordedTime: kotlin.String,
+    val recordedTime: String,
     val status: org.web3j.corda.model.core.node.services.Vault_StateMetadata.Status,
     val ref: org.web3j.corda.model.core.contracts.StateRef? = null,
 /* JSR310 encoded time representation of Instant */
-    val consumedTime: kotlin.String? = null,
+    val consumedTime: String? = null,
     val notary: org.web3j.corda.model.core.identity.AbstractParty? = null,
-    val lockId: kotlin.String? = null,
+    val lockId: String? = null,
 /* JSR310 encoded time representation of Instant */
-    val lockUpdateTime: kotlin.String? = null,
+    val lockUpdateTime: String? = null,
     val relevancyStatus: org.web3j.corda.model.core.node.services.Vault_StateMetadata.RelevancyStatus? = null,
     val constraintInfo: org.web3j.corda.model.core.node.services.Vault_ConstraintInfo? = null
 ) {

@@ -25,7 +25,7 @@ import javax.annotation.Generated
 )
 data class StateConsumptionDetails(
     /* Base 58 Encoded Secure Hash */
-    val hashOfTransactionId: kotlin.String,
+    val hashOfTransactionId: String,
     val type: org.web3j.corda.model.core.flows.StateConsumptionDetails.Type
 ) {
     enum class Type {

@@ -25,6 +25,6 @@ import javax.annotation.Generated
 )
 data class LinearPointer(
     /* Java class name */
-    val type: kotlin.String,
+    val type: String,
     val pointer: org.web3j.corda.model.core.contracts.UniqueIdentifier? = null
 )

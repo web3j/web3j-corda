@@ -21,3 +21,9 @@ pages:
   artifacts:
     paths:
       - public
+
+cache:
+  key: $CI_PROJECT_ID
+  paths:
+    - $CI_PROJECT_DIR/.gradle/caches
+    - $CI_PROJECT_DIR/.gradle/wrapper

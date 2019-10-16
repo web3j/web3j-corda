@@ -14,18 +14,29 @@ package org.web3j.corda.network
 
 import java.util.function.Consumer
 
-class CordaNodes internal constructor(private val network: CordaNetwork) : Iterable<CordaNode> {
+class CordaNodes internal constructor(private val network: CordaNetwork) {
 
-    private val nodes = mutableListOf<CordaNode>()
+    internal val notaries = mutableListOf<CordaNotaryNode>()
+    internal val nodes = mutableListOf<CordaPartyNode>()
 
-    override fun iterator() = nodes.iterator()
-
-    @JvmName("node")
-    fun nodeJava(nodeBlock: Consumer<CordaNode>) {
-        CordaNode(network).also {
-            nodeBlock.accept(it)
+    @JvmName("party")
+    fun partyJava(partyBlock: Consumer<CordaPartyNode>) {
+        CordaPartyNode(network).also {
+            partyBlock.accept(it)
             it.validate()
             nodes.add(it)
+            if (it.autoStart) {
+                it.start()
+            }
+        }
+    }
+
+    @JvmName("notary")
+    fun notaryJava(notaryBlock: Consumer<CordaNotaryNode>) {
+        CordaNotaryNode(network).also {
+            notaryBlock.accept(it)
+            it.validate()
+            notaries.add(it)
             if (it.autoStart) {
                 it.start()
             }

@@ -12,21 +12,9 @@
  */
 package org.web3j.corda.model.core.context
 
-import javax.annotation.Generated
-
-/**
- *
- * @param id
- * @param serviceId
- * @param owningLegalIdentity CordaX500Name encoded Party
- */
-@Generated(
-    value = ["org.web3j.corda.codegen.CorDappClientGenerator"],
-    date = "2019-09-25T12:12:09.606Z"
-)
 data class Actor(
     /* CordaX500Name encoded Party */
-    val owningLegalIdentity: kotlin.String,
-    val id: org.web3j.corda.model.core.context.Actor_Id? = null,
-    val serviceId: org.web3j.corda.model.core.context.AuthServiceId? = null
+    val owningLegalIdentity: String,
+    val id: Actor_Id? = null,
+    val serviceId: AuthServiceId? = null
 )

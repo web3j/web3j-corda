@@ -28,9 +28,9 @@ import javax.annotation.Generated
     date = "2019-09-25T12:12:09.61Z"
 )
 data class CommonSchemaV1_FungibleState(
-    val quantity: kotlin.Long,
-    val issuerRef: kotlin.collections.List<kotlin.ByteArray>,
-    val participants: kotlin.collections.List<org.web3j.corda.model.core.identity.AbstractParty>? = null,
+    val quantity: Long,
+    val issuerRef: List<ByteArray>,
+    val participants: List<org.web3j.corda.model.core.identity.AbstractParty>? = null,
     val owner: org.web3j.corda.model.core.identity.AbstractParty? = null,
     val issuer: org.web3j.corda.model.core.identity.AbstractParty? = null,
     val stateRef: org.web3j.corda.model.core.schemas.PersistentStateRef? = null

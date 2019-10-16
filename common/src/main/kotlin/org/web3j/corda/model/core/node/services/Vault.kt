@@ -23,5 +23,5 @@ import javax.annotation.Generated
     date = "2019-09-25T12:12:09.609Z"
 )
 data class Vault(
-    val states: kotlin.Any
+    val states: Any
 )

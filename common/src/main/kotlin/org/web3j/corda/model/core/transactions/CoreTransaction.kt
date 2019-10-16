@@ -29,13 +29,13 @@ import javax.annotation.Generated
     date = "2019-09-25T12:12:09.61Z"
 )
 data class CoreTransaction(
-    val inputs: kotlin.collections.List<org.web3j.corda.model.core.contracts.StateRef>,
-    val references: kotlin.collections.List<org.web3j.corda.model.core.contracts.StateRef>,
-    val outputStates: kotlin.collections.List<org.web3j.corda.model.core.contracts.ContractState>?,
-    val outputs: kotlin.collections.List<org.web3j.corda.model.core.contracts.TransactionState_net_corda_core_contracts_ContractState>,
+    val inputs: List<org.web3j.corda.model.core.contracts.StateRef>,
+    val references: List<org.web3j.corda.model.core.contracts.StateRef>,
+    val outputStates: List<org.web3j.corda.model.core.contracts.ContractState>?,
+    val outputs: List<org.web3j.corda.model.core.contracts.TransactionState_net_corda_core_contracts_ContractState>,
     /* Base 58 Encoded Secure Hash */
-    val id: kotlin.String,
+    val id: String,
 /* Base 58 Encoded Secure Hash */
-    val networkParametersHash: kotlin.String? = null,
+    val networkParametersHash: String? = null,
     val notary: org.web3j.corda.model.core.identity.Party? = null
 )

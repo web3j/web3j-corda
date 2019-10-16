@@ -39,14 +39,6 @@ class GenerateCommandTest {
             assertThat(it).exists()
         }
 
-        File(outputDir, KOTLIN_SOURCE.format("main", "core", "CordaCore", "")).also {
-            assertThat(it).exists()
-        }
-
-        File(outputDir, KOTLIN_SOURCE.format("test", "core", "CordaCore", "Test")).also {
-            assertThat(it).exists()
-        }
-
         File(outputDir, KOTLIN_SOURCE.format("main", "finance/workflows", "CordaFinanceWorkflows", "")).also {
             assertThat(it).exists()
         }
@@ -64,10 +56,6 @@ class GenerateCommandTest {
             "-u", definitionFile.absolutePath,
             "-o", outputDir.absolutePath
         )
-
-        File(outputDir, KOTLIN_SOURCE.format("main", "core", "CordaCore", "")).also {
-            assertThat(it).exists()
-        }
 
         File(outputDir, KOTLIN_SOURCE.format("main", "finance/workflows", "CordaFinanceWorkflows", "")).also {
             assertThat(it).exists()

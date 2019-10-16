@@ -12,23 +12,15 @@
  */
 package org.web3j.braid.services.vault
 
-import javax.annotation.Generated
+import org.web3j.corda.model.core.node.services.vault.PageSpecification
+import org.web3j.corda.model.core.node.services.vault.Sort
 
-/**
- *
- * @param criteria
- * @param paging
- * @param sorting
- * @param contractStateType Java class name
- */
-@Generated(
-    value = ["org.web3j.corda.codegen.CorDappClientGenerator"],
-    date = "2019-10-01T10:36:39.394Z"
-)
 data class VaultQuery(
-    /* Java class name */
-    val contractStateType: kotlin.String,
-    val criteria: kotlin.Any? = null,
-    val paging: org.web3j.corda.model.core.node.services.vault.PageSpecification? = null,
-    val sorting: org.web3j.corda.model.core.node.services.vault.Sort? = null
+    /**
+     * Java class name
+     */
+    val contractStateType: String,
+    val criteria: Any? = null,
+    val paging: PageSpecification? = null,
+    val sorting: Sort? = null
 )

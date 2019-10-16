@@ -27,9 +27,9 @@ import javax.annotation.Generated
     date = "2019-09-25T12:12:09.608Z"
 )
 data class NodeInfo(
-    val addresses: kotlin.collections.List<org.web3j.corda.model.core.utilities.NetworkHostAndPort>,
-    val legalIdentitiesAndCerts: kotlin.collections.List<org.web3j.corda.model.core.identity.PartyAndCertificate>,
-    val platformVersion: kotlin.Int,
-    val serial: kotlin.Long,
-    val legalIdentities: kotlin.collections.List<org.web3j.corda.model.core.identity.Party>
+    val addresses: List<org.web3j.corda.model.core.utilities.NetworkHostAndPort>,
+    val legalIdentitiesAndCerts: List<org.web3j.corda.model.core.identity.PartyAndCertificate>,
+    val platformVersion: Int,
+    val serial: Long,
+    val legalIdentities: List<org.web3j.corda.model.core.identity.Party>
 )

@@ -24,5 +24,5 @@ import javax.annotation.Generated
 )
 data class AbstractParty(
     /* Base 58 Encoded Public Key */
-    val owningKey: kotlin.String
+    val owningKey: String
 )
