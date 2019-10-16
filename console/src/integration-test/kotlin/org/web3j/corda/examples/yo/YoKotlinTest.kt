@@ -12,13 +12,14 @@
  */
 package org.web3j.corda.examples.yo
 
+import assertk.assertThat
+import assertk.assertions.isEqualTo
 import java.io.File
 import org.junit.jupiter.api.Test
 import org.web3j.corda.network.network
 import org.web3j.corda.network.nodes
 import org.web3j.corda.network.notary
 import org.web3j.corda.network.party
-import org.web3j.corda.util.toJson
 import org.web3j.corda.yo.YoFlowPayload
 import org.web3j.corda.yo.api.Yo
 
@@ -46,8 +47,7 @@ class YoKotlinTest {
         Yo.load(network.nodes[0].api.service).flows.yoFlow.start(
             YoFlowPayload(partyB)
         ).apply {
-            // FIXME: Have useful assertions
-            println(toJson())
+            assertThat(coreTransaction!!.outputs[0].data!!.participants?.first()?.owningKey).isEqualTo(partyB.owningKey)
         }
     }
 }
