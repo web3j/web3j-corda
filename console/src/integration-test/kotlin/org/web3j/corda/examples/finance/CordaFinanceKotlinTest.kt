@@ -10,14 +10,13 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
-package org.web3j.corda.examples.obligation
+package org.web3j.corda.examples.finance
 
 import assertk.assertThat
 import assertk.assertions.isEqualTo
 import java.io.File
 import java.math.BigDecimal
 import org.junit.jupiter.api.Test
-import org.web3j.corda.examples.obligation.flows.IssueObligation_InitiatorPayload
 import org.web3j.corda.finance.flows.CashIssueAndPaymentFlowPayload
 import org.web3j.corda.finance.flows.CashIssueFlowPayload
 import org.web3j.corda.finance.workflows.api.CordaFinanceWorkflows
@@ -27,9 +26,8 @@ import org.web3j.corda.network.network
 import org.web3j.corda.network.nodes
 import org.web3j.corda.network.notary
 import org.web3j.corda.network.party
-import org.web3j.corda.obligation.api.Obligation
 
-class ObligationKotlinTest {
+class CordaFinanceKotlinTest {
 
     private val network = network {
         baseDir = File(javaClass.classLoader.getResource("cordapps")!!.file)
@@ -43,23 +41,6 @@ class ObligationKotlinTest {
             party {
                 name = "O=PartyB, L=New York, C=US"
             }
-        }
-    }
-
-    @Test
-    fun `issue obligation`() {
-
-        val partyB = network.nodes[0].api.network.nodes
-            .findByX500Name("O=PartyB,L=New York,C=US")[0].legalIdentities[0]
-
-        Obligation.load(network.nodes[0].api.service).flows.issueObligationInitiator.start(
-            IssueObligation_InitiatorPayload(
-                AmountCurrency(100, BigDecimal.ONE, "GBP"),
-                partyB,
-                false
-            )
-        ).apply {
-            assertThat(coreTransaction!!.outputs[0].data!!.participants?.first()?.owningKey).isEqualTo(partyB.owningKey)
         }
     }
 
