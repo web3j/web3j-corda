@@ -14,6 +14,7 @@ package org.web3j.corda.examples.obligation;
 
 import java.io.File;
 import java.math.BigDecimal;
+import java.util.Objects;
 
 import org.junit.jupiter.api.Test;
 
@@ -38,7 +39,7 @@ public class ObligationJavaTest {
                                 new File(
                                         getClass()
                                                 .getClassLoader()
-                                                .getResource("classes")
+                                                .getResource("cordapps")
                                                 .getFile()));
                         net.nodes(
                                 nodes -> {
@@ -53,14 +54,14 @@ public class ObligationJavaTest {
 
     @Test
     public void issueObligation() {
-        final Corda corda = network.getNodes().get(1).getApi();
+        final Corda corda = network.getNodes().get(0).getApi();
 
-        final Party party =
-                corda.getNetwork().getNodes().findAll().get(2).getLegalIdentities().get(0);
+        final Party partyB =
+                corda.getNetwork().getNodes().findByX500Name("O=PartyB,L=New York,C=US").get(0).getLegalIdentities().get(0);
 
         final AmountCurrency amount = new AmountCurrency(100, BigDecimal.ONE, "GBP");
         final IssueObligation_InitiatorPayload parameters =
-                new IssueObligation_InitiatorPayload(amount, party, false);
+                new IssueObligation_InitiatorPayload(amount, partyB, false);
 
         final Obligation.FlowResource.IssueObligationInitiator issue =
                 Obligation.Companion.load(corda.getService())
@@ -70,13 +71,13 @@ public class ObligationJavaTest {
         final SignedTransaction signedTx = issue.start(parameters);
 
         final AbstractParty actualParty =
-                signedTx.getCoreTransaction()
+                Objects.requireNonNull(Objects.requireNonNull(Objects.requireNonNull(signedTx.getCoreTransaction())
                         .getOutputs()
                         .get(0)
-                        .getData()
-                        .getParticipants()
+                        .getData())
+                        .getParticipants())
                         .get(0);
 
-        assertEquals(party.getOwningKey(), actualParty.getOwningKey());
+        assertEquals(partyB.getOwningKey(), actualParty.getOwningKey());
     }
 }
