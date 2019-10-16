@@ -1,26 +1,50 @@
 build:
-  image: openjdk:8-jdk-alpine
+  image: gradle:5.6.2-jdk8
   stage: build
   script:
-    - ./gradlew spotlessCheck build jacocoTestReport publishToMavenLocal publishAllPublicationsToOssrhRepository #integrationTest
+    - gradle spotlessCheck build -x test
+
+test:
+  image: gradle:5.6.2-jdk8
+  stage: test
+  script:
+    - gradle publishToMavenLocal test
   artifacts:
     reports:
       junit:
         - build/test-results/test/TEST-*.xml
         - build/test-results/integrationTest/TEST-*.xml
 
+integration-test:
+  image: gradle:5.6.2-jdk8
+  stage: test
+  script:
+    - gradle integrationTest
+
+coverage:
+  image: gradle:5.6.2-jdk8
+  stage: test
+  script:
+    - gradle jacocoTestReport
+
 pages:
   image: python:alpine
   before_script:
     - pip install mkdocs
     - pip install mkdocs-material
-  stage: pages
+  stage: deploy
   script:
     - mkdocs build
     - mv site public
   artifacts:
     paths:
       - public
+
+publish:
+  image: gradle:5.6.2-jdk8
+  stage: deploy
+  script:
+    - gradle publishAllPublicationsToOssrhRepository
 
 cache:
   key: $CI_PROJECT_ID
