@@ -57,7 +57,12 @@ public class ObligationJavaTest {
         final Corda corda = network.getNodes().get(0).getApi();
 
         final Party partyB =
-                corda.getNetwork().getNodes().findByX500Name("O=PartyB,L=New York,C=US").get(0).getLegalIdentities().get(0);
+                corda.getNetwork()
+                        .getNodes()
+                        .findByX500Name("O=PartyB,L=New York,C=US")
+                        .get(0)
+                        .getLegalIdentities()
+                        .get(0);
 
         final AmountCurrency amount = new AmountCurrency(100, BigDecimal.ONE, "GBP");
         final IssueObligation_InitiatorPayload parameters =
@@ -71,11 +76,14 @@ public class ObligationJavaTest {
         final SignedTransaction signedTx = issue.start(parameters);
 
         final AbstractParty actualParty =
-                Objects.requireNonNull(Objects.requireNonNull(Objects.requireNonNull(signedTx.getCoreTransaction())
-                        .getOutputs()
-                        .get(0)
-                        .getData())
-                        .getParticipants())
+                Objects.requireNonNull(
+                                Objects.requireNonNull(
+                                                Objects.requireNonNull(
+                                                                signedTx.getCoreTransaction())
+                                                        .getOutputs()
+                                                        .get(0)
+                                                        .getData())
+                                        .getParticipants())
                         .get(0);
 
         assertEquals(partyB.getOwningKey(), actualParty.getOwningKey());
