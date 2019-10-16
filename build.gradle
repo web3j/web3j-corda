@@ -24,6 +24,7 @@ subprojects {
     apply plugin: 'java'
     apply plugin: 'idea'
     apply plugin: 'maven'
+    apply plugin: 'jacoco'
     apply plugin: 'signing'
     apply plugin: 'maven-publish'
     apply plugin: 'com.jfrog.bintray'
@@ -67,6 +68,12 @@ subprojects {
 
     integrationTestJar {
         archiveClassifier = 'integration-test'
+    }
+
+    jacocoTestReport {
+        reports {
+            xml.enabled = true
+        }
     }
 
     artifacts {
@@ -223,15 +230,7 @@ subprojects {
         repositories {
             maven {
                 name = 'ossrh'
-                url = ossrhRepoUrl
-                credentials {
-                    username ossrhUsername
-                    password ossrhPassword
-                }
-            }
-            maven {
-                name = 'ossrhSnapshots'
-                url = ossrhSnapshotRepoUrl
+                url = 'https://oss.sonatype.org/content/repositories/snapshots'
                 mavenContent {
                     snapshotsOnly()
                 }
