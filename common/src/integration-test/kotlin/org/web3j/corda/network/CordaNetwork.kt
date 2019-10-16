@@ -77,7 +77,7 @@ class CordaNetwork private constructor() {
         }.toFile().absolutePath.run {
             // Fix Mac temporary folder absolute path
             File((if (isMac) "/private" else "") + this)
-        }.apply { deleteOnExit() }
+        }
     }
 
     /**
