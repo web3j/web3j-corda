@@ -2,7 +2,7 @@ build:
   image: openjdk:8-jdk-alpine
   stage: build
   script:
-    - ./gradlew spotlessCheck publishToMavenLocal build #integrationTest
+    - ./gradlew spotlessCheck jacocoTestReport publishToMavenLocal build #integrationTest
   artifacts:
     reports:
       junit:
@@ -14,7 +14,7 @@ pages:
   before_script:
     - pip install mkdocs
     - pip install mkdocs-material
-  stage: test
+  stage: pages
   script:
     - mkdocs build
     - mv site public
