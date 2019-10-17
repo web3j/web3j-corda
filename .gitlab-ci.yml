@@ -1,22 +1,14 @@
-services:
-  - docker:dind
-
-variables:
-  DOCKER_HOST: "tcp://docker:2375"
-  DOCKER_DRIVER: overlay2
-  
-.base:
+default:
   image: openjdk:8-jdk-alpine
   interruptible: true
-  
+
 build:
   image: openjdk:8-jdk-alpine
   stage: build
   script:
     - ./gradlew spotlessCheck build -x test
-  
+
 test:
-  extends: .base
   stage: test
   script:
     - ./gradlew publishToMavenLocal test
@@ -26,7 +18,11 @@ test:
         - build/test-results/test/TEST-*.xml
 
 integration-test:
-  extends: .base
+  services:
+    - docker:dind
+  variables:
+    DOCKER_HOST: "tcp://docker:2375"
+    DOCKER_DRIVER: overlay2
   stage: test
   script:
     - apk add docker
@@ -37,11 +33,9 @@ integration-test:
         - build/test-results/integrationTest/TEST-*.xml
 
 #coverage:
-#  extends: .base
 #  stage: test
 #  script:
 #    - ./gradlew jacocoTestReport && cat build/reports/jacoco/test/jacocoTestReport.csv
-#  coverage: '/Code coverage: \d+\.\d+/'
 
 publish-docs:
   image: python:alpine
@@ -57,14 +51,13 @@ publish-docs:
     paths:
       - public
   only:
-    refs: 
+    refs:
       - master
     changes:
       - docs/*
       - mkdocs.yml
-    
+
 publish-snapshot:
-  extends: .base
   stage: deploy
   script:
     - ./gradlew publishAllPublicationsToOssrhRepository
@@ -72,7 +65,6 @@ publish-snapshot:
     - master
 
 publish-release:
-  extends: .base
   stage: deploy
   script:
     - ./gradlew bintrayUpload
@@ -82,7 +74,6 @@ publish-release:
 cache:
   policy: pull
   untracked: true
-  key: $CI_PROJECT_ID
   paths:
-    - $CI_PROJECT_DIR/.gradle/caches
-    - $CI_PROJECT_DIR/.gradle/wrapper
+    - .gradle/caches
+    - .gradle/wrapper

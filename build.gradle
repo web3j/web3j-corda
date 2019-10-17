@@ -77,9 +77,9 @@ subprojects {
 
     jacocoTestReport {
         reports {
-            csv.enabled true
+            csv.enabled false
             xml.enabled false
-            html.enabled false
+            html.enabled true
         }
     }
 
