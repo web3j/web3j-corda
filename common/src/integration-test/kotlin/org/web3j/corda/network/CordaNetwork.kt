@@ -85,12 +85,9 @@ class CordaNetwork private constructor() {
      */
     internal val network = Network.newNetwork()
 
-    internal val mapUrl: String
-        get() = "http://$mapName:$NETWORK_MAP_PORT"
+    private val mapName = "$NETWORK_MAP_ALIAS-${System.currentTimeMillis()}"
 
-    private val mapName: String
-        get() = "$NETWORK_MAP_ALIAS-${System.currentTimeMillis()}"
-
+    internal val mapUrl = "http://$mapName:$NETWORK_MAP_PORT"
     /**
      * Cordite network map Docker container.
      */
