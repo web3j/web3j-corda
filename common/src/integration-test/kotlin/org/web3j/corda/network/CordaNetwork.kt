@@ -56,7 +56,7 @@ class CordaNetwork private constructor() {
     lateinit var nodes: List<CordaPartyNode>
 
     val map: NetworkMap by lazy {
-        NetworkMap.build(CordaService("http://localhost:${mapContainer.getMappedPort(8080)}"))
+        NetworkMap.build(CordaService("http://localhost:${mapContainer.getMappedPort(NETWORK_MAP_PORT)}"))
     }
 
     /**
