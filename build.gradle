@@ -55,6 +55,7 @@ subprojects {
 
     tasks.withType(Test) {
         useJUnitPlatform()
+        reports.html.enabled = false
         systemProperties = [
                 'junit.jupiter.extensions.autodetection.enabled': 'true',
                 'junit.jupiter.testinstance.lifecycle.default'  : 'per_class'
@@ -70,9 +71,15 @@ subprojects {
         archiveClassifier = 'integration-test'
     }
 
+    jacoco {
+        toolVersion = versions.jacoco
+    }
+
     jacocoTestReport {
         reports {
-            xml.enabled = true
+            csv.enabled true
+            xml.enabled false
+            html.enabled false
         }
     }
 

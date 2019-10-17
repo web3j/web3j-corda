@@ -5,14 +5,18 @@ variables:
   DOCKER_HOST: "tcp://docker:2375"
   DOCKER_DRIVER: overlay2
   
+.base:
+  image: openjdk:8-jdk-alpine
+  interruptible: true
+  
 build:
   image: openjdk:8-jdk-alpine
   stage: build
   script:
     - ./gradlew spotlessCheck build -x test
-
+  
 test:
-  image: openjdk:8-jdk-alpine
+  extends: .base
   stage: test
   script:
     - ./gradlew publishToMavenLocal test
@@ -20,23 +24,28 @@ test:
     reports:
       junit:
         - build/test-results/test/TEST-*.xml
-        - build/test-results/integrationTest/TEST-*.xml
 
 integration-test:
-  image: openjdk:8-jdk-alpine
+  extends: .base
   stage: test
   script:
     - apk add docker
     - ./gradlew integrationTest
+  artifacts:
+    reports:
+      junit:
+        - build/test-results/integrationTest/TEST-*.xml
 
-coverage:
-  image: openjdk:8-jdk-alpine
-  stage: test
-  script:
-    - ./gradlew jacocoTestReport
+#coverage:
+#  extends: .base
+#  stage: test
+#  script:
+#    - ./gradlew jacocoTestReport && cat build/reports/jacoco/test/jacocoTestReport.csv
+#  coverage: '/Code coverage: \d+\.\d+/'
 
 publish-docs:
   image: python:alpine
+  interruptible: true
   before_script:
     - pip install mkdocs
     - pip install mkdocs-material
@@ -44,19 +53,35 @@ publish-docs:
   script:
     - mkdocs build
     - mv site public
-    on:
-      branch: master
   artifacts:
     paths:
       - public
-
+  only:
+    refs: 
+      - master
+    changes:
+      - docs/*
+      - mkdocs.yml
+    
 publish-snapshot:
-  image: openjdk:8-jdk-alpine
+  extends: .base
   stage: deploy
   script:
     - ./gradlew publishAllPublicationsToOssrhRepository
+  only:
+    - master
+
+publish-release:
+  extends: .base
+  stage: deploy
+  script:
+    - ./gradlew bintrayUpload
+  only:
+    - /^release/.*$/
 
 cache:
+  policy: pull
+  untracked: true
   key: $CI_PROJECT_ID
   paths:
     - $CI_PROJECT_DIR/.gradle/caches
