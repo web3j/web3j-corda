@@ -26,7 +26,7 @@ import org.web3j.corda.obligation.api.Obligation;
 import org.web3j.corda.protocol.Corda;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.web3j.corda.examples.Network.getNetwork;
+import static org.web3j.corda.examples.IntegrationTestUtils.getNetwork;
 
 public class ObligationJavaTest {
 
