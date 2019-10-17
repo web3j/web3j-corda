@@ -161,7 +161,7 @@ class CordaNetwork private constructor() {
 
     companion object {
         private const val NETWORK_MAP_IMAGE = "cordite/network-map:latest"
-        private const val NETWORK_MAP_ALIAS = "networkmap"
+        private const val NETWORK_MAP_ALIAS = "network-map"
         private const val NETWORK_MAP_PORT = 8080
 
         /**
