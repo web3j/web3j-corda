@@ -36,8 +36,9 @@ integration-test:
     DOCKER_HOST: "tcp://docker:2375"
     DOCKER_DRIVER: overlay2
   stage: test
-  script:
+  before_script:
     - apk add docker
+  script:
     - ./gradlew integrationTest
 #    - cat build/reports/jacoco/jacocoIntegrationTestReport/html/index.html
   artifacts:
