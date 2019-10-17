@@ -1,22 +1,21 @@
 default:
   image: openjdk:8-jdk-alpine
 
-cache: &global_cache
-  policy: pull
-  untracked: true
-  key: $CI_PROJECT_ID
-  paths:
-    - $CI_PROJECT_DIR/.gradle/caches
-    - $CI_PROJECT_DIR/.gradle/wrapper
+#cache: &global_cache
+#  policy: pull
+#  untracked: true
+#  key: $CI_PROJECT_ID
+#  paths:
+#    - $CI_PROJECT_DIR/.gradle/caches
+#    - $CI_PROJECT_DIR/.gradle/wrapper
 
 build:
-  image: openjdk:8-jdk-alpine
   stage: build
   script:
     - ./gradlew spotlessCheck build -x test
-  cache:
-    <<: *global_cache
-    policy: pull-push
+#  cache:
+#    <<: *global_cache
+#    policy: pull-push
 
 test:
   stage: test
@@ -31,10 +30,13 @@ test:
 
 integration-test:
   services:
-    - docker:dind
+    - name: docker:dind
+      entrypoint: ["env", "-u", "DOCKER_HOST"]
+      command: ["dockerd-entrypoint.sh"]
   variables:
     DOCKER_HOST: "tcp://docker:2375"
     DOCKER_DRIVER: overlay2
+    DOCKER_TLS_CERTDIR: ""
   stage: test
   before_script:
     - apk add docker
