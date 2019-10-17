@@ -1,6 +1,5 @@
 default:
   image: openjdk:8-jdk-alpine
-  interruptible: true
 
 build:
   image: openjdk:8-jdk-alpine
