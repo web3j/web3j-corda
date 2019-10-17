@@ -1,11 +1,22 @@
 default:
   image: openjdk:8-jdk-alpine
 
+cache: &global_cache
+  policy: pull
+  untracked: true
+  key: $CI_PROJECT_ID
+  paths:
+    - $CI_PROJECT_DIR/.gradle/caches
+    - $CI_PROJECT_DIR/.gradle/wrapper
+
 build:
   image: openjdk:8-jdk-alpine
   stage: build
   script:
     - ./gradlew spotlessCheck build -x test
+  cache:
+    <<: *global_cache
+    policy: pull-push
 
 test:
   stage: test
@@ -31,10 +42,12 @@ integration-test:
       junit:
         - build/test-results/integrationTest/TEST-*.xml
 
-#coverage:
-#  stage: test
-#  script:
-#    - ./gradlew jacocoTestReport && cat build/reports/jacoco/test/jacocoTestReport.csv
+coverage:
+  stage: test
+  script:
+    - ./gradlew jacocoTestReport
+    - cat build/reports/jacoco/test/html/index.html
+  coverage: '/Total.*?([0-9]{1,3})%/'
 
 publish-docs:
   image: python:alpine
@@ -59,7 +72,7 @@ publish-docs:
 publish-snapshot:
   stage: deploy
   script:
-    - ./gradlew publishAllPublicationsToOssrhRepository
+    - ./gradlew publishAllPublicationsToSnapshotsRepository
   only:
     - master
 
@@ -69,11 +82,3 @@ publish-release:
     - ./gradlew bintrayUpload
   only:
     - /^release/.*$/
-
-cache:
-  policy: pull
-  untracked: true
-  key: $CI_PROJECT_ID
-  paths:
-    - $CI_PROJECT_DIR/.gradle/caches
-    - $CI_PROJECT_DIR/.gradle/wrapper
