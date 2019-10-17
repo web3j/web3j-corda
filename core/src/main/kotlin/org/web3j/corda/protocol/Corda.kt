@@ -18,10 +18,9 @@ import org.web3j.corda.api.CordaApi
  * Entry class for the Corda API.
  */
 class Corda private constructor(
-    private val api: CordaApi,
+    val api: CordaApi,
     val service: CordaService
-) : CordaApi by api {
-
+) {
     companion object {
 
         /**

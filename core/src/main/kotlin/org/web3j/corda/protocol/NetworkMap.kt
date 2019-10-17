@@ -15,10 +15,9 @@ package org.web3j.corda.protocol
 import org.web3j.corda.networkmap.NetworkMapApi
 
 class NetworkMap private constructor(
-    private val api: NetworkMapApi,
+    val api: NetworkMapApi,
     val service: CordaService
-) : NetworkMapApi by api {
-
+) {
     companion object {
         @JvmStatic
         fun build(service: CordaService): NetworkMap {

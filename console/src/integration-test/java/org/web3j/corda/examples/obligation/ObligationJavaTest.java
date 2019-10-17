@@ -32,10 +32,11 @@ public class ObligationJavaTest {
 
     @Test
     public void issueObligation() {
-        final Corda corda = getNetwork().getNodes().get(0).getApi();
+        final Corda corda = getNetwork().getNodes().get(0).getCorda();
 
         final Party partyB =
-                corda.getNetwork()
+                corda.getApi()
+                        .getNetwork()
                         .getNodes()
                         .findByX500Name("O=PartyB,L=New York,C=US")
                         .get(0)

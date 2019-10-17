@@ -16,8 +16,6 @@ import assertk.assertThat
 import assertk.assertions.isEqualTo
 import org.junit.jupiter.api.Test
 import org.web3j.corda.examples.network
-import org.web3j.corda.network.network
-import org.web3j.corda.network.nodes
 import org.web3j.corda.yo.YoFlowPayload
 import org.web3j.corda.yo.api.Yo
 
@@ -25,10 +23,10 @@ class YoKotlinTest {
 
     @Test
     fun `send Yo`() {
-        val partyB = network.nodes[0].api.network.nodes
+        val partyB = network.nodes[0].corda.api.network.nodes
             .findByX500Name("O=PartyB,L=New York,C=US")[0].legalIdentities[0]
 
-        Yo.load(network.nodes[0].api.service).flows.yoFlow.start(
+        Yo.load(network.nodes[0].corda.service).flows.yoFlow.start(
             YoFlowPayload(partyB)
         ).apply {
             assertThat(coreTransaction!!.outputs[0].data!!.participants?.first()?.owningKey).isEqualTo(partyB.owningKey)

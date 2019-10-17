@@ -85,16 +85,22 @@ class CordaNetwork private constructor() {
      */
     internal val network = Network.newNetwork()
 
+    internal val mapUrl: String
+        get() = "http://$mapName:$NETWORK_MAP_PORT"
+
+    private val mapName: String
+        get() = "$NETWORK_MAP_ALIAS-${System.currentTimeMillis()}"
+
     /**
      * Cordite network map Docker container.
      */
     private val mapContainer: KGenericContainer by lazy {
         KGenericContainer(NETWORK_MAP_IMAGE)
             .withCreateContainerCmdModifier {
-                it.withHostName(NETWORK_MAP_ALIAS)
-                it.withName(NETWORK_MAP_ALIAS)
+                it.withHostName(mapName)
+                it.withName(mapName)
             }.withNetwork(network)
-            .withNetworkAliases(NETWORK_MAP_ALIAS)
+            .withNetworkAliases(mapName)
             .withEnv("NMS_STORAGE_TYPE", "file")
             .waitingFor(Wait.forHttp("").forPort(NETWORK_MAP_PORT))
             .withLogConsumer {
@@ -160,8 +166,6 @@ class CordaNetwork private constructor() {
         private const val NETWORK_MAP_IMAGE = "cordite/network-map:latest"
         private const val NETWORK_MAP_ALIAS = "networkmap"
         private const val NETWORK_MAP_PORT = 8080
-
-        internal const val NETWORK_MAP_URL = "http://$NETWORK_MAP_ALIAS:$NETWORK_MAP_PORT"
 
         /**
          *  Corda network DSL entry point.

@@ -42,7 +42,7 @@ class CordaPartyNode internal constructor(network: CordaNetwork) : CordaNode(net
     /**
      * Corda API to interact with this node.
      */
-    val api: Corda by lazy {
+    val corda: Corda by lazy {
         Corda.build(CordaService("http://localhost:${braid.ports[apiPort]}"))
     }
 

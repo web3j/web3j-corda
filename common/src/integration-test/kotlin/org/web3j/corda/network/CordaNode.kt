@@ -68,6 +68,11 @@ abstract class CordaNode internal constructor(protected val network: CordaNetwor
     }
 
     /**
+     * Is this a notary node?
+     */
+    open val isNotary: Boolean = false
+
+    /**
      * CorDapp `node.conf` template file.
      */
     private val nodeConfTemplate = CordaNetwork::class.java.classLoader
@@ -93,8 +98,8 @@ abstract class CordaNode internal constructor(protected val network: CordaNetwor
                 nodeDir.resolve("certificates").absolutePath,
                 "/opt/corda/certificates",
                 BindMode.READ_WRITE
-            ).withEnv("NETWORKMAP_URL", CordaNetwork.NETWORK_MAP_URL)
-            .withEnv("DOORMAN_URL", CordaNetwork.NETWORK_MAP_URL)
+            ).withEnv("NETWORKMAP_URL", network.mapUrl)
+            .withEnv("DOORMAN_URL", network.mapUrl)
             .withEnv("NETWORK_TRUST_PASSWORD", "trustpass")
             .withEnv("MY_PUBLIC_ADDRESS", "http://localhost:$p2pPort")
             .withCommand("config-generator --generic")
@@ -141,11 +146,11 @@ abstract class CordaNode internal constructor(protected val network: CordaNetwor
             nodeConfTemplate.execute(
                 mapOf(
                     "name" to name,
-                    "isNotary" to (this is CordaNotaryNode),
+                    "isNotary" to isNotary,
                     "p2pAddress" to "$canonicalName:$p2pPort",
                     "rpcPort" to rpcPort,
                     "adminPort" to adminPort,
-                    "networkMapUrl" to CordaNetwork.NETWORK_MAP_URL
+                    "networkMapUrl" to network.mapUrl
                 ),
                 it
             )
@@ -156,7 +161,7 @@ abstract class CordaNode internal constructor(protected val network: CordaNetwor
     private fun saveCertificateFromNetworkMap(nodeDir: File) {
         val certificateFolder = File(nodeDir, "certificates").apply { mkdir() }
         val certificateFile = certificateFolder.resolve("network-root-truststore.jks")
-        Files.write(certificateFile.toPath(), network.map.networkMap.truststore)
+        Files.write(certificateFile.toPath(), network.map.api.networkMap.truststore)
     }
 
     companion object : KLogging() {

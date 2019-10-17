@@ -27,11 +27,13 @@ import org.web3j.corda.testcontainers.KGenericContainer
  */
 class CordaNotaryNode internal constructor(network: CordaNetwork) : CordaNode(network) {
 
+    override val isNotary: Boolean = true
+
     override fun KGenericContainer.configure(nodeDir: File) {
         logger.info("Starting notary container $canonicalName...")
         start()
         logger.info("Started notary container $canonicalName.")
-        val prev = this@CordaNotaryNode.network.map.admin.networkMap().networkParameterHash
+        val prev = this@CordaNotaryNode.network.map.api.admin.networkMap().networkParameterHash
         extractNotaryNodeInfo(nodeDir).also {
             updateNotaryInNetworkMap(nodeDir.resolve(it).absolutePath)
         }
@@ -59,15 +61,15 @@ class CordaNotaryNode internal constructor(network: CordaNetwork) : CordaNode(ne
 
     private fun updateNotaryInNetworkMap(nodeInfoPath: String) {
         val loginRequest = LoginRequest("sa", "admin")
-        val token = network.map.admin.login(loginRequest)
+        val token = network.map.api.admin.login(loginRequest)
         val authMap = NetworkMap.build(CordaService(network.map.service.uri), token)
 
         logger.info("Creating a non-validating notary in network map with node info $nodeInfoPath")
-        authMap.admin.notaries.create(NotaryType.NON_VALIDATING, Files.readAllBytes(Paths.get(nodeInfoPath)))
+        authMap.api.admin.notaries.create(NotaryType.NON_VALIDATING, Files.readAllBytes(Paths.get(nodeInfoPath)))
     }
 
     private fun waitForNetworkMapHashUpdate(prevNetworkMapHash: String) {
-        while (network.map.admin.networkMap().networkParameterHash == prevNetworkMapHash) {
+        while (network.map.api.admin.networkMap().networkParameterHash == prevNetworkMapHash) {
             TimeUnit.MILLISECONDS.sleep(5000)
             logger.info("waiting for Network Map to update the Hash ")
         }

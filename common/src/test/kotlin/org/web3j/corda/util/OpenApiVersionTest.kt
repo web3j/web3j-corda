@@ -24,21 +24,21 @@ import org.web3j.corda.util.OpenApiVersion.v3_0_1
 class OpenApiVersionTest {
 
     @Test
-    internal fun `build enum from OpenAPI version`() {
+    fun `build enum from OpenAPI version`() {
         assertThat(fromVersion("2.0")).isEqualTo(v2_0)
         assertThat(fromVersion("3.0")).isEqualTo(v3_0)
         assertThat(fromVersion("3.0.1")).isEqualTo(v3_0_1)
     }
 
     @Test
-    internal fun `exception thrown from illegal version`() {
+    fun `exception thrown from illegal version`() {
         assertThrows<IllegalArgumentException> {
             fromVersion("1.0")
         }
     }
 
     @Test
-    internal fun `convert Open API version to int`() {
+    fun `convert Open API version to int`() {
         assertThat(v2_0.toInt()).isEqualTo(2)
         assertThat(v3_0.toInt()).isEqualTo(3)
         assertThat(v3_0_1.toInt()).isEqualTo(3)

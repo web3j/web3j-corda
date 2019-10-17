@@ -28,10 +28,10 @@ class CordaFinanceKotlinTest {
     @Test
     fun `cash issue flow`() {
 
-        val notary = network.nodes[0].api.network.notaries.findAll().first()
-        val partyA = network.nodes[0].api.network.nodes.self
+        val notary = network.nodes[0].corda.api.network.notaries.findAll().first()
+        val partyA = network.nodes[0].corda.api.network.nodes.self
 
-        CordaFinanceWorkflows.load(network.nodes[0].api.service).flows.cashIssueFlow.start(
+        CordaFinanceWorkflows.load(network.nodes[0].corda.service).flows.cashIssueFlow.start(
             CashIssueFlowPayload(
                 amount = AmountCurrency(100, BigDecimal.valueOf(0.01), "GBP"),
                 issuerBankPartyRef = OpaqueBytes("736F6D654279746573"),
@@ -44,11 +44,11 @@ class CordaFinanceKotlinTest {
 
     @Test
     fun `cash issue and payment flow`() {
-        val notary = network.nodes[0].api.network.notaries.findAll().first()
-        val partyB = network.nodes[0].api.network.nodes
+        val notary = network.nodes[0].corda.api.network.notaries.findAll().first()
+        val partyB = network.nodes[0].corda.api.network.nodes
             .findByX500Name("O=PartyB,L=New York,C=US")[0].legalIdentities[0]
 
-        CordaFinanceWorkflows.load(network.nodes[0].api.service).flows.cashIssueAndPaymentFlow.start(
+        CordaFinanceWorkflows.load(network.nodes[0].corda.service).flows.cashIssueAndPaymentFlow.start(
             CashIssueAndPaymentFlowPayload(
                 amount = AmountCurrency(100, BigDecimal.valueOf(0.01), "GBP"),
                 issueRef = OpaqueBytes("736F6D654279746573"),
