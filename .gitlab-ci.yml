@@ -21,11 +21,13 @@ build:
 test:
   stage: test
   script:
-    - ./gradlew publishToMavenLocal test
+    - ./gradlew publishToMavenLocal test jacocoTestReport
+    - cat build/reports/jacoco/test/html/index.html
   artifacts:
     reports:
       junit:
         - build/test-results/test/TEST-*.xml
+  coverage: '/Total.*?([0-9]{1,3})%/'
 
 integration-test:
   services:
@@ -37,17 +39,12 @@ integration-test:
   script:
     - apk add docker
     - ./gradlew integrationTest
+#    - cat build/reports/jacoco/jacocoIntegrationTestReport/html/index.html
   artifacts:
     reports:
       junit:
         - build/test-results/integrationTest/TEST-*.xml
-
-coverage:
-  stage: test
-  script:
-    - ./gradlew jacocoTestReport
-    - cat build/reports/jacoco/test/html/index.html
-  coverage: '/Total.*?([0-9]{1,3})%/'
+#  coverage: '/Total.*?([0-9]{1,3})%/'
 
 publish-docs:
   image: python:alpine
