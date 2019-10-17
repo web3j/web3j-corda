@@ -22,11 +22,11 @@ test:
   stage: test
   script:
     - ./gradlew publishToMavenLocal test jacocoTestReport
-    - cat build/reports/jacoco/test/html/index.html
+    - cat console/build/reports/jacoco/test/html/index.html
   artifacts:
     reports:
       junit:
-        - build/test-results/test/TEST-*.xml
+        - '**/build/test-results/test/TEST-*.xml'
   coverage: '/Total.*?([0-9]{1,3})%/'
 
 integration-test:
@@ -43,10 +43,10 @@ integration-test:
   artifacts:
     reports:
       junit:
-        - build/test-results/integrationTest/TEST-*.xml
+        - '**/build/test-results/integrationTest/TEST-*.xml'
 #  coverage: '/Total.*?([0-9]{1,3})%/'
 
-publish-docs:
+pages:
   image: python:alpine
   interruptible: true
   before_script:
