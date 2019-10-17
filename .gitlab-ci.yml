@@ -73,6 +73,7 @@ publish-release:
 cache:
   policy: pull
   untracked: true
+  key: $CI_PROJECT_ID
   paths:
-    - .gradle/caches
-    - .gradle/wrapper
+    - $CI_PROJECT_DIR/.gradle/caches
+    - $CI_PROJECT_DIR/.gradle/wrapper
