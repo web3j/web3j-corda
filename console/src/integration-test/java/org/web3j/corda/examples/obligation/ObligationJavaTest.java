@@ -12,7 +12,6 @@
  */
 package org.web3j.corda.examples.obligation;
 
-import java.io.File;
 import java.math.BigDecimal;
 import java.util.Objects;
 
@@ -23,38 +22,17 @@ import org.web3j.corda.model.AmountCurrency;
 import org.web3j.corda.model.core.identity.AbstractParty;
 import org.web3j.corda.model.core.identity.Party;
 import org.web3j.corda.model.core.transactions.SignedTransaction;
-import org.web3j.corda.network.CordaNetwork;
 import org.web3j.corda.obligation.api.Obligation;
 import org.web3j.corda.protocol.Corda;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.web3j.corda.network.CordaNetwork.network;
+import static org.web3j.corda.examples.Network.getNetwork;
 
 public class ObligationJavaTest {
 
-    private CordaNetwork network =
-            network(
-                    net -> {
-                        net.setBaseDir(
-                                new File(
-                                        getClass()
-                                                .getClassLoader()
-                                                .getResource("cordapps")
-                                                .getFile()));
-                        net.nodes(
-                                nodes -> {
-                                    nodes.notary(
-                                            notary -> notary.setName("O=Notary, L=London, C=GB"));
-                                    nodes.party(
-                                            partyA -> partyA.setName("O=PartyA, L=London, C=GB"));
-                                    nodes.party(
-                                            partyB -> partyB.setName("O=PartyB, L=New York, C=US"));
-                                });
-                    });
-
     @Test
     public void issueObligation() {
-        final Corda corda = network.getNodes().get(0).getApi();
+        final Corda corda = getNetwork().getNodes().get(0).getApi();
 
         final Party partyB =
                 corda.getNetwork()
