@@ -85,14 +85,14 @@ subprojects {
             xml.enabled false
             html.enabled true
         }
-//        afterEvaluate {
-//            // FIXME [ant:jacocoReport] Classes in bundle 'web3j-corda-console' do no match with execution data. 
-//            //  For report generation the same class files must be used as at runtime.
-//            // [ant:jacocoReport] Execution data for class org/gradle/wrapper/WrapperExecutor does not match.
-//            classDirectories.from files(classDirectories.files.collect {
-//                fileTree(dir: it, exclude: 'org/gradle/**')
-//            })
-//        }
+        afterEvaluate {
+            // FIXME [ant:jacocoReport] Classes in bundle 'web3j-corda-console' do no match with execution data. 
+            //  For report generation the same class files must be used as at runtime.
+            // [ant:jacocoReport] Execution data for class org/gradle/wrapper/WrapperExecutor does not match.
+            classDirectories.from files(classDirectories.files.collect {
+                fileTree(dir: it, exclude: 'org/gradle/**')
+            })
+        }
     }
 
 //    task jacocoIntegrationTestReport(type: JacocoReport, group: 'verification') {
