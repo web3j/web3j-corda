@@ -28,26 +28,27 @@ test:
         - '**/build/test-results/test/TEST-*.xml'
   coverage: '/Total.*?([0-9]{1,3})%/'
 
-integration-test:
-  services:
-    - name: docker:dind
-      entrypoint: ["env", "-u", "DOCKER_HOST"]
-      command: ["dockerd-entrypoint.sh"]
-  variables:
-    DOCKER_HOST: "tcp://docker:2375"
-    DOCKER_DRIVER: overlay2
-    DOCKER_TLS_CERTDIR: ""
-  stage: test
-  before_script:
-    - apk add docker
-  script:
-    - ./gradlew integrationTest
-#    - cat build/reports/jacoco/jacocoIntegrationTestReport/html/index.html
-  artifacts:
-    reports:
-      junit:
-        - '**/build/test-results/integrationTest/TEST-*.xml'
-#  coverage: '/Total.*?([0-9]{1,3})%/'
+# FIXME https://forum.gitlab.com/t/docker-dind-stops-working-after-12-1-0-update/28664
+#integration-test:
+#  services:
+#    - name: docker:dind
+#      entrypoint: ["env", "-u", "DOCKER_HOST"]
+#      command: ["dockerd-entrypoint.sh"]
+#  variables:
+#    DOCKER_HOST: "tcp://docker:2375"
+#    DOCKER_DRIVER: overlay2
+#    DOCKER_TLS_CERTDIR: ""
+#  stage: test
+#  before_script:
+#    - apk add docker
+#  script:
+#    - ./gradlew integrationTest
+##    - cat build/reports/jacoco/jacocoIntegrationTestReport/html/index.html
+#  artifacts:
+#    reports:
+#      junit:
+#        - '**/build/test-results/integrationTest/TEST-*.xml'
+##  coverage: '/Total.*?([0-9]{1,3})%/'
 
 pages:
   image: python:alpine
