@@ -2,25 +2,25 @@ devMode=true
 myLegalName="{{&name}}"
 {{#isNotary}}
 notary {
-validating=false
+    validating=false
 }
 {{/isNotary}}
 p2pAddress="{{&p2pAddress}}"
 rpcSettings {
-address="0.0.0.0:{{rpcPort}}"
-adminAddress="0.0.0.0:{{adminPort}}"
+    address="0.0.0.0:{{rpcPort}}"
+    adminAddress="0.0.0.0:{{adminPort}}"
 }
 security {
-authService {
-dataSource {
-type=INMEMORY
-users=[ {
-password=test
-permissions=[ALL]
-user=user1
-} ]
-}
-}
+    authService {
+        dataSource {
+            type=INMEMORY
+            users=[{
+                password=test
+                permissions=[ALL]
+                user=user1
+            }]
+        }
+    }
 }
 compatibilityZoneURL="{{networkMapUrl}}"
 devModeOptions.allowCompatibilityZone=true
