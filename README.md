@@ -8,11 +8,11 @@ web3j-corda is a lightweight client library for working with CorDapps and intera
 ![web3j-corda Network](docs/images/web3j-corda.png)
 
 ## Features
-- [x] Connect to a Corda node.
-- [x] Query the available CorDapps in the node.
-- [x] Generate CorDapp wrappers to interact with the deployed CorDapps.
-- [ ] Generate automated tests using Docker containers to verify the working of CorDapp. 
-- [x] Commandline tools
+- [x] Connect to a Corda node :rocket:
+- [x] Query the available CorDapps in the node :page_with_curl:
+- [x] Generate CorDapp wrappers to interact with the deployed CorDapps :boom:
+- [x] Generate automated tests using Docker containers to verify the working of CorDapp :beetle: 
+- [x] Generate sample project with a CorDapp contract, workflow and client modules :control_knobs:
 
 
 ## Quick start
@@ -29,8 +29,8 @@ Add the relevant dependency to your project:
 
 ```xml
 <dependency>
-    <groupId>org.web3j</groupId>
-    <artifactId>web3j-corda</artifactId>
+    <groupId>org.web3j.corda</groupId>
+    <artifactId>web3j-corda-core</artifactId>
     <version>0.1.0-SNAPSHOT</version>
 </dependency>
 ```
@@ -39,7 +39,7 @@ Add the relevant dependency to your project:
 
 ```groovy
 dependencies {
-    implementation 'org.web3j:web3j-corda:0.1.0-SNAPSHOT'
+    implementation 'org.web3j.corda:web3j-corda-core:0.1.0-SNAPSHOT'
 }
 ```
 
@@ -102,13 +102,13 @@ The following functionality of web3j-corda is exposed from the command line:
 To generate a template CorDapp project with the client wrappers: 
 
 ```shell script
-web3j-corda new -n=<corDappName> -o=<output-dir> -p=<packageName>
+web3j-corda new --name=<corDappName> --output-dir=<output-dir> --package-name=<packageName>
 ```
 ### Using web3j-corda generate command
 
 To generate a web3j-corda client wrappers to existing CorDapps: 
 
 ```shell script
-web3j-corda generate (-u=<openApiUrl> | -d=<corDapps-dir>) -o=<output-dir> -p=<packageName>
+web3j-corda generate (--url=<openApiUrl> | --cordapps-dir=<corDapps-dir>) --output-dir=<output-dir> --package-name=<packageName>
 ```
 
