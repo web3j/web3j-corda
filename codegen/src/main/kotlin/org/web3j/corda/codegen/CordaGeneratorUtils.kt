@@ -30,8 +30,18 @@ internal object CordaGeneratorUtils : KLogging() {
         ExperimentalRuleSetProvider().get()
     )
 
+    private val regexToReplace = "-[0-9][^/]*".toRegex()
+
     fun needToRepackage(name: String, mapping: Map<String, String>): Boolean {
         return mapping.keys.any { name.startsWith(it) }
+    }
+
+    fun sanitizeCorDappName(name: String): String {
+        return name.replace(regexToReplace, "")
+    }
+
+    fun needToSanitizeCorDappName(name: String): Boolean {
+        return name.contains(regexToReplace)
     }
 
     /**

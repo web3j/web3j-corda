@@ -26,7 +26,9 @@ import org.openapitools.codegen.CodegenConstants.MODEL_PACKAGE
 import org.openapitools.codegen.CodegenConstants.PACKAGE_NAME
 import org.openapitools.codegen.DefaultGenerator
 import org.openapitools.codegen.config.GeneratorProperties.setProperty
+import org.web3j.corda.codegen.CordaGeneratorUtils.needToSanitizeCorDappName
 import org.web3j.corda.codegen.CordaGeneratorUtils.repackage
+import org.web3j.corda.codegen.CordaGeneratorUtils.sanitizeCorDappName
 import org.web3j.corda.model.AmountCurrency
 import org.web3j.corda.model.Error
 import org.web3j.corda.model.core.contracts.Issued
@@ -42,11 +44,18 @@ class CorDappClientGenerator(
     override fun generate(): List<File> {
 
         // Filter common API endpoints
-        val result = parser.readContents(openApiDef, listOf(), parseOptions).apply {
-            openAPI.paths.entries.removeIf {
-                it.key == "/cordapps" || !it.key.startsWith("/cordapps") || it.key.endsWith("/flows")
+        val result = parser.readContents(openApiDef, listOf(), parseOptions)
+            .apply {
+                openAPI.paths.entries.filter {
+                    needToSanitizeCorDappName(it.key)
+                }.forEach {
+                    openAPI.paths[sanitizeCorDappName(it.key)] = it.value
+                }
+                openAPI.paths.entries.removeIf {
+                    it.key == "/cordapps" || !it.key.startsWith("/cordapps") ||
+                            it.key.endsWith("/flows") || needToSanitizeCorDappName(it.key)
+                }
             }
-        }
         configureTypeMappings()
         opts(
             ClientOptInput()
