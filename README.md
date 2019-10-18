@@ -50,7 +50,7 @@ To print all the nodes connected to the current node:
 ```kotlin
 val service = CordaService("http://localhost:9000/") // URL exposed by BRAID service
 val corda = Corda.build(service)
-corda.network.nodes.findAll()
+corda.api.network.nodes.findAll()
 ```
 
 To query the list of all running CorDapps:
@@ -58,7 +58,7 @@ To query the list of all running CorDapps:
 ```kotlin
 val service = CordaService("http://localhost:9000/") // URL exposed by BRAID service
 val corda = Corda.build(service)
-corda.corDapps.findAll()
+corda.api.corDapps.findAll()
 ```
 
 To start a flow there are two option depending on whether you want to use a generated CorDapp wrapper
@@ -70,7 +70,7 @@ This way works but is not type-safe, so can lead to runtime exceptions:
 // Initialise the parameters of the flow 
 val params = InitiatorParameters("$1", "O=PartyA, L=London, C=GB", false)
 
-val issue = corda
+val issue = corda.api
     .corDapps.findById("obligation-cordapp")
     .flows.findById("issue-obligation")
 
@@ -86,7 +86,7 @@ you can interact with your CorDapp in a type-safe way:
 val params = InitiatorParameters("$1", "O=PartyA, L=London, C=GB", false)
 
 // Start the flow with typed parameters and response
-val signedTx = Obligation.load(corda).flows.issue.start(parameters)
+val signedTx = Obligation.load(corda.service).flows.issue.start(parameters)
 ```
 
 ## Command line tools
@@ -111,4 +111,3 @@ To generate a web3j-corda client wrappers to existing CorDapps:
 ```shell script
 web3j-corda generate (--url=<openApiUrl> | --cordapps-dir=<corDapps-dir>) --output-dir=<output-dir> --package-name=<packageName>
 ```
-
