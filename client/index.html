@@ -434,6 +434,7 @@ This block encapsulates the all information related to the particular CorDapp in
  */
 @Path(&quot;/api/rest/cordapps/&lt;name-of-cordapp-or-jar&gt;/&quot;)
 interface &lt;name-of-cordapp&gt; : CorDapp {
+
     @get:Path(&quot;flows&quot;)
     override val flows: FlowResource // Lists all the flows in a CorDapp
 

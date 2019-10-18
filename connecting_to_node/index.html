@@ -396,13 +396,13 @@
 <p>To print all the nodes connected to the current node:</p>
 <pre><code class="kotlin">val service = CordaService(&quot;http://localhost:9000/&quot;) // URL exposed by BRAID service
 val corda = Corda.build(service)
-corda.network.nodes.findAll()
+corda.api.network.nodes.findAll()
 </code></pre>
 
 <p>To query the list of all running CorDapps:</p>
 <pre><code class="kotlin">val service = CordaService(&quot;http://localhost:9000/&quot;) // URL exposed by BRAID service
 val corda = Corda.build(service)
-corda.corDapps.findAll()
+corda.api.corDapps.findAll()
 </code></pre>
 
 <p>To start a flow there are two options depending on whether you want to use a generated CorDapp wrapper
@@ -412,7 +412,7 @@ or just the Corda API directly:</p>
 <pre><code class="kotlin">// Initialise the parameters of the flow 
 val params = InitiatorParameters(&quot;$1&quot;, &quot;O=PartyA, L=London, C=GB&quot;, false)
 
-val issue = corda
+val issue = corda.api
     .corDapps.findById(&quot;obligation-cordapp&quot;)
     .flows.findById(&quot;issue-obligation&quot;)
 
