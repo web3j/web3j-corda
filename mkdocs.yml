@@ -26,8 +26,8 @@ markdown_extensions:
 
 extra_css:
   - "stylesheets/extra.css"
-  - "stylesheets/github.css"
+#  - "stylesheets/github.css"
 
-extra_javascript:
-  - 'javascripts/highlight.pack.js'
-  - 'javascripts/index.js'
+#extra_javascript:
+#  - 'javascripts/highlight.pack.js'
+#  - 'javascripts/index.js'
