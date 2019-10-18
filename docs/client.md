@@ -38,7 +38,6 @@ interface <name-of-cordapp> : CorDapp {
         override fun load(corda: Corda) = ProxyBuilder.build(<name-of-cordapp>::class.java, corda.service)
     }
 }
-
 ```
 
 ### Flows blocks
