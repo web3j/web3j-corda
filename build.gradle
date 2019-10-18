@@ -168,6 +168,7 @@ subprojects {
         implementation "com.pinterest.ktlint:ktlint-ruleset-experimental:${versions.ktlint}"
 
         testImplementation "org.junit.jupiter:junit-jupiter-api:${versions.junit5}"
+        testImplementation "org.junit.jupiter:junit-jupiter-params:${versions.junit5}"
         testImplementation "com.willowtreeapps.assertk:assertk-jvm:${versions.assertk}"
         testImplementation "junit:junit:${versions.junit4}"
         testImplementation("io.mockk:mockk:${versions.mockk}") {
