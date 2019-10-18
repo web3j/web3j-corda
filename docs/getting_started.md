@@ -7,8 +7,8 @@ Add the relevant dependency to your project:
 
 ```xml
 <dependency>
-    <groupId>org.web3j</groupId>
-    <artifactId>web3j-corda</artifactId>
+    <groupId>org.web3j.corda</groupId>
+    <artifactId>web3j-corda-core</artifactId>
     <version>0.1.0-SNAPSHOT</version>
 </dependency>
 ```
@@ -17,6 +17,6 @@ Add the relevant dependency to your project:
 
 ```groovy
 dependencies {
-    implementation 'org.web3j:web3j-corda:0.1.0-SNAPSHOT'
+    implementation 'org.web3j.corda:web3j-corda-core:0.1.0-SNAPSHOT'
 }
 ```
