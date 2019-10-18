@@ -24,6 +24,7 @@ import javax.ws.rs.Produces
 )
 @Path("{{basePathWithoutHost}}/cordapps/{{classVarName}}/")
 interface {{classname}} : CorDapp {
+
     {{#operations}}
     @get:Path("flows")
     override val flows: FlowResource
