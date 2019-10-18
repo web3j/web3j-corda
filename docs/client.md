@@ -21,6 +21,7 @@ Example code is as follows:
  */
 @Path("/api/rest/cordapps/<name-of-cordapp-or-jar>/")
 interface <name-of-cordapp> : CorDapp {
+
     @get:Path("flows")
     override val flows: FlowResource // Lists all the flows in a CorDapp
 

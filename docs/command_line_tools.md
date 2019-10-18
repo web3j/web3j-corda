@@ -11,14 +11,14 @@ The following functionality of web3j-corda is exposed from the command line:
 
 To generate a template CorDapp project along with the client wrappers: 
 
-``` bash
-web3j-corda new -n=<corDappName> -o=<outputDir> -p=<packageName>
+```shell script
+web3j-corda new --name=<corDappName> --output-dir=<output-dir> --package-name=<packageName>
 ```
 
 ### Using web3j-corda generate command
 
 To generate a web3j-corda client wrappers for existing CorDapps: 
 
-``` bash
-web3j-corda generate (-u=<openApiUrl> | -d=<corDappsDir>) -o=<outputDir> -p=<packageName>
+```shell script
+web3j-corda generate (--url=<openApiUrl> | --cordapps-dir=<corDapps-dir>) --output-dir=<output-dir> --package-name=<packageName>
 ```
