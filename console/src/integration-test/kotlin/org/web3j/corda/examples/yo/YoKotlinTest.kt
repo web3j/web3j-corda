@@ -24,7 +24,7 @@ class YoKotlinTest {
     @Test
     fun `send Yo`() {
         val partyB = network.nodes[0].corda.api.network.nodes
-            .findByX500Name("O=PartyB,L=New York,C=US")[0].legalIdentities[0]
+            .findByX500Name("O=PartyB, L=New York, C=US")[0].legalIdentities[0]
 
         Yo.load(network.nodes[0].corda.service).flows.yoFlow.start(
             YoFlowPayload(partyB)
