@@ -1,4 +1,4 @@
-web3j integration for Corda
+Web3j integration for Corda
 ===========================
 
 ## Introduction

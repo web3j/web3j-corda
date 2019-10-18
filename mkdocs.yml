@@ -1,6 +1,7 @@
 site_name: Web3j Corda
 
 nav:
+  - Home : index.md
   - Quickstart : quickstart.md
   - Getting Started : getting_started.md
   - Connect to Corda Node : connecting_to_node.md
