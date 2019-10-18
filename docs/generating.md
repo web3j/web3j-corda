@@ -15,14 +15,15 @@ Please refer to [command line tools](command_line_tools.md)
 We should add the task to generate the CorDapp client wrappers using the following:
 
 ```groovy
-task generateCorDappWrappers(type: JavaExec, group: 'corda') {
+task generateCorDappWrappers(type: JavaExec, group: 'web3j') {
     classpath = sourceSets.main.runtimeClasspath
     main = 'org.web3j.corda.console.CordaCommandMain'
 
-    args 'generate', '--package-name', 'org.web3j.corda',
+    args 'generate', 
+            '--package-name', group,
             '--cordapps-dir', "$projectDir",
             '--output-dir', "$projectDir/clients"
 }
 ```
 
-It exposes a gradle task `generateCorDappWrappers` which can be invoked to generate client wrappers for the CorDapps.
+It exposes a Gradle task `generateCorDappWrappers` which can be invoked to generate client wrappers for the CorDapps.
