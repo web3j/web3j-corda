@@ -162,6 +162,16 @@
     <ul class="md-tabs__list">
       
         
+  <li class="md-tabs__item">
+    
+      <a href=".." class="md-tabs__link md-tabs__link--active">
+        Home
+      </a>
+    
+  </li>
+
+      
+        
       
         
       
@@ -199,6 +209,18 @@
   </label>
   
   <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href=".." title="Home" class="md-nav__link">
+      Home
+    </a>
+  </li>
+
     
       
       
@@ -402,17 +424,18 @@
 <p>Please refer to <a href="../command_line_tools/">command line tools</a></p>
 <h2 id="using-gradle-task">Using gradle task</h2>
 <p>We should add the task to generate the CorDapp client wrappers using the following:</p>
-<pre><code class="groovy">task generateCorDappWrappers(type: JavaExec, group: 'corda') {
+<pre><code class="groovy">task generateCorDappWrappers(type: JavaExec, group: 'web3j') {
     classpath = sourceSets.main.runtimeClasspath
     main = 'org.web3j.corda.console.CordaCommandMain'
 
-    args 'generate', '--package-name', 'org.web3j.corda',
+    args 'generate', 
+            '--package-name', group,
             '--cordapps-dir', &quot;$projectDir&quot;,
             '--output-dir', &quot;$projectDir/clients&quot;
 }
 </code></pre>
 
-<p>It exposes a gradle task <code>generateCorDappWrappers</code> which can be invoked to generate client wrappers for the CorDapps.</p>
+<p>It exposes a Gradle task <code>generateCorDappWrappers</code> which can be invoked to generate client wrappers for the CorDapps.</p>
                 
                   
                 
