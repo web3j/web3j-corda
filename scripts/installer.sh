@@ -5,13 +5,13 @@ local=~/
 
 check_if_installed() {
   if [ -x "$(command -v web3j-corda)" ] &>/dev/null; then
-    echo 'Web3j-Corda is installed on you system.'
+    echo 'web3j-corda is installed on you system.'
     installed_flag=1
   fi
 }
 
 download_web3j_corda() {
-  echo "Downloading Web3j-Corda ..."
+  echo "Downloading web3j-corda ..."
   mkdir "${local}.web3j_corda"
   if [[ $(curl --write-out %{http_code} --silent --output /dev/null "https://github.com/web3j/corda/releases/download/v${web3j_corda_version}/web3j-corda-${web3j_corda_version}.tar") -eq 302 ]]; then
     curl -# -L -o "$HOME/.web3j_corda/web3j-corda-${web3j_corda_version}.tar" "https://github.com/web3j/corda/releases/download/v${web3j_corda_version}/web3j-corda-${web3j_corda_version}.tar"
@@ -28,22 +28,22 @@ download_web3j_corda() {
 }
 
 check_version() {
-  version_string=`web3j-corda --version`
-  echo $version_string
+  version_string=$(web3j-corda --version)
+  echo "$version_string"
   if [[ $version_string < ${web3j_corda_version} ]] ; then
-    echo "Your web3j_corda version is not up to date."
+    echo "Your web3j-corda version is not up to date."
     get_user_input
   else
-    echo "You have the latest version of web3j_corda. Exiting."
+    echo "You have the latest version of web3j-corda. Exiting."
     exit 0
   fi
 }
 
 get_user_input() {
-  while read -p "Would you like to update web3j_corda ? [y]es | [n]o : " user_input ; do
+  while read -p "Would you like to update web3j-corda ? [y]es | [n]o : " user_input ; do
     case $user_input in
     y)
-      echo "Updating web3j_corda ..."
+      echo "Updating web3j-corda ..."
       break
       ;;
     n)
@@ -81,7 +81,7 @@ source_web3j_corda() {
 
   if [ -f "$(command -v zsh 2>/dev/null)" ]; then
     file="$HOME/.zshrc"
-    touch ${file}
+    touch "${file}"
     if ! grep -qc '.web3j_corda/source.sh' "${file}"; then
       echo "Adding source string to ${file}"
       printf "$SOURCE_WEB3J_CORDA\n" >>"${file}"
