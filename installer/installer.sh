@@ -1,7 +1,6 @@
 #!/bin/bash
 web3j_corda_version="0.1.0-SNAPSHOT"
 installed_flag=0
-update_flag=0
 local=~/
 
 check_if_installed() {
@@ -11,23 +10,17 @@ check_if_installed() {
   fi
 }
 
-completed() {
-  echo "To start using the CLI type web3j-corda"
-  exit 0
-}
-
 download_web3j_corda() {
   echo "Downloading Web3j-Corda ..."
   mkdir "${local}.web3j_corda"
-  # FIXME: the version of cli reflect web3j-version
-  if [[ $(curl --write-out %{http_code} --silent --output /dev/null "https://oss.sonatype.org/service/local/repositories/snapshots/content/org/web3j/corda/web3j-corda-console/0.1.0-SNAPSHOT/web3j-corda-console-0.1.0-20191018.100620-3.jar") -eq 200 ]]; then
-    curl -# -L -o "$HOME/.web3j_corda/web3j-corda-${web3j_corda_version}.jar" "https://oss.sonatype.org/service/local/repositories/snapshots/content/org/web3j/corda/web3j-corda-console/0.1.0-SNAPSHOT/web3j-corda-console-0.1.0-20191018.100620-3.jar"
+  if [[ $(curl --write-out %{http_code} --silent --output /dev/null "https://github.com/web3j/corda/releases/download/v${web3j_corda_version}/web3j-corda-${web3j_corda_version}.tar") -eq 302 ]]; then
+    curl -# -L -o "$HOME/.web3j_corda/web3j-corda-${web3j_corda_version}.tar" "https://github.com/web3j/corda/releases/download/v${web3j_corda_version}/web3j-corda-${web3j_corda_version}.tar"
     echo "Installing Web3j Corda..."
-    tar -xf "$HOME/.web3j_corda/web3j-corda-${web3j_corda_version}.jar" -C "$HOME/.web3j_corda"
+    tar -xf "$HOME/.web3j_corda/web3j-corda-${web3j_corda_version}.tar" -C "$HOME/.web3j_corda"
     echo "export PATH=\$PATH:$HOME/.web3j_corda/web3j-corda-${web3j_corda_version}/bin" >"$HOME/.web3j_corda/source.sh"
     chmod +x "$HOME/.web3j_corda/source.sh"
-    #echo "Removing zip file ..."
-    #rm "$HOME/.web3j_corda/web3j_corda-${web3j_corda_version}.zip"
+    echo "Removing zip file ..."
+    rm "$HOME/.web3j_corda/web3j_corda-${web3j_corda_version}.zip"
  else
   echo "Looks like there was an error while trying to download web3j_corda"
   exit 0
@@ -37,8 +30,7 @@ download_web3j_corda() {
 check_version() {
   version_string=`web3j-corda --version`
   echo $version_string
-  # FIXME: the version of cli reflect web3j-version
-  if [[ $version_string < "1.0" ]] ; then
+  if [[ $version_string < ${web3j_corda_version} ]] ; then
     echo "Your web3j_corda version is not up to date."
     get_user_input
   else
@@ -55,7 +47,7 @@ get_user_input() {
       break
       ;;
     n)
-      echo "Aborting instalation ..."
+      echo "Aborting installation ..."
       exit 0
       ;;
     esac
@@ -104,6 +96,18 @@ clean_up() {
   rm -r "${local}.web3j_corda" &>/dev/null
   echo "Deleting older installation ..."
   fi
+}
+
+completed() {
+  printf '\033[32m'
+  echo "web3j-corda was succesfully installed"
+  echo "To get started you will need web3j-corda's bin directory in your PATH enviroment variable."
+  echo "When you open a new terminal window this will be done automatically."
+  echo "To see what web3j-corda's CLI can do you can check the documentation below."
+  echo "https://corda.web3j.io "
+  echo "To use web3j-corda in your current shell run:"
+  echo "source \$HOME/.web3j_corda/source.sh "
+  exit 0
 }
 
 main() {
