@@ -1,47 +1,47 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
-     <loc>https://web3j.github.io/corda/</loc>
+     <loc>https://corda.web3j.io/</loc>
      <lastmod>2019-10-21</lastmod>
      <changefreq>daily</changefreq>
     </url>
     <url>
-     <loc>https://web3j.github.io/corda/quickstart/</loc>
+     <loc>https://corda.web3j.io/quickstart/</loc>
      <lastmod>2019-10-21</lastmod>
      <changefreq>daily</changefreq>
     </url>
     <url>
-     <loc>https://web3j.github.io/corda/getting_started/</loc>
+     <loc>https://corda.web3j.io/getting_started/</loc>
      <lastmod>2019-10-21</lastmod>
      <changefreq>daily</changefreq>
     </url>
     <url>
-     <loc>https://web3j.github.io/corda/connecting_to_node/</loc>
+     <loc>https://corda.web3j.io/connecting_to_node/</loc>
      <lastmod>2019-10-21</lastmod>
      <changefreq>daily</changefreq>
     </url>
     <url>
-     <loc>https://web3j.github.io/corda/generating/</loc>
+     <loc>https://corda.web3j.io/generating/</loc>
      <lastmod>2019-10-21</lastmod>
      <changefreq>daily</changefreq>
     </url>
     <url>
-     <loc>https://web3j.github.io/corda/client/</loc>
+     <loc>https://corda.web3j.io/client/</loc>
      <lastmod>2019-10-21</lastmod>
      <changefreq>daily</changefreq>
     </url>
     <url>
-     <loc>https://web3j.github.io/corda/usage/</loc>
+     <loc>https://corda.web3j.io/usage/</loc>
      <lastmod>2019-10-21</lastmod>
      <changefreq>daily</changefreq>
     </url>
     <url>
-     <loc>https://web3j.github.io/corda/command_line_tools/</loc>
+     <loc>https://corda.web3j.io/command_line_tools/</loc>
      <lastmod>2019-10-21</lastmod>
      <changefreq>daily</changefreq>
     </url>
     <url>
-     <loc>https://web3j.github.io/corda/modules/</loc>
+     <loc>https://corda.web3j.io/modules/</loc>
      <lastmod>2019-10-21</lastmod>
      <changefreq>daily</changefreq>
     </url>
