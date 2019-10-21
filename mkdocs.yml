@@ -9,7 +9,6 @@ repo_url: "https://github.com/web3j/corda"
 copyright: "Copyright &copy; 2017-2019 Web3 Labs Ltd"
 
 nav:
-  - Home : index.md
   - Quickstart : quickstart.md
   - Getting Started : getting_started.md
   - Connect to Corda Node : connecting_to_node.md
