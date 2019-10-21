@@ -12,17 +12,18 @@ check_if_installed() {
 }
 
 completed() {
-  echo "To start using the CLI type web3j_corda"
+  echo "To start using the CLI type web3j-corda"
   exit 0
 }
 
 download_web3j_corda() {
   echo "Downloading Web3j-Corda ..."
   mkdir "${local}.web3j_corda"
-  if [[ $(curl --write-out %{http_code} --silent --output /dev/null "https://oss.sonatype.org/service/local/repositories/snapshots/content/org/web3j/corda/web3j-corda-console/0.1.0-SNAPSHOT/web3j-corda-console-0.1.0-20191002.151748-1.zip") -eq 200 ]]; then
-    curl -# -L -o "$HOME/.web3j_corda/web3j_corda-${web3j_corda_version}.zip" "https://oss.sonatype.org/service/local/repositories/snapshots/content/org/web3j/corda/web3j-corda-console/0.1.0-SNAPSHOT/web3j-corda-console-0.1.0-20191002.151748-1.zip"
+  # FIXME: the version of cli reflect web3j-version
+  if [[ $(curl --write-out %{http_code} --silent --output /dev/null "https://oss.sonatype.org/service/local/repositories/snapshots/content/org/web3j/corda/web3j-corda-console/0.1.0-SNAPSHOT/web3j-corda-console-0.1.0-20191018.100620-3.jar") -eq 200 ]]; then
+    curl -# -L -o "$HOME/.web3j_corda/web3j-corda-${web3j_corda_version}.jar" "https://oss.sonatype.org/service/local/repositories/snapshots/content/org/web3j/corda/web3j-corda-console/0.1.0-SNAPSHOT/web3j-corda-console-0.1.0-20191018.100620-3.jar"
     echo "Installing Web3j Corda..."
-    unzip "$HOME/.web3j_corda/web3j_corda-${web3j_corda_version}" -d "$HOME/.web3j_corda"
+    tar -xf "$HOME/.web3j_corda/web3j-corda-${web3j_corda_version}.jar" -C "$HOME/.web3j_corda"
     echo "export PATH=\$PATH:$HOME/.web3j_corda/web3j-corda-${web3j_corda_version}/bin" >"$HOME/.web3j_corda/source.sh"
     chmod +x "$HOME/.web3j_corda/source.sh"
     #echo "Removing zip file ..."
