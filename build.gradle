@@ -18,7 +18,7 @@ plugins {
     id 'com.diffplug.gradle.spotless' version '3.25.0'
 }
 
-description = 'Integrates web3j with the Corda blockchain platform.'
+description = 'Web3j integration with the Corda blockchain platform.'
 
 subprojects {
     apply plugin: 'java'
@@ -32,19 +32,18 @@ subprojects {
     apply plugin: 'org.unbroken-dome.test-sets'
     apply plugin: 'com.diffplug.gradle.spotless'
     apply plugin: 'com.adarshr.test-logger'
-    apply plugin: "com.github.breadmoirai.github-release"
 
     apply from: "$rootProject.projectDir/gradle/versions.gradle"
     apply from: "$rootProject.projectDir/gradle/repositories.gradle"
 
     task sourcesJar(type: Jar) {
         from sourceSets.main.allSource
-        archiveClassifier = 'sources'
+        archiveClassifier.set('sources')
     }
 
     task javadocJar(type: Jar) {
         from javadoc
-        archiveClassifier = 'javadoc'
+        archiveClassifier.set('javadoc')
     }
 
     testSets {
@@ -108,7 +107,6 @@ subprojects {
     artifacts {
         archives sourcesJar
         testOutput testJar
-        integrationTestOutput integrationTestJar
     }
 
     testlogger {
@@ -223,10 +221,11 @@ subprojects {
                 from components.java
                 artifact sourcesJar
                 artifact javadocJar
-                artifact integrationTestJar
                 pom {
                     name = project.name
-                    description = 'web3j integration with the Corda Platform.'
+                    afterEvaluate {
+                        description = project.description
+                    }
                     url = "https://github.com/web3j/corda"
                     licenses {
                         license {

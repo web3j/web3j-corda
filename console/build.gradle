@@ -1,8 +1,10 @@
 plugins {
     id 'application'
     id 'distribution'
+    id 'com.github.breadmoirai.github-release'
 }
 
+description = 'Web3j command-line tools for the Corda blockchain platform.'
 mainClassName = 'org.web3j.corda.console.CordaCommandMain'
 applicationName = 'web3j-corda'
 
@@ -102,4 +104,22 @@ task generateVersionProperties {
         def generated = new File(generatedResources, "version.properties")
         generated.text = "version=$rootProject.version"
     }
+}
+
+githubRelease {
+    String githubToken = (project.hasProperty('githubToken') ?
+            project.property('githubToken') : System.getenv('GITHUB_TOKEN'))
+
+    token githubToken == null ? '' : githubToken
+
+    repo 'corda'
+    owner 'web3j'
+    overwrite true
+    releaseName "v${project.version}"
+    draft version.endsWith('SNAPSHOT')
+    prerelease version.endsWith('SNAPSHOT')
+    releaseAssets = [
+            "$buildDir/distributions/$rootProject.name-${version}.zip",
+            "$buildDir/distributions/$rootProject.name-${version}.tar"
+    ]
 }

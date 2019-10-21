@@ -1,3 +1,5 @@
+description = 'Web3j code generation for the Corda blockchain platform.'
+
 dependencies {
     api project(':web3j-corda-common')
     api "jakarta.ws.rs:jakarta.ws.rs-api:${versions.jaxRs}"

@@ -1,3 +1,5 @@
+description = 'Web3j core libraries for the Corda blockchain platform.'
+
 dependencies {
     api project(':web3j-corda-api')
     
