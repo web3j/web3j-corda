@@ -16,22 +16,21 @@ import picocli.CommandLine
 
 class CordaCommandMain {
     companion object {
-
-        private val LOGO = """
-                          _      _____ _                         _
-                         | |    |____ (_)                       | |
-            __      _____| |__      / /_ ______ ___ ___  _ __ __| | __ _
-            \ \ /\ / / _ \ '_ \     \ \ |______/ __/ _ \| '__/ _` |/ _` |
-             \ V  V /  __/ |_) |.___/ / |     | (_| (_) | | | (_| | (_| |
-              \_/\_/ \___|_.__/ \____/| |      \___\___/|_|  \__,_|\__,_|
-                                     _/ |
-                                    |__/
-
+        private val LOGO = """               
+                      _      _____ _                     _             
+                     | |    |____ (_)                   | |            
+        __      _____| |__      / /_    ___      _ __ __| | __ _       
+        \ \ /\ / / _ \ '_ \     \ \ |  / __/ @|red _|@  | '__/ _` |/ _` |      
+         \ V  V /  __/ |_) |.___/ / | | (_| @|red (_)|@ | | | (_| | (_| |
+          \_/\_/ \___|_.__/ \____/| |  \___\    |_|  \__,_|\__,_|
+                                 _/ |                            
+                                |__/                               
+        
         """.trimIndent()
 
         @JvmStatic
         fun main(vararg args: String) {
-            println(LOGO)
+            println(CommandLine.Help.Ansi.AUTO.string(LOGO))
             CommandLine(CordaCommand()).execute(*args)
         }
     }
