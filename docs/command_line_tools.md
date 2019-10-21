@@ -20,5 +20,5 @@ $ web3j-corda new --name=<corDappName> --output-dir=<output-dir> --package-name=
 To generate a web3j-corda client wrappers for existing CorDapps: 
 
 ```
-|$ web3j-corda generate (--url=<openApiUrl> | --cordapps-dir=<corDapps-dir>) --output-dir=<output-dir> --package-name=<packageName>
+$ web3j-corda generate (--url=<openApiUrl> | --cordapps-dir=<corDapps-dir>) --output-dir=<output-dir> --package-name=<packageName>
 ```
