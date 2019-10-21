@@ -17,8 +17,21 @@ import picocli.CommandLine
 class CordaCommandMain {
     companion object {
 
+        private val LOGO = """
+                          _      _____ _                         _
+                         | |    |____ (_)                       | |
+            __      _____| |__      / /_ ______ ___ ___  _ __ __| | __ _
+            \ \ /\ / / _ \ '_ \     \ \ |______/ __/ _ \| '__/ _` |/ _` |
+             \ V  V /  __/ |_) |.___/ / |     | (_| (_) | | | (_| | (_| |
+              \_/\_/ \___|_.__/ \____/| |      \___\___/|_|  \__,_|\__,_|
+                                     _/ |
+                                    |__/
+
+        """.trimIndent()
+
         @JvmStatic
         fun main(vararg args: String) {
+            println(LOGO)
             CommandLine(CordaCommand()).execute(*args)
         }
     }

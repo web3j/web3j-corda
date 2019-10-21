@@ -57,6 +57,7 @@ class GenerateCommand : BaseCommand() {
                 cordaResource.isCorDappsDirInitialized()
             ).generate()
         }
+        println("CorDapp client generated at location: $outputDir")
     }
 
     private fun fetchOpenApiDef(): String {

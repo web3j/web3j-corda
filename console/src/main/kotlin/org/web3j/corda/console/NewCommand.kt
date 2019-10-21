@@ -68,6 +68,7 @@ class NewCommand : BaseCommand() {
             outputDir = File("${this@NewCommand.outputDir}/clients")
             run()
         }
+        println("Sample CorDapp created with name: $corDappName at location: $outputDir")
     }
 
     private fun runGradleBuild(projectRoot: Path) {
