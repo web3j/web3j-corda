@@ -1,4 +1,12 @@
-site_name: Web3j Corda
+site_name: "Web3j Corda"
+site_description: "Documentation portal for the web3j Corda Blockchain Library"
+site_author: "Web3 Labs"
+site_url: "https://corda.web3j.io/"
+
+repo_name: "web3j/corda"
+repo_url: "https://github.com/web3j/corda"
+
+copyright: "Copyright &copy; 2017-2019 Web3 Labs Ltd"
 
 nav:
   - Home : index.md
