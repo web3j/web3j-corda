@@ -19,8 +19,8 @@ download_web3j_corda() {
     tar -xf "$HOME/.web3j_corda/web3j-corda-${web3j_corda_version}.tar" -C "$HOME/.web3j_corda"
     echo "export PATH=\$PATH:$HOME/.web3j_corda/web3j-corda-${web3j_corda_version}/bin" >"$HOME/.web3j_corda/source.sh"
     chmod +x "$HOME/.web3j_corda/source.sh"
-    echo "Removing zip file ..."
-    rm "$HOME/.web3j_corda/web3j_corda-${web3j_corda_version}.zip"
+    echo "Removing tar file ..."
+    rm "$HOME/.web3j_corda/web3j-corda-${web3j_corda_version}.tar"
  else
   echo "Looks like there was an error while trying to download web3j_corda"
   exit 0
