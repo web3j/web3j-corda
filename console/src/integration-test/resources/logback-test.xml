@@ -12,9 +12,11 @@
 
     <logger name="io.vertx" level="error"/>
     <logger name="io.bluebank.braid.corda" level="error"/>
+    <!--    FIXME: Stop disabling when braid generates correct swagger.json-->
+    <logger name="org.openapitools.codegen.DefaultCodegen" level="error"/>
+    <logger name="org.web3j.corda.codegen.CordaGeneratorUtils" level="error"/>
 
     <logger name="org.junit.jupiter" level="warn"/>
-    <logger name="org.openapitools.codegen" level="warn"/>
 
     <logger name="org.web3j.corda.protocol" level="debug"/>
 
