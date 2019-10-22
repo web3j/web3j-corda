@@ -13,6 +13,7 @@
 package org.web3j.corda.protocol
 
 import javax.ws.rs.ClientErrorException
+import javax.ws.rs.core.MediaType
 import org.web3j.corda.model.Error
 
 /**
@@ -20,8 +21,8 @@ import org.web3j.corda.model.Error
  */
 class CordaException internal constructor(
     val status: Int,
-    val type: String?,
-    message: String?
+    val type: String,
+    message: String
 ) : RuntimeException(message) {
     companion object {
 
@@ -29,12 +30,15 @@ class CordaException internal constructor(
         fun of(exception: ClientErrorException): CordaException {
             with(exception.response) {
                 // Try to de-serialize the exception error
-                val error = if (hasEntity()) {
+                val error = if (hasEntity() && mediaType == MediaType.APPLICATION_JSON_TYPE) {
                     readEntity(Error::class.java)
                 } else {
-                    null
+                    Error(
+                        exception.message ?: statusInfo.reasonPhrase,
+                        exception::class.java.canonicalName
+                    )
                 }
-                return CordaException(status, error?.type, error?.message)
+                return CordaException(status, error.type, error.message)
             }
         }
     }

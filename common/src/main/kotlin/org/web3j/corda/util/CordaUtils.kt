@@ -46,3 +46,13 @@ val X500Principal.canonicalName: String
             .joinToString("-") { it.value.toString() }
             .replace(' ', '-')
     }
+
+val regexToReplace = "-[0-9][^/]*".toRegex()
+
+fun sanitizeCorDappName(name: String): String {
+    return name.replace(regexToReplace, "")
+}
+
+fun needToSanitizeCorDappName(name: String): Boolean {
+    return name.contains(regexToReplace)
+}

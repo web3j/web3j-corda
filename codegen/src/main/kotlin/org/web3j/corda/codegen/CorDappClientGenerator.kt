@@ -26,13 +26,13 @@ import org.openapitools.codegen.CodegenConstants.MODEL_PACKAGE
 import org.openapitools.codegen.CodegenConstants.PACKAGE_NAME
 import org.openapitools.codegen.DefaultGenerator
 import org.openapitools.codegen.config.GeneratorProperties.setProperty
-import org.web3j.corda.codegen.CordaGeneratorUtils.needToSanitizeCorDappName
 import org.web3j.corda.codegen.CordaGeneratorUtils.repackage
-import org.web3j.corda.codegen.CordaGeneratorUtils.sanitizeCorDappName
 import org.web3j.corda.model.AmountCurrency
 import org.web3j.corda.model.Error
 import org.web3j.corda.model.core.contracts.Issued
 import org.web3j.corda.model.core.contracts.Issued_issuer
+import org.web3j.corda.util.needToSanitizeCorDappName
+import org.web3j.corda.util.sanitizeCorDappName
 
 class CorDappClientGenerator(
     private val packageName: String,

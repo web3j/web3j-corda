@@ -12,15 +12,13 @@
  */
 package org.web3j.corda.protocol
 
-import java.lang.reflect.InvocationHandler
-import java.lang.reflect.InvocationTargetException
-import java.lang.reflect.Method
 import java.lang.reflect.Proxy
 import javax.ws.rs.ClientErrorException
+import mu.KLogging
 import org.glassfish.jersey.client.proxy.WebResourceFactory
 import org.web3j.corda.api.AuthenticationFilter
 
-object ClientBuilder {
+object ClientBuilder : KLogging() {
 
     /**
      * Builds a JAX-RS client with the given type [T].
@@ -48,38 +46,5 @@ object ClientBuilder {
 
         @Suppress("UNCHECKED_CAST")
         return Proxy.newProxyInstance(type.classLoader, arrayOf(type), handler) as T
-    }
-
-    private class ClientErrorHandler<T>(
-        private val client: T,
-        private val mapper: (ClientErrorException) -> RuntimeException
-    ) : InvocationHandler {
-
-        override fun invoke(proxy: Any, method: Method, args: Array<out Any>?): Any? {
-            try {
-                // Invoke the original method on the client
-                return method.invoke(client, *(args ?: arrayOf())).let {
-                    if (Proxy.isProxyClass(it.javaClass)) {
-                        // The result is a Jersey web resource
-                        // so we need to wrap it again
-                        Proxy.newProxyInstance(
-                            method.returnType.classLoader,
-                            arrayOf(method.returnType),
-                            ClientErrorHandler(it, mapper)
-                        )
-                    } else {
-                        it
-                    }
-                }
-            } catch (e: ClientErrorException) {
-                throw mapper.invoke(e)
-            } catch (e: InvocationTargetException) {
-                throw if (e.targetException is ClientErrorException) {
-                    mapper.invoke(e.targetException as ClientErrorException)
-                } else {
-                    e.targetException
-                }
-            }
-        }
     }
 }
