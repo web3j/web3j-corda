@@ -1,5 +1,5 @@
 #!/bin/bash
-web3j_corda_version="0.1.0-SNAPSHOT"
+web3j_corda_version="0.1.0"
 installed_flag=0
 local=~/
 
