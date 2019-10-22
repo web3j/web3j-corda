@@ -16,7 +16,6 @@ import java.io.File
 import java.nio.file.Files
 import java.nio.file.Path
 import java.nio.file.StandardCopyOption
-import org.apache.commons.io.FileUtils
 import org.gradle.tooling.GradleConnector
 import org.web3j.corda.codegen.CorDappGenerator
 import picocli.CommandLine.Command
@@ -54,15 +53,11 @@ class NewCommand : BaseCommand() {
         // Build CorDapp JAR for the client
         runGradleBuild(outputDir.toPath())
 
-        val tempDir = Files.createTempDirectory("outputDir").toFile().apply {
-            FileUtils.copyDirectory(File("$outputDir/contracts/build/libs/"), this)
-            FileUtils.copyDirectory(File("$outputDir/workflows/build/libs/"), this)
-        }
         // Generate the CorDapp client classes
         GenerateCommand().apply {
             cordaResource = CordaResource().apply {
                 // should be individual contracts and workflows to be copied
-                corDappsDir = tempDir
+                corDappsDir = this@NewCommand.outputDir
             }
             packageName = this@NewCommand.packageName
             outputDir = File("${this@NewCommand.outputDir}/clients")

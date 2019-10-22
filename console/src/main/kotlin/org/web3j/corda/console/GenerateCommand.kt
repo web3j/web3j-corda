@@ -17,8 +17,8 @@ import io.bluebank.braid.core.utils.toJarsClassLoader
 import io.bluebank.braid.core.utils.tryWithClassLoader
 import java.net.URL
 import java.nio.charset.StandardCharsets.UTF_8
-import java.nio.file.Files
 import kotlin.streams.toList
+import net.corda.core.internal.walk
 import org.web3j.corda.codegen.CorDappClientGenerator
 import org.web3j.corda.util.OpenApiVersion
 import org.web3j.corda.util.OpenApiVersion.v3_0_1
@@ -71,16 +71,17 @@ class GenerateCommand : BaseCommand() {
     }
 
     private fun generateOpenApiDef(): String {
-        return Files.list(cordaResource.corDappsDir.toPath()).toList()
-            .map {
+        return cordaResource.corDappsDir.toPath().walk { paths ->
+            paths.map {
                 it.toFile().toURI().toURL().toExternalForm()
             }.filter {
                 it.endsWith(".jar")
-            }.run {
+            }.toList().run {
                 tryWithClassLoader(toJarsClassLoader()) {
                     BraidDocsMain().swaggerText(openApiVersion.toInt())
                 }
             }
+        }
     }
 
     private class OpenApiVersionConverter : ITypeConverter<OpenApiVersion> {

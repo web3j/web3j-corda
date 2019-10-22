@@ -105,6 +105,7 @@ dependencies {
 
     // web3j-corda dependency
     implementation group: 'org.web3j.corda', name: 'web3j-corda-core', version: web3j_corda_version
+    implementation group: 'org.web3j.corda', name: 'web3j-corda-codegen', version: web3j_corda_version
 
     testImplementation group: 'io.bluebank.braid', name: 'braid-corda', version: '4.1.2-SNAPSHOT', changing: true
     testImplementation "org.web3j.corda:web3j-corda-common:${web3j_corda_version}:integration-test"
@@ -117,8 +118,8 @@ dependencies {
 
 cordapp {
     info {
-        name "CorDapp Template"
-        vendor "Corda Open Source"
+        name '{{corDappName}}'
+        vendor 'Web3 Labs'
         targetPlatformVersion corda_platform_version
         minimumPlatformVersion corda_platform_version
     }
@@ -129,4 +130,13 @@ task installQuasar(type: Copy) {
     from(configurations.quasar) {
         rename 'quasar-core(.*).jar', 'quasar.jar'
     }
+}
+
+task generateCorDappWrappers(type: JavaExec, group: 'web3j') {
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'org.web3j.corda.console.CordaCommandMain'
+    
+    args 'generate', '--package-name', '{{packageName}}',
+    '--cordapps-dir', "$projectDir",
+    '--output-dir', 'clients'
 }
