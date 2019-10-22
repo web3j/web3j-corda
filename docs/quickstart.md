@@ -2,14 +2,12 @@ Quick start
 ===========
 
 web3j-corda CLI
----------
+---------------
 
-Install the web3j-corda binary.
-
-To get the latest version on Mac OS or Linux, type the following in your terminal:
+To install the latest vversion of the web3j-corda CLI on Mac OS or Linux, type the following in your terminal:
 
 ```bash
-curl -L https://getcorda.web3j.io | sh
+curl -L https://getcorda.web3j.io | bash
 ```
 
 Then to create a new project, simply run:
@@ -32,8 +30,8 @@ Then to build your project run:
 
 For more information on using the web3j-corda CLI, head to the [CLI section](command_line_tools.md).
 
-The generated Corda projects demonstrate a number of core features of `web3j-corda`, including:
+The generated Corda project demonstrate a number of core features of `web3j-corda`, including:
 
 * Generate CorDapp client wrappers for deployed CorDapps.
 * Interact with a CorDapp listing its nodes and starting flows.
-* Generate automated tests using Docker containers to verify the working of CorDapp. 
+* Generate integration tests using a Dockerized Corda network to verify the CorDapp. 

@@ -71,9 +71,14 @@ subprojects {
     }
 
     integrationTestJar {
-        archiveClassifier = 'integration-test'
+        archiveClassifier.set('integration-test')
     }
-
+    
+    task integrationTestSourcesJar(type: Jar) {
+        from sourceSets.integrationTest.allSource
+        archiveClassifier.set('integration-test-sources')
+    }
+    
     jacoco {
         toolVersion = versions.jacoco
     }
@@ -106,7 +111,9 @@ subprojects {
 
     artifacts {
         archives sourcesJar
+        archives integrationTestSourcesJar
         testOutput testJar
+        integrationTestOutput integrationTestJar
     }
 
     testlogger {
@@ -155,7 +162,7 @@ subprojects {
             }
         }
 
-        implementation "io.github.microutils:kotlin-logging:${versions.kLogging}"
+        api "io.github.microutils:kotlin-logging:${versions.kLogging}"
 
         implementation("com.pinterest.ktlint:ktlint-core:${versions.ktlint}") {
             exclude group: 'org.apache.commons'
@@ -221,6 +228,8 @@ subprojects {
                 from components.java
                 artifact sourcesJar
                 artifact javadocJar
+                artifact integrationTestJar
+                artifact integrationTestSourcesJar
                 pom {
                     name = project.name
                     afterEvaluate {

@@ -1,7 +1,7 @@
-Getting started
-===============
+Dependencies
+============
 
-To resolve all web3j-corda relevant dependencies, add to your project:
+To resolve all web3j-corda relevant dependencies, add the following to your project build file:
 
 ### Maven
 

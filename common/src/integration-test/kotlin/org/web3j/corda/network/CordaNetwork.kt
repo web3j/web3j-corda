@@ -17,7 +17,6 @@ import java.nio.file.Files
 import java.nio.file.Path
 import java.nio.file.StandardCopyOption.REPLACE_EXISTING
 import java.util.function.Consumer
-import kotlin.streams.toList
 import org.gradle.tooling.GradleConnector
 import org.gradle.tooling.ProjectConnection
 import org.gradle.tooling.model.idea.IdeaProject
@@ -29,6 +28,7 @@ import org.web3j.corda.protocol.NetworkMap
 import org.web3j.corda.testcontainers.KGenericContainer
 import org.web3j.corda.util.OpenApiVersion.v3_0_1
 import org.web3j.corda.util.isMac
+import org.web3j.corda.util.sanitizeCorDappName
 
 /**
  * Corda network DSK for integration tests web3j CorDapp wrappers.
@@ -43,7 +43,7 @@ class CordaNetwork private constructor() {
     /**
      * Directory where the CorDapp JARs are located.
      */
-    var baseDir: File = File("${System.getProperty("user.dir")}/build/libs")
+    var baseDir: File = File(System.getProperty("user.dir"))
 
     /**
      * The nodes in this network.
@@ -63,16 +63,17 @@ class CordaNetwork private constructor() {
      * CorDapp Docker-mapped directory.
      */
     internal val cordappsDir: File by lazy {
-        Files.createTempDirectory("cordapps").apply {
+        Files.createTempDirectory("cordapps_").apply {
             if (isGradleProject()) {
                 // Copy project JARs into cordapps dir
                 createJarUsingGradle(this)
-                copyGradleDependencies(this)
+                // FIXME Commented out causing all files copied
+                // copyGradleDependencies(this)
             } else {
                 // Not a valid Gradle project, copy baseDir
                 baseDir.walkTopDown().forEach {
                     if (it.absolutePath.endsWith(".jar")) {
-                        Files.copy(it.toPath(), File(toFile(), it.name).toPath(), REPLACE_EXISTING)
+                        Files.copy(it.toPath(), File(toFile(), "${sanitizeCorDappName(it.name)}.jar").toPath(), REPLACE_EXISTING)
                     }
                 }
             }
@@ -134,12 +135,19 @@ class CordaNetwork private constructor() {
      * Build the CorDapp located in [baseDir] using the `jar` task and copy the resulting JAR into the given directory.
      */
     private fun createJarUsingGradle(cordappsDir: Path) {
-        // Run the jar task to create the CorDapp JAR
+        // Run the jar task to create the CorDapp JARs
         connection.newBuild().forTasks("jar").run()
 
-        // Copy Gradle project JAR into cordapps folder
-        Files.list(File(baseDir, "build/libs").toPath()).toList().forEach {
-            Files.copy(it, File(cordappsDir.toFile(), it.toFile().name).toPath(), REPLACE_EXISTING)
+        // Copy the built JAR artifacts into the CorDapps folder
+        connection.getModel(IdeaProject::class.java).modules.map {
+            File(it.gradleProject.buildDirectory, "libs")
+        }.forEach { libsDir ->
+            // FIXME Avoid copying sources and javadoc JARs, only copy artifacts
+            libsDir.walkTopDown().forEach { file ->
+                if (file.name.endsWith(".jar")) {
+                    Files.copy(file.toPath(), File(cordappsDir.toFile(), "${sanitizeCorDappName(file.name)}.jar").toPath(), REPLACE_EXISTING)
+                }
+            }
         }
     }
 

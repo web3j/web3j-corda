@@ -3,14 +3,14 @@ Generating web3j client wrappers
 
 There are two ways to generate web3j client wrappers for given CorDapps.
 
-1. Using command-line tool
-2. Using gradle task
+1. Using the CLI
+2. Using a Gradle task
 
 ## Using command-line tool
 
-Please refer to [command line tools](command_line_tools.md)
+Please refer to the [CLI](command_line_tools.md) section.
 
-## Using gradle task
+## Using a Gradle task
 
 We should add the task to generate the CorDapp client wrappers using the following:
 
