@@ -32,9 +32,8 @@ dependencies {
     // web3j-corda dependency
     implementation "org.web3j.corda:web3j-corda-core:${web3j_corda_version}"
 
-    testImplementation group: 'io.bluebank.braid', name: 'braid-corda', version: '4.1.2-SNAPSHOT', changing: true
-
     testImplementation "org.testcontainers:testcontainers:1.11.2"
+    testImplementation "com.samskivert:jmustache:1.14"
 
     testImplementation "org.web3j.corda:web3j-corda-common:${web3j_corda_version}:integration-test"
 
@@ -43,4 +42,8 @@ dependencies {
 
     testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:5.4.2"
     testRuntimeOnly "org.junit.vintage:junit-vintage-engine:5.4.2"
+}
+
+test {
+    useJUnitPlatform()
 }
