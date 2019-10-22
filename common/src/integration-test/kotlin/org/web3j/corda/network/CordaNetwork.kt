@@ -12,6 +12,11 @@
  */
 package org.web3j.corda.network
 
+import java.io.File
+import java.nio.file.Files
+import java.nio.file.Path
+import java.nio.file.StandardCopyOption.REPLACE_EXISTING
+import java.util.function.Consumer
 import org.gradle.tooling.GradleConnector
 import org.gradle.tooling.ProjectConnection
 import org.gradle.tooling.model.idea.IdeaProject
@@ -23,11 +28,7 @@ import org.web3j.corda.protocol.NetworkMap
 import org.web3j.corda.testcontainers.KGenericContainer
 import org.web3j.corda.util.OpenApiVersion.v3_0_1
 import org.web3j.corda.util.isMac
-import java.io.File
-import java.nio.file.Files
-import java.nio.file.Path
-import java.nio.file.StandardCopyOption.REPLACE_EXISTING
-import java.util.function.Consumer
+import org.web3j.corda.util.sanitizeCorDappName
 
 /**
  * Corda network DSK for integration tests web3j CorDapp wrappers.
@@ -72,7 +73,7 @@ class CordaNetwork private constructor() {
                 // Not a valid Gradle project, copy baseDir
                 baseDir.walkTopDown().forEach {
                     if (it.absolutePath.endsWith(".jar")) {
-                        Files.copy(it.toPath(), File(toFile(), it.name).toPath(), REPLACE_EXISTING)
+                        Files.copy(it.toPath(), File(toFile(), "${sanitizeCorDappName(it.name)}.jar").toPath(), REPLACE_EXISTING)
                     }
                 }
             }
@@ -140,11 +141,11 @@ class CordaNetwork private constructor() {
         // Copy the built JAR artifacts into the CorDapps folder
         connection.getModel(IdeaProject::class.java).modules.map {
             File(it.gradleProject.buildDirectory, "libs")
-        }.forEach {libsDir ->
+        }.forEach { libsDir ->
             // FIXME Avoid copying sources and javadoc JARs, only copy artifacts
-            libsDir.walkTopDown().forEach {file ->
+            libsDir.walkTopDown().forEach { file ->
                 if (file.name.endsWith(".jar")) {
-                    Files.copy(file.toPath(), File(cordappsDir.toFile(), file.name).toPath(), REPLACE_EXISTING)
+                    Files.copy(file.toPath(), File(cordappsDir.toFile(), "${sanitizeCorDappName(file.name)}.jar").toPath(), REPLACE_EXISTING)
                 }
             }
         }
