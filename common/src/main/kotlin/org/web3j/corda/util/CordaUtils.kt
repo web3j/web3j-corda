@@ -46,3 +46,13 @@ val X500Principal.canonicalName: String
             .joinToString("-") { it.value.toString() }
             .replace(' ', '-')
     }
+
+val regexToReplace = "-[0-9][^/]*".toRegex()
+
+fun needToRepackage(name: String, mapping: Map<String, String>): Boolean {
+    return mapping.keys.any { name.startsWith(it) }
+}
+
+fun sanitizeCorDappName(name: String): String {
+    return name.replace(regexToReplace, "")
+}

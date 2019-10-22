@@ -29,6 +29,7 @@ import org.web3j.corda.protocol.NetworkMap
 import org.web3j.corda.testcontainers.KGenericContainer
 import org.web3j.corda.util.OpenApiVersion.v3_0_1
 import org.web3j.corda.util.isMac
+import org.web3j.corda.util.sanitizeCorDappName
 
 /**
  * Corda network DSK for integration tests web3j CorDapp wrappers.
@@ -72,7 +73,7 @@ class CordaNetwork private constructor() {
                 // Not a valid Gradle project, copy baseDir
                 baseDir.walkTopDown().forEach {
                     if (it.absolutePath.endsWith(".jar")) {
-                        Files.copy(it.toPath(), File(toFile(), it.name).toPath(), REPLACE_EXISTING)
+                        Files.copy(it.toPath(), File(toFile(), sanitizeCorDappName(it.name)).toPath(), REPLACE_EXISTING)
                     }
                 }
             }

@@ -22,6 +22,7 @@ import org.openapitools.codegen.templating.mustache.CamelCaseLambda
 import org.openapitools.codegen.templating.mustache.LowercaseLambda
 import org.openapitools.codegen.templating.mustache.TitlecaseLambda
 import org.openapitools.codegen.templating.mustache.UppercaseLambda
+import org.web3j.corda.util.regexToReplace
 
 internal object CordaGeneratorUtils : KLogging() {
 
@@ -29,16 +30,6 @@ internal object CordaGeneratorUtils : KLogging() {
         StandardRuleSetProvider().get(),
         ExperimentalRuleSetProvider().get()
     )
-
-    private val regexToReplace = "-[0-9][^/]*".toRegex()
-
-    fun needToRepackage(name: String, mapping: Map<String, String>): Boolean {
-        return mapping.keys.any { name.startsWith(it) }
-    }
-
-    fun sanitizeCorDappName(name: String): String {
-        return name.replace(regexToReplace, "")
-    }
 
     fun needToSanitizeCorDappName(name: String): Boolean {
         return name.contains(regexToReplace)
