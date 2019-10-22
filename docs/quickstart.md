@@ -32,7 +32,7 @@ Then to build your project run:
 
 For more information on using the web3j-corda CLI, head to the [CLI section](command_line_tools.md).
 
-A [web3j-corda sample project](https://gitlab.com/web3j/corda-samples) is available that demonstrates a number of core features of web3j-corda, including:
+The generated Corda projects demonstrate a number of core features of `web3j-corda`, including:
 
 * Generate CorDapp client wrappers for deployed CorDapps.
 * Interact with a CorDapp listing its nodes and starting flows.
