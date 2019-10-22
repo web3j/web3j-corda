@@ -70,8 +70,10 @@ class CordaNetwork private constructor() {
                 copyGradleDependencies(this)
             } else {
                 // Not a valid Gradle project, copy baseDir
-                Files.list(baseDir.toPath()).forEach {
-                    Files.copy(it, File(toFile(), it.toFile().name).toPath(), REPLACE_EXISTING)
+                baseDir.walkTopDown().forEach {
+                    if (it.absolutePath.endsWith(".jar")) {
+                        Files.copy(it.toPath(), File(toFile(), it.name).toPath(), REPLACE_EXISTING)
+                    }
                 }
             }
         }.toFile().absolutePath.run {
