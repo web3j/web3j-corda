@@ -18,7 +18,13 @@ dependencies {
     integrationTestImplementation group: 'com.samskivert', name: 'jmustache', version: versions.jmustache
 }
 
+task integrationTestSourcesJar(type: Jar) {
+    from sourceSets.integrationTest.allSource
+    archiveClassifier.set('integration-test-sources')
+}
+
 artifacts {
+    archives integrationTestSourcesJar
     integrationTestOutput integrationTestJar
 }
 
@@ -27,6 +33,7 @@ publishing {
         mavenIntegrationTest(MavenPublication) {
             from components.java
             artifact integrationTestJar
+            artifact integrationTestSourcesJar
             pom {
                 afterEvaluate {
                     description = project.description
