@@ -127,5 +127,5 @@ githubRelease {
 }
 
 tasks.withType(GithubReleaseTask) {
-    dependsOn 'build'
+    dependsOn 'distZip', 'distTar'
 }
