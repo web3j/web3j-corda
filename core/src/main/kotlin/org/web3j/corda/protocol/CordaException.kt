@@ -12,9 +12,9 @@
  */
 package org.web3j.corda.protocol
 
-import org.web3j.corda.model.Error
 import javax.ws.rs.ClientErrorException
 import javax.ws.rs.core.MediaType
+import org.web3j.corda.model.Error
 
 /**
  * Corda API exception containing error data.

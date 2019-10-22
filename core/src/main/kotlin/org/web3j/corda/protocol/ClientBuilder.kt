@@ -12,11 +12,11 @@
  */
 package org.web3j.corda.protocol
 
+import java.lang.reflect.Proxy
+import javax.ws.rs.ClientErrorException
 import mu.KLogging
 import org.glassfish.jersey.client.proxy.WebResourceFactory
 import org.web3j.corda.api.AuthenticationFilter
-import java.lang.reflect.Proxy
-import javax.ws.rs.ClientErrorException
 
 object ClientBuilder : KLogging() {
 
