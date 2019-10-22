@@ -7,19 +7,19 @@ one can interact with a CorDapp in a type-safe way:
 ```kotlin
 // Initialise the test network
 var network = network {
-                  baseDir = File(<path-to-corDapp>)
-                  nodes {
-                      notary {
-                          name = "O=Notary, L=London, C=GB"
-                      }
-                      party {
-                          name = "O=PartyA, L=London, C=GB"
-                      }
-                      party {
-                          name = "O=PartyB, L=New York, C=US"
-                      }
-                  }
-              }
+    baseDir = File("<path-to-corDapp>")
+    nodes {
+        notary {
+          name = "O=Notary, L=London, C=GB"
+        }
+        party {
+          name = "O=PartyA, L=London, C=GB"
+        }
+        party {
+          name = "O=PartyB, L=New York, C=US"
+        }
+    }
+}
 
 // Initialise the parameters of the flow 
 lateinit var parameters: <flow-input-parameters>
