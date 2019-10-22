@@ -14,14 +14,14 @@ class Initiator : FlowLogic<Unit>() {
 
     @Suspendable
     override fun call() {
-    // Initiator flow logic goes here.
+        // Initiator flow logic goes here.
     }
-    }
+}
 
-    @InitiatedBy(Initiator::class)
-    class Responder(val counterpartySession: FlowSession) : FlowLogic<Unit>() {
-        @Suspendable
-        override fun call() {
+@InitiatedBy(Initiator::class)
+class Responder(val counterpartySession: FlowSession) : FlowLogic<Unit>() {
+    @Suspendable
+    override fun call() {
         // Responder flow logic goes here.
-        }
-        }
+    }
+}
