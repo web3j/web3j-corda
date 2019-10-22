@@ -52,6 +52,10 @@ allprojects {
                 snapshotsOnly()
             }
         }
+        maven { url 'https://repo.gradle.org/gradle/libs-releases' }
+        maven {
+            url 'https://gitlab.com/api/v4/projects/5172644/packages/maven'
+        }
     }
 
     tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile) {
@@ -105,7 +109,7 @@ dependencies {
 
     // web3j-corda dependency
     implementation group: 'org.web3j.corda', name: 'web3j-corda-core', version: web3j_corda_version
-    implementation group: 'org.web3j.corda', name: 'web3j-corda-codegen', version: web3j_corda_version
+    implementation group: 'org.web3j.corda', name: 'web3j-corda-console', version: web3j_corda_version
 
     testImplementation group: 'io.bluebank.braid', name: 'braid-corda', version: '4.1.2-SNAPSHOT', changing: true
     testImplementation "org.web3j.corda:web3j-corda-common:${web3j_corda_version}:integration-test"
