@@ -8,26 +8,26 @@ import org.junit.jupiter.api.Test
 import org.web3j.corda.network.CordaNetwork
 
 @Generated(
-value = ["{{generator}}"],
-date = "{{currentDate}}"
+    value = ["{{generator}}"],
+    date = "{{currentDate}}"
 )
 class {{classname}}Test {
 
-// TODO Initialize network
-lateinit var network: CordaNetwork
+    // TODO Initialize network
+    lateinit var network: CordaNetwork
 
 {{#operations}}
     {{#flows}}
-lateinit var {{#camelcase}}{{inputClass}}{{/camelcase}}: {{inputClass}}
+    lateinit var {{#camelcase}}{{inputClass}}{{/camelcase}}: {{inputClass}}
 
-@Test
-fun `start the {{#titlecase}}{{#camelcase}}{{flowId}}{{/camelcase}}{{/titlecase}} flow`() {
-
-// TODO Initialize {{#camelcase}}{{inputClass}}{{/camelcase}}
-
-    {{classname}}.load(network.nodes[0].corda.service).flows.{{#camelcase}}{{flowId}}{{/camelcase}}.start({{#camelcase}}{{inputClass}}{{/camelcase}})
-// TODO Add assertions
-}
-{{/flows}}
+    @Test
+    fun `start the {{#titlecase}}{{#camelcase}}{{flowId}}{{/camelcase}}{{/titlecase}} flow`() {
+    
+        // TODO Initialize {{#camelcase}}{{inputClass}}{{/camelcase}}
+    
+        {{classname}}.load(network.nodes[0].corda.service).flows.{{#camelcase}}{{flowId}}{{/camelcase}}.start({{#camelcase}}{{inputClass}}{{/camelcase}})
+        // TODO Add assertions
+    }
+    {{/flows}}
 {{/operations}}
 }
