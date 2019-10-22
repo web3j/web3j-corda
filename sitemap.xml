@@ -2,52 +2,52 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
      <loc>https://corda.web3j.io/quickstart/</loc>
-     <lastmod>2019-10-22</lastmod>
+     <lastmod>2019-10-23</lastmod>
      <changefreq>daily</changefreq>
     </url>
     <url>
      <loc>https://corda.web3j.io/dependencies/</loc>
-     <lastmod>2019-10-22</lastmod>
+     <lastmod>2019-10-23</lastmod>
      <changefreq>daily</changefreq>
     </url>
     <url>
      <loc>https://corda.web3j.io/connecting_to_node/</loc>
-     <lastmod>2019-10-22</lastmod>
+     <lastmod>2019-10-23</lastmod>
      <changefreq>daily</changefreq>
     </url>
     <url>
      <loc>https://corda.web3j.io/generating/</loc>
-     <lastmod>2019-10-22</lastmod>
+     <lastmod>2019-10-23</lastmod>
      <changefreq>daily</changefreq>
     </url>
     <url>
      <loc>https://corda.web3j.io/client/</loc>
-     <lastmod>2019-10-22</lastmod>
+     <lastmod>2019-10-23</lastmod>
      <changefreq>daily</changefreq>
     </url>
     <url>
      <loc>https://corda.web3j.io/usage/</loc>
-     <lastmod>2019-10-22</lastmod>
+     <lastmod>2019-10-23</lastmod>
      <changefreq>daily</changefreq>
     </url>
     <url>
      <loc>https://corda.web3j.io/network/</loc>
-     <lastmod>2019-10-22</lastmod>
+     <lastmod>2019-10-23</lastmod>
      <changefreq>daily</changefreq>
     </url>
     <url>
      <loc>https://corda.web3j.io/command_line_tools/</loc>
-     <lastmod>2019-10-22</lastmod>
+     <lastmod>2019-10-23</lastmod>
      <changefreq>daily</changefreq>
     </url>
     <url>
      <loc>https://corda.web3j.io/examples/</loc>
-     <lastmod>2019-10-22</lastmod>
+     <lastmod>2019-10-23</lastmod>
      <changefreq>daily</changefreq>
     </url>
     <url>
      <loc>https://corda.web3j.io/support/</loc>
-     <lastmod>2019-10-22</lastmod>
+     <lastmod>2019-10-23</lastmod>
      <changefreq>daily</changefreq>
     </url>
 </urlset>

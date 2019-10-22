@@ -463,19 +463,19 @@
                 <h1 id="quick-start">Quick start</h1>
 <h2 id="web3j-corda-cli">web3j-corda CLI</h2>
 <p>To install the latest vversion of the web3j-corda CLI on Mac OS or Linux, type the following in your terminal:</p>
-<pre><code class="bash">curl -L https://getcorda.web3j.io | bash
+<pre><code class="shell">curl -L https://getcorda.web3j.io | bash
 </code></pre>
 
 <p>Then to create a new project, simply run:</p>
-<pre><code class="zsh">web3j-corda new -o ~/template/cordapp -n Sample -p &lt;package-name&gt;
+<pre><code class="shell">web3j-corda new -o ~/template/cordapp -n &lt;corDappName&gt; -p &lt;package-name&gt;
 </code></pre>
 
 <p>Or, to generate client wrappers for an existing CorDapp, run:</p>
-<pre><code class="zsh">web3j-corda generate -d &lt;path-existing-cordapp&gt; -o &lt;output-dir&gt; -p &lt;package-name&gt;
+<pre><code class="shell">web3j-corda generate -d &lt;path-existing-cordapp&gt; -o &lt;output-dir&gt; -p &lt;package-name&gt;
 </code></pre>
 
 <p>Then to build your project run:</p>
-<pre><code class="zsh">./gradle build
+<pre><code class="shell">./gradle build
 </code></pre>
 
 <p>For more information on using the web3j-corda CLI, head to the <a href="../command_line_tools/">CLI section</a>.</p>
