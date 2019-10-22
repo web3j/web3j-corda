@@ -6,25 +6,25 @@ web3j-corda CLI
 
 To install the latest vversion of the web3j-corda CLI on Mac OS or Linux, type the following in your terminal:
 
-```bash
+```shell
 curl -L https://getcorda.web3j.io | bash
 ```
 
 Then to create a new project, simply run:
 
-```zsh
-web3j-corda new -o ~/template/cordapp -n Sample -p <package-name>
+```shell
+web3j-corda new -o ~/template/cordapp -n <corDappName> -p <package-name>
 ```
 
 Or, to generate client wrappers for an existing CorDapp, run:
 
-```zsh
+```shell
 web3j-corda generate -d <path-existing-cordapp> -o <output-dir> -p <package-name>
 ```
 
 Then to build your project run:
 
-```zsh
+```shell
 ./gradle build
 ```
 
