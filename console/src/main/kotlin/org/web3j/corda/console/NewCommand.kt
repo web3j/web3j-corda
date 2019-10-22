@@ -26,7 +26,10 @@ import picocli.CommandLine.Spec
 /**
  * Custom CLI interpreter to generate a new sample CordApp and web3j client.
  */
-@Command(name = "new")
+@Command(
+    name = "new",
+    description = ["Create an empty CorDapp project with its client wrappers."]
+)
 class NewCommand : BaseCommand() {
 
     @Spec

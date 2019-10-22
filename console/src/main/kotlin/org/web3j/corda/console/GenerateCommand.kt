@@ -30,7 +30,10 @@ import picocli.CommandLine.Option
 /**
  * Custom CLI interpreter to generate a new template web3j wrappers for given CordApp.
  */
-@Command(name = "generate")
+@Command(
+    name = "generate",
+    description = ["Create client wrapper classes for existing CorDapps."]
+)
 class GenerateCommand : BaseCommand() {
 
     @ArgGroup(exclusive = true, multiplicity = "1")

@@ -26,6 +26,7 @@ import picocli.CommandLine.Spec
  */
 @Command(
     name = "web3j-corda",
+    description = ["Web3j command-line tools for the Corda blockchain platform."],
     sortOptions = false,
     mixinStandardHelpOptions = true,
     versionProvider = VersionProvider::class,
