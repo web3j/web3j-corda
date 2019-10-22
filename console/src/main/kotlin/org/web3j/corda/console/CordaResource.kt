@@ -22,7 +22,7 @@ class CordaResource {
 
     @Option(
         names = ["-u", "--url"],
-        description = ["Corda node OpenAPI URL"],
+        description = ["OpenAPI definition URL from a Corda node"],
         converter = [URLConverter::class],
         required = true
     )
@@ -30,7 +30,7 @@ class CordaResource {
 
     @Option(
         names = ["-d", "--cordapps-dir"],
-        description = ["CorDapps node directory"],
+        description = ["Directory with CorDapp JAR files"],
         required = true
     )
     lateinit var corDappsDir: File

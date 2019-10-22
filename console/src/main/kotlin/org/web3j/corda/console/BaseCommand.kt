@@ -19,14 +19,14 @@ abstract class BaseCommand : Runnable {
 
     @Option(
         names = ["-p", "--package-name"],
-        description = ["Generated code package name"],
+        description = ["Package name for generated classes"],
         required = true
     )
     lateinit var packageName: String
 
     @Option(
         names = ["-o", "--output-dir"],
-        description = ["Output directory"],
+        description = ["Output directory for generated files"],
         required = true
     )
     lateinit var outputDir: File
