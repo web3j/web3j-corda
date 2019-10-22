@@ -30,13 +30,12 @@ interface <name-of-cordapp> : CorDapp {
     /**
      * <name-of-cordapp> CorDapp lifecycle methods.
      */
-    companion object : LifeCycle<<name-of-cordapp>> {
+    companion object : LifeCycle<name-of-cordapp> {
 
         /**
          * Loads an existing <name-of-cordapp> CorDapp instance.
          */
-        @JvmStatic
-        override fun load(corda: Corda) = ProxyBuilder.build(<name-of-cordapp>::class.java, corda.service)
+        override fun load(service: CordaService) = ClientBuilder.build(<name-of-cordapp>::class.java, service, CordaException.Companion::of)
     }
 }
 ```

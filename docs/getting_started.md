@@ -1,7 +1,7 @@
 Getting started
 ===============
 
-Add the relevant dependency to your project:
+To resolve all web3j-corda relevant dependencies, add to your project:
 
 ### Maven
 
@@ -9,7 +9,7 @@ Add the relevant dependency to your project:
 <dependency>
     <groupId>org.web3j.corda</groupId>
     <artifactId>web3j-corda-core</artifactId>
-    <version>0.1.0-SNAPSHOT</version>
+    <version>0.1.0</version>
 </dependency>
 ```
 
@@ -17,6 +17,6 @@ Add the relevant dependency to your project:
 
 ```groovy
 dependencies {
-    implementation 'org.web3j.corda:web3j-corda-core:0.1.0-SNAPSHOT'
+    implementation 'org.web3j.corda:web3j-corda-core:0.1.0'
 }
 ```

@@ -6,11 +6,24 @@ one can interact with a CorDapp in a type-safe way:
 
 ```kotlin
 // Initialise the test network
-lateinit var network: CordaNetwork
+var network = network {
+                  baseDir = File(<path-to-corDapp>)
+                  nodes {
+                      notary {
+                          name = "O=Notary, L=London, C=GB"
+                      }
+                      party {
+                          name = "O=PartyA, L=London, C=GB"
+                      }
+                      party {
+                          name = "O=PartyB, L=New York, C=US"
+                      }
+                  }
+              }
 
 // Initialise the parameters of the flow 
 lateinit var parameters: <flow-input-parameters>
 
 // Start the flow with typed parameters and response
-val output = <corDapp-name>.load(network.nodes["<party-to-invoke-flow>"].api).flows.<flow-instance>.start(parameters)
+val output = <corDapp-name>.load(network.nodes["<party-to-invoke-flow>"].service).flows.<flow-instance>.start(parameters)
 ```

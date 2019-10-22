@@ -27,7 +27,7 @@ This way works but is not type-safe, so can lead to runtime exceptions:
 val params = InitiatorParameters("$1", "O=PartyA, L=London, C=GB", false)
 
 val issue = corda.api
-    .corDapps.findById("obligation-cordapp")
+    .corDapps.findById("obligation")
     .flows.findById("issue-obligation")
 
 // Type-conversions with potential runtime exception!

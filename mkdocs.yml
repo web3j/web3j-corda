@@ -15,8 +15,10 @@ nav:
   - Generating Client Wrappers : generating.md
   - Client Wrappers : client.md
   - Using the wrappers : usage.md
+  - Network Queries : network.md
   - Command Line Tools: command_line_tools.md
-  - Modules : modules.md
+  - Examples To Create New: exampleCreate.md
+  - Examples To Generate: exampleGenerate.md
 
 # Configuration
 theme:
