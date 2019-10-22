@@ -42,3 +42,33 @@ publishing {
         }
     }
 }
+
+bintray {
+    user = bintrayUser
+    key = bintrayKey
+    publications = ['maven', 'mavenIntegrationTest']
+    publish = true
+    pkg {
+        repo = 'maven'
+        name = 'org.web3j.corda'
+        desc = project.description
+        userOrg = 'web3j'
+        licenses = ['Apache-2.0']
+        issueTrackerUrl = 'https://github.com/web3j/corda/issues'
+        vcsUrl = 'https://github.com/web3j/corda.git'
+        websiteUrl = 'https://web3j.io'
+        publicDownloadNumbers = true
+        version {
+            gpg {
+                sign = true
+                passphrase = bintrayGpgPassphrase
+            }
+            mavenCentralSync {
+                sync = true
+                user = ossrhUsername
+                password = ossrhPassword
+                close = '1'
+            }
+        }
+    }
+}
