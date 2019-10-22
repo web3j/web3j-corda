@@ -15,13 +15,13 @@ curl -L https://getcorda.web3j.io | sh
 Then to create a new project, simply run:
 
 ```zsh
-web3j-corda new -o ~/template/cordapp -n Sample -p <packge-name>
+web3j-corda new -o ~/template/cordapp -n Sample -p <package-name>
 ```
 
 Or, to generate client wrappers for an existing CorDapp, run:
 
 ```zsh
-web3j-corda generate -d <path-existing-cordapp> -o <output-dir> -p <packge-name>
+web3j-corda generate -d <path-existing-cordapp> -o <output-dir> -p <package-name>
 ```
 
 Then to build your project run:
