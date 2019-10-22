@@ -39,11 +39,19 @@ buildscript {
 
 allprojects {
     apply plugin: 'kotlin'
+    apply plugin: 'maven'
+    apply plugin: 'idea'
 
     repositories {
         mavenCentral()
         maven { url 'https://software.r3.com/artifactory/corda' }
         maven { url 'https://repo.gradle.org/gradle/libs-releases' }
+        maven {
+            url 'https://oss.sonatype.org/service/local/repositories/snapshots/content/'
+            mavenContent {
+                snapshotsOnly()
+            }
+        }
     }
 
     tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile) {
@@ -62,17 +70,20 @@ allprojects {
     }
 }
 
+subprojects {
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    compileKotlin.kotlinOptions.jvmTarget = sourceCompatibility
+    compileTestKotlin.kotlinOptions.jvmTarget = sourceCompatibility
+
+    dependencies {
+        // Kotlin dependencies
+        compile "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
+    }
+}
+
 apply plugin: 'net.corda.plugins.cordapp'
 apply plugin: 'net.corda.plugins.cordformation'
 apply plugin: 'net.corda.plugins.quasar-utils'
-
-sourceSets {
-    main {
-        resources {
-            srcDir rootProject.file("config/dev")
-        }
-        }
-    }
 
 dependencies {
     // Corda dependencies
@@ -86,24 +97,9 @@ dependencies {
 
     // Logging dependencies
     cordaCompile "org.slf4j:jul-to-slf4j:$slf4j_version"
-    implementation("ch.qos.logback:logback-classic:$logback_version") { force = true }
 
-    // JAX-RS dependencies
-    implementation group: 'org.glassfish.jersey.inject', name: 'jersey-hk2', version: jersey_version
-    implementation group: 'org.glassfish.jersey.core', name: 'jersey-client', version: jersey_version
-    implementation group: 'org.glassfish.jersey.media', name: 'jersey-media-json-jackson', version: jersey_version
-    implementation group: 'org.glassfish.jersey.ext', name: 'jersey-proxy-client', version: jersey_version
-    implementation group: 'org.glassfish.jersey.ext', name: 'jersey-bean-validation', version: jersey_version
-
-    // web3j-corda dependency
+    // web3j-corda command-line tools dependency
     implementation group: 'org.web3j.corda', name: 'web3j-corda-console', version: web3j_corda_version
-
-    testImplementation "org.web3j.corda:web3j-corda-common:${web3j_corda_version}:integration-test"
-    testImplementation "org.testcontainers:testcontainers:1.11.2"
-    testImplementation "org.junit.jupiter:junit-jupiter-api:5.4.2"
-
-    testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:5.4.2"
-    testRuntimeOnly "org.junit.vintage:junit-vintage-engine:5.4.2"
 }
 
 cordapp {
@@ -126,7 +122,8 @@ task generateCorDappWrappers(type: JavaExec, group: 'web3j') {
     classpath = sourceSets.main.runtimeClasspath
     main = 'org.web3j.corda.console.CordaCommandMain'
     
-    args 'generate', '--package-name', '{{packageName}}',
-    '--cordapps-dir', "$projectDir",
-    '--output-dir', 'clients'
+    args 'generate', 
+        '--package-name', project.group,
+        '--cordapps-dir', "$projectDir",
+        '--output-dir', 'clients'
 }

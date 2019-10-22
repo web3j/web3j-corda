@@ -1,44 +1,13 @@
-repositories {
-    mavenLocal()
-    mavenCentral()
-    jcenter()
-    maven { url 'https://software.r3.com/artifactory/corda' }
-    maven {
-        url 'https://oss.sonatype.org/service/local/repositories/snapshots/content/'
-        mavenContent {
-            snapshotsOnly()
-        }
-    }
-}
-
 dependencies {
-    // Corda dependencies.
-    implementation "$corda_release_group:corda-rpc:$corda_release_version"
-
-    // CorDapp dependencies.
-    api project(":contracts")
-    api project(":workflows")
-
-    implementation "org.slf4j:jul-to-slf4j:$slf4j_version"
-    implementation("ch.qos.logback:logback-classic:$logback_version") { force = true }
-
-    // JAX-RS dependencies
-    implementation group: 'org.glassfish.jersey.inject', name: 'jersey-hk2', version: jersey_version
-    implementation group: 'org.glassfish.jersey.core', name: 'jersey-client', version: jersey_version
-    implementation group: 'org.glassfish.jersey.media', name: 'jersey-media-json-jackson', version: jersey_version
-    implementation group: 'org.glassfish.jersey.ext', name: 'jersey-proxy-client', version: jersey_version
-    implementation group: 'org.glassfish.jersey.ext', name: 'jersey-bean-validation', version: jersey_version
-
     // web3j-corda dependency
-    implementation "org.web3j.corda:web3j-corda-core:${web3j_corda_version}"
-
-    testImplementation "org.testcontainers:testcontainers:1.11.2"
-    testImplementation "com.samskivert:jmustache:1.14"
+    implementation group: 'org.web3j.corda', name: 'web3j-corda-core', version: web3j_corda_version
 
     testImplementation "org.web3j.corda:web3j-corda-common:${web3j_corda_version}:integration-test"
 
     testImplementation "org.junit.jupiter:junit-jupiter-api:5.4.2"
+    testImplementation "org.testcontainers:testcontainers:1.11.2"
     testImplementation "io.swagger.core.v3:swagger-core:2.0.9"
+    testImplementation "com.samskivert:jmustache:1.14"
 
     testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:5.4.2"
     testRuntimeOnly "org.junit.vintage:junit-vintage-engine:5.4.2"
