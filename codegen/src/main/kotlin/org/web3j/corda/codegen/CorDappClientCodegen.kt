@@ -24,8 +24,8 @@ import org.openapitools.codegen.CodegenOperation
 import org.openapitools.codegen.languages.AbstractKotlinCodegen
 import org.openapitools.codegen.utils.StringUtils.camelize
 import org.web3j.corda.codegen.CordaGeneratorUtils.addLambdas
+import org.web3j.corda.codegen.CordaGeneratorUtils.needToRepackage
 import org.web3j.corda.codegen.CordaGeneratorUtils.repackage
-import org.web3j.corda.util.needToRepackage
 
 class CorDappClientCodegen(
     packageName: String,

@@ -16,7 +16,7 @@ import assertk.assertThat
 import assertk.assertions.isEqualTo
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.ValueSource
-import org.web3j.corda.util.sanitizeCorDappName
+import org.web3j.corda.codegen.CordaGeneratorUtils.sanitizeCorDappName
 
 class CordaGeneratorUtilsTest {
 
