@@ -1,24 +1,28 @@
-Command line tools
-==================
+Command line utility
+====================
 
-A web3j-corda fat jar is distributed with each release providing command line tools. 
-The following functionality of web3j-corda is exposed from the command line:
+The web3j-corda CLI makes it easy to:
 
 * Generate a template CorDapp project and the respective client wrappers
 * Generate client wrappers for existing CorDapps
 
-### Using web3j-corda new command
+You can install the web3j-corda CLI by running the following command in your terminal:
 
-To generate a template CorDapp project along with the client wrappers: 
-
-```zsh
-$ web3j-corda new --name=<corDappName> --output-dir=<output-dir> --package-name=<packageName>
+```shell
+curl -L https://getcorda.web3j.io | bash
 ```
 
-### Using web3j-corda generate command
+### Create a template CorDapp project
 
-To generate a web3j-corda client wrappers for existing CorDapps: 
+To generate a template CorDapp project with the client wrappers: 
 
-```zsh
-$ web3j-corda generate (--url=<openApiUrl> | --cordapps-dir=<corDapps-dir>) --output-dir=<output-dir> --package-name=<packageName>
+```shell
+web3j-corda new --name=<corDappName> --output-dir=<output-dir> --package-name=<packageName>
+```
+### Create CorDapp client wrappers
+
+To generate a web3j-corda client wrappers to existing CorDapps: 
+
+```shell
+web3j-corda generate (--url=<openApiUrl> | --cordapps-dir=<corDapps-dir>) --output-dir=<output-dir> --package-name=<packageName>
 ```

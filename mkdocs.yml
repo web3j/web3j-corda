@@ -10,15 +10,15 @@ copyright: "Copyright &copy; 2017-2019 Web3 Labs Ltd"
 
 nav:
   - Quickstart : quickstart.md
-  - Getting Started : getting_started.md
+  - Getting Started : dependencies.md
   - Connect to Corda Node : connecting_to_node.md
   - Generating Client Wrappers : generating.md
   - Client Wrappers : client.md
-  - Using the wrappers : usage.md
+  - Working with Client Wrappers : usage.md
   - Network Queries : network.md
   - Command Line Tools: command_line_tools.md
-  - Examples To Create New: exampleCreate.md
-  - Examples To Generate: exampleGenerate.md
+  - Examples: examples.md
+  - Support: support.md
 
 # Configuration
 theme:
