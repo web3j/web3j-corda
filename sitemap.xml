@@ -6,7 +6,7 @@
      <changefreq>daily</changefreq>
     </url>
     <url>
-     <loc>https://corda.web3j.io/getting_started/</loc>
+     <loc>https://corda.web3j.io/dependencies/</loc>
      <lastmod>2019-10-22</lastmod>
      <changefreq>daily</changefreq>
     </url>
@@ -41,12 +41,12 @@
      <changefreq>daily</changefreq>
     </url>
     <url>
-     <loc>https://corda.web3j.io/exampleCreate/</loc>
+     <loc>https://corda.web3j.io/examples/</loc>
      <lastmod>2019-10-22</lastmod>
      <changefreq>daily</changefreq>
     </url>
     <url>
-     <loc>https://corda.web3j.io/exampleGenerate/</loc>
+     <loc>https://corda.web3j.io/support/</loc>
      <lastmod>2019-10-22</lastmod>
      <changefreq>daily</changefreq>
     </url>

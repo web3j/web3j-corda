@@ -38,7 +38,7 @@
         <meta name="lang:search.tokenizer" content="[\s\-]+">
       
       <link rel="shortcut icon" href="../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.0.4, mkdocs-material-4.4.2">
+      <meta name="generator" content="mkdocs-1.0.4, mkdocs-material-4.4.3">
     
     
       
@@ -274,7 +274,7 @@
 
 
   <li class="md-nav__item">
-    <a href="../getting_started/" title="Getting Started" class="md-nav__link">
+    <a href="../dependencies/" title="Getting Started" class="md-nav__link">
       Getting Started
     </a>
   </li>
@@ -313,15 +313,15 @@
     <ul class="md-nav__list" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#using-corda-api" class="md-nav__link">
-    Using Corda API
+  <a href="#using-the-web3j-cordapp-wrapper" class="md-nav__link">
+    Using the Web3j CorDapp wrapper
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#using-the-web3j-cordapp-wrapper" class="md-nav__link">
-    Using the web3j CorDapp wrapper
+  <a href="#using-corda-api" class="md-nav__link">
+    Using Corda API
   </a>
   
 </li>
@@ -367,8 +367,8 @@
 
 
   <li class="md-nav__item">
-    <a href="../usage/" title="Using the wrappers" class="md-nav__link">
-      Using the wrappers
+    <a href="../usage/" title="Working with Client Wrappers" class="md-nav__link">
+      Working with Client Wrappers
     </a>
   </li>
 
@@ -403,8 +403,8 @@
 
 
   <li class="md-nav__item">
-    <a href="../exampleCreate/" title="Examples To Create New" class="md-nav__link">
-      Examples To Create New
+    <a href="../examples/" title="Examples" class="md-nav__link">
+      Examples
     </a>
   </li>
 
@@ -415,8 +415,8 @@
 
 
   <li class="md-nav__item">
-    <a href="../exampleGenerate/" title="Examples To Generate" class="md-nav__link">
-      Examples To Generate
+    <a href="../support/" title="Support" class="md-nav__link">
+      Support
     </a>
   </li>
 
@@ -442,15 +442,15 @@
     <ul class="md-nav__list" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#using-corda-api" class="md-nav__link">
-    Using Corda API
+  <a href="#using-the-web3j-cordapp-wrapper" class="md-nav__link">
+    Using the Web3j CorDapp wrapper
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#using-the-web3j-cordapp-wrapper" class="md-nav__link">
-    Using the web3j CorDapp wrapper
+  <a href="#using-corda-api" class="md-nav__link">
+    Using Corda API
   </a>
   
 </li>
@@ -475,22 +475,24 @@
                 
                 
                 <h1 id="connect-to-a-corda-node">Connect to a Corda Node</h1>
-<p>To print all the nodes connected to the current node:</p>
-<pre><code class="kotlin">val service = CordaService(&quot;http://localhost:9000/&quot;) // URL exposed by BRAID service
+<p>Initialise a connection, and create our Corda client service:</p>
+<pre><code class="kotlin">val service = CordaService(&quot;http://localhost:9000/&quot;) // URL exposed by Corda OpenAPI connector
 val corda = Corda.build(service)
-corda.api.network.nodes.findAll()
+</code></pre>
+
+<p>To print all the nodes connected to the current node:</p>
+<pre><code class="kotlin">val nodes = corda.api.network.nodes.findAll()
 </code></pre>
 
 <p>To query the list of all running CorDapps:</p>
-<pre><code class="kotlin">val service = CordaService(&quot;http://localhost:9000/&quot;) // URL exposed by BRAID service
-val corda = Corda.build(service)
-corda.api.corDapps.findAll()
+<pre><code class="kotlin">val corDapps = corda.api.corDapps.findAll()
 </code></pre>
 
-<p>To start a flow there are two options depending on whether you want to use a generated CorDapp wrapper
-or just the Corda API directly:</p>
+<p>To start a flow there are two options depending on whether you want to use a generated CorDapp wrapper or just the Corda API directly:</p>
+<h3 id="using-the-web3j-cordapp-wrapper">Using the Web3j CorDapp wrapper</h3>
+<p>Please refer on how to use client wrappers in a <a href="../usage/">type-safe way</a></p>
 <h3 id="using-corda-api">Using Corda API</h3>
-<p>This way works but is not type-safe, so can lead to runtime exceptions:</p>
+<p>Due to the lack of type-safety, this is not recommended as it can lead to runtime exceptions:</p>
 <pre><code class="kotlin">// Initialise the parameters of the flow 
 val params = InitiatorParameters(&quot;$1&quot;, &quot;O=PartyA, L=London, C=GB&quot;, false)
 
@@ -501,9 +503,6 @@ val issue = corda.api
 // Type-conversions with potential runtime exception!
 var signedTx = issue.start(parameters).convert&lt;SignedTransaction&gt;()
 </code></pre>
-
-<h3 id="using-the-web3j-cordapp-wrapper">Using the web3j CorDapp wrapper</h3>
-<p>Please refer on how to use client wrappers in a <a href="../usage/">type-safe way</a></p>
                 
                   
                 
@@ -524,7 +523,7 @@ var signedTx = issue.start(parameters).convert&lt;SignedTransaction&gt;()
     <div class="md-footer-nav">
       <nav class="md-footer-nav__inner md-grid">
         
-          <a href="../getting_started/" title="Getting Started" class="md-flex md-footer-nav__link md-footer-nav__link--prev" rel="prev">
+          <a href="../dependencies/" title="Getting Started" class="md-flex md-footer-nav__link md-footer-nav__link--prev" rel="prev">
             <div class="md-flex__cell md-flex__cell--shrink">
               <i class="md-icon md-icon--arrow-back md-footer-nav__button"></i>
             </div>
@@ -577,7 +576,7 @@ var signedTx = issue.start(parameters).convert&lt;SignedTransaction&gt;()
       
     </div>
     
-      <script src="../assets/javascripts/application.c648116f.js"></script>
+      <script src="../assets/javascripts/application.ac79c3b0.js"></script>
       
       <script>app.initialize({version:"1.0.4",url:{base:".."}})</script>
       
