@@ -38,7 +38,7 @@
         <meta name="lang:search.tokenizer" content="[\s\-]+">
       
       <link rel="shortcut icon" href="../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.0.4, mkdocs-material-4.4.3">
+      <meta name="generator" content="mkdocs-1.0.4, mkdocs-material-4.4.2">
     
     
       
@@ -209,6 +209,10 @@
       
         
       
+        
+      
+        
+      
     </ul>
   </div>
 </nav>
@@ -266,9 +270,38 @@
       
     
     
+      <label class="md-nav__link md-nav__link--active" for="__toc">
+        Quickstart
+      </label>
+    
     <a href="./" title="Quickstart" class="md-nav__link md-nav__link--active">
       Quickstart
     </a>
+    
+      
+<nav class="md-nav md-nav--secondary">
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">Table of contents</label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#web3j-corda-cli" class="md-nav__link">
+    web3j-corda CLI
+  </a>
+  
+</li>
+      
+      
+      
+      
+      
+    </ul>
+  
+</nav>
     
   </li>
 
@@ -339,6 +372,18 @@
 
 
   <li class="md-nav__item">
+    <a href="../network/" title="Network Queries" class="md-nav__link">
+      Network Queries
+    </a>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
     <a href="../command_line_tools/" title="Command Line Tools" class="md-nav__link">
       Command Line Tools
     </a>
@@ -351,8 +396,20 @@
 
 
   <li class="md-nav__item">
-    <a href="../modules/" title="Modules" class="md-nav__link">
-      Modules
+    <a href="../exampleCreate/" title="Examples To Create New" class="md-nav__link">
+      Examples To Create New
+    </a>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../exampleGenerate/" title="Examples To Generate" class="md-nav__link">
+      Examples To Generate
     </a>
   </li>
 
@@ -374,6 +431,22 @@
     
   
   
+    <label class="md-nav__title" for="__toc">Table of contents</label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#web3j-corda-cli" class="md-nav__link">
+    web3j-corda CLI
+  </a>
+  
+</li>
+      
+      
+      
+      
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -388,7 +461,26 @@
                 
                 
                 <h1 id="quick-start">Quick start</h1>
-<p>A <a href="https://gitlab.com/web3j/corda-samples">web3j-corda sample project</a> is available that demonstrates a number of core features of web3j-corda, including:</p>
+<h2 id="web3j-corda-cli">web3j-corda CLI</h2>
+<p>Install the web3j-corda binary.</p>
+<p>To get the latest version on Mac OS or Linux, type the following in your terminal:</p>
+<pre><code class="bash">curl -L https://getcorda.web3j.io | sh
+</code></pre>
+
+<p>Then to create a new project, simply run:</p>
+<pre><code class="zsh">web3j-corda new -o ~/template/cordapp -n Sample -p &lt;package-name&gt;
+</code></pre>
+
+<p>Or, to generate client wrappers for an existing CorDapp, run:</p>
+<pre><code class="zsh">web3j-corda generate -d &lt;path-existing-cordapp&gt; -o &lt;output-dir&gt; -p &lt;package-name&gt;
+</code></pre>
+
+<p>Then to build your project run:</p>
+<pre><code class="zsh">./gradle build
+</code></pre>
+
+<p>For more information on using the web3j-corda CLI, head to the <a href="../command_line_tools/">CLI section</a>.</p>
+<p>The generated Corda projects demonstrate a number of core features of <code>web3j-corda</code>, including:</p>
 <ul>
 <li>Generate CorDapp client wrappers for deployed CorDapps.</li>
 <li>Interact with a CorDapp listing its nodes and starting flows.</li>
@@ -453,7 +545,7 @@
       
     </div>
     
-      <script src="../assets/javascripts/application.ac79c3b0.js"></script>
+      <script src="../assets/javascripts/application.c648116f.js"></script>
       
       <script>app.initialize({version:"1.0.4",url:{base:".."}})</script>
       
