@@ -20,9 +20,9 @@ abstract class BaseCommand : Runnable {
     @Option(
         names = ["-p", "--package-name"],
         description = ["Generated code package name"],
-        required = false
+        required = true
     )
-    var packageName: String = ""
+    lateinit var packageName: String
 
     @Option(
         names = ["-o", "--output-dir"],
