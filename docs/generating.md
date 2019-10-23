@@ -21,7 +21,7 @@ task generateCorDappWrappers(type: JavaExec, group: 'web3j') {
 
     args 'generate', 
             '--package-name', project.group,
-            '--cordapps-dir', "$projectDir",
+            '--cordapps-dir', projectDir,
             '--output-dir', "$projectDir/clients"
 }
 ```
