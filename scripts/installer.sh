@@ -107,6 +107,7 @@ completed() {
   echo "https://corda.web3j.io "
   echo "To use web3j-corda in your current shell run:"
   echo "source \$HOME/.web3j_corda/source.sh "
+  printf '\033[0m'
   exit 0
 }
 
