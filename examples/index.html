@@ -478,14 +478,46 @@
 <h3 id="creating-a-template-cordapp-and-client-wrappers">Creating a template CorDapp and client wrappers</h3>
 <p><a href="../quickstart/">Install</a> the <code>web3j-corda</code> CLI. </p>
 <p>Run the following command :</p>
-<pre><code class="shell">$ web3j-corda new -n Sample -o ~/corda/gen -p org.test.web3j.corda
+<pre><code class="shell">$ web3j-corda new -n Sample -o &lt;destDir&gt; -p org.web3j.corda
 </code></pre>
 
+<p>This will create a new template Kotlin CorDapp in <code>&lt;destDir&gt;</code>, with client wrappers generated in <code>&lt;destDir&gt;/clients</code>.</p>
+<p>The business logic for the flow can be added in the following file:</p>
+<ul>
+<li><code>workflows/src/main/kotlin/org/web3j/corda/flows/Flows.kt</code></li>
+</ul>
+<p>The flow state can be found in:</p>
+<ul>
+<li><code>contracts/src/main/kotlin/org/web3j/corda/states/SampleState.kt</code></li>
+</ul>
+<p>The contract file can be found in:</p>
+<ul>
+<li><code>contracts/src/main/kotlin/org/web3j/corda/contracts/SampleContract.kt</code></li>
+</ul>
+<p>The template integration test can be found at:</p>
+<ul>
+<li><code>clients/src/test/kotlin/org/web3j/corda/workflows/api/WorkflowsTest.kt</code></li>
+</ul>
+<p>In the template integration test you'll need to define a network, such as the following:</p>
+<pre><code class="kotlin">network = network {
+            baseDir = File(System.getProperty(&quot;user.dir&quot;)).parentFile
+            nodes {
+                party {
+                    name = &quot;O=PartyA, L=London, C=GB&quot;
+                }
+            }
+        }
+</code></pre>
+
+<p>Once you've added business logic for the flow and made any changes you wish to make to the contracts and states, you need to run the following Gradle task to regenerate the client, and then run the integration test:</p>
+<p><code>./gradlew generateCorDappWrappers test</code></p>
 <h3 id="generating-client-wrappers-for-existing-cordapps">Generating client wrappers for existing CorDapps</h3>
 <p><a href="../quickstart/">Install</a> the <code>web3j-corda</code> executable. </p>
 <p>Provided we have the <code>Obligation</code> CorDapp at the location <code>~/obligation</code>, we can execute the following command to generate client wrappers: </p>
 <pre><code class="shell">$ web3j-corda generate -d ~/obligation -o ~/obligation/clients -p org.test.web3j.corda
 </code></pre>
+
+<p>This will generate the client wrappers in the provided output directory <code>~/obligation/clients</code>.</p>
                 
                   
                 
