@@ -28,7 +28,7 @@ Then to build your project run:
 ./gradle build
 ```
 
-For more information on using the web3j-corda CLI, head to the [CLI section](command_line_tools.md).
+For more information on using the web3j-corda CLI, head to the [Examples section](examples.md).
 
 The generated Corda project demonstrate a number of core features of `web3j-corda`, including:
 

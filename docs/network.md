@@ -4,7 +4,7 @@ Network queries
 Once connected to a node, there are a number of network queries that can be run 
 via web3j-corda.
 
-To initialise the connection to the node, refer to the section on (Connecting to a Corda Node)[connecting_to_node.md).
+To initialise the connection to the node, refer to the section on [Connecting to a Corda Node](connecting_to_node.md).
 
 - To query all the nodes connected to the current node:
 
