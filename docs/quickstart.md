@@ -13,7 +13,7 @@ curl -L https://getcorda.web3j.io | bash
 Then to create a new project, simply run:
 
 ```shell
-web3j-corda new -o ~/template/cordapp -n <corDappName> -p <package-name>
+web3j-corda new -o <output-dir> -n <corDappName> -p <package-name>
 ```
 
 Or, to generate client wrappers for an existing CorDapp, run:
