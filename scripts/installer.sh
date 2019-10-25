@@ -1,7 +1,25 @@
 #!/bin/bash
-web3j_corda_version="0.1.0"
+
 installed_flag=0
 local=~/
+
+project_version() {
+  file="../gradle.properties"
+  if [ -f "$file" ]; then
+    # shellcheck disable=SC2034
+    while IFS='=' read -r key value; do
+      key=$(echo "$key" | tr '.' '_')
+      eval "${key}"=\$value
+    done <"$file"
+    # shellcheck disable=SC2154
+    echo "${version}"
+  else
+    exit 1
+  fi
+}
+
+web3j_corda_version="$(project_version)"
+echo "$web3j_corda_version"
 
 check_if_installed() {
   if [ -x "$(command -v web3j-corda)" ] &>/dev/null; then
@@ -21,16 +39,16 @@ download_web3j_corda() {
     chmod +x "$HOME/.web3j_corda/source.sh"
     echo "Removing tar file ..."
     rm "$HOME/.web3j_corda/web3j-corda-${web3j_corda_version}.tar"
- else
-  echo "Looks like there was an error while trying to download web3j_corda"
-  exit 0
- fi
+  else
+    echo "Looks like there was an error while trying to download web3j_corda"
+    exit 0
+  fi
 }
 
 check_version() {
   version_string=$(web3j-corda --version)
   echo "$version_string"
-  if [[ $version_string < ${web3j_corda_version} ]] ; then
+  if [[ $version_string < ${web3j_corda_version} ]]; then
     echo "Your web3j-corda version is not up to date."
     get_user_input
   else
@@ -40,7 +58,7 @@ check_version() {
 }
 
 get_user_input() {
-  while read -p "Would you like to update web3j-corda ? [y]es | [n]o : " user_input ; do
+  while read -p "Would you like to update web3j-corda ? [y]es | [n]o : " user_input; do
     case $user_input in
     y)
       echo "Updating web3j-corda ..."
@@ -92,9 +110,9 @@ source_web3j_corda() {
 }
 
 clean_up() {
-  if [ -d "${local}.web3j_corda" ] ; then
-  rm -r "${local}.web3j_corda" &>/dev/null
-  echo "Deleting older installation ..."
+  if [ -d "${local}.web3j_corda" ]; then
+    rm -r "${local}.web3j_corda" &>/dev/null
+    echo "Deleting older installation ..."
   fi
 }
 
