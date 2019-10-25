@@ -26,6 +26,5 @@ interface StartableFlow : Flow {
 
     @POST
     @Produces(APPLICATION_JSON)
-    @Consumes(APPLICATION_JSON)
     fun start(): Any
 }
