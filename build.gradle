@@ -312,7 +312,7 @@ subprojects {
                     sync = true
                     user = ossrhUsername
                     password = ossrhPassword
-                    close = '1'
+                    close = '0'
                 }
             }
         }

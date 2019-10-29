@@ -49,6 +49,8 @@ To generate a web3j-corda client wrappers to existing CorDapps:
 web3j-corda generate (--url=<openApiUrl> | --cordapps-dir=<corDapps-dir>) --output-dir=<output-dir> --package-name=<packageName>
 ```
 
+For further instructions, head to the [Examples](https://corda.web3j.io) section in the docs.
+
 ## Getting started
 
 Add the relevant dependency to your project:
