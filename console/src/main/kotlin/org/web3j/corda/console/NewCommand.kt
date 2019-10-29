@@ -64,6 +64,7 @@ class NewCommand : BaseCommand() {
             }
             packageName = this@NewCommand.packageName
             outputDir = File("${this@NewCommand.outputDir}/clients")
+            invokedFromNewCommand = true
             run()
         }
         println("Sample CorDapp created with name: $corDappName at location: $outputDir")

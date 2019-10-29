@@ -38,7 +38,8 @@ class CorDappClientGenerator(
     private val packageName: String,
     private val openApiDef: String,
     private val outputDir: File,
-    private val generateTests: Boolean
+    private val generateTests: Boolean,
+    private val invokedFromNewCommand: Boolean
 ) : DefaultGenerator(), CordaGenerator {
 
     override fun generate(): List<File> {
@@ -59,7 +60,7 @@ class CorDappClientGenerator(
         configureTypeMappings()
         opts(
             ClientOptInput()
-                .config(CorDappClientCodegen(packageName, outputDir, typeMapping, cordaMapping))
+                .config(CorDappClientCodegen(packageName, outputDir, typeMapping, cordaMapping, invokedFromNewCommand))
                 .opts(ClientOpts())
                 .openAPI(result.openAPI)
         )

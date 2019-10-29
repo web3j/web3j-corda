@@ -36,7 +36,7 @@ class CorDappClientGeneratorTest {
             openStream().use { InputStreamReader(it).readText() }
         } ?: fail { "corda-api.json" }
 
-        CorDappClientGenerator("org.web3j.corda", definition, outputDir, true).generate().apply {
+        CorDappClientGenerator("org.web3j.corda", definition, outputDir, true, false).generate().apply {
             assertThat(map { it.absolutePath }).containsAll(
                 File(outputDir, KOTLIN_SOURCE.format("main", "core", "CordaCore", "")).absolutePath,
                 File(outputDir, KOTLIN_SOURCE.format("test", "core", "CordaCore", "Test")).absolutePath,

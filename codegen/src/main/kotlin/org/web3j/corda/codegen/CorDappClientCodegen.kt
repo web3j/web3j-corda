@@ -31,7 +31,8 @@ class CorDappClientCodegen(
     packageName: String,
     outputDir: File,
     typeMapping: Map<String, String>,
-    private val cordaMapping: Map<String, String>
+    private val cordaMapping: Map<String, String>,
+    invokedFromNewCommand: Boolean
 ) : AbstractKotlinCodegen() {
 
     init {
@@ -45,7 +46,11 @@ class CorDappClientCodegen(
         outputFolder = outputDir.absolutePath
         modelTemplateFiles["model.mustache"] = ".kt"
         apiTemplateFiles["cordapp_client.mustache"] = ".kt"
-        apiTestTemplateFiles["cordapp_client_test.mustache"] = ".kt"
+        if (invokedFromNewCommand) {
+            apiTestTemplateFiles["cordapp_client_new_test.mustache"] = ".kt"
+        } else {
+            apiTestTemplateFiles["cordapp_client_test.mustache"] = ".kt"
+        }
         templateDir = TEMPLATE_DIR
         embeddedTemplateDir = TEMPLATE_DIR
         allowUnicodeIdentifiers = true

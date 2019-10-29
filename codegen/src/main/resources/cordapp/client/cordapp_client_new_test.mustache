@@ -1,0 +1,40 @@
+package {{apiPackage}}
+
+{{#imports}}import {{import}}
+{{/imports}}
+
+import org.junit.jupiter.api.Assertions.assertEquals
+
+import javax.annotation.Generated
+import org.junit.jupiter.api.Test
+import org.web3j.corda.network.network
+import org.web3j.corda.network.nodes
+import org.web3j.corda.network.party
+import java.io.File
+
+@Generated(
+value = ["{{generator}}"],
+date = "{{currentDate}}"
+)
+class {{classname}}Test {
+
+    var network = network {
+            baseDir = File(System.getProperty("user.dir")).parentFile
+            nodes {
+                party {
+                    name = "O=PartyA, L=London, C=GB"
+                }
+            }
+        }
+
+    val text = "template"
+    var payload = InitiatorPayload(text)
+
+    @Test
+    fun `start the Initiator flow`() {
+
+    Workflows.load(network.nodes[0].corda.service).flows.initiator.start(payload).apply {
+            assertEquals("Hello from the flow with $text", this)
+        }
+    }
+}

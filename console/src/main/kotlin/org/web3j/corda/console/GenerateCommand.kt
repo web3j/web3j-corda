@@ -47,6 +47,8 @@ class GenerateCommand : BaseCommand() {
     )
     var openApiVersion = v3_0_1
 
+    var invokedFromNewCommand = false
+
     override fun run() {
         if (cordaResource.isCorDappsDirInitialized()) {
             generateOpenApiDef()
@@ -57,7 +59,8 @@ class GenerateCommand : BaseCommand() {
                 packageName,
                 this,
                 outputDir,
-                cordaResource.isCorDappsDirInitialized()
+                cordaResource.isCorDappsDirInitialized(),
+                invokedFromNewCommand
             ).generate()
         }
         println("CorDapp client generated at location: $outputDir")
