@@ -66,17 +66,17 @@ class CorDappGenerator(
     private fun generateTemplateContract(): List<File> {
         return listOf(
             generateFromTemplate(
-                "contracts/src/main/kotlin/${packageName.replace(".", "/")}/contracts",
+                "${stubPath.format("contracts", "main")}contracts",
                 "${corDappName}Contract.kt",
                 mustacheTemplate("contracts/contract.mustache")
             ),
             generateFromTemplate(
-                "contracts/src/main/kotlin/${packageName.replace(".", "/")}/states",
+                "${stubPath.format("contracts", "main")}states",
                 "${corDappName}State.kt",
                 mustacheTemplate("contracts/state.mustache")
             ),
             generateFromTemplate(
-                "contracts/src/test/kotlin/${packageName.replace(".", "/")}/contracts",
+                "${stubPath.format("contracts", "test")}contracts",
                 "ContractTests.kt",
                 mustacheTemplate("contracts/contract_test.mustache")
             ),
@@ -91,17 +91,17 @@ class CorDappGenerator(
     private fun generateTemplateFlow(): List<File> {
         return listOf(
             generateFromTemplate(
-                "workflows/src/main/kotlin/${packageName.replace(".", "/")}/flows",
+                "${stubPath.format("workflows", "main")}flows",
                 "Flows.kt",
                 mustacheTemplate("workflows/flow.mustache")
             ),
             generateFromTemplate(
-                "workflows/src/test/kotlin/${packageName.replace(".", "/")}",
+                stubPath.format("workflows", "test"),
                 "FlowTests.kt",
                 mustacheTemplate("workflows/flow_test.mustache")
             ),
             generateFromTemplate(
-                "workflows/src/test/kotlin/${packageName.replace(".", "/")}",
+                stubPath.format("workflows", "test"),
                 "ContractTests.kt",
                 mustacheTemplate("workflows/flow_contract_test.mustache")
             ),
@@ -111,7 +111,7 @@ class CorDappGenerator(
                 mustacheTemplate("workflows/gradle_build.mustache")
             ),
             generateFromTemplate(
-                "workflows/src/test/kotlin/${packageName.replace(".", "/")}",
+                stubPath.format("workflows", "test"),
                 "NodeDriver.kt",
                 mustacheTemplate("workflows/node_driver.mustache")
             )
@@ -119,11 +119,13 @@ class CorDappGenerator(
     }
 
     private fun generateClientTests(): List<File> {
-        return listOf(generateFromTemplate(
-            "clients/src/test/kotlin/${packageName.replace(".", "/")}/workflows/api",
-            "WorkflowsTest.kt",
-            mustacheTemplate("client/cordapp_client_new_test.mustache")
-        ))
+        return listOf(
+            generateFromTemplate(
+                stubPath.format("clients", "test") + "workflows${File.separator}api",
+                "WorkflowsTest.kt",
+                mustacheTemplate("client/cordapp_client_new_test.mustache")
+            )
+        )
     }
 
     private fun generateFromTemplate(path: String, name: String, template: Template): File {
@@ -150,6 +152,9 @@ class CorDappGenerator(
             compiler.compile(InputStreamReader(this))
         } ?: throw IllegalStateException("Template not found: $TEMPLATE_DIR/$file")
     }
+
+    private val stubPath = "%s${File.separator}src${File.separator}%s${File.separator}kotlin${File.separator}" +
+            packageName.replace(".", File.separator) + File.separator
 
     companion object {
         private const val TEMPLATE_DIR = "cordapp"
