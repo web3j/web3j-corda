@@ -9,12 +9,12 @@ import net.corda.core.utilities.ProgressTracker
 // *********
 @InitiatingFlow
 @StartableByRPC
-class Initiator : FlowLogic<Unit>() {
+class Initiator(private val input: String) : FlowLogic<String>() {
     override val progressTracker = ProgressTracker()
 
     @Suspendable
-    override fun call() {
-        // Initiator flow logic goes here.
+    override fun call(): String {
+        return "Hello from flow with $input"
     }
 }
 
