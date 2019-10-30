@@ -3,23 +3,7 @@
 installed_flag=0
 local=~/
 
-project_version() {
-  file="../gradle.properties"
-  if [ -f "$file" ]; then
-    # shellcheck disable=SC2034
-    while IFS='=' read -r key value; do
-      key=$(echo "$key" | tr '.' '_')
-      eval "${key}"=\$value
-    done <"$file"
-    # shellcheck disable=SC2154
-    echo "${version}"
-  else
-    exit 1
-  fi
-}
-
-web3j_corda_version="$(project_version)"
-echo "$web3j_corda_version"
+web3j_corda_version="0.1.2"
 
 check_if_installed() {
   if [ -x "$(command -v web3j-corda)" ] &>/dev/null; then
