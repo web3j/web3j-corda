@@ -301,6 +301,7 @@ subprojects {
         key = bintrayKey
         publications = ['maven']
         publish = true
+        override = true
         pkg {
             repo = 'maven'
             name = 'org.web3j.corda'
