@@ -47,6 +47,13 @@ class GenerateCommand : BaseCommand() {
     )
     var openApiVersion = v3_0_1
 
+    @Option(
+        names = ["-t", "--generate-tests"],
+        description = ["Generate client stubbed tests"],
+        required = false
+    )
+    var generateTests = true
+
     override fun run() {
         if (cordaResource.isCorDappsDirInitialized()) {
             generateOpenApiDef()
@@ -57,7 +64,7 @@ class GenerateCommand : BaseCommand() {
                 packageName,
                 this,
                 outputDir,
-                cordaResource.isCorDappsDirInitialized()
+                generateTests
             ).generate()
         }
         println("CorDapp client generated at location: $outputDir")

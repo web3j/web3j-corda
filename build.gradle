@@ -277,6 +277,14 @@ subprojects {
                     password ossrhPassword
                 }
             }
+            maven {
+                name = 'releases'
+                url = 'https://oss.sonatype.org/service/local/staging/deploy/maven2/'
+                credentials {
+                    username ossrhUsername
+                    password ossrhPassword
+                }
+            }
         }
     }
 
@@ -304,7 +312,7 @@ subprojects {
                     sync = true
                     user = ossrhUsername
                     password = ossrhPassword
-                    close = '0'
+                    close = '1'
                 }
             }
         }

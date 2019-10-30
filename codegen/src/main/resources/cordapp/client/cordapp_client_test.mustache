@@ -6,6 +6,10 @@ package {{apiPackage}}
 import javax.annotation.Generated
 import org.junit.jupiter.api.Test
 import org.web3j.corda.network.CordaNetwork
+import org.web3j.corda.network.network
+import org.web3j.corda.network.nodes
+import org.web3j.corda.network.party
+import java.io.File
 
 @Generated(
     value = ["{{generator}}"],
@@ -13,8 +17,14 @@ import org.web3j.corda.network.CordaNetwork
 )
 class {{classname}}Test {
 
-    // TODO Initialize network
-    lateinit var network: CordaNetwork
+    var network = network {
+            baseDir = File(System.getProperty("user.dir")).parentFile
+            nodes {
+                party {
+                    name = "O=PartyA, L=London, C=GB"
+                }
+            }
+        }
 
 {{#operations}}
     {{#flows}}

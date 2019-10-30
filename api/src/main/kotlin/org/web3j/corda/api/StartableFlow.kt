@@ -15,12 +15,16 @@ package org.web3j.corda.api
 import javax.ws.rs.Consumes
 import javax.ws.rs.POST
 import javax.ws.rs.Produces
-import javax.ws.rs.core.MediaType
+import javax.ws.rs.core.MediaType.APPLICATION_JSON
 
 interface StartableFlow : Flow {
 
     @POST
-    @Produces(MediaType.APPLICATION_JSON)
-    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(APPLICATION_JSON)
+    @Consumes(APPLICATION_JSON)
     fun start(parameters: Any): Any
+
+    @POST
+    @Produces(APPLICATION_JSON)
+    fun start(): Any
 }

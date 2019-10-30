@@ -19,6 +19,9 @@ import java.io.FileOutputStream
 import java.io.InputStreamReader
 import java.io.OutputStreamWriter
 import java.io.PrintWriter
+import java.time.OffsetDateTime
+import java.time.ZoneOffset
+import java.time.format.DateTimeFormatter
 
 class CorDappGenerator(
     private val packageName: String,
@@ -33,9 +36,11 @@ class CorDappGenerator(
         context["packageName"] = packageName
         context["corDappName"] = corDappName
         context["web3jCordaVersion"] = version
+        context["generator"] = "org.web3j.corda.codegen.CorDappGenerator"
+        context["currentDate"] = OffsetDateTime.now(ZoneOffset.UTC).format(DateTimeFormatter.ISO_DATE_TIME)
         CordaGeneratorUtils.addLambdas(context)
 
-        return generateTemplateFlow() + generateTemplateContract() + generateGradleFiles()
+        return generateTemplateFlow() + generateTemplateContract() + generateGradleFiles() + generateClientTests()
     }
 
     private fun generateGradleFiles(): List<File> {
@@ -111,6 +116,14 @@ class CorDappGenerator(
                 mustacheTemplate("workflows/node_driver.mustache")
             )
         )
+    }
+
+    private fun generateClientTests(): List<File> {
+        return listOf(generateFromTemplate(
+            "clients/src/test/kotlin/${packageName.replace(".", "/")}/api",
+            "WorkflowsTest.kt",
+            mustacheTemplate("client/cordapp_client_new_test.mustache")
+        ))
     }
 
     private fun generateFromTemplate(path: String, name: String, template: Template): File {
