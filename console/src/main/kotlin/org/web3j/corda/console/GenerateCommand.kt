@@ -48,7 +48,7 @@ class GenerateCommand : BaseCommand() {
     var openApiVersion = v3_0_1
 
     @Option(
-        names = ["-t", "--generate-test"],
+        names = ["-t", "--generate-tests"],
         description = ["Generate client stubbed tests"],
         required = false
     )
