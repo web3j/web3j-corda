@@ -1,3 +1,5 @@
+description = 'Web3j Corda RPC and Network Map APIs for the Corda blockchain platform.'
+
 dependencies {
     api project(":web3j-corda-common")
     api group: 'jakarta.ws.rs', name: 'jakarta.ws.rs-api', version: versions.jaxrs
