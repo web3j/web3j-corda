@@ -12,7 +12,7 @@
  */
 package org.web3j.corda.model
 
-data class Error(
+data class InvocationError(
     /**
      * The error message.
      * */
