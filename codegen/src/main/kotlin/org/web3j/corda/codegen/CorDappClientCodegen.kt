@@ -13,10 +13,6 @@
 package org.web3j.corda.codegen
 
 import io.swagger.v3.oas.models.Operation
-import java.io.File
-import java.time.OffsetDateTime
-import java.time.ZoneOffset.UTC
-import java.time.format.DateTimeFormatter.ISO_DATE_TIME
 import org.openapitools.codegen.CodegenConstants
 import org.openapitools.codegen.CodegenConstants.API_PACKAGE
 import org.openapitools.codegen.CodegenModel
@@ -26,6 +22,10 @@ import org.openapitools.codegen.utils.StringUtils.camelize
 import org.web3j.corda.codegen.CordaGeneratorUtils.addLambdas
 import org.web3j.corda.codegen.CordaGeneratorUtils.needToRepackage
 import org.web3j.corda.codegen.CordaGeneratorUtils.repackage
+import java.io.File
+import java.time.OffsetDateTime
+import java.time.ZoneOffset.UTC
+import java.time.format.DateTimeFormatter.ISO_DATE_TIME
 
 class CorDappClientCodegen(
     packageName: String,
@@ -167,10 +167,12 @@ class CorDappClientCodegen(
             additionalProperties[API_PACKAGE] = apiPackage
         }
         objs["flows"] = flows.map {
-            mutableMapOf<String, String>(
+            mutableMapOf<String, Any>(
                 "flowPath" to buildFlowPath(it.path),
                 "flowId" to buildFlowId(it.path),
-                "outputClass" to if (it.returnType.isNullOrBlank()) "Unit" else it.returnType,
+                "hasOutput" to it.hasOutput,
+                "outputClass" to it.returnType,
+                "hasInput" to it.hasInput,
                 "inputClass" to it.bodyParams[0].baseType
             ).apply {
                 if (it.hasConsumes) {
@@ -261,5 +263,11 @@ class CorDappClientCodegen(
 
         private fun buildFlowPath(path: String) = path.split("/".toRegex())[4]
             .replace("$", "\\$")
+
+        private val CodegenOperation.hasOutput: Boolean
+            get() = returnType != null
+        
+        private val CodegenOperation.hasInput: Boolean
+            get() = bodyParams[0].baseType != Any::class.qualifiedName
     }
 }

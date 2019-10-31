@@ -46,10 +46,10 @@ interface {{classname}} : CorDapp {
             /**
              * Start the {{#titlecase}}{{#camelcase}}{{flowId}}{{/camelcase}}{{/titlecase}} flow.
              */
-            @POST
-            @Produces("{{produces}}")
-            @Consumes("{{consumes}}")
-            fun start(parameters: {{inputClass}}): {{outputClass}}
+            @POST{{#hasOutput}}
+            @Produces("{{produces}}"){{/hasOutput}}{{#hasInput}}
+            @Consumes("{{consumes}}"){{/hasInput}}
+            fun start({{#hasInput}}parameters: {{inputClass}}{{/hasInput}}){{#hasOutput}}: {{outputClass}}{{/hasOutput}}
         }
     {{/flows}}
     }
