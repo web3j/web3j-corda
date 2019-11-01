@@ -33,15 +33,7 @@
         },
         "responses": {
           "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "integer",
-                  "format": "int32"
-                }
-              }
-            }
+            "description": "empty response"
           },
           "400": {
             "description": "the server failed to parse the request",

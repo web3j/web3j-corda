@@ -13,6 +13,10 @@
 package org.web3j.corda.codegen
 
 import io.swagger.v3.oas.models.Operation
+import java.io.File
+import java.time.OffsetDateTime
+import java.time.ZoneOffset.UTC
+import java.time.format.DateTimeFormatter.ISO_DATE_TIME
 import org.openapitools.codegen.CodegenConstants
 import org.openapitools.codegen.CodegenConstants.API_PACKAGE
 import org.openapitools.codegen.CodegenModel
@@ -22,10 +26,6 @@ import org.openapitools.codegen.utils.StringUtils.camelize
 import org.web3j.corda.codegen.CordaGeneratorUtils.addLambdas
 import org.web3j.corda.codegen.CordaGeneratorUtils.needToRepackage
 import org.web3j.corda.codegen.CordaGeneratorUtils.repackage
-import java.io.File
-import java.time.OffsetDateTime
-import java.time.ZoneOffset.UTC
-import java.time.format.DateTimeFormatter.ISO_DATE_TIME
 
 class CorDappClientCodegen(
     packageName: String,
@@ -266,7 +266,7 @@ class CorDappClientCodegen(
 
         private val CodegenOperation.hasOutput: Boolean
             get() = returnType != null
-        
+
         private val CodegenOperation.hasInput: Boolean
             get() = bodyParams[0].baseType != Any::class.qualifiedName
     }

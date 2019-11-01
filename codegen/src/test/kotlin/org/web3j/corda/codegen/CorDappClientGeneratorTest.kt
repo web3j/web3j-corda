@@ -17,13 +17,15 @@ import assertk.assertThat
 import assertk.assertions.containsAll
 import assertk.assertions.containsOnly
 import assertk.assertions.exists
+import java.io.File
+import java.io.InputStreamReader
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.fail
 import org.junit.jupiter.api.io.TempDir
+import org.web3j.corda.test.hasName
+import org.web3j.corda.test.hasVoidFunction
 import org.web3j.corda.util.KCompilerClassLoader
-import java.io.File
-import java.io.InputStreamReader
 
 /**
  * TODO Implement more tests and add assertions.
