@@ -28,7 +28,7 @@ import org.openapitools.codegen.DefaultGenerator
 import org.openapitools.codegen.config.GeneratorProperties.setProperty
 import org.web3j.corda.codegen.CordaGeneratorUtils.repackage
 import org.web3j.corda.model.AmountCurrency
-import org.web3j.corda.model.Error
+import org.web3j.corda.model.InvocationError
 import org.web3j.corda.model.core.contracts.Issued
 import org.web3j.corda.model.core.contracts.Issued_issuer
 import org.web3j.corda.util.needToSanitizeCorDappName
@@ -86,10 +86,10 @@ class CorDappClientGenerator(
     private fun configureTypeMappings() {
 
         // Corda types without package
+        typeMapping["InvocationError"] = InvocationError::class.qualifiedName!!
         typeMapping["AmountCurrency"] = AmountCurrency::class.qualifiedName!!
         typeMapping["Issued_issuer"] = Issued_issuer::class.qualifiedName!!
         typeMapping["Issued"] = Issued::class.qualifiedName!!
-        typeMapping["Error"] = Error::class.qualifiedName!!
 
         // Map Corda and Braid model classes to avoid re-generation
         ClassGraph().enableClassInfo().scan().allClasses.apply {

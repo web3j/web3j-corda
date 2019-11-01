@@ -12,22 +12,25 @@
  */
 package org.web3j.corda.codegen
 
+import assertk.all
 import assertk.assertThat
 import assertk.assertions.containsAll
+import assertk.assertions.containsOnly
 import assertk.assertions.exists
 import java.io.File
 import java.io.InputStreamReader
+import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.fail
 import org.junit.jupiter.api.io.TempDir
+import org.web3j.corda.test.hasName
+import org.web3j.corda.test.hasVoidFunction
+import org.web3j.corda.util.KCompilerClassLoader
 
 /**
  * TODO Implement more tests and add assertions.
  */
 class CorDappClientGeneratorTest {
-
-    @TempDir
-    lateinit var outputDir: File
 
     @Test
     fun `generate from Corda API definition`() {
@@ -54,7 +57,39 @@ class CorDappClientGeneratorTest {
         }
     }
 
+    @Test
+    fun `generate from empty Corda API definition`() {
+
+        val definition = javaClass.classLoader.getResource("empty-flow.json")?.run {
+            openStream().use { InputStreamReader(it).readText() }
+        } ?: fail { "empty-flow.json" }
+
+        CorDappClientGenerator("org.web3j.corda", definition, outputDir, false).generate().apply {
+            assertThat(map { it.absolutePath }).containsOnly(
+                File(outputDir, KOTLIN_SOURCE.format("main", "workflows", "Workflows", "")).absolutePath
+            )
+
+            val initiatorClass = "org.web3j.corda.workflows.api.Workflows\$FlowResource\$Initiator"
+            assertThat(classLoader.loadClass(initiatorClass).kotlin).all {
+                hasName("org.web3j.corda.workflows.api.Workflows.FlowResource.Initiator")
+                hasVoidFunction("start")
+            }
+        }
+    }
+
     companion object {
+
+        @TempDir
+        lateinit var outputDir: File
+        lateinit var classLoader: ClassLoader
+
+        @BeforeAll
+        @JvmStatic
+        fun setUp() {
+            val srcDir = File(File(File(outputDir, "src"), "main"), "kotlin")
+            classLoader = KCompilerClassLoader(arrayOf(srcDir.toURI().toURL()), outputDir)
+        }
+
         const val KOTLIN_SOURCE = "src/%s/kotlin/org/web3j/corda/%s/api/%s%s.kt"
     }
 }

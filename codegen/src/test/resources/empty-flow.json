@@ -1,0 +1,86 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "",
+    "description": "",
+    "contact": {},
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:8080/api/rest"
+    }
+  ],
+  "paths": {
+    "/cordapps/workflows/flows/org.web3j.corda.flows.Initiator": {
+      "post": {
+        "tags": [
+          "cordapps"
+        ],
+        "description": "",
+        "operationId": "cordapps_workflows_flows_org.web3j.corda.flows.Initiator",
+        "parameters": [],
+        "requestBody": {
+          "description": "payload",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/generated.org.web3j.corda.flows.InitiatorPayload"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "empty response"
+          },
+          "400": {
+            "description": "the server failed to parse the request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InvocationError"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "the request could not be processed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InvocationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "generated.org.web3j.corda.flows.InitiatorPayload": {
+        "type": "object"
+      },
+      "InvocationError": {
+        "required": [
+          "message",
+          "type"
+        ],
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "description": "the error message"
+          },
+          "type": {
+            "type": "string",
+            "description": "the type of error"
+          }
+        }
+      }
+    }
+  }
+}
