@@ -97,7 +97,7 @@ constructor(
 
     private fun buildClassPath(): String {
         val systemUrls = (javaClass.classLoader as URLClassLoader).urLs
-        return buildClassPath(*urls) + ':' + buildClassPath(*systemUrls)
+        return outputDir.absolutePath + ':' + buildClassPath(*systemUrls)
     }
 
     private fun buildClassPath(vararg urls: URL): String {
@@ -107,10 +107,10 @@ constructor(
     }
 
     private fun createProcess(cmd: List<String>, projectDir: File): Process {
-        val builder = ProcessBuilder(cmd)
-        builder.directory(projectDir)
-        builder.redirectErrorStream(true)
-        return builder.start()
+        return ProcessBuilder(cmd).apply {
+            directory(projectDir)
+            redirectErrorStream(true)
+        }.start()
     }
 
     private fun Process.readOutput() {
