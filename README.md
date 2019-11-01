@@ -61,7 +61,7 @@ Add the relevant dependency to your project:
 <dependency>
     <groupId>org.web3j.corda</groupId>
     <artifactId>web3j-corda-core</artifactId>
-    <version>0.1.0</version>
+    <version>0.1.3</version>
 </dependency>
 ```
 
@@ -69,7 +69,7 @@ Add the relevant dependency to your project:
 
 ```groovy
 dependencies {
-    implementation 'org.web3j.corda:web3j-corda-core:0.1.0'
+    implementation 'org.web3j.corda:web3j-corda-core:0.1.3'
 }
 ```
 

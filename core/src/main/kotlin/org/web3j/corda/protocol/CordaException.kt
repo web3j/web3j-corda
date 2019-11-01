@@ -14,7 +14,7 @@ package org.web3j.corda.protocol
 
 import javax.ws.rs.ClientErrorException
 import javax.ws.rs.core.MediaType
-import org.web3j.corda.model.Error
+import org.web3j.corda.model.InvocationError
 
 /**
  * Corda API exception containing error data.
@@ -31,9 +31,9 @@ class CordaException internal constructor(
             with(exception.response) {
                 // Try to de-serialize the exception error
                 val error = if (hasEntity() && mediaType == MediaType.APPLICATION_JSON_TYPE) {
-                    readEntity(Error::class.java)
+                    readEntity(InvocationError::class.java)
                 } else {
-                    Error(
+                    InvocationError(
                         exception.message ?: statusInfo.reasonPhrase,
                         exception::class.java.canonicalName
                     )
