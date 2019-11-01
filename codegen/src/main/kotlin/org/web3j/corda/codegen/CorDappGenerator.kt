@@ -120,7 +120,7 @@ class CorDappGenerator(
 
     private fun generateClientTests(): List<File> {
         return listOf(generateFromTemplate(
-            "clients/src/test/kotlin/${packageName.replace(".", "/")}/api",
+            "clients/src/test/kotlin/${packageName.replace(".", "/")}/workflows/api",
             "WorkflowsTest.kt",
             mustacheTemplate("client/cordapp_client_new_test.mustache")
         ))
