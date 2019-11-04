@@ -66,8 +66,7 @@ dependencies {
     implementation "info.picocli:picocli:${versions.picocli}"
     implementation "org.gradle:gradle-tooling-api:${versions.gradle}"
 
-    integrationTestImplementation project(path: ':web3j-corda-common', configuration: 'integrationTest')
-    integrationTestImplementation project(':web3j-corda-common').sourceSets.integrationTest.output
+    testImplementation project(':web3j-corda-test')
 }
 
 def generatedResources = "$buildDir/generated-resources/main"

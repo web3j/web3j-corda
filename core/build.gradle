@@ -8,6 +8,5 @@ dependencies {
     implementation group: 'org.glassfish.jersey.media', name: 'jersey-media-json-jackson', version: versions.jersey
     implementation group: 'org.glassfish.jersey.ext', name: 'jersey-proxy-client', version: versions.jersey
 
-    integrationTestImplementation project(path: ':web3j-corda-common', configuration: 'integrationTest')
-    integrationTestImplementation project(':web3j-corda-common').sourceSets.integrationTest.output // FIXME
+    testImplementation project(path: ':web3j-corda-test')
 }

@@ -14,3 +14,6 @@ findProject(':codegen')?.name = 'web3j-corda-codegen'
 
 include 'console'
 findProject(':console')?.name = 'web3j-corda-console'
+
+include 'test'
+findProject(':test')?.name = 'web3j-corda-test'

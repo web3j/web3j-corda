@@ -1,0 +1,17 @@
+description = 'Web3j test libraries for the Corda blockchain platform.'
+
+dependencies {
+    api project(':web3j-corda-core')
+    api "com.willowtreeapps.assertk:assertk-jvm:${versions.assertk}"
+    api 'org.jetbrains.kotlin:kotlin-compiler-embeddable'
+    api group: 'io.bluebank.braid', name: 'braid-corda', version: versions.braid, changing: true
+    
+    api(group: 'net.corda', name: 'corda-node', version: versions.corda){
+        exclude group: 'org.apache.logging.log4j'
+    }
+    
+    implementation "org.gradle:gradle-tooling-api:5.6.2"
+    implementation group: 'com.samskivert', name: 'jmustache', version: versions.jmustache
+    implementation "org.testcontainers:testcontainers:${versions.testcontainers}"
+    implementation "org.testcontainers:junit-jupiter:${versions.testcontainers}"
+}
