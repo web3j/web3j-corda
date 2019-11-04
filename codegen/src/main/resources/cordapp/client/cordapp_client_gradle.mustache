@@ -1,17 +1,31 @@
 dependencies {
     // web3j-corda dependency
-    implementation group: 'org.web3j.corda', name: 'web3j-corda-core', version: web3j_corda_version
+    implementation (group: 'org.web3j.corda', name: 'web3j-corda-core', version: web3j_corda_version) {
+        exclude group: 'com.fasterxml.jackson.core'
+        exclude group: 'org.glassfish.jersey.core'
+        exclude group: 'org.slf4j'
+    }
 
-    testImplementation "org.web3j.corda:web3j-corda-common:${web3j_corda_version}:integration-test"
+    testImplementation ("org.web3j.corda:web3j-corda-common:${web3j_corda_version}:integration-test") {
+        exclude group: 'com.fasterxml.jackson.core'
+        exclude group: 'org.glassfish.jersey.core'
+        exclude group: 'org.slf4j'
+    }
 
-    testImplementation "org.junit.jupiter:junit-jupiter-api:5.4.2"
-    testImplementation "org.testcontainers:testcontainers:1.11.2"
-    testImplementation "io.swagger.core.v3:swagger-core:2.0.9"
-    testImplementation "com.samskivert:jmustache:1.14"
-    testImplementation "org.gradle:gradle-tooling-api:5.6.2"
+    testImplementation "org.junit.jupiter:junit-jupiter-api:${jupiter_version}"
+    testImplementation ("org.testcontainers:testcontainers:${testcontainers_version}") {
+        exclude group: 'org.slf4j'
+    }
+    testImplementation ("io.swagger.core.v3:swagger-core:${swagger3_versions}") {
+        exclude group: 'org.slf4j'
+    }
+    testImplementation "com.samskivert:jmustache:${jmustache_version}"
+    testImplementation ("org.gradle:gradle-tooling-api:${gradle_tooling_version}") {
+        exclude group: 'org.slf4j'
+    }
 
-    testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:5.4.2"
-    testRuntimeOnly "org.junit.vintage:junit-vintage-engine:5.4.2"
+    testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:${jupiter_version}"
+    testRuntimeOnly "org.junit.vintage:junit-vintage-engine:${jupiter_version}"
 }
 
 test {

@@ -13,9 +13,27 @@ cordapp {
 
 dependencies {
     compile "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
-    
+
     // Corda dependencies.
-    cordaCompile "$corda_release_group:corda-core:$corda_release_version"
-    
-    testCompile "$corda_release_group:corda-node-driver:$corda_release_version"
+    cordaCompile("$corda_release_group:corda-core:$corda_release_version") {
+        exclude group: 'com.google.errorprone'
+        exclude group: 'com.google.guava'
+        exclude group: 'com.fasterxml.jackson.core'
+        exclude group: 'com.fasterxml.jackson.dataformat'
+        exclude group: 'com.fasterxml.jackson.module'
+        exclude group: 'org.glassfish.jersey.core'
+        exclude group: 'org.slf4j'
+        exclude group: 'org.yaml'
+    }
+
+    testCompile ("$corda_release_group:corda-node-driver:$corda_release_version") {
+        exclude group: 'com.google.errorprone'
+        exclude group: 'com.google.guava'
+        exclude group: 'com.fasterxml.jackson.core'
+        exclude group: 'com.fasterxml.jackson.dataformat'
+        exclude group: 'com.fasterxml.jackson.module'
+        exclude group: 'org.glassfish.jersey.core'
+        exclude group: 'org.slf4j'
+        exclude group: 'org.yaml'
+    }
 }
