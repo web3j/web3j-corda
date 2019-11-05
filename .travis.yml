@@ -20,7 +20,7 @@ before_install:
   - chmod +x docker-compose
   - sudo mv docker-compose /usr/local/bin
 install:
-  - ./gradlew build -x check --scan --no-daemon
+  - ./gradlew build -x check --no-daemon
 
 jobs:
   include:
@@ -28,7 +28,7 @@ jobs:
       script: "./scripts/integration-tests.sh"
       if: type = pull_request
     - stage: build master
-      script: "./gradlew spotlessCheck check"
+      script: "./gradlew  --no-daemon spotlessCheck check"
       if: branch = master AND NOT type = pull_request
       deploy:
         provider: script
