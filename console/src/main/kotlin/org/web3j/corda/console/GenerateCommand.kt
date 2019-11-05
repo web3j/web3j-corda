@@ -60,6 +60,11 @@ class GenerateCommand : BaseCommand() {
         } else {
             fetchOpenApiDef()
         }.apply {
+
+            org.jetbrains.kotlin.konan.file.File(outputDir.absolutePath, "swagger.json").printWriter().use { out ->
+                out.println(this)
+            }
+
             CorDappClientGenerator(
                 packageName,
                 this,
