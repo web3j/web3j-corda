@@ -4,6 +4,43 @@ plugins {
     id 'application'
     id 'distribution'
     id 'com.github.breadmoirai.github-release'
+    id 'com.github.johnrengelman.shadow'
+}
+
+shadowJar {
+    zip64 = true
+    append 'gradle-wrapper.jar'
+}
+
+task customFatJar(type: Jar) {
+    manifest {
+        attributes 'Main-Class': 'org.web3j.corda.console.CordaCommandMain'
+    }
+    archiveClassifier = 'all'
+    from { configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) } }
+    zip64=true
+    exclude 'META-INF/*.RSA', 'META-INF/*.SF', 'META-INF/*.DSA'
+    with jar
+}
+
+task createStartScripts(type: CreateStartScripts) {
+    outputDir = file('build/sample')
+    mainClassName = 'org.web3j.corda.console.CordaCommandMain'
+    applicationName = 'web3j-corda'
+    classpath = files(customFatJar.archiveFile)
+}
+
+distributions {
+    custom {
+        contents {
+            from(customFatJar) {
+                into 'lib'
+            }
+            from(createStartScripts) {
+                into 'bin'
+            }
+        }
+    }
 }
 
 description = 'Web3j command-line tools for the Corda blockchain platform.'
