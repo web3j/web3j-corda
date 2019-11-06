@@ -24,6 +24,7 @@ import org.web3j.corda.model.core.identity.AbstractParty;
 import org.web3j.corda.model.core.identity.Party;
 import org.web3j.corda.model.core.transactions.SignedTransaction;
 import org.web3j.corda.network.CordaNetwork;
+import org.web3j.corda.obligation.api.Obligation;
 import org.web3j.corda.protocol.Corda;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
