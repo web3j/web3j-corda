@@ -14,12 +14,31 @@ package org.web3j.corda.examples.yo
 
 import assertk.assertThat
 import assertk.assertions.isEqualTo
+import java.io.File
 import org.junit.jupiter.api.Test
-import org.web3j.corda.examples.network
+import org.web3j.corda.network.network
+import org.web3j.corda.network.nodes
+import org.web3j.corda.network.notary
+import org.web3j.corda.network.party
 import org.web3j.corda.yo.YoFlowPayload
 import org.web3j.corda.yo.api.Yo
 
 class YoKotlinTest {
+
+    private val network = network {
+        baseDir = File(javaClass.classLoader.getResource("cordapps")!!.file)
+        nodes {
+            notary {
+                name = "O=Notary, L=London, C=GB"
+            }
+            party {
+                name = "O=PartyA, L=London, C=GB"
+            }
+            party {
+                name = "O=PartyB, L=New York, C=US"
+            }
+        }
+    }
 
     @Test
     fun `send Yo`() {
