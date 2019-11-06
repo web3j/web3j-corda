@@ -1,4 +1,4 @@
-DOCKER_HOST=unix:///var/run/docker.sock DOCKER_TLS_VERIFY=0 docker run -t --rm \
+DOCKER_HOST=unix:///var/run/docker.sock DOCKER_TLS_VERIFY= docker run -t --rm \
           -v "$HOME/.gradle":/root/.gradle/ \
           -v /var/run/docker.sock:/var/run/docker.sock \
           -v "$(pwd)":"$(pwd)" \
