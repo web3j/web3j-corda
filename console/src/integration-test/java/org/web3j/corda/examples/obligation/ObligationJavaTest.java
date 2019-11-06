@@ -24,11 +24,9 @@ import org.web3j.corda.model.core.identity.AbstractParty;
 import org.web3j.corda.model.core.identity.Party;
 import org.web3j.corda.model.core.transactions.SignedTransaction;
 import org.web3j.corda.network.CordaNetwork;
-import org.web3j.corda.obligation.api.Obligation;
 import org.web3j.corda.protocol.Corda;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.web3j.corda.examples.IntegrationTestUtils.getNetwork;
 
 public class ObligationJavaTest {
 
@@ -54,7 +52,7 @@ public class ObligationJavaTest {
 
     @Test
     public void issueObligation() {
-        final Corda corda = getNetwork().getParties().get(0).getCorda();
+        final Corda corda = network.getParties().get(0).getCorda();
 
         final Party partyB =
                 corda.getApi()
