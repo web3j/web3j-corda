@@ -38,6 +38,11 @@ abstract class CordaNode internal constructor(protected val network: CordaNetwor
     lateinit var name: String
 
     /**
+     * Docker image version for this Corda node, by default `latest`.
+     */
+    var cordaVersion: String = CORDA_ZULU_VERSION
+
+    /**
      * Corda P2P port for this node.
      */
     var p2pPort: Int = randomPort()
@@ -88,7 +93,7 @@ abstract class CordaNode internal constructor(protected val network: CordaNetwor
         createNodeConfFiles(nodeDir.resolve("node.conf"))
         saveCertificateFromNetworkMap(nodeDir)
 
-        KGenericContainer(CORDA_ZULU_IMAGE)
+        KGenericContainer("$CORDA_ZULU_IMAGE:$cordaVersion")
             .withNetwork(network.network)
             .withExposedPorts(p2pPort, rpcPort, adminPort)
             .withFileSystemBind(
@@ -165,7 +170,8 @@ abstract class CordaNode internal constructor(protected val network: CordaNetwor
     }
 
     companion object : KLogging() {
-        private const val CORDA_ZULU_IMAGE = "corda/corda-zulu-4.1:latest"
+        private const val CORDA_ZULU_VERSION = "latest"
+        private const val CORDA_ZULU_IMAGE = "corda/corda-zulu-4.1"
 
         private val portRange = 1024..65535
 

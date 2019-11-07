@@ -55,6 +55,14 @@ class CordaNetwork private constructor() {
      */
     lateinit var nodes: List<CordaPartyNode>
 
+    /**
+     * Docker image version for Network Map, by default `latest`.
+     */
+    var mapVersion: String = NETWORK_MAP_VERSION
+
+    /**
+     * Network Map instance to access the API.
+     */
     val map: NetworkMap by lazy {
         NetworkMap.build(CordaService("http://localhost:${mapContainer.getMappedPort(NETWORK_MAP_PORT)}"))
     }
@@ -95,7 +103,7 @@ class CordaNetwork private constructor() {
      * Cordite network map Docker container.
      */
     private val mapContainer: KGenericContainer by lazy {
-        KGenericContainer(NETWORK_MAP_IMAGE)
+        KGenericContainer("$NETWORK_MAP_IMAGE:$mapVersion")
             .withCreateContainerCmdModifier {
                 it.withHostName(mapName)
                 it.withName(mapName)
@@ -170,7 +178,8 @@ class CordaNetwork private constructor() {
     }
 
     companion object {
-        private const val NETWORK_MAP_IMAGE = "cordite/network-map:latest"
+        private const val NETWORK_MAP_VERSION = "latest"
+        private const val NETWORK_MAP_IMAGE = "cordite/network-map"
         private const val NETWORK_MAP_ALIAS = "network-map"
         private const val NETWORK_MAP_PORT = 8080
 
