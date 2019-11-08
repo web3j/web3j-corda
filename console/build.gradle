@@ -7,40 +7,19 @@ plugins {
     id 'com.github.johnrengelman.shadow'
 }
 
+task shadowBugWorkaround(type: Jar) {
+    archiveBaseName = 'nested-gradle-jar'
+    from files(file("${rootDir}/gradle/wrapper/gradle-wrapper.jar"))
+    destinationDir file('build/shadow-bug-workaround')
+}
+
 shadowJar {
+    dependsOn shadowBugWorkaround
     zip64 = true
-    append 'gradle-wrapper.jar'
-}
-
-task customFatJar(type: Jar) {
-    manifest {
-        attributes 'Main-Class': 'org.web3j.corda.console.CordaCommandMain'
-    }
-    archiveClassifier = 'all'
-    from { configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) } }
-    zip64=true
-    exclude 'META-INF/*.RSA', 'META-INF/*.SF', 'META-INF/*.DSA'
-    with jar
-}
-
-task createStartScripts(type: CreateStartScripts) {
-    outputDir = file('build/sample')
-    mainClassName = 'org.web3j.corda.console.CordaCommandMain'
-    applicationName = 'web3j-corda'
-    classpath = files(customFatJar.archiveFile)
-}
-
-distributions {
-    custom {
-        contents {
-            from(customFatJar) {
-                into 'lib'
-            }
-            from(createStartScripts) {
-                into 'bin'
-            }
-        }
-    }
+    // Shadow plugin bug: explodes the nested jar.
+    // Workaround: double-nest the jar.
+    // Refer https://github.com/johnrengelman/shadow/issues/111
+    from shadowBugWorkaround
 }
 
 description = 'Web3j command-line tools for the Corda blockchain platform.'
@@ -158,11 +137,11 @@ githubRelease {
     draft version.endsWith('SNAPSHOT')
     prerelease version.endsWith('SNAPSHOT')
     releaseAssets = [
-            "$buildDir/distributions/$rootProject.name-${version}.zip",
-            "$buildDir/distributions/$rootProject.name-${version}.tar"
+            "$buildDir/distributions/$rootProject.name-shadow-${version}.zip",
+            "$buildDir/distributions/$rootProject.name-shadow-${version}.tar"
     ]
 }
 
 tasks.withType(GithubReleaseTask) {
-    dependsOn 'distZip', 'distTar'
+    dependsOn 'shadowDistZip', 'shadowDistTar'
 }

@@ -149,6 +149,7 @@ subprojects {
                 force(group: 'com.google.errorprone', name: 'error_prone_annotations', version: versions.errorProneAnnotations)
                 force(group: 'com.google.guava', name: 'guava', version: versions.guava)
                 force(group: 'commons-io', name: 'commons-io', version: versions.commonsIo)
+                force(group: 'io.github.classgraph', name: 'classgraph', version: versions.classgraph)
                 force(group: 'io.swagger.core.v3', name: 'swagger-annotations', version: versions.swagger3)
                 force(group: 'io.swagger.core.v3', name: 'swagger-core', version: versions.swagger3)
                 force(group: 'io.swagger.core.v3', name: 'swagger-models', version: versions.swagger3)

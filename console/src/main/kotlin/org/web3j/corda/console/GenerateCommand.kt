@@ -15,6 +15,7 @@ package org.web3j.corda.console
 import io.bluebank.braid.corda.server.BraidDocsMain
 import io.bluebank.braid.core.utils.toJarsClassLoader
 import io.bluebank.braid.core.utils.tryWithClassLoader
+import java.io.File
 import java.net.URL
 import java.nio.charset.StandardCharsets.UTF_8
 import kotlin.streams.toList
@@ -61,9 +62,15 @@ class GenerateCommand : BaseCommand() {
             fetchOpenApiDef()
         }.apply {
 
-            org.jetbrains.kotlin.konan.file.File(outputDir.absolutePath, "swagger.json").printWriter().use { out ->
-                out.println(this)
-            }
+            // Output the swagger file into clients folder
+            File(outputDir.absolutePath)
+                .apply {
+                    mkdirs()
+                    resolve("swagger.json")
+                        .printWriter().use { out ->
+                            out.println(this)
+                        }
+                }
 
             CorDappClientGenerator(
                 packageName,
