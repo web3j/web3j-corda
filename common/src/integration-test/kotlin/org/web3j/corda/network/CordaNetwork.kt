@@ -12,27 +12,24 @@
  */
 package org.web3j.corda.network
 
-import java.io.File
-import java.nio.file.Files
-import java.nio.file.Path
-import java.nio.file.StandardCopyOption.REPLACE_EXISTING
-import java.util.function.Consumer
 import org.gradle.tooling.GradleConnector
 import org.gradle.tooling.ProjectConnection
 import org.gradle.tooling.model.idea.IdeaProject
 import org.gradle.tooling.model.idea.IdeaSingleEntryLibraryDependency
 import org.testcontainers.containers.Network
-import org.testcontainers.containers.wait.strategy.Wait
-import org.web3j.corda.protocol.CordaService
-import org.web3j.corda.protocol.NetworkMap
-import org.web3j.corda.testcontainers.KGenericContainer
 import org.web3j.corda.util.OpenApiVersion.v3_0_1
 import org.web3j.corda.util.isMac
 import org.web3j.corda.util.sanitizeCorDappName
+import java.io.File
+import java.nio.file.Files
+import java.nio.file.Path
+import java.nio.file.StandardCopyOption.REPLACE_EXISTING
+import java.util.function.Consumer
 
 /**
  * Corda network DSK for integration tests web3j CorDapp wrappers.
  */
+@CordaDslMarker
 class CordaNetwork private constructor() {
 
     /**
@@ -46,6 +43,11 @@ class CordaNetwork private constructor() {
     var baseDir: File = File(System.getProperty("user.dir"))
 
     /**
+     * The network map in this network.
+     */
+    lateinit var map: CordaNetworkMap
+
+    /**
      * The nodes in this network.
      */
     lateinit var notaries: List<CordaNotaryNode>
@@ -54,18 +56,6 @@ class CordaNetwork private constructor() {
      * The nodes in this network.
      */
     lateinit var nodes: List<CordaPartyNode>
-
-    /**
-     * Docker image version for Network Map, by default `latest`.
-     */
-    var mapVersion: String = NETWORK_MAP_VERSION
-
-    /**
-     * Network Map instance to access the API.
-     */
-    val map: NetworkMap by lazy {
-        NetworkMap.build(CordaService("http://localhost:${mapContainer.getMappedPort(NETWORK_MAP_PORT)}"))
-    }
 
     /**
      * CorDapp Docker-mapped directory.
@@ -81,7 +71,11 @@ class CordaNetwork private constructor() {
                 // Not a valid Gradle project, copy baseDir
                 baseDir.walkTopDown().forEach {
                     if (it.absolutePath.endsWith(".jar")) {
-                        Files.copy(it.toPath(), File(toFile(), "${sanitizeCorDappName(it.name)}.jar").toPath(), REPLACE_EXISTING)
+                        Files.copy(
+                            it.toPath(),
+                            File(toFile(), "${sanitizeCorDappName(it.name)}.jar").toPath(),
+                            REPLACE_EXISTING
+                        )
                     }
                 }
             }
@@ -95,26 +89,6 @@ class CordaNetwork private constructor() {
      * The internal Docker network.
      */
     internal val network = Network.newNetwork()
-
-    private val mapName = "$NETWORK_MAP_ALIAS-${System.currentTimeMillis()}"
-
-    internal val mapUrl = "http://$mapName:$NETWORK_MAP_PORT"
-    /**
-     * Cordite network map Docker container.
-     */
-    private val mapContainer: KGenericContainer by lazy {
-        KGenericContainer("$NETWORK_MAP_IMAGE:$mapVersion")
-            .withCreateContainerCmdModifier {
-                it.withHostName(mapName)
-                it.withName(mapName)
-            }.withNetwork(network)
-            .withNetworkAliases(mapName)
-            .withEnv("NMS_STORAGE_TYPE", "file")
-            .waitingFor(Wait.forHttp("").forPort(NETWORK_MAP_PORT))
-            .withLogConsumer {
-                CordaNode.logger.info { it.utf8String.trimEnd() }
-            }.apply { start() }
-    }
 
     /**
      * Gradle connection to the CorDapp located in [baseDir].
@@ -140,6 +114,18 @@ class CordaNetwork private constructor() {
     }
 
     /**
+     * Defines a network map in this network.
+     */
+    @JvmName("networkMap")
+    fun mapJava(networkMapBlock: Consumer<CordaNetworkMap>) {
+        CordaNetworkMap(this).apply {
+            networkMapBlock.accept(this)
+        }.also {
+            map = it
+        }
+    }
+
+    /**
      * Build the CorDapp located in [baseDir] using the `jar` task and copy the resulting JAR into the given directory.
      */
     private fun createJarUsingGradle(cordappsDir: Path) {
@@ -153,7 +139,8 @@ class CordaNetwork private constructor() {
             // FIXME Avoid copying sources and javadoc JARs, only copy artifacts
             libsDir.walkTopDown().forEach { file ->
                 if (file.name.endsWith(".jar")) {
-                    Files.copy(file.toPath(), File(cordappsDir.toFile(), "${sanitizeCorDappName(file.name)}.jar").toPath(), REPLACE_EXISTING)
+                    val destFile = File(cordappsDir.toFile(), "${sanitizeCorDappName(file.name)}.jar")
+                    Files.copy(file.toPath(), destFile.toPath(), REPLACE_EXISTING)
                 }
             }
         }
@@ -169,7 +156,8 @@ class CordaNetwork private constructor() {
             .filter {
                 it.gradleModuleVersion.group.startsWith("net.corda")
             }.forEach {
-                Files.copy(it.file.toPath(), File(cordappsDir.toFile(), it.file.name).toPath(), REPLACE_EXISTING)
+                val destFile = File(cordappsDir.toFile(), it.file.name).toPath()
+                Files.copy(it.file.toPath(), destFile, REPLACE_EXISTING)
             }
     }
 
@@ -178,11 +166,6 @@ class CordaNetwork private constructor() {
     }
 
     companion object {
-        private const val NETWORK_MAP_VERSION = "latest"
-        private const val NETWORK_MAP_IMAGE = "cordite/network-map"
-        private const val NETWORK_MAP_ALIAS = "network-map"
-        private const val NETWORK_MAP_PORT = 8080
-
         /**
          *  Corda network DSL entry point.
          */
@@ -191,6 +174,12 @@ class CordaNetwork private constructor() {
         fun networkJava(networkBlock: Consumer<CordaNetwork>): CordaNetwork {
             return CordaNetwork().apply {
                 networkBlock.accept(this)
+                if (!::map.isInitialized) {
+                    // Initialize a network map
+                    mapJava(Consumer {})
+                }
+                // Auto-start network nodes if specified
+                nodes.filter { it.autoStart }.onEach { it.start() }
             }
         }
     }

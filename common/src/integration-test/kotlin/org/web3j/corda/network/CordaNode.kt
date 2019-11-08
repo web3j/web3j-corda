@@ -30,6 +30,7 @@ import org.web3j.corda.util.canonicalName
 /**
  * Corda network node exposing a Corda API through a Braid container.
  */
+@CordaDslMarker
 abstract class CordaNode internal constructor(protected val network: CordaNetwork) {
 
     /**
@@ -103,8 +104,8 @@ abstract class CordaNode internal constructor(protected val network: CordaNetwor
                 nodeDir.resolve("certificates").absolutePath,
                 "/opt/corda/certificates",
                 BindMode.READ_WRITE
-            ).withEnv("NETWORKMAP_URL", network.mapUrl)
-            .withEnv("DOORMAN_URL", network.mapUrl)
+            ).withEnv("NETWORKMAP_URL", network.map.url)
+            .withEnv("DOORMAN_URL", network.map.url)
             .withEnv("NETWORK_TRUST_PASSWORD", "trustpass")
             .withEnv("MY_PUBLIC_ADDRESS", "http://localhost:$p2pPort")
             .withCommand("config-generator --generic")
@@ -155,7 +156,7 @@ abstract class CordaNode internal constructor(protected val network: CordaNetwor
                     "p2pAddress" to "$canonicalName:$p2pPort",
                     "rpcPort" to rpcPort,
                     "adminPort" to adminPort,
-                    "networkMapUrl" to network.mapUrl
+                    "networkMapUrl" to network.map.url
                 ),
                 it
             )

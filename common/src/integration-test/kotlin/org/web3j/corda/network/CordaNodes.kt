@@ -14,6 +14,7 @@ package org.web3j.corda.network
 
 import java.util.function.Consumer
 
+@CordaDslMarker
 class CordaNodes internal constructor(private val network: CordaNetwork) {
 
     internal val notaries = mutableListOf<CordaNotaryNode>()
@@ -25,9 +26,6 @@ class CordaNodes internal constructor(private val network: CordaNetwork) {
             partyBlock.accept(it)
             it.validate()
             nodes.add(it)
-            if (it.autoStart) {
-                it.start()
-            }
         }
     }
 
