@@ -131,7 +131,7 @@ class CordaNetwork private constructor() : ContainerCoordinates(
             nodesBlock.accept(this)
         }.also {
             notaries = it.notaries
-            parties = it.nodes
+            parties = it.parties
         }
     }
 

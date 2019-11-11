@@ -18,14 +18,14 @@ import java.util.function.Consumer
 class CordaNodes internal constructor(private val network: CordaNetwork) {
 
     internal val notaries = mutableListOf<CordaNotaryNode>()
-    internal val nodes = mutableListOf<CordaPartyNode>()
+    internal val parties = mutableListOf<CordaPartyNode>()
 
     @JvmName("party")
     fun partyJava(partyBlock: Consumer<CordaPartyNode>) {
         CordaPartyNode(network).also {
             partyBlock.accept(it)
             it.validate()
-            nodes.add(it)
+            parties.add(it)
         }
     }
 
