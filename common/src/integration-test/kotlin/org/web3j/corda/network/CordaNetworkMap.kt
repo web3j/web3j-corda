@@ -48,9 +48,9 @@ class CordaNetworkMap internal constructor(network: CordaNetwork) {
         }.apply { start() }
 
     companion object {
-        internal const val ORGANIZATION = "cordite"
+        internal const val DEFAULT_ORGANIZATION = "cordite"
         internal const val DEFAULT_IMAGE = "network-map"
-        internal const val DEFAULT_TAG = "v0.4.6"
+        internal const val DEFAULT_TAG = "v0.4.5"
         internal const val PORT = 8080
     }
 }

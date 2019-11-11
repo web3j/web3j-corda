@@ -32,7 +32,7 @@ import org.web3j.corda.util.canonicalName
  */
 @CordaDslMarker
 abstract class CordaNode internal constructor(protected val network: CordaNetwork) : ContainerCoordinates(
-    ORGANIZATION, DEFAULT_IMAGE, DEFAULT_TAG
+    DEFAULT_ORGANIZATION, DEFAULT_IMAGE, DEFAULT_TAG
 ) {
     /**
      * X.500 name for this Corda node, eg. `O=Notary, L=London, C=GB`.
@@ -177,7 +177,7 @@ abstract class CordaNode internal constructor(protected val network: CordaNetwor
     }
 
     companion object : KLogging() {
-        private const val ORGANIZATION = "corda"
+        private const val DEFAULT_ORGANIZATION = "corda"
         private const val DEFAULT_IMAGE = "corda-zulu-4.1"
         private const val DEFAULT_TAG = "latest"
 

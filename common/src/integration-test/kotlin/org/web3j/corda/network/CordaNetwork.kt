@@ -24,7 +24,7 @@ import org.gradle.tooling.model.idea.IdeaSingleEntryLibraryDependency
 import org.testcontainers.containers.Network
 import org.web3j.corda.network.CordaNetworkMap.Companion.DEFAULT_IMAGE
 import org.web3j.corda.network.CordaNetworkMap.Companion.DEFAULT_TAG
-import org.web3j.corda.network.CordaNetworkMap.Companion.ORGANIZATION
+import org.web3j.corda.network.CordaNetworkMap.Companion.DEFAULT_ORGANIZATION
 import org.web3j.corda.networkmap.NetworkMapApi
 import org.web3j.corda.protocol.CordaService
 import org.web3j.corda.util.OpenApiVersion.v3_0_1
@@ -36,7 +36,7 @@ import org.web3j.corda.util.sanitizeCorDappName
  */
 @CordaDslMarker
 class CordaNetwork private constructor() : ContainerCoordinates(
-    ORGANIZATION, DEFAULT_IMAGE, DEFAULT_TAG
+    DEFAULT_ORGANIZATION, DEFAULT_IMAGE, DEFAULT_TAG
 ) {
 
     /**
