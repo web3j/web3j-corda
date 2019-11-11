@@ -1,60 +1,57 @@
+/*
+ * Copyright 2019 Web3 Labs LTD.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
+ * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
+ * specific language governing permissions and limitations under the License.
+ */
 package org.web3j.corda.network
 
 import org.testcontainers.containers.wait.strategy.Wait
-import org.web3j.corda.networkmap.NetworkMapApi
 import org.web3j.corda.protocol.CordaService
 import org.web3j.corda.protocol.NetworkMap
 import org.web3j.corda.testcontainers.KGenericContainer
 
-@CordaDslMarker
 class CordaNetworkMap internal constructor(network: CordaNetwork) {
-
-    /**
-     * Host name inside the Docker container network.
-     */
-    private val name = "${NETWORK_MAP_IMAGE}-${System.currentTimeMillis()}"
 
     /**
      * Container URL inside the Docker network.
      */
-    internal val url = "http://$name:${NETWORK_MAP_PORT}"
-
-    /**
-     * Docker image tag, by default `edge`.
-     */
-    var tag: String = NETWORK_MAP_DEFAULT_TAG
+    internal val url = "http://$$DEFAULT_IMAGE-${System.currentTimeMillis()}:$PORT"
 
     /**
      * Network Map instance to access the API.
      */
-    private val instance: NetworkMap by lazy {
-        NetworkMap.build(CordaService("http://localhost:${container.getMappedPort(NETWORK_MAP_PORT)}"))
+    internal val instance: NetworkMap by lazy {
+        NetworkMap.build(CordaService("http://localhost:${container.ports[PORT]}"))
     }
-    
-    val api: NetworkMapApi = instance.api
-    val service: CordaService = instance.service
 
     /**
      * Cordite network map Docker container.
      */
     private val container: KGenericContainer by lazy {
-        KGenericContainer("$NETWORK_MAP_ORGANIZATION/$NETWORK_MAP_IMAGE:$tag")
+        KGenericContainer(toString())
             .withCreateContainerCmdModifier {
-                it.withHostName(name)
-                it.withName(name)
+                it.withHostName(network.image)
+                it.withName(network.image)
             }.withNetwork(network.network)
-            .withNetworkAliases(name)
+            .withNetworkAliases(network.image)
             .withEnv("NMS_STORAGE_TYPE", "file")
-            .waitingFor(Wait.forHttp("").forPort(NETWORK_MAP_PORT))
+            .waitingFor(Wait.forHttp("").forPort(PORT))
             .withLogConsumer {
                 CordaNode.logger.info { it.utf8String.trimEnd() }
             }.apply { start() }
     }
 
     companion object {
-        private const val NETWORK_MAP_ORGANIZATION = "cordite"
-        private const val NETWORK_MAP_DEFAULT_TAG = "edge"
-        private const val NETWORK_MAP_IMAGE = "network-map"
-        private const val NETWORK_MAP_PORT = 8080
+        internal const val ORGANIZATION = "cordite"
+        internal const val DEFAULT_IMAGE = "network-map"
+        internal const val DEFAULT_TAG = "v0.5.0"
+        internal const val PORT = 8080
     }
 }

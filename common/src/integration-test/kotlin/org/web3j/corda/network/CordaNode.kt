@@ -31,17 +31,13 @@ import org.web3j.corda.util.canonicalName
  * Corda network node exposing a Corda API through a Braid container.
  */
 @CordaDslMarker
-abstract class CordaNode internal constructor(protected val network: CordaNetwork) {
-
+abstract class CordaNode internal constructor(protected val network: CordaNetwork) : ContainerCoordinates(
+    ORGANIZATION, DEFAULT_IMAGE, DEFAULT_TAG
+) {
     /**
      * X.500 name for this Corda node, eg. `O=Notary, L=London, C=GB`.
      */
     lateinit var name: String
-
-    /**
-     * Docker image version for this Corda node, by default `latest`.
-     */
-    var cordaVersion: String = CORDA_ZULU_VERSION
 
     /**
      * Corda P2P port for this node.
@@ -79,6 +75,16 @@ abstract class CordaNode internal constructor(protected val network: CordaNetwor
     open val isNotary: Boolean = false
 
     /**
+     * Make container image settable.
+     */
+    override var image = super.image
+
+    /**
+     * Make container tag settable.
+     */
+    override var tag = super.tag
+
+    /**
      * CorDapp `node.conf` template file.
      */
     private val nodeConfTemplate = CordaNetwork::class.java.classLoader
@@ -94,7 +100,7 @@ abstract class CordaNode internal constructor(protected val network: CordaNetwor
         createNodeConfFiles(nodeDir.resolve("node.conf"))
         saveCertificateFromNetworkMap(nodeDir)
 
-        KGenericContainer("$CORDA_ZULU_IMAGE:$cordaVersion")
+        KGenericContainer(toString())
             .withNetwork(network.network)
             .withExposedPorts(p2pPort, rpcPort, adminPort)
             .withFileSystemBind(
@@ -167,12 +173,13 @@ abstract class CordaNode internal constructor(protected val network: CordaNetwor
     private fun saveCertificateFromNetworkMap(nodeDir: File) {
         val certificateFolder = File(nodeDir, "certificates").apply { mkdir() }
         val certificateFile = certificateFolder.resolve("network-root-truststore.jks")
-        Files.write(certificateFile.toPath(), network.map.api.networkMap.truststore)
+        Files.write(certificateFile.toPath(), network.api.networkMap.truststore)
     }
 
     companion object : KLogging() {
-        private const val CORDA_ZULU_VERSION = "latest"
-        private const val CORDA_ZULU_IMAGE = "corda/corda-zulu-4.1"
+        private const val ORGANIZATION = "corda"
+        private const val DEFAULT_IMAGE = "corda-zulu-4.1"
+        private const val DEFAULT_TAG = "latest"
 
         private val portRange = 1024..65535
 

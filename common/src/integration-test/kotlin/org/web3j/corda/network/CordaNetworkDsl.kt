@@ -28,11 +28,6 @@ fun CordaNetwork.nodes(nodesBlock: CordaNodes.() -> Unit) {
 }
 
 @CordaDslMarker
-fun CordaNetwork.map(mapBlock: CordaNetworkMap.() -> Unit) {
-    mapJava(Consumer { mapBlock.invoke(it) })
-}
-
-@CordaDslMarker
 fun CordaNodes.party(partyBlock: CordaPartyNode.() -> Unit) {
     partyJava(Consumer { partyBlock.invoke(it) })
 }

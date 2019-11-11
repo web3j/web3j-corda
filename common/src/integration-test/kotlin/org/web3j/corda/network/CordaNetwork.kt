@@ -12,25 +12,32 @@
  */
 package org.web3j.corda.network
 
-import org.gradle.tooling.GradleConnector
-import org.gradle.tooling.ProjectConnection
-import org.gradle.tooling.model.idea.IdeaProject
-import org.gradle.tooling.model.idea.IdeaSingleEntryLibraryDependency
-import org.testcontainers.containers.Network
-import org.web3j.corda.util.OpenApiVersion.v3_0_1
-import org.web3j.corda.util.isMac
-import org.web3j.corda.util.sanitizeCorDappName
 import java.io.File
 import java.nio.file.Files
 import java.nio.file.Path
 import java.nio.file.StandardCopyOption.REPLACE_EXISTING
 import java.util.function.Consumer
+import org.gradle.tooling.GradleConnector
+import org.gradle.tooling.ProjectConnection
+import org.gradle.tooling.model.idea.IdeaProject
+import org.gradle.tooling.model.idea.IdeaSingleEntryLibraryDependency
+import org.testcontainers.containers.Network
+import org.web3j.corda.network.CordaNetworkMap.Companion.DEFAULT_IMAGE
+import org.web3j.corda.network.CordaNetworkMap.Companion.DEFAULT_TAG
+import org.web3j.corda.network.CordaNetworkMap.Companion.ORGANIZATION
+import org.web3j.corda.networkmap.NetworkMapApi
+import org.web3j.corda.protocol.CordaService
+import org.web3j.corda.util.OpenApiVersion.v3_0_1
+import org.web3j.corda.util.isMac
+import org.web3j.corda.util.sanitizeCorDappName
 
 /**
  * Corda network DSK for integration tests web3j CorDapp wrappers.
  */
 @CordaDslMarker
-class CordaNetwork private constructor() {
+class CordaNetwork private constructor() : ContainerCoordinates(
+    ORGANIZATION, DEFAULT_IMAGE, DEFAULT_TAG
+) {
 
     /**
      * Open API version.
@@ -43,11 +50,6 @@ class CordaNetwork private constructor() {
     var baseDir: File = File(System.getProperty("user.dir"))
 
     /**
-     * The network map in this network.
-     */
-    lateinit var map: CordaNetworkMap
-
-    /**
      * The nodes in this network.
      */
     lateinit var notaries: List<CordaNotaryNode>
@@ -56,6 +58,26 @@ class CordaNetwork private constructor() {
      * The nodes in this network.
      */
     lateinit var nodes: List<CordaPartyNode>
+
+    /**
+     * Client API to interact with this network.
+     */
+    val api: NetworkMapApi = map.instance.api
+
+    /**
+     * Corda service for this network.
+     */
+    val service: CordaService = map.instance.service
+
+    /**
+     * Make container tag settable.
+     */
+    override var tag = super.tag
+
+    /**
+     * The network map in this network.
+     */
+    internal lateinit var map: CordaNetworkMap
 
     /**
      * CorDapp Docker-mapped directory.
@@ -114,18 +136,6 @@ class CordaNetwork private constructor() {
     }
 
     /**
-     * Defines a network map in this network.
-     */
-    @JvmName("networkMap")
-    fun mapJava(networkMapBlock: Consumer<CordaNetworkMap>) {
-        CordaNetworkMap(this).apply {
-            networkMapBlock.accept(this)
-        }.also {
-            map = it
-        }
-    }
-
-    /**
      * Build the CorDapp located in [baseDir] using the `jar` task and copy the resulting JAR into the given directory.
      */
     private fun createJarUsingGradle(cordappsDir: Path) {
@@ -174,10 +184,8 @@ class CordaNetwork private constructor() {
         fun networkJava(networkBlock: Consumer<CordaNetwork>): CordaNetwork {
             return CordaNetwork().apply {
                 networkBlock.accept(this)
-                if (!::map.isInitialized) {
-                    // Initialize a network map
-                    mapJava(Consumer {})
-                }
+                // Initialize a network map
+                map = CordaNetworkMap(this)
                 // Auto-start network nodes if specified
                 nodes.filter { it.autoStart }.onEach { it.start() }
             }
