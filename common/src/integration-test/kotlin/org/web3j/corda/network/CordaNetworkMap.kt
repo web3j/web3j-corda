@@ -22,7 +22,7 @@ class CordaNetworkMap internal constructor(network: CordaNetwork) {
     /**
      * Container URL inside the Docker network.
      */
-    internal val url = "http://$$DEFAULT_IMAGE-${System.currentTimeMillis()}:$PORT"
+    internal val url = "http://$DEFAULT_IMAGE-${System.currentTimeMillis()}:$PORT"
 
     /**
      * Network Map instance to access the API.
@@ -34,24 +34,23 @@ class CordaNetworkMap internal constructor(network: CordaNetwork) {
     /**
      * Cordite network map Docker container.
      */
-    private val container: KGenericContainer by lazy {
-        KGenericContainer(toString())
-            .withCreateContainerCmdModifier {
-                it.withHostName(network.image)
-                it.withName(network.image)
-            }.withNetwork(network.network)
-            .withNetworkAliases(network.image)
-            .withEnv("NMS_STORAGE_TYPE", "file")
-            .waitingFor(Wait.forHttp("").forPort(PORT))
-            .withLogConsumer {
-                CordaNode.logger.info { it.utf8String.trimEnd() }
-            }.apply { start() }
-    }
+    private val container = KGenericContainer(network.toString())
+        .withCreateContainerCmdModifier {
+            it.withHostName(network.image)
+            it.withName(network.image)
+        }.withNetwork(network.network)
+        .withNetworkAliases(network.image)
+        .withEnv("NMS_STORAGE_TYPE", "file")
+        .waitingFor(Wait.forHttp("").forPort(PORT))
+        .withExposedPorts(PORT)
+        .withLogConsumer {
+            CordaNode.logger.info { it.utf8String.trimEnd() }
+        }.apply { start() }
 
     companion object {
         internal const val ORGANIZATION = "cordite"
         internal const val DEFAULT_IMAGE = "network-map"
-        internal const val DEFAULT_TAG = "v0.5.0"
+        internal const val DEFAULT_TAG = "v0.4.6"
         internal const val PORT = 8080
     }
 }

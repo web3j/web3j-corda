@@ -26,10 +26,10 @@ class ObligationKotlinTest {
     @Test
     fun `issue obligation`() {
 
-        val partyB = network.nodes[0].corda.api.network.nodes
+        val partyB = network.parties[0].corda.api.network.nodes
             .findByX500Name("O=PartyB,L=New York,C=US")[0].legalIdentities[0]
 
-        Obligation.load(network.nodes[0].corda.service).flows.issueObligationInitiator.start(
+        Obligation.load(network.parties[0].corda.service).flows.issueObligationInitiator.start(
             IssueObligation_InitiatorPayload(
                 AmountCurrency(100, BigDecimal.ONE, "GBP"),
                 partyB,

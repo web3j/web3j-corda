@@ -32,7 +32,7 @@ public class ObligationJavaTest {
 
     @Test
     public void issueObligation() {
-        final Corda corda = getNetwork().getNodes().get(0).getCorda();
+        final Corda corda = getNetwork().getParties().get(0).getCorda();
 
         final Party partyB =
                 corda.getApi()

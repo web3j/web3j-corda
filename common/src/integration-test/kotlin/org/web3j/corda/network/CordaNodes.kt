@@ -35,9 +35,6 @@ class CordaNodes internal constructor(private val network: CordaNetwork) {
             notaryBlock.accept(it)
             it.validate()
             notaries.add(it)
-            if (it.autoStart) {
-                it.start()
-            }
         }
     }
 }

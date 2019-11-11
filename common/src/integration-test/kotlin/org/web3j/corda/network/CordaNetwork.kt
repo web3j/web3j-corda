@@ -57,17 +57,17 @@ class CordaNetwork private constructor() : ContainerCoordinates(
     /**
      * The nodes in this network.
      */
-    lateinit var nodes: List<CordaPartyNode>
+    lateinit var parties: List<CordaPartyNode>
 
     /**
      * Client API to interact with this network.
      */
-    val api: NetworkMapApi = map.instance.api
+    val api: NetworkMapApi by lazy { map.instance.api }
 
     /**
      * Corda service for this network.
      */
-    val service: CordaService = map.instance.service
+    val service: CordaService by lazy { map.instance.service }
 
     /**
      * Make container tag settable.
@@ -131,7 +131,7 @@ class CordaNetwork private constructor() : ContainerCoordinates(
             nodesBlock.accept(this)
         }.also {
             notaries = it.notaries
-            nodes = it.nodes
+            parties = it.nodes
         }
     }
 
@@ -184,10 +184,14 @@ class CordaNetwork private constructor() : ContainerCoordinates(
         fun networkJava(networkBlock: Consumer<CordaNetwork>): CordaNetwork {
             return CordaNetwork().apply {
                 networkBlock.accept(this)
+
                 // Initialize a network map
                 map = CordaNetworkMap(this)
-                // Auto-start network nodes if specified
-                nodes.filter { it.autoStart }.onEach { it.start() }
+
+                // Auto-start notaries and nodes
+                (notaries + parties).onEach {
+                    if (it.autoStart) { it.start() }
+                }
             }
         }
     }

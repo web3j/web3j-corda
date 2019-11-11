@@ -34,7 +34,7 @@ class CordaIntegrationTest {
 
     @Test
     fun `corDapps resource`() {
-        with(network.nodes[0].corda.api) {
+        with(network.parties[0].corda.api) {
             assertThat(corDapps.findAll()).containsOnly("braid-server")
             assertThat(corDapps.findById("braid-server").flows.findAll()).isEmpty()
         }
@@ -42,7 +42,7 @@ class CordaIntegrationTest {
 
     @Test
     fun `network resource`() {
-        with(network.nodes[0].corda.api) {
+        with(network.parties[0].corda.api) {
             network.nodes.self.apply {
                 assertThat(legalIdentities).hasSize(1)
                 assertThat(legalIdentities.first().name).isEqualTo(PARTY)
@@ -56,7 +56,7 @@ class CordaIntegrationTest {
                 assertThat(this).hasSize(1)
                 assertThat(first().legalIdentities.map { it.name }).containsOnly(PARTY)
             }
-            val p2pPort = this@CordaIntegrationTest.network.nodes[0].p2pPort
+            val p2pPort = this@CordaIntegrationTest.network.parties[0].p2pPort
             network.nodes.findByHostAndPort("party-new-york-us:$p2pPort").apply {
                 assertThat(this).hasSize(1)
                 assertThat(first().legalIdentities.map { it.name }).containsOnly(PARTY)
