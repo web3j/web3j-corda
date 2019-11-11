@@ -12,24 +12,24 @@
  */
 package org.web3j.corda.network
 
-import java.io.File
-import java.nio.file.Files
-import java.nio.file.Path
-import java.nio.file.StandardCopyOption.REPLACE_EXISTING
-import java.util.function.Consumer
 import org.gradle.tooling.GradleConnector
 import org.gradle.tooling.ProjectConnection
 import org.gradle.tooling.model.idea.IdeaProject
 import org.gradle.tooling.model.idea.IdeaSingleEntryLibraryDependency
 import org.testcontainers.containers.Network
 import org.web3j.corda.network.CordaNetworkMap.Companion.DEFAULT_IMAGE
-import org.web3j.corda.network.CordaNetworkMap.Companion.DEFAULT_TAG
 import org.web3j.corda.network.CordaNetworkMap.Companion.DEFAULT_ORGANIZATION
+import org.web3j.corda.network.CordaNetworkMap.Companion.DEFAULT_TAG
 import org.web3j.corda.networkmap.NetworkMapApi
 import org.web3j.corda.protocol.CordaService
 import org.web3j.corda.util.OpenApiVersion.v3_0_1
 import org.web3j.corda.util.isMac
 import org.web3j.corda.util.sanitizeCorDappName
+import java.io.File
+import java.nio.file.Files
+import java.nio.file.Path
+import java.nio.file.StandardCopyOption.REPLACE_EXISTING
+import java.util.function.Consumer
 
 /**
  * Corda network DSK for integration tests web3j CorDapp wrappers.
@@ -189,8 +189,10 @@ class CordaNetwork private constructor() : ContainerCoordinates(
                 map = CordaNetworkMap(this)
 
                 // Auto-start notaries and nodes
-                (notaries + parties).onEach {
-                    if (it.autoStart) { it.start() }
+                (notaries + parties).filter {
+                    it.autoStart
+                }.onEach {
+                    it.start()
                 }
             }
         }
