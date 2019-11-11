@@ -70,11 +70,6 @@ abstract class CordaNode internal constructor(protected val network: CordaNetwor
     }
 
     /**
-     * Is this a notary node?
-     */
-    open val isNotary: Boolean = false
-
-    /**
      * Make container image settable.
      */
     override var image = super.image
@@ -158,7 +153,8 @@ abstract class CordaNode internal constructor(protected val network: CordaNetwor
             nodeConfTemplate.execute(
                 mapOf(
                     "name" to name,
-                    "isNotary" to isNotary,
+                    "isNotary" to (this is CordaNotaryNode),
+                    "isValidating" to ((this is CordaNotaryNode) && validating),
                     "p2pAddress" to "$canonicalName:$p2pPort",
                     "rpcPort" to rpcPort,
                     "adminPort" to adminPort,

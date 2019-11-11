@@ -2,7 +2,7 @@ devMode=true
 myLegalName="{{&name}}"
 {{#isNotary}}
 notary {
-    validating=false
+    validating={{isValidating}}
 }
 {{/isNotary}}
 p2pAddress="{{&p2pAddress}}"

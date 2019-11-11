@@ -27,7 +27,10 @@ import org.web3j.corda.testcontainers.KGenericContainer
  */
 class CordaNotaryNode internal constructor(network: CordaNetwork) : CordaNode(network) {
 
-    override val isNotary: Boolean = true
+    /**
+     * Is this a validating notary?
+     */
+    var validating: Boolean = false
 
     override fun KGenericContainer.configure(nodeDir: File) {
         logger.info("Starting notary container $canonicalName...")
