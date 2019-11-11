@@ -12,6 +12,11 @@
  */
 package org.web3j.corda.network
 
+import java.io.File
+import java.nio.file.Files
+import java.nio.file.Path
+import java.nio.file.StandardCopyOption.REPLACE_EXISTING
+import java.util.function.Consumer
 import org.gradle.tooling.GradleConnector
 import org.gradle.tooling.ProjectConnection
 import org.gradle.tooling.model.idea.IdeaProject
@@ -25,11 +30,6 @@ import org.web3j.corda.protocol.CordaService
 import org.web3j.corda.util.OpenApiVersion.v3_0_1
 import org.web3j.corda.util.isMac
 import org.web3j.corda.util.sanitizeCorDappName
-import java.io.File
-import java.nio.file.Files
-import java.nio.file.Path
-import java.nio.file.StandardCopyOption.REPLACE_EXISTING
-import java.util.function.Consumer
 
 /**
  * Corda network DSK for integration tests web3j CorDapp wrappers.
