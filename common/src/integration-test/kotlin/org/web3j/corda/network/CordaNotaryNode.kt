@@ -67,8 +67,9 @@ class CordaNotaryNode internal constructor(network: CordaNetwork) : CordaNode(ne
         val token = network.api.admin.login(loginRequest)
         val authMap = NetworkMap.build(CordaService(network.service.uri), token)
 
-        logger.info("Creating a non-validating notary in network map with node info $nodeInfoPath")
-        authMap.api.admin.notaries.create(NotaryType.NON_VALIDATING, Files.readAllBytes(Paths.get(nodeInfoPath)))
+        val notaryType = if (validating) NotaryType.VALIDATING else NotaryType.NON_VALIDATING
+        logger.info("Creating a $notaryType notary in network map with node info $nodeInfoPath")
+        authMap.api.admin.notaries.create(notaryType, Files.readAllBytes(Paths.get(nodeInfoPath)))
     }
 
     private fun waitForNetworkMapHashUpdate(prevNetworkMapHash: String) {
