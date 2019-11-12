@@ -153,8 +153,8 @@ class CorDappGenerator(
         } ?: throw IllegalStateException("Template not found: $TEMPLATE_DIR/$file")
     }
 
-    private val stubPath = "%s${File.separator}src${File.separator}%s${File.separator}kotlin${File.separator}" +
-            packageName.replace(".", File.separator) + File.separator
+    private val stubPath = (listOf("%s", "src", "%s", "kotlin") + packageName.split("."))
+        .joinToString(File.separator) + File.separator
 
     companion object {
         private const val TEMPLATE_DIR = "cordapp"
