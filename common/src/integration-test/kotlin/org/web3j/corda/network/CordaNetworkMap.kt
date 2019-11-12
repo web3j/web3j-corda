@@ -12,17 +12,23 @@
  */
 package org.web3j.corda.network
 
+import mu.KLogging
 import org.testcontainers.containers.wait.strategy.Wait
 import org.web3j.corda.protocol.CordaService
 import org.web3j.corda.protocol.NetworkMap
 import org.web3j.corda.testcontainers.KGenericContainer
 
-class CordaNetworkMap internal constructor(network: CordaNetwork) {
+class CordaNetworkMap internal constructor(network: CordaNetwork) : ContainerLifecycle {
+
+    /**
+     * Container host name the Docker network.
+     */
+    private val host = "$DEFAULT_IMAGE-${System.currentTimeMillis()}"
 
     /**
      * Container URL inside the Docker network.
      */
-    internal val url = "http://$DEFAULT_IMAGE-${System.currentTimeMillis()}:$PORT"
+    internal val url = "http://$host:$PORT"
 
     /**
      * Network Map instance to access the API.
@@ -34,20 +40,40 @@ class CordaNetworkMap internal constructor(network: CordaNetwork) {
     /**
      * Cordite network map Docker container.
      */
-    private val container = KGenericContainer(network.toString())
-        .withCreateContainerCmdModifier {
-            it.withHostName(network.image)
-            it.withName(network.image)
-        }.withNetwork(network.network)
-        .withNetworkAliases(network.image)
-        .withEnv("NMS_STORAGE_TYPE", "file")
-        .waitingFor(Wait.forHttp("").forPort(PORT))
-        .withExposedPorts(PORT)
-        .withLogConsumer {
-            CordaNode.logger.info { it.utf8String.trimEnd() }
-        }.apply { start() }
+    private val container: KGenericContainer by lazy {
+        KGenericContainer(network.toString())
+            .withCreateContainerCmdModifier {
+                it.withHostName(host)
+                it.withName(host)
+            }.withNetwork(network.network)
+            .withNetworkAliases(network.image)
+            .withEnv("NMS_STORAGE_TYPE", "file")
+            .waitingFor(Wait.forHttp("").forPort(PORT))
+            .withExposedPorts(PORT)
+            .withLogConsumer {
+                logger.info { it.utf8String.trimEnd() }
+            }
+    }
 
-    companion object {
+    /**
+     * Start this network map.
+     */
+    override fun start() {
+        logger.info("Starting network map...")
+        container.start()
+        CordaNode.logger.info("Started network map at $url")
+    }
+
+    /**
+     * Stop this network map.
+     */
+    override fun stop() {
+        logger.info("Stopping network map...")
+        container.stop()
+        logger.info("Stopped network map.")
+    }
+
+    companion object : KLogging() {
         internal const val DEFAULT_ORGANIZATION = "cordite"
         internal const val DEFAULT_IMAGE = "network-map"
         internal const val DEFAULT_TAG = "v0.5.0"

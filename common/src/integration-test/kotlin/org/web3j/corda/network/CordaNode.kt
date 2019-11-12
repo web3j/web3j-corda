@@ -31,9 +31,8 @@ import org.web3j.corda.util.canonicalName
  * Corda network node exposing a Corda API through a Braid container.
  */
 @CordaDslMarker
-abstract class CordaNode internal constructor(protected val network: CordaNetwork) : ContainerCoordinates(
-    DEFAULT_ORGANIZATION, DEFAULT_IMAGE, DEFAULT_TAG
-) {
+abstract class CordaNode internal constructor(protected val network: CordaNetwork) : ContainerLifecycle,
+    ContainerCoordinates(DEFAULT_ORGANIZATION, DEFAULT_IMAGE, DEFAULT_TAG) {
     /**
      * X.500 name for this Corda node, eg. `O=Notary, L=London, C=GB`.
      */
@@ -124,7 +123,7 @@ abstract class CordaNode internal constructor(protected val network: CordaNetwor
     /**
      * Start this Corda node.
      */
-    open fun start() {
+    override fun start() {
         logger.info("Starting Corda node $canonicalName...")
         container.start()
         logger.info("Started Corda node $canonicalName.")
@@ -133,7 +132,7 @@ abstract class CordaNode internal constructor(protected val network: CordaNetwor
     /**
      * Stop this Corda node.
      */
-    open fun stop() {
+    override fun stop() {
         logger.info("Stopping Corda node $canonicalName...")
         container.stop()
         logger.info("Stopped Corda node $canonicalName.")
@@ -167,7 +166,7 @@ abstract class CordaNode internal constructor(protected val network: CordaNetwor
     }
 
     private fun saveCertificateFromNetworkMap(nodeDir: File) {
-        val certificateFolder = File(nodeDir, "certificates").apply { mkdir() }
+        val certificateFolder = File(nodeDir, "certificates").apply { mkdirs() }
         val certificateFile = certificateFolder.resolve("network-root-truststore.jks")
         Files.write(certificateFile.toPath(), network.api.networkMap.truststore)
     }
