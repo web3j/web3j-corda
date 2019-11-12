@@ -189,7 +189,7 @@ class CordaNetwork private constructor() : ContainerCoordinates(
                 map = CordaNetworkMap(this).apply {
                     start()
                 }
-                
+
                 // Auto-start notaries and nodes
                 (notaries + parties).filter {
                     it.autoStart
