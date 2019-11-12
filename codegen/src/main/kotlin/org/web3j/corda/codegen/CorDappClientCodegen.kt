@@ -102,7 +102,7 @@ class CorDappClientCodegen(
         return when {
             needToRepackage(name, cordaMapping) -> repackage(name, cordaMapping)
             else -> name
-        }.replace(".", "/")
+        }.replace(".", File.separator)
     }
 
     override fun getOrGenerateOperationId(

@@ -11,6 +11,7 @@ buildscript {
         classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.4'
         classpath 'com.adarshr:gradle-test-logger-plugin:1.7.0'
         classpath 'gradle.plugin.com.github.breadmoirai:github-release:2.2.9'
+        classpath 'com.github.jengelman.gradle.plugins:shadow:5.1.0'
     }
 }
 
@@ -148,6 +149,7 @@ subprojects {
                 force(group: 'com.google.errorprone', name: 'error_prone_annotations', version: versions.errorProneAnnotations)
                 force(group: 'com.google.guava', name: 'guava', version: versions.guava)
                 force(group: 'commons-io', name: 'commons-io', version: versions.commonsIo)
+                force(group: 'io.github.classgraph', name: 'classgraph', version: versions.classgraph)
                 force(group: 'io.swagger.core.v3', name: 'swagger-annotations', version: versions.swagger3)
                 force(group: 'io.swagger.core.v3', name: 'swagger-core', version: versions.swagger3)
                 force(group: 'io.swagger.core.v3', name: 'swagger-models', version: versions.swagger3)

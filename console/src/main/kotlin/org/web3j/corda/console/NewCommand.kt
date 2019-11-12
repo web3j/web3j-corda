@@ -63,7 +63,7 @@ class NewCommand : BaseCommand() {
                 corDappsDir = this@NewCommand.outputDir
             }
             packageName = this@NewCommand.packageName
-            outputDir = File("${this@NewCommand.outputDir}/clients")
+            outputDir = File("${this@NewCommand.outputDir}${File.separator}clients")
             generateTests = false
             run()
         }
@@ -86,9 +86,9 @@ class NewCommand : BaseCommand() {
         copyResource("settings.gradle", outputDir)
         copyResource("gradlew", outputDir)
 
-        File("${outputDir.toURI().path}/gradlew").setExecutable(true)
+        File("${outputDir.toURI().path}${File.separator}gradlew").setExecutable(true)
 
-        val gradleFolder = File("$outputDir/gradle/wrapper").apply { mkdirs() }
+        val gradleFolder = File("$outputDir${File.separator}gradle${File.separator}wrapper").apply { mkdirs() }
         copyResource("gradle-wrapper.jar", gradleFolder)
         copyResource("gradle-wrapper.properties", gradleFolder)
         copyResource("README.md", outputDir)
