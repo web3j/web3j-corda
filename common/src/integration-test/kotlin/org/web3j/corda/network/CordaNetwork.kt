@@ -22,10 +22,11 @@ import org.gradle.tooling.ProjectConnection
 import org.gradle.tooling.model.idea.IdeaProject
 import org.gradle.tooling.model.idea.IdeaSingleEntryLibraryDependency
 import org.testcontainers.containers.Network
-import org.testcontainers.containers.wait.strategy.Wait
+import org.web3j.corda.network.CordaNetworkMap.Companion.DEFAULT_IMAGE
+import org.web3j.corda.network.CordaNetworkMap.Companion.DEFAULT_ORGANIZATION
+import org.web3j.corda.network.CordaNetworkMap.Companion.DEFAULT_TAG
+import org.web3j.corda.networkmap.NetworkMapApi
 import org.web3j.corda.protocol.CordaService
-import org.web3j.corda.protocol.NetworkMap
-import org.web3j.corda.testcontainers.KGenericContainer
 import org.web3j.corda.util.OpenApiVersion.v3_0_1
 import org.web3j.corda.util.isMac
 import org.web3j.corda.util.sanitizeCorDappName
@@ -33,7 +34,10 @@ import org.web3j.corda.util.sanitizeCorDappName
 /**
  * Corda network DSK for integration tests web3j CorDapp wrappers.
  */
-class CordaNetwork private constructor() {
+@CordaDslMarker
+class CordaNetwork private constructor() : ContainerCoordinates(
+    DEFAULT_ORGANIZATION, DEFAULT_IMAGE, DEFAULT_TAG
+) {
 
     /**
      * Open API version.
@@ -53,11 +57,27 @@ class CordaNetwork private constructor() {
     /**
      * The nodes in this network.
      */
-    lateinit var nodes: List<CordaPartyNode>
+    lateinit var parties: List<CordaPartyNode>
 
-    val map: NetworkMap by lazy {
-        NetworkMap.build(CordaService("http://localhost:${mapContainer.getMappedPort(NETWORK_MAP_PORT)}"))
-    }
+    /**
+     * Client API to interact with this network.
+     */
+    val api: NetworkMapApi by lazy { map.instance.api }
+
+    /**
+     * Corda service for this network.
+     */
+    val service: CordaService by lazy { map.instance.service }
+
+    /**
+     * Make container tag settable.
+     */
+    override var tag = super.tag
+
+    /**
+     * The network map in this network.
+     */
+    internal lateinit var map: CordaNetworkMap
 
     /**
      * CorDapp Docker-mapped directory.
@@ -73,7 +93,11 @@ class CordaNetwork private constructor() {
                 // Not a valid Gradle project, copy baseDir
                 baseDir.walkTopDown().forEach {
                     if (it.absolutePath.endsWith(".jar")) {
-                        Files.copy(it.toPath(), File(toFile(), "${sanitizeCorDappName(it.name)}.jar").toPath(), REPLACE_EXISTING)
+                        Files.copy(
+                            it.toPath(),
+                            File(toFile(), "${sanitizeCorDappName(it.name)}.jar").toPath(),
+                            REPLACE_EXISTING
+                        )
                     }
                 }
             }
@@ -87,26 +111,6 @@ class CordaNetwork private constructor() {
      * The internal Docker network.
      */
     internal val network = Network.newNetwork()
-
-    private val mapName = "$NETWORK_MAP_ALIAS-${System.currentTimeMillis()}"
-
-    internal val mapUrl = "http://$mapName:$NETWORK_MAP_PORT"
-    /**
-     * Cordite network map Docker container.
-     */
-    private val mapContainer: KGenericContainer by lazy {
-        KGenericContainer(NETWORK_MAP_IMAGE)
-            .withCreateContainerCmdModifier {
-                it.withHostName(mapName)
-                it.withName(mapName)
-            }.withNetwork(network)
-            .withNetworkAliases(mapName)
-            .withEnv("NMS_STORAGE_TYPE", "file")
-            .waitingFor(Wait.forHttp("").forPort(NETWORK_MAP_PORT))
-            .withLogConsumer {
-                CordaNode.logger.info { it.utf8String.trimEnd() }
-            }.apply { start() }
-    }
 
     /**
      * Gradle connection to the CorDapp located in [baseDir].
@@ -127,7 +131,7 @@ class CordaNetwork private constructor() {
             nodesBlock.accept(this)
         }.also {
             notaries = it.notaries
-            nodes = it.nodes
+            parties = it.parties
         }
     }
 
@@ -145,7 +149,8 @@ class CordaNetwork private constructor() {
             // FIXME Avoid copying sources and javadoc JARs, only copy artifacts
             libsDir.walkTopDown().forEach { file ->
                 if (file.name.endsWith(".jar")) {
-                    Files.copy(file.toPath(), File(cordappsDir.toFile(), "${sanitizeCorDappName(file.name)}.jar").toPath(), REPLACE_EXISTING)
+                    val destFile = File(cordappsDir.toFile(), "${sanitizeCorDappName(file.name)}.jar")
+                    Files.copy(file.toPath(), destFile.toPath(), REPLACE_EXISTING)
                 }
             }
         }
@@ -161,7 +166,8 @@ class CordaNetwork private constructor() {
             .filter {
                 it.gradleModuleVersion.group.startsWith("net.corda")
             }.forEach {
-                Files.copy(it.file.toPath(), File(cordappsDir.toFile(), it.file.name).toPath(), REPLACE_EXISTING)
+                val destFile = File(cordappsDir.toFile(), it.file.name).toPath()
+                Files.copy(it.file.toPath(), destFile, REPLACE_EXISTING)
             }
     }
 
@@ -170,10 +176,6 @@ class CordaNetwork private constructor() {
     }
 
     companion object {
-        private const val NETWORK_MAP_IMAGE = "cordite/network-map:latest"
-        private const val NETWORK_MAP_ALIAS = "network-map"
-        private const val NETWORK_MAP_PORT = 8080
-
         /**
          *  Corda network DSL entry point.
          */
@@ -182,6 +184,18 @@ class CordaNetwork private constructor() {
         fun networkJava(networkBlock: Consumer<CordaNetwork>): CordaNetwork {
             return CordaNetwork().apply {
                 networkBlock.accept(this)
+
+                // Initialize a network map
+                map = CordaNetworkMap(this).apply {
+                    start()
+                }
+
+                // Auto-start notaries and nodes
+                (notaries + parties).filter {
+                    it.autoStart
+                }.onEach {
+                    it.start()
+                }
             }
         }
     }

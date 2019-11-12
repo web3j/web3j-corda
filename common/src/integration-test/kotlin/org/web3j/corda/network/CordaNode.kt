@@ -30,8 +30,9 @@ import org.web3j.corda.util.canonicalName
 /**
  * Corda network node exposing a Corda API through a Braid container.
  */
-abstract class CordaNode internal constructor(protected val network: CordaNetwork) {
-
+@CordaDslMarker
+abstract class CordaNode internal constructor(protected val network: CordaNetwork) : ContainerLifecycle,
+    ContainerCoordinates(DEFAULT_ORGANIZATION, DEFAULT_IMAGE, DEFAULT_TAG) {
     /**
      * X.500 name for this Corda node, eg. `O=Notary, L=London, C=GB`.
      */
@@ -68,9 +69,14 @@ abstract class CordaNode internal constructor(protected val network: CordaNetwor
     }
 
     /**
-     * Is this a notary node?
+     * Make container image settable.
      */
-    open val isNotary: Boolean = false
+    override var image = super.image
+
+    /**
+     * Make container tag settable.
+     */
+    override var tag = super.tag
 
     /**
      * CorDapp `node.conf` template file.
@@ -88,7 +94,7 @@ abstract class CordaNode internal constructor(protected val network: CordaNetwor
         createNodeConfFiles(nodeDir.resolve("node.conf"))
         saveCertificateFromNetworkMap(nodeDir)
 
-        KGenericContainer(CORDA_ZULU_IMAGE)
+        KGenericContainer(toString())
             .withNetwork(network.network)
             .withExposedPorts(p2pPort, rpcPort, adminPort)
             .withFileSystemBind(
@@ -98,8 +104,8 @@ abstract class CordaNode internal constructor(protected val network: CordaNetwor
                 nodeDir.resolve("certificates").absolutePath,
                 "/opt/corda/certificates",
                 BindMode.READ_WRITE
-            ).withEnv("NETWORKMAP_URL", network.mapUrl)
-            .withEnv("DOORMAN_URL", network.mapUrl)
+            ).withEnv("NETWORKMAP_URL", network.map.url)
+            .withEnv("DOORMAN_URL", network.map.url)
             .withEnv("NETWORK_TRUST_PASSWORD", "trustpass")
             .withEnv("MY_PUBLIC_ADDRESS", "http://localhost:$p2pPort")
             .withCommand("config-generator --generic")
@@ -117,7 +123,7 @@ abstract class CordaNode internal constructor(protected val network: CordaNetwor
     /**
      * Start this Corda node.
      */
-    open fun start() {
+    override fun start() {
         logger.info("Starting Corda node $canonicalName...")
         container.start()
         logger.info("Started Corda node $canonicalName.")
@@ -126,7 +132,7 @@ abstract class CordaNode internal constructor(protected val network: CordaNetwor
     /**
      * Stop this Corda node.
      */
-    open fun stop() {
+    override fun stop() {
         logger.info("Stopping Corda node $canonicalName...")
         container.stop()
         logger.info("Stopped Corda node $canonicalName.")
@@ -146,11 +152,12 @@ abstract class CordaNode internal constructor(protected val network: CordaNetwor
             nodeConfTemplate.execute(
                 mapOf(
                     "name" to name,
-                    "isNotary" to isNotary,
+                    "isNotary" to (this is CordaNotaryNode),
+                    "isValidating" to ((this is CordaNotaryNode) && validating),
                     "p2pAddress" to "$canonicalName:$p2pPort",
                     "rpcPort" to rpcPort,
                     "adminPort" to adminPort,
-                    "networkMapUrl" to network.mapUrl
+                    "networkMapUrl" to network.map.url
                 ),
                 it
             )
@@ -159,13 +166,15 @@ abstract class CordaNode internal constructor(protected val network: CordaNetwor
     }
 
     private fun saveCertificateFromNetworkMap(nodeDir: File) {
-        val certificateFolder = File(nodeDir, "certificates").apply { mkdir() }
+        val certificateFolder = File(nodeDir, "certificates").apply { mkdirs() }
         val certificateFile = certificateFolder.resolve("network-root-truststore.jks")
-        Files.write(certificateFile.toPath(), network.map.api.networkMap.truststore)
+        Files.write(certificateFile.toPath(), network.api.networkMap.truststore)
     }
 
     companion object : KLogging() {
-        private const val CORDA_ZULU_IMAGE = "corda/corda-zulu-4.1:latest"
+        private const val DEFAULT_ORGANIZATION = "corda"
+        private const val DEFAULT_IMAGE = "corda-zulu-4.1"
+        private const val DEFAULT_TAG = "latest"
 
         private val portRange = 1024..65535
 
