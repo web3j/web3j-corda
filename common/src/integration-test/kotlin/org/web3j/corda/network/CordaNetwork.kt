@@ -186,8 +186,10 @@ class CordaNetwork private constructor() : ContainerCoordinates(
                 networkBlock.accept(this)
 
                 // Initialize a network map
-                map = CordaNetworkMap(this)
-
+                map = CordaNetworkMap(this).apply {
+                    start()
+                }
+                
                 // Auto-start notaries and nodes
                 (notaries + parties).filter {
                     it.autoStart
