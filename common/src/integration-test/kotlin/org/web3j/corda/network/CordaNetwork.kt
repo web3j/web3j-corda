@@ -148,7 +148,8 @@ class CordaNetwork private constructor() : ContainerCoordinates(
         }.forEach { libsDir ->
             // FIXME Avoid copying sources and javadoc JARs, only copy artifacts
             libsDir.walkTopDown().forEach { file ->
-                if (file.name.endsWith(".jar")) {
+                if ((file.name.endsWith(".jar") &&
+                            !(file.name.endsWith("javadoc.jar") || file.name.endsWith("sources.jar")))) {
                     val destFile = File(cordappsDir.toFile(), "${sanitizeCorDappName(file.name)}.jar")
                     Files.copy(file.toPath(), destFile.toPath(), REPLACE_EXISTING)
                 }
