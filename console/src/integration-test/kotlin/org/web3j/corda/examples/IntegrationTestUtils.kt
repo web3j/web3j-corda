@@ -11,24 +11,24 @@
  * specific language governing permissions and limitations under the License.
  */
 package org.web3j.corda.examples
-//
-// import java.io.File
-// import org.web3j.corda.network.network
-// import org.web3j.corda.network.nodes
-// import org.web3j.corda.network.notary
-// import org.web3j.corda.network.party
-//
-// val network = network {
-//    baseDir = File(javaClass.classLoader.getResource("cordapps")!!.file)
-//    nodes {
-//        notary {
-//            name = "O=Notary, L=London, C=GB"
-//        }
-//        party {
-//            name = "O=PartyA, L=London, C=GB"
-//        }
-//        party {
-//            name = "O=PartyB, L=New York, C=US"
-//        }
-//    }
-// }
+
+import java.io.File
+import org.web3j.corda.network.network
+import org.web3j.corda.network.nodes
+import org.web3j.corda.network.notary
+import org.web3j.corda.network.party
+
+val network = network {
+    baseDir = File(javaClass.classLoader.getResource("cordapps")!!.file)
+    nodes {
+        notary {
+            name = "O=Notary, L=London, C=GB"
+        }
+        party {
+            name = "O=PartyA, L=London, C=GB"
+        }
+        party {
+            name = "O=PartyB, L=New York, C=US"
+        }
+    }
+}

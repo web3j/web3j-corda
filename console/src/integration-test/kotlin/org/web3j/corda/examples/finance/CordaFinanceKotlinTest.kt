@@ -14,35 +14,16 @@ package org.web3j.corda.examples.finance
 
 import assertk.assertThat
 import assertk.assertions.isEqualTo
-import java.io.File
 import java.math.BigDecimal
 import org.junit.jupiter.api.Test
+import org.web3j.corda.examples.network
 import org.web3j.corda.finance.flows.CashIssueAndPaymentFlowPayload
 import org.web3j.corda.finance.flows.CashIssueFlowPayload
 import org.web3j.corda.finance.workflows.api.CordaFinanceWorkflows
 import org.web3j.corda.model.AmountCurrency
 import org.web3j.corda.model.core.utilities.OpaqueBytes
-import org.web3j.corda.network.network
-import org.web3j.corda.network.nodes
-import org.web3j.corda.network.notary
-import org.web3j.corda.network.party
 
 class CordaFinanceKotlinTest {
-
-    private val network = network {
-        baseDir = File(javaClass.classLoader.getResource("cordapps")!!.file)
-        nodes {
-            notary {
-                name = "O=Notary, L=London, C=GB"
-            }
-            party {
-                name = "O=PartyA, L=London, C=GB"
-            }
-            party {
-                name = "O=PartyB, L=New York, C=US"
-            }
-        }
-    }
 
     @Test
     fun `cash issue flow`() {

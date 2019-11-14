@@ -14,33 +14,14 @@ package org.web3j.corda.examples.obligation
 
 import assertk.assertThat
 import assertk.assertions.isEqualTo
-import java.io.File
 import java.math.BigDecimal
 import org.junit.jupiter.api.Test
+import org.web3j.corda.examples.network
 import org.web3j.corda.examples.obligation.flows.IssueObligation_InitiatorPayload
 import org.web3j.corda.model.AmountCurrency
-import org.web3j.corda.network.network
-import org.web3j.corda.network.nodes
-import org.web3j.corda.network.notary
-import org.web3j.corda.network.party
 import org.web3j.corda.obligation.api.Obligation
 
 class ObligationKotlinTest {
-
-    private val network = network {
-        baseDir = File(javaClass.classLoader.getResource("cordapps")!!.file)
-        nodes {
-            notary {
-                name = "O=Notary, L=London, C=GB"
-            }
-            party {
-                name = "O=PartyA, L=London, C=GB"
-            }
-            party {
-                name = "O=PartyB, L=New York, C=US"
-            }
-        }
-    }
 
     @Test
     fun `issue obligation`() {
