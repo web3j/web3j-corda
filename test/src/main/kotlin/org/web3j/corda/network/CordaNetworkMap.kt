@@ -46,7 +46,7 @@ class CordaNetworkMap internal constructor(network: CordaNetwork) : ContainerLif
                 it.withHostName(host)
                 it.withName(host)
             }.withNetwork(network.network)
-            .withNetworkAliases(network.image)
+            .withNetworkAliases(host)
             .withEnv("NMS_STORAGE_TYPE", "file")
             .waitingFor(Wait.forHttp("").forPort(PORT))
             .withExposedPorts(PORT)
