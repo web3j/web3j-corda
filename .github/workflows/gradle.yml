@@ -16,4 +16,4 @@ jobs:
       - name: Build with Gradle
         run: ./gradlew build
       - name: Integration test with Gradle
-        run: ./gradlew integrationTest
+        run: ./gradlew integrationTest --no-daemon
