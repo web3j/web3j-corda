@@ -107,7 +107,7 @@ class CordaPartyNode internal constructor(network: CordaNetwork) : CordaNode(net
     }
 
     companion object {
-        private const val BRAID_IMAGE = "cordite/braid:edge"
+        private const val BRAID_IMAGE = "cordite/braid:v4.1.2-RC08"
         private const val BRAID_ALIAS = "braid"
     }
 }
