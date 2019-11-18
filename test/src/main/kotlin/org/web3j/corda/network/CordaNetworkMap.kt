@@ -34,7 +34,7 @@ class CordaNetworkMap internal constructor(network: CordaNetwork) : ContainerLif
      * Network Map instance to access the API.
      */
     internal val instance: NetworkMap by lazy {
-        NetworkMap.build(CordaService("http://localhost:${container.ports[PORT]}"))
+        NetworkMap.build(CordaService("http://${container.containerIpAddress}:${container.ports[PORT]}"))
     }
 
     /**
