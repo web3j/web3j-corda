@@ -91,9 +91,8 @@ abstract class CordaNode internal constructor(protected val network: CordaNetwor
      */
     private val container: KGenericContainer by lazy {
         val nodeDir = File(network.cordappsDir, canonicalName).apply { mkdirs() }
-        createNodeConfFiles(nodeDir.resolve("node.conf"))
+        createNodeConfFile(nodeDir.resolve("node.conf"))
         saveCertificateFromNetworkMap(nodeDir)
-        logger.info { "Network map URL: ${network.map.url}" }
         KGenericContainer(toString())
             .withNetwork(network.network)
             .withExposedPorts(p2pPort, rpcPort, adminPort)
@@ -117,6 +116,8 @@ abstract class CordaNode internal constructor(protected val network: CordaNetwor
                 logger.info { it.utf8String.trimEnd() }
             }.apply {
                 configure(nodeDir)
+                logger.info { "Node $canonicalName environment variables: $envMap" }
+                logger.info { "Node $canonicalName file system binds: $binds" }
             }
     }
 
@@ -147,7 +148,7 @@ abstract class CordaNode internal constructor(protected val network: CordaNetwor
 
     protected abstract fun KGenericContainer.configure(nodeDir: File)
 
-    private fun createNodeConfFiles(file: File) {
+    private fun createNodeConfFile(file: File) {
         PrintWriter(OutputStreamWriter(FileOutputStream(file))).use {
             nodeConfTemplate.execute(
                 mapOf(
@@ -163,6 +164,7 @@ abstract class CordaNode internal constructor(protected val network: CordaNetwor
             )
             it.flush()
         }
+        logger.info { "Node $canonicalName generated node.conf file: \n${file.readText()}" }
     }
 
     private fun saveCertificateFromNetworkMap(nodeDir: File) {
