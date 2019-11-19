@@ -168,18 +168,15 @@ abstract class CordaNode internal constructor(protected val network: CordaNetwor
     }
 
     private fun saveCertificateFromNetworkMap(nodeDir: File) {
-        val certificateFolder = File(nodeDir, "certificates").apply { mkdirs() }
-        val certificateFile = certificateFolder.resolve("network-root-truststore.jks")
-
-        certificateFile.walkTopDown().forEach {
-            logger.info {
-                "${it.absolutePath} ${ if (it.canRead()) "r" else ""}" +
-                    "${ if (it.canWrite()) "w" else ""}${ if (it.canExecute()) "x" else ""}"
-            }
+        val certFolder = File(nodeDir, "certificates").apply { mkdirs() }
+        val certFile = certFolder.resolve("network-root-truststore.jks")
+        logger.info {
+            "Network Trust Root file (${certFile.lengthInKiloBytes} KB) saved at ${certFile.absolutePath}"
         }
-
-        Files.write(certificateFile.toPath(), network.api.networkMap.truststore)
     }
+
+    private val File.lengthInKiloBytes: Long
+        get() = length() / 1024
 
     companion object : KLogging() {
         private const val DEFAULT_ORGANIZATION = "corda"
