@@ -97,6 +97,10 @@ abstract class CordaNode internal constructor(protected val network: CordaNetwor
             .withNetwork(network.network)
             .withExposedPorts(p2pPort, rpcPort, adminPort)
             .withFileSystemBind(
+                nodeDir.resolve("node.conf").absolutePath, "/etc/corda/node.conf",
+                BindMode.READ_WRITE
+            )
+            .withFileSystemBind(
                 nodeDir.absolutePath, "/etc/corda",
                 BindMode.READ_WRITE
             ).withFileSystemBind(
