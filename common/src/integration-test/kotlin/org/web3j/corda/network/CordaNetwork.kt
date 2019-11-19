@@ -167,7 +167,7 @@ class CordaNetwork private constructor() : ContainerCoordinates(
             .map {
                 it.file
             }.apply {
-                filterCorDapps().forEach {
+                filterCorDapps().distinct().forEach {
                     val destFile = File(cordappsDir.toFile(), it.name).toPath()
                     Files.copy(it.toPath(), destFile, REPLACE_EXISTING)
                 }
