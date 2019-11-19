@@ -89,8 +89,7 @@ class CordaNetwork private constructor() : ContainerCoordinates(
             if (isGradleProject()) {
                 // Copy project JARs into cordapps dir
                 createJarUsingGradle(this)
-                // FIXME Commented out causing all files copied
-                // copyGradleDependencies(this)
+                copyGradleDependencies(this)
             } else {
                 // Not a valid Gradle project, copy baseDir
                 baseDir.walkTopDown().forEach {
@@ -165,13 +164,29 @@ class CordaNetwork private constructor() : ContainerCoordinates(
         connection.getModel(IdeaProject::class.java).modules.flatMap {
             it.dependencies
         }.filterIsInstance<IdeaSingleEntryLibraryDependency>()
-            .filter {
-                it.gradleModuleVersion.group.startsWith("net.corda")
-            }.forEach {
-                val destFile = File(cordappsDir.toFile(), it.file.name).toPath()
-                Files.copy(it.file.toPath(), destFile, REPLACE_EXISTING)
+            .map {
+                it.file
+            }.apply {
+                filterCorDapps().forEach {
+                    val destFile = File(cordappsDir.toFile(), it.name).toPath()
+                    Files.copy(it.toPath(), destFile, REPLACE_EXISTING)
+                }
             }
     }
+
+    private fun List<File>.filterCorDapps(): List<File> =
+        map {
+            it.toURI().toURL()
+        }.run {
+            ClassGraph()
+                .enableAnnotationInfo()
+                .overrideClassLoaders(URLClassLoader(toTypedArray(), null))
+                .scan()
+                .getClassesWithAnnotation("net.corda.core.flows.StartableByRPC")
+                .map {
+                    File(it.classpathElementURL.path)
+                }
+        }
 
     private fun isGradleProject(): Boolean {
         return File(baseDir, "build.gradle").exists()
