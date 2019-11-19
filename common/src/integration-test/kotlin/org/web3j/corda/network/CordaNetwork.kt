@@ -12,7 +12,9 @@
  */
 package org.web3j.corda.network
 
+import io.github.classgraph.ClassGraph
 import java.io.File
+import java.net.URLClassLoader
 import java.nio.file.Files
 import java.nio.file.Path
 import java.nio.file.StandardCopyOption.REPLACE_EXISTING
@@ -146,10 +148,9 @@ class CordaNetwork private constructor() : ContainerCoordinates(
         connection.getModel(IdeaProject::class.java).modules.map {
             File(it.gradleProject.buildDirectory, "libs")
         }.forEach { libsDir ->
-            // FIXME Avoid copying sources and javadoc JARs, only copy artifacts
             libsDir.walkTopDown().forEach { file ->
                 if ((file.name.endsWith(".jar") &&
-                            !(file.name.endsWith("javadoc.jar") || file.name.endsWith("sources.jar")))) {
+                            !(file.name.endsWith("-javadoc.jar") || file.name.endsWith("-sources.jar")))) {
                     val destFile = File(cordappsDir.toFile(), "${sanitizeCorDappName(file.name)}.jar")
                     Files.copy(file.toPath(), destFile.toPath(), REPLACE_EXISTING)
                 }
