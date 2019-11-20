@@ -1,9 +1,11 @@
 language: java
 jdk:
   - openjdk8
+
+sudo: required
 services:
   - docker
-sudo: false
+
 before_cache:
   - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
   - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
@@ -11,27 +13,41 @@ cache:
   directories:
     - "$HOME/.gradle/caches/"
     - "$HOME/.gradle/wrapper/"
-install: skip
-test: skip
+
+before_install:
+  - sudo rm /usr/local/bin/docker-compose
+  - curl -L https://github.com/docker/compose/releases/download/1.24.1/docker-compose-Linux-x86_64 > docker-compose
+  - chmod +x docker-compose
+  - sudo mv docker-compose /usr/local/bin
+install:
+  - ./gradlew build -x check --no-daemon
+
 jobs:
   include:
     - stage: build pull request
-      script: "./gradlew spotlessCheck check jacocoTestReport"
+#      script: "./scripts/integration-tests.sh"
+      script: ./gradlew check --no-daemon --stacktrace
       if: type = pull_request
     - stage: build master
-      script: "./gradlew spotlessCheck check jacocoTestReport publishAllPublicationsToSnapshotsRepository"
+      script: "./gradlew --no-daemon spotlessCheck check jacocoTestReport"
       if: branch = master AND NOT type = pull_request
+      deploy:
+        provider: script
+        script: "./gradlew --info --no-daemon publishAllPublicationsToSnapshotsRepository -Pversion=${TRAVIS_BRANCH#'release/'}"
     - stage: build release
       if: branch =~ /release/
-      script: "./gradlew check release bintrayUpload -Pversion=${TRAVIS_BRANCH#'release/'}"
-    - stage: github release
-      if: branch =~ /release/
-      script: "./gradlew check githubRelease -Pversion=${TRAVIS_BRANCH#'release/'}"
+#      script: "./scripts/integration-tests.sh"
+      script: "./gradlew --no-daemon --stacktrace check jacocoTestReport"
+      deploy:
+        provider: script
+        script: "./gradlew --info --no-daemon bintrayUpload githubRelease -Pversion=${TRAVIS_BRANCH#'release/'}"
 after_success:
   - bash <(curl -s https://codecov.io/bash)
+
 env:
   global:
     - secure: n1kA8zHz14XUvebm7uQ2GWo9Pl/eGfTzP+1bkq2kDFWx2B6o4ozkQLOiN7jPNiR0KL6oRIGweR4eDx5fVxoOdGx7ZwfDhJAf0pnBtEGoM19n+89v0yquIz1k+3nFhyb1ppSnP6jqU3yz3DRTE54m3yy9zIcOKC5DG4/C/dSQkXzW8APBKuk8xolEXV5+V4u4Go3XocuRjmEQN23ViWL92DhxFQqthmj3DUYv0s2e/vXmc11dOYkIIsZ0eKnQIDlcvX6rZ8J7q81ZAZ5At84VTsjesjSIRQUQADzXNEBxKxfSaep9EP9uAXliBrD4wY5zm0u7ula5kOSZiG8Uyb2CuIlbYeS4HBPrlZzWBtipPaZexDiHr/eik9GVaCL2HdfIR1TYEyiRrKkMCx25ZMGWmqc1Po8S7M8WUoe/4MsSJ/QenUoEcE2vV0q1nFEweRQrz1XtltyTdL3dkVuLXLMXP+6F2wigd3vNnNWwi+cVyHaU/UxtXRcD5pRF7X+6wQE/8nAnz3P4ciYvwOYvEv4ZPz4IbgrEf0KD8PrJvk1dlnCxUyoryxKhsfbMQ6DgcCqA7f53cmPETCQkc/JNdUeyBRicnkbsq4fgHHuiN7T1XgVmB6f9veDCc2Y9mFgKH9RWVOxRjBIRA7mWeDeO5YYhqN2l8X9blD1UOsy5Pppp9VI=
     - secure: HyAXyglbcIV+5nbdyR2I4pNhYpJ0VLZiAXqDnvJR+43kVHD/NzoQTKhKOdg2fPNPQMwKEaqB8UgK6k3F8iMNWDN7kj1GVET7VEFM5LNR0tPLbQz2VdewgZyTPBtlXxxfm7k4wKQ8rflIW1Bw7+mUWMTKxyoZlIeSwaZeArt05WuYEoJIDeQv5U3TX80oeoknoTk0wWHw8Qmi+oNPej71uEpdWtfHQplQ9myEW4MNewxEa3XR3tTd6lsvb1EKZmcIYW4FQReN7X+VNAY8WfNaapz0uYDLdT8B8Fy+76F9kA2DXgUMBtwaeOLFjn6GbGzUIYMrnUpvzpGBvzG91c+vAvtGB6BKy4U/XdsvgsK7KzJ7llgTs6IqCahhiijFX0VQomPghHED/M5az58rUM00JdAmSUX83At61oY4jVD4WSIwcaHQXWruUDlhWSqYPeLMdLjj4SM1xBreVX5mimvuC/O+e6zmjgUJADrPexu52RHrAlI47V8zTcHbMrsKxhExVlKRqOxZzQIfDFETKXmSDnHKhnXdVr94Kv+Fadw0sBXrWBYX6deRiyBy9sS89LgoDY2xy0j/uWq56900tYPKGh7inbA6YK4QgS6JqCkQUq3ySSA8I4uiDdKmhRikc5MPKVfag3wIxQsnUknjryPY6tIGKt8ehu3QdGbbtWyvu0U=
     - secure: Sp3qqPq5ySWkW7NXiWmci6Q8HJtljLE9EdK+OMBTfXHmbpz0M/TNsg/pt7AXSZp+XVsQvElCBUNjvdt/mpY6sCRZIJQp1UjzfygMNnRZ5OmodFqUT+4K/tc9EC8WbnfGImIm63ANIjtQ99SjHnGt0JccmKCC4bIo6pQQgPHchYpAJvRxNSXcPTO/0pNNouOmhJEzGrEbcLqxqAvHJ9PCAGhXBWCxEsB51iVK1tYFZ4+SBvW/DTOVfGwpz9sQbu1XpCriHFfXyklKin+D1p1iycnwqtqPsl3SFE27laVwtJBf/uhvjSixwTD8W6bMs6zNqa4quS61irK7xE7E9rK5JzgB33z+sN6eV7qnM/PxW1l8jWyrPFdqJR96LZuLYe1zXp2VZ1JVBva+q+Q8sQQQaryJqB9LuzoTdHc5t8WRqSPo7+T8ZAMoyFUj8Dkb3303k2qHZN1e/rwq6J+4IF8fOXr4BSwhLFCnvaEDGu007P3S16L+ov5Cm+ULaCSahIdpSUVtj44fLW9dCoe/NwY/S8BcvxwQ4UDg+7RHMFpVpKSwz08r+Ws9+Z7B/rW6vH/xYpl7RSsYStxlGPaa8WxaUhUNKXCOK9k/O38BWsqVDfnCoX2yDJY8dfUuTeSx5EN1W/LhFfMTRQotjpynmWn2MQ1p6LcsOt8fXFZFeqrJpoc=
     - secure: CB4uHvLH10IIZJGIeqQHiWlAY9f3pEZUsjZXoQFFjxZapkwal+KLQL+tD8uGtc56ETsfw8yRqpnlUEjXKYDE+f39ZrX4vFYNwdstXgavTJyeXk4TRdUPEpHkBroFwX1N2ILHE0hqPhTyWyc5lMv3h1MOAtxGFcQdbwJK0YyjryZsW0bbAJMWxsteY2SdjTXs5MF5HU1keTsbHII/EmxkeUJMKmbEnPMS1efd0DvXnE1txOTA+qwHh/oyLVzfyi83Y+99bygMDyuzsANoUqTp/sJejgE9VFPtT0WRIB1w3lIsT8Ocy+hdWL+PDws1vy8itRiw/xH0ktE8ZdgCUhrPqrnrvYV7VTZSs1qTtkoS7r1wwX+npDMv8SsAOIkBK9CGHBEm8wyxD3EbNXbzQn9ng+PPuBCMaWNmIkUCyXH30a5ftOTspQYe4B77fvrTbU803dyxo0437NZyLqgVNK7sKGmPRcvJMVjdCATDgu4gbHbNhrL2UlMoZnGFlqTAj7cBOcZdBQ/aMDNGRQ39L9xSSFNfsC+V3cAai3WA3ikj7BYyzgjBXadVTR/4uuPxNucT5lBUENfmXCpDUKoeKPRTFT9tLmUfwPlcirlUb18XSoxZ/bHz4O1dSi12EM47nLj29GvTrEALFGWLMCSNfceiwXipN/B7yGXYj74NNJo2XM4=
+    - secure: e2nsyl9PXZjbCwsPHd5B/R9Uxnq5cZ01g9PnlluMPOGny1xnSi8ajutmDswXInDQDPeEEG9jDEuSdfJ7Rf5+SDLmb/JvXG/bL2ilg9hs31/KZtb81ukwTB3SvWTslXF9P08vkgS8+VoCpm4k/dzliDsWev/Sol/sNNTRajdV7U7c2RCYkCJ3qljRf7oDU18yu83Zs0NW/V9mCqm6QjCE5VO3Yg3IZdOtPguuOdPf/Kb5DoPgxbbhQze9Xq7HRPQah7iyDxFKo/v4wRhGuqrnIvlVg3i0QNeNSx+aNM67/QHubT4cfrUicHPFrdWbKjFsLGa1seLKNlpRGwA/lh9xkTvIs/tJS23spWIES7PKRAiWTLsfi/Kt2VCV503hjhk1LF4u3R8gKavlSrBV86jdXFK8o6WanqT/6J5fZsOcEDsi0krB6anbjgK0gny7YBucl7OTBf/WPpnXhKOyHiOLsvmr19rnr990qm+HVA9y6S/8lTQDC/muGlBR2hpZ+RKSIkhbVu0C8YjfcWImQvTFt/223LrABtspORxzkqEhy336lzrSmGt7UgsqxZJ40Zxpb/MyEXMmN/czVBkT3JXM5kDNm3iY4GxZvPAoVgOSX9MYsj1TrKCPT34v9X2djHNZEEJNjCIbRAex1++uh7fLYiu1yR7v/bU6DU1N8IRaHYg=

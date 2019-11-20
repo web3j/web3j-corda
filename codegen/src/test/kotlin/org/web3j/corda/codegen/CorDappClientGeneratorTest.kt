@@ -23,8 +23,8 @@ import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.fail
 import org.junit.jupiter.api.io.TempDir
-import org.web3j.corda.test.hasName
-import org.web3j.corda.test.hasVoidFunction
+import org.web3j.corda.assertion.hasName
+import org.web3j.corda.assertion.hasVoidFunction
 import org.web3j.corda.util.KCompilerClassLoader
 
 /**

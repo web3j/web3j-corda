@@ -17,8 +17,9 @@
     <logger name="org.web3j.corda.codegen.CordaGeneratorUtils" level="error"/>
 
     <logger name="org.junit.jupiter" level="warn"/>
-
-    <logger name="org.web3j.corda.protocol" level="debug"/>
+    
+    <logger name="org.testcontainers" level="debug"/>
+    <logger name="org.web3j.corda" level="debug"/>
 
     <root level="info">
         <appender-ref ref="CONSOLE"/>

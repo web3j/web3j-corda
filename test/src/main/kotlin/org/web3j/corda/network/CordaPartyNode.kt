@@ -43,7 +43,7 @@ class CordaPartyNode internal constructor(network: CordaNetwork) : CordaNode(net
      * Corda API to interact with this node.
      */
     val corda: Corda by lazy {
-        Corda.build(CordaService("http://localhost:${braid.ports[apiPort]}"))
+        Corda.build(CordaService("http://${braid.containerIpAddress}:${braid.ports[apiPort]}"))
     }
 
     /**
@@ -107,7 +107,7 @@ class CordaPartyNode internal constructor(network: CordaNetwork) : CordaNode(net
     }
 
     companion object {
-        private const val BRAID_IMAGE = "cordite/braid:edge"
+        private const val BRAID_IMAGE = "cordite/braid:v4.1.2-RC08"
         private const val BRAID_ALIAS = "braid"
     }
 }
