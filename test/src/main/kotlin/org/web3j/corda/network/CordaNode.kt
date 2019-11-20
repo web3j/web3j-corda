@@ -63,6 +63,9 @@ abstract class CordaNode internal constructor(protected val network: CordaNetwor
      */
     var timeOut: Duration = Duration.ofMinutes(5)
 
+    /**
+     * X.500 canonical name for this Corda node, eg. `notary-london-gb`.
+     */
     val canonicalName: String by lazy {
         require(::name.isInitialized)
         X500Principal(name).canonicalName
