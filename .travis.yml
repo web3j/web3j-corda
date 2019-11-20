@@ -29,7 +29,7 @@ jobs:
       script: ./gradlew check --no-daemon --stacktrace
       if: type = pull_request
     - stage: build master
-      script: "./gradlew --no-daemon spotlessCheck check"
+      script: "./gradlew --no-daemon spotlessCheck check jacocoTestReport"
       if: branch = master AND NOT type = pull_request
       deploy:
         provider: script
@@ -37,7 +37,7 @@ jobs:
     - stage: build release
       if: branch =~ /release/
 #      script: "./scripts/integration-tests.sh"
-      script: ./gradlew check --no-daemon --stacktrace
+      script: "./gradlew --no-daemon --stacktrace check jacocoTestReport"
       deploy:
         provider: script
         script: "./gradlew --info --no-daemon bintrayUpload githubRelease -Pversion=${TRAVIS_BRANCH#'release/'}"
