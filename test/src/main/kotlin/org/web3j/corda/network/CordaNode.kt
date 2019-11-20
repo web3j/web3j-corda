@@ -19,13 +19,13 @@ import java.io.InputStreamReader
 import java.io.OutputStreamWriter
 import java.io.PrintWriter
 import java.net.ServerSocket
+import java.nio.file.Files
 import java.time.Duration
 import javax.security.auth.x500.X500Principal
 import mu.KLogging
 import org.testcontainers.containers.BindMode
 import org.web3j.corda.testcontainers.KGenericContainer
 import org.web3j.corda.util.canonicalName
-import java.nio.file.Files
 
 /**
  * Corda network node exposing a Corda API through a Braid container.
