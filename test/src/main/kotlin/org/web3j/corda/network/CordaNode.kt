@@ -25,6 +25,7 @@ import mu.KLogging
 import org.testcontainers.containers.BindMode
 import org.web3j.corda.testcontainers.KGenericContainer
 import org.web3j.corda.util.canonicalName
+import java.nio.file.Files
 
 /**
  * Corda network node exposing a Corda API through a Braid container.
@@ -95,10 +96,6 @@ abstract class CordaNode internal constructor(protected val network: CordaNetwor
         KGenericContainer(toString())
             .withNetwork(network.network)
             .withExposedPorts(p2pPort, rpcPort, adminPort)
-            .withFileSystemBind(
-                nodeDir.resolve("node.conf").absolutePath, "/etc/corda/node.conf",
-                BindMode.READ_WRITE
-            )
             .withFileSystemBind(
                 nodeDir.absolutePath, "/etc/corda",
                 BindMode.READ_WRITE
@@ -173,6 +170,7 @@ abstract class CordaNode internal constructor(protected val network: CordaNetwor
     private fun saveCertificateFromNetworkMap(nodeDir: File) {
         val certFolder = File(nodeDir, "certificates").apply { mkdirs() }
         val certFile = certFolder.resolve("network-root-truststore.jks")
+        Files.write(certFile.toPath(), network.api.networkMap.truststore)
         logger.info {
             "Network Trust Root file (${certFile.lengthInKiloBytes} KB) saved at ${certFile.absolutePath}"
         }
