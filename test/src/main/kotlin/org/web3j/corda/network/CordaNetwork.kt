@@ -167,7 +167,7 @@ class CordaNetwork private constructor() : ContainerCoordinates(
             .map {
                 it.file
             }.apply {
-                filterCorDapps().distinct().forEach {
+                filterCorDapps().forEach {
                     val destFile = File(cordappsDir.toFile(), it.name).toPath()
                     Files.copy(it.toPath(), destFile, REPLACE_EXISTING)
                 }
@@ -183,14 +183,11 @@ class CordaNetwork private constructor() : ContainerCoordinates(
                 .overrideClassLoaders(URLClassLoader(toTypedArray(), null))
                 .scan()
                 .getClassesWithAnnotation("net.corda.core.flows.StartableByRPC")
-                .map {
-                    File(it.classpathElementURL.path)
-                }
+                .map { File(it.classpathElementURL.path) }
+                .distinct()
         }
 
-    private fun isGradleProject(): Boolean {
-        return File(baseDir, "build.gradle").exists()
-    }
+    private fun isGradleProject() = File(baseDir, "build.gradle").exists()
 
     companion object {
         /**
