@@ -3,8 +3,8 @@
 * Values: {{#allowableValues}}{{#enumVars}}{{{value}}}{{^-last}}, {{/-last}}{{/enumVars}}{{/allowableValues}}
 */
 @Generated(
-value = ["{{generator}}"],
-date = "{{currentDate}}"
+    value = ["{{generator}}"],
+    date = "{{currentDate}}"
 )
 enum class {{classname}} {
 {{#allowableValues}}{{#enumVars}}{{#unquote}}{{{value}}}{{/unquote}}{{^-last}},{{/-last}}
