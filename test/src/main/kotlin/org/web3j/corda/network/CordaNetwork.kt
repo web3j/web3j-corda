@@ -54,12 +54,12 @@ class CordaNetwork private constructor() : ContainerCoordinates(
     /**
      * The nodes in this network.
      */
-    lateinit var notaries: List<CordaNotaryNode>
+    val notaries: List<CordaNotaryNode> = arrayListOf()
 
     /**
      * The nodes in this network.
      */
-    lateinit var parties: List<CordaPartyNode>
+    val parties: List<CordaPartyNode> = arrayListOf()
 
     /**
      * Client API to interact with this network.
@@ -130,9 +130,6 @@ class CordaNetwork private constructor() : ContainerCoordinates(
     fun nodesJava(nodesBlock: Consumer<CordaNodes>) {
         CordaNodes(this).apply {
             nodesBlock.accept(this)
-        }.also {
-            notaries = it.notaries
-            parties = it.parties
         }
     }
 
