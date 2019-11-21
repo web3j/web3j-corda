@@ -12,7 +12,9 @@
  */
 package org.web3j.corda.network
 
+import io.github.classgraph.ClassGraph
 import java.io.File
+import java.net.URLClassLoader
 import java.nio.file.Files
 import java.nio.file.Path
 import java.nio.file.StandardCopyOption.REPLACE_EXISTING
@@ -87,8 +89,7 @@ class CordaNetwork private constructor() : ContainerCoordinates(
             if (isGradleProject()) {
                 // Copy project JARs into cordapps dir
                 createJarUsingGradle(this)
-                // FIXME Commented out causing all files copied
-                // copyGradleDependencies(this)
+                copyGradleDependencies(this)
             } else {
                 // Not a valid Gradle project, copy baseDir
                 baseDir.walkTopDown().forEach {
@@ -146,9 +147,9 @@ class CordaNetwork private constructor() : ContainerCoordinates(
         connection.getModel(IdeaProject::class.java).modules.map {
             File(it.gradleProject.buildDirectory, "libs")
         }.forEach { libsDir ->
-            // FIXME Avoid copying sources and javadoc JARs, only copy artifacts
             libsDir.walkTopDown().forEach { file ->
-                if (file.name.endsWith(".jar")) {
+                if ((file.name.endsWith(".jar") &&
+                            !(file.name.endsWith("-javadoc.jar") || file.name.endsWith("-sources.jar")))) {
                     val destFile = File(cordappsDir.toFile(), "${sanitizeCorDappName(file.name)}.jar")
                     Files.copy(file.toPath(), destFile.toPath(), REPLACE_EXISTING)
                 }
@@ -163,13 +164,29 @@ class CordaNetwork private constructor() : ContainerCoordinates(
         connection.getModel(IdeaProject::class.java).modules.flatMap {
             it.dependencies
         }.filterIsInstance<IdeaSingleEntryLibraryDependency>()
-            .filter {
-                it.gradleModuleVersion.group.startsWith("net.corda")
-            }.forEach {
-                val destFile = File(cordappsDir.toFile(), it.file.name).toPath()
-                Files.copy(it.file.toPath(), destFile, REPLACE_EXISTING)
+            .map {
+                it.file
+            }.apply {
+                filterCorDapps().distinct().forEach {
+                    val destFile = File(cordappsDir.toFile(), it.name).toPath()
+                    Files.copy(it.toPath(), destFile, REPLACE_EXISTING)
+                }
             }
     }
+
+    private fun List<File>.filterCorDapps(): List<File> =
+        map {
+            it.toURI().toURL()
+        }.run {
+            ClassGraph()
+                .enableAnnotationInfo()
+                .overrideClassLoaders(URLClassLoader(toTypedArray(), null))
+                .scan()
+                .getClassesWithAnnotation("net.corda.core.flows.StartableByRPC")
+                .map {
+                    File(it.classpathElementURL.path)
+                }
+        }
 
     private fun isGradleProject(): Boolean {
         return File(baseDir, "build.gradle").exists()
