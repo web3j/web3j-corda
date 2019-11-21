@@ -12,20 +12,18 @@
  */
 package org.web3j.corda.codegen
 
-import io.github.classgraph.ClassGraph
 import io.swagger.v3.parser.OpenAPIV3Parser
 import io.swagger.v3.parser.core.models.ParseOptions
 import io.swagger.v3.parser.core.models.SwaggerParseResult
 import java.io.File
 import org.openapitools.codegen.ClientOptInput
-import org.openapitools.codegen.ClientOpts
 import org.openapitools.codegen.CodegenConstants.APIS
 import org.openapitools.codegen.CodegenConstants.API_TESTS
 import org.openapitools.codegen.CodegenConstants.MODELS
 import org.openapitools.codegen.CodegenConstants.MODEL_PACKAGE
 import org.openapitools.codegen.CodegenConstants.PACKAGE_NAME
 import org.openapitools.codegen.DefaultGenerator
-import org.openapitools.codegen.config.GeneratorProperties.setProperty
+import org.openapitools.codegen.config.GlobalSettings.setProperty
 import org.web3j.corda.codegen.CordaGeneratorUtils.repackage
 import org.web3j.corda.model.AmountCurrency
 import org.web3j.corda.model.InvocationError
@@ -60,7 +58,7 @@ class CorDappClientGenerator(
         opts(
             ClientOptInput()
                 .config(CorDappClientCodegen(packageName, outputDir, typeMapping, cordaMapping))
-                .opts(ClientOpts())
+//                .opts(ClientOpts())
                 .openAPI(result.openAPI)
         )
         configureGeneratorProperties(result)
@@ -91,19 +89,19 @@ class CorDappClientGenerator(
         typeMapping["Issued_issuer"] = Issued_issuer::class.qualifiedName!!
         typeMapping["Issued"] = Issued::class.qualifiedName!!
 
-        // Map Corda and Braid model classes to avoid re-generation
-        ClassGraph().enableClassInfo().scan().allClasses.apply {
-
-            filter { it.packageName.startsWith(CORDA_REPACKAGED) }.forEach {
-                val repackaged = it.packageName.replace(CORDA_REPACKAGED, "net.corda")
-                typeMapping["$repackaged.${it.simpleName}"] = it.name
-            }
-
-            filter { it.packageName.startsWith(BRAID_REPACKAGED) }.forEach {
-                val repackaged = it.packageName.replace(BRAID_REPACKAGED, "io.bluebank.braid.corda")
-                typeMapping["$repackaged.${it.simpleName}"] = it.name
-            }
-        }
+//        // Map Corda and Braid model classes to avoid re-generation
+//        ClassGraph().enableClassInfo().scan().allClasses.apply {
+//
+//            filter { it.packageName.startsWith(CORDA_REPACKAGED) }.forEach {
+//                val repackaged = it.packageName.replace(CORDA_REPACKAGED, "net.corda")
+//                typeMapping["$repackaged.${it.simpleName}"] = it.name
+//            }
+//
+//            filter { it.packageName.startsWith(BRAID_REPACKAGED) }.forEach {
+//                val repackaged = it.packageName.replace(BRAID_REPACKAGED, "io.bluebank.braid.corda")
+//                typeMapping["$repackaged.${it.simpleName}"] = it.name
+//            }
+//        }
     }
 
     private fun configureGeneratorProperties(result: SwaggerParseResult) {
