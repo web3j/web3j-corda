@@ -18,14 +18,15 @@ import java.io.FileOutputStream
 import java.io.InputStreamReader
 import java.io.OutputStreamWriter
 import java.io.PrintWriter
-import java.net.ServerSocket
 import java.nio.file.Files
 import java.time.Duration
+import java.util.function.Consumer
 import javax.security.auth.x500.X500Principal
 import mu.KLogging
 import org.testcontainers.containers.BindMode
 import org.web3j.corda.testcontainers.KGenericContainer
 import org.web3j.corda.util.canonicalName
+import org.web3j.corda.util.randomPort
 
 /**
  * Corda network node exposing a Corda API through a Braid container.
@@ -39,19 +40,28 @@ abstract class CordaNode internal constructor(protected val network: CordaNetwor
     lateinit var name: String
 
     /**
+     * IP address of this Corda node, e.g. `notary:10006`.
+     */
+    val p2pAddress: String by lazy {
+        "${container.containerIpAddress}:$p2pPort"
+    }
+
+    /**
      * Corda P2P port for this node.
      */
     var p2pPort: Int = randomPort()
 
     /**
-     * Corda RPC port for this node.
+     * Corda RPC ports configuration.
      */
-    var rpcPort: Int = randomPort()
+    val rpcSettings: CordaRpcSettings by lazy {
+        CordaRpcSettings(this)
+    }
 
     /**
-     * Admin port for this Corda node.
+     * Corda RPC users configuration.
      */
-    var adminPort: Int = randomPort()
+    val rpcUsers: CordaRpcUsers = CordaRpcUsers()
 
     /**
      * Start this node automatically?
@@ -92,13 +102,13 @@ abstract class CordaNode internal constructor(protected val network: CordaNetwor
     /**
      * Docker container instance for this node.
      */
-    private val container: KGenericContainer by lazy {
+    internal val container: KGenericContainer by lazy {
         val nodeDir = File(network.cordappsDir, canonicalName).apply { mkdirs() }
         createNodeConfFile(nodeDir.resolve("node.conf"))
         saveCertificateFromNetworkMap(nodeDir)
         KGenericContainer(toString())
             .withNetwork(network.network)
-            .withExposedPorts(p2pPort, rpcPort, adminPort)
+            .withExposedPorts(p2pPort, rpcSettings.port, rpcSettings.adminPort)
             .withFileSystemBind(
                 nodeDir.absolutePath, "/etc/corda",
                 BindMode.READ_WRITE
@@ -124,6 +134,16 @@ abstract class CordaNode internal constructor(protected val network: CordaNetwor
             }
     }
 
+    @JvmName("rpcSettings")
+    fun rpcSettingsJava(rpcSettingsBlock: Consumer<CordaRpcSettings>) {
+        rpcSettingsBlock.accept(rpcSettings)
+    }
+
+    @JvmName("rpcUsers")
+    fun rpcUsersJava(rpcUsersBlock: Consumer<CordaRpcUsers>) {
+        rpcUsersBlock.accept(rpcUsers)
+    }
+
     /**
      * Start this Corda node.
      */
@@ -144,9 +164,12 @@ abstract class CordaNode internal constructor(protected val network: CordaNetwor
 
     internal open fun validate() {
         require(name.isNotBlank()) { "Field 'name' cannot be blank" }
-        require(p2pPort.isPort()) { "Field 'p2pPort' is not in $portRange" }
-        require(rpcPort.isPort()) { "Field 'rpcPort' is not in $portRange" }
-        require(adminPort.isPort()) { "Field 'adminPort' is not in $portRange" }
+        require(p2pPort.isPort()) { "Field 'p2pPort' is not a valid port" }
+        require(rpcSettings.port.isPort()) { "Field 'rpcSettings.port' is not a valid port" }
+        require(rpcSettings.adminPort.isPort()) { "Field 'rpcSettings.adminPort' is not a valid port" }
+        require(rpcUsers.user.isNotBlank()) { "Field 'rpcUsers.user' cannot be blank" }
+        require(rpcUsers.password.isNotBlank()) { "Field 'rpcUsers.password' cannot be blank" }
+        require(rpcUsers.permissions.isNotEmpty()) { "Field 'rpcUsers.permissions' cannot be empty" }
     }
 
     protected abstract fun KGenericContainer.configure(nodeDir: File)
@@ -159,9 +182,12 @@ abstract class CordaNode internal constructor(protected val network: CordaNetwor
                     "isNotary" to (this is CordaNotaryNode),
                     "isValidating" to ((this is CordaNotaryNode) && validating),
                     "p2pAddress" to "$canonicalName:$p2pPort",
-                    "rpcPort" to rpcPort,
-                    "adminPort" to adminPort,
-                    "networkMapUrl" to network.map.url
+                    "rpcPort" to rpcSettings.port,
+                    "adminPort" to rpcSettings.adminPort,
+                    "user" to rpcUsers.user,
+                    "password" to rpcUsers.password,
+                    "permissions" to rpcUsers.permissions.joinToString(","),
+                    "compatibilityZoneURL" to network.map.url
                 ),
                 it
             )
@@ -188,9 +214,6 @@ abstract class CordaNode internal constructor(protected val network: CordaNetwor
         private const val DEFAULT_TAG = "latest"
 
         private val portRange = 1024..65535
-
-        @JvmStatic
-        protected fun randomPort() = ServerSocket(0).use { it.localPort }
 
         @JvmStatic
         protected fun Int?.isPort() = this != null && portRange.contains(this)

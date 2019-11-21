@@ -18,6 +18,7 @@ import org.testcontainers.containers.wait.strategy.Wait
 import org.web3j.corda.protocol.Corda
 import org.web3j.corda.protocol.CordaService
 import org.web3j.corda.testcontainers.KGenericContainer
+import org.web3j.corda.util.randomPort
 
 /**
  * Corda network node exposing a Corda API through a Braid container.
@@ -25,25 +26,22 @@ import org.web3j.corda.testcontainers.KGenericContainer
 class CordaPartyNode internal constructor(network: CordaNetwork) : CordaNode(network) {
 
     /**
-     * Braid server username.
-     */
-    var userName: String = "user1"
-
-    /**
-     * Braid server password.
-     */
-    var password: String = "test"
-
-    /**
      * Braid server API port.
      */
-    var apiPort: Int = randomPort()
+    var webPort: Int = randomPort()
+
+    /**
+     * Braid server API address.
+     */
+    val webAddress: String by lazy {
+        "${braid.containerIpAddress}:${braid.ports[webPort]}"
+    }
 
     /**
      * Corda API to interact with this node.
      */
     val corda: Corda by lazy {
-        Corda.build(CordaService("http://${braid.containerIpAddress}:${braid.ports[apiPort]}"))
+        Corda.build(CordaService("http://$webAddress"))
     }
 
     /**
@@ -60,13 +58,13 @@ class CordaPartyNode internal constructor(network: CordaNetwork) : CordaNode(net
                 "/opt/braid/cordapps",
                 BindMode.READ_WRITE
             ).withNetwork(network.network)
-            .withExposedPorts(apiPort)
+            .withExposedPorts(webPort)
             .withNetworkAliases(braidName)
-            .withEnv("NODE_RPC_ADDRESS", "$canonicalName:$rpcPort")
-            .withEnv("NODE_RPC_USERNAME", userName)
-            .withEnv("NODE_RPC_PASSWORD", password)
-            .withEnv("PORT", "$apiPort")
-            .waitingFor(Wait.forHttp("").forPort(apiPort))
+            .withEnv("NODE_RPC_ADDRESS", "$canonicalName:${rpcSettings.port}")
+            .withEnv("NODE_RPC_USERNAME", rpcUsers.user)
+            .withEnv("NODE_RPC_PASSWORD", rpcUsers.password)
+            .withEnv("PORT", "$webPort")
+            .waitingFor(Wait.forHttp("").forPort(webPort))
             .withLogConsumer {
                 logger.info { it.utf8String.trimEnd() }
             }
@@ -93,8 +91,7 @@ class CordaPartyNode internal constructor(network: CordaNetwork) : CordaNode(net
     }
 
     override fun validate() {
-        require(userName.isNotBlank()) { "Field 'userName' cannot be blank" }
-        require(password.isNotBlank()) { "Field 'password' cannot be blank" }
+        require(webPort.isPort()) { "Field 'webPort' is not a valid port" }
         super.validate()
     }
 

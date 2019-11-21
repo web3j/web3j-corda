@@ -15,12 +15,12 @@ security {
         dataSource {
             type=INMEMORY
             users=[{
-                password=test
-                permissions=[ALL]
-                user=user1
+                user={{user}}
+                password={{password}}
+                permissions=[{{permissions}}]
             }]
         }
     }
 }
-compatibilityZoneURL="{{networkMapUrl}}"
+compatibilityZoneURL="{{compatibilityZoneURL}}"
 devModeOptions.allowCompatibilityZone=true
