@@ -21,7 +21,7 @@ import org.web3j.corda.network.notary
 import org.web3j.corda.network.party
 
 val network = network {
-    baseDir = File(javaClass.classLoader.getResource("cordapps")!!.file)
+    directory = File(javaClass.classLoader.getResource("cordapps")!!.file)
     nodes {
         notary {
             name = "O=Notary, L=London, C=GB"

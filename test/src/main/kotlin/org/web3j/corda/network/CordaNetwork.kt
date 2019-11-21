@@ -49,7 +49,7 @@ class CordaNetwork private constructor() : ContainerCoordinates(
     /**
      * Directory where the CorDapp JARs are located.
      */
-    var baseDir: File = File(System.getProperty("user.dir"))
+    var directory: File = File(System.getProperty("user.dir"))
 
     /**
      * The nodes in this network.
@@ -92,7 +92,7 @@ class CordaNetwork private constructor() : ContainerCoordinates(
                 copyGradleDependencies(this)
             } else {
                 // Not a valid Gradle project, copy baseDir
-                baseDir.walkTopDown().forEach {
+                directory.walkTopDown().forEach {
                     if (it.absolutePath.endsWith(".jar")) {
                         Files.copy(
                             it.toPath(),
@@ -114,12 +114,12 @@ class CordaNetwork private constructor() : ContainerCoordinates(
     internal val network = Network.newNetwork()
 
     /**
-     * Gradle connection to the CorDapp located in [baseDir].
+     * Gradle connection to the CorDapp located in [directory].
      */
     private val connection: ProjectConnection by lazy {
         GradleConnector.newConnector()
             .useBuildDistribution()
-            .forProjectDirectory(baseDir)
+            .forProjectDirectory(directory)
             .connect()
     }
 
@@ -137,7 +137,7 @@ class CordaNetwork private constructor() : ContainerCoordinates(
     }
 
     /**
-     * Build the CorDapp located in [baseDir] using the `jar` task and copy the resulting JAR into the given directory.
+     * Build the CorDapp located in [directory] using the `jar` task and copy the resulting JAR into the given directory.
      */
     private fun createJarUsingGradle(cordappsDir: Path) {
         // Run the jar task to create the CorDapp JARs
@@ -187,7 +187,7 @@ class CordaNetwork private constructor() : ContainerCoordinates(
                 .distinct()
         }
 
-    private fun isGradleProject() = File(baseDir, "build.gradle").exists()
+    private fun isGradleProject() = File(directory, "build.gradle").exists()
 
     companion object {
         /**
