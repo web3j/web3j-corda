@@ -91,6 +91,7 @@ Defines a dockerized Corda network.
 ### **`notary`**, **`party`**
 
 Inside a `network` you can declare nodes using the `notary` and `party` markers.
+Both have in common the following configuration values:
 
 #### Required configuration
 
@@ -174,6 +175,8 @@ Defines a Corda notary node.
     Defines this notary as validation (defaults to `false`).
 
 ### **`party`**
+
+Defines a Corda party node.
 
 #### Optional configuration
 
