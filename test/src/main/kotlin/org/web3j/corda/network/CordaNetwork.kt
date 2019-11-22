@@ -40,7 +40,6 @@ import org.web3j.corda.util.sanitizeCorDappName
 class CordaNetwork private constructor() : ContainerCoordinates(
     DEFAULT_ORGANIZATION, DEFAULT_IMAGE, DEFAULT_TAG
 ) {
-
     /**
      * Open API version.
      */
