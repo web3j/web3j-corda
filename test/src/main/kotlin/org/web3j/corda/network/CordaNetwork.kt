@@ -51,6 +51,11 @@ class CordaNetwork private constructor() : ContainerCoordinates(
     var directory: File = File(System.getProperty("user.dir"))
 
     /**
+     * Make container tag settable.
+     */
+    override var tag = super.tag
+    
+    /**
      * The nodes in this network.
      */
     val notaries: List<CordaNotaryNode> = arrayListOf()
@@ -69,11 +74,6 @@ class CordaNetwork private constructor() : ContainerCoordinates(
      * Corda service for this network.
      */
     val service: CordaService by lazy { map.instance.service }
-
-    /**
-     * Make container tag settable.
-     */
-    override var tag = super.tag
 
     /**
      * The network map in this network.
