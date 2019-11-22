@@ -17,7 +17,7 @@ nav:
   - Working with Client Wrappers : usage.md
   - Network Queries : network.md
   - Command Line Tools: command_line_tools.md
-  - Writing tests: tests.md
+  - Creating test networks: tests.md
   - Examples: examples.md
   - Support: support.md
 
