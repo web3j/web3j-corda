@@ -1,4 +1,4 @@
-Creating test networks
+Test network reference
 ======================
 
 Web3j Corda provides a DSL that allows you to automatically generate and configure a set of nodes for testing
@@ -6,8 +6,8 @@ Web3j Corda provides a DSL that allows you to automatically generate and configu
 Here is an example of a Corda network that creates three nodes and start them on Docker containers:
 
 ```kotlin
-val network = network {
-    directory = File(System.getProperty("user.dir")).parentFile
+val myNetwork = network {
+    directory = File("<path-to-corDapp>")
     nodes {
         notary {
             name = "O=Notary, L=London, C=GB"
@@ -40,13 +40,9 @@ Additionally, all `party` nodes will include:
 This means that running the network from the generated sample CorDapp from `web3j-corda new`, for example, 
 would automatically build and add the sample CorDapp to each node.
 
-## Using the network to write integration tests
-
-### Loading CorDapps from a network
-
 ## Configuration
 
-The configuration values available in the DSL are as follows.
+The configuration values available in the DSL are as follows:
 
 ### **`network`**
 

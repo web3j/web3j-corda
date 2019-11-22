@@ -10,14 +10,14 @@ copyright: "Copyright &copy; 2017-2019 Web3 Labs Ltd"
 
 nav:
   - Quickstart : quickstart.md
-  - Getting Started : dependencies.md
-  - Connect to Corda Node : connecting_to_node.md
-  - Generating Client Wrappers : generating.md
-  - Client Wrappers : client.md
-  - Working with Client Wrappers : usage.md
-  - Network Queries : network.md
+  - Getting started : dependencies.md
+  - Connect to Corda node : connecting_to_node.md
+  - Network queries : network.md
+  - CorDapp client wrappers : client.md
+  - Generating client wrappers : generating.md
+  - Testing with client wrappers : usage.md
+  - Test network reference : tests.md
   - Command Line Tools: command_line_tools.md
-  - Creating test networks: tests.md
   - Examples: examples.md
   - Support: support.md
 
