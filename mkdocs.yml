@@ -24,7 +24,7 @@ nav:
 # Configuration
 theme:
   name: "material"
-  logo: "images/web3j-corda-logo.png"
+  logo: "img/web3j-corda-logo.png"
   language: "en"
   feature:
     tabs: true
@@ -36,9 +36,9 @@ markdown_extensions:
   - pymdownx.tasklist
 
 extra_css:
-  - "stylesheets/extra.css"
-  - "stylesheets/github.css"
+  - "css/extra.css"
+  - "css/github.css"
 
 extra_javascript:
-  - 'javascripts/highlight.pack.js'
-  - 'javascripts/index.js'
+  - 'js/highlight.pack.js'
+  - 'js/index.js'
