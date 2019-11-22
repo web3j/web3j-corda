@@ -54,7 +54,7 @@ class CordaNetwork private constructor() : ContainerCoordinates(
      * Make container tag settable.
      */
     override var tag = super.tag
-    
+
     /**
      * The nodes in this network.
      */
