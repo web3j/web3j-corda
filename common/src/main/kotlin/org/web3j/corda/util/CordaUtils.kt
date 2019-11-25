@@ -21,6 +21,7 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.SerializationFeature
 import com.fasterxml.jackson.module.kotlin.convertValue
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import java.net.ServerSocket
 import javax.naming.ldap.LdapName
 import javax.security.auth.x500.X500Principal
 
@@ -56,3 +57,5 @@ fun sanitizeCorDappName(name: String): String {
 fun needToSanitizeCorDappName(name: String): Boolean {
     return name.contains(regexToReplace)
 }
+
+fun randomPort() = ServerSocket(0).use { it.localPort }

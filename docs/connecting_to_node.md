@@ -39,5 +39,5 @@ val issue = corda.api
     .flows.findById("issue-obligation")
 
 // Type-conversions with potential runtime exception!
-var signedTx = issue.start(parameters).convert<SignedTransaction>()
+var signedTx = issue.start(params).convert<SignedTransaction>()
 ```

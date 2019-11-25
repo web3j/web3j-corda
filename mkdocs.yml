@@ -10,21 +10,21 @@ copyright: "Copyright &copy; 2017-2019 Web3 Labs Ltd"
 
 nav:
   - Quickstart : quickstart.md
-  - Getting Started : dependencies.md
-  - Connect to Corda Node : connecting_to_node.md
-  - Generating Client Wrappers : generating.md
-  - Client Wrappers : client.md
-  - Working with Client Wrappers : usage.md
-  - Network Queries : network.md
+  - Getting started : dependencies.md
+  - Connect to Corda node : connecting_to_node.md
+  - Network queries : network.md
+  - CorDapp client wrappers : client.md
+  - Generating client wrappers : generating.md
+  - Testing with client wrappers : usage.md
+  - Test network reference : tests.md
   - Command Line Tools: command_line_tools.md
-  - Writing tests: tests.md
   - Examples: examples.md
   - Support: support.md
 
 # Configuration
 theme:
   name: "material"
-  logo: "images/web3j-corda-logo.png"
+  logo: "img/web3j-corda-logo.png"
   language: "en"
   feature:
     tabs: true
@@ -36,9 +36,9 @@ markdown_extensions:
   - pymdownx.tasklist
 
 extra_css:
-  - "stylesheets/extra.css"
-  - "stylesheets/github.css"
+  - "css/extra.css"
+  - "css/github.css"
 
 extra_javascript:
-  - 'javascripts/highlight.pack.js'
-  - 'javascripts/index.js'
+  - 'js/highlight.pack.js'
+  - 'js/index.js'

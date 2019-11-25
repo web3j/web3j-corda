@@ -10,27 +10,22 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
-@file:JvmName("IntegrationTestUtils")
+package org.web3j.corda.network
 
-package org.web3j.corda.examples
+@CordaDslMarker
+class CordaRpcUsers internal constructor() {
+    /**
+     * Corda RPC user name.
+     */
+    var user: String = "user1"
 
-import java.io.File
-import org.web3j.corda.network.network
-import org.web3j.corda.network.nodes
-import org.web3j.corda.network.notary
-import org.web3j.corda.network.party
+    /**
+     * Corda RPC user password.
+     */
+    var password: String = "test"
 
-val network = network {
-    directory = File(javaClass.classLoader.getResource("cordapps")!!.file)
-    nodes {
-        notary {
-            name = "O=Notary, L=London, C=GB"
-        }
-        party {
-            name = "O=PartyA, L=London, C=GB"
-        }
-        party {
-            name = "O=PartyB, L=New York, C=US"
-        }
-    }
+    /**
+     * Corda RPC user permissions.
+     */
+    var permissions: Array<String> = arrayOf("ALL")
 }

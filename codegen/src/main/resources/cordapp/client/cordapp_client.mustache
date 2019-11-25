@@ -49,7 +49,7 @@ interface {{classname}} : CorDapp {
             @POST{{#hasOutput}}
             @Produces("{{produces}}"){{/hasOutput}}{{#hasInput}}
             @Consumes("{{consumes}}"){{/hasInput}}
-            fun start({{#hasInput}}parameters: {{inputClass}}{{/hasInput}}){{#hasOutput}}: {{outputClass}}{{/hasOutput}}
+            fun start({{#hasInput}}payload: {{inputClass}}{{/hasInput}}){{#hasOutput}}: {{outputClass}}{{/hasOutput}}
         }
     {{/flows}}
     }

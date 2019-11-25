@@ -10,27 +10,26 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
-@file:JvmName("IntegrationTestUtils")
+package org.web3j.corda.network
 
-package org.web3j.corda.examples
+import org.web3j.corda.util.randomPort
 
-import java.io.File
-import org.web3j.corda.network.network
-import org.web3j.corda.network.nodes
-import org.web3j.corda.network.notary
-import org.web3j.corda.network.party
-
-val network = network {
-    directory = File(javaClass.classLoader.getResource("cordapps")!!.file)
-    nodes {
-        notary {
-            name = "O=Notary, L=London, C=GB"
-        }
-        party {
-            name = "O=PartyA, L=London, C=GB"
-        }
-        party {
-            name = "O=PartyB, L=New York, C=US"
-        }
+@CordaDslMarker
+class CordaRpcSettings internal constructor (private val node: CordaNode) {
+    /**
+     * Corda RPC address for this node, e.g. `notary:10006`.
+     */
+    val address: String by lazy {
+        "${node.container.containerIpAddress}:${node.rpcSettings.port}"
     }
+
+    /**
+     * Corda RPC port for this node.
+     */
+    var port: Int = randomPort()
+
+    /**
+     * Corda RPC admin port for this Corda node.
+     */
+    var adminPort: Int = randomPort()
 }

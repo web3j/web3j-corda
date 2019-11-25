@@ -29,23 +29,25 @@ The template integration test can be found at:
 
 - `clients/src/test/kotlin/org/web3j/corda/workflows/api/WorkflowsTest.kt`
 
-In the template integration test you'll need to define a network, such as the following:
+In the template integration test you'll find a defined network, such as the following:
 
 ```kotlin
 network = network {
-            baseDir = File(System.getProperty("user.dir")).parentFile
-            nodes {
-                party {
-                    name = "O=PartyA, L=London, C=GB"
-                }
-            }
+    directory = File(System.getProperty("user.dir")).parentFile
+    nodes {
+        party {
+            name = "O=PartyA, L=London, C=GB"
         }
+    }
+}
 ```
 
-Once you've added business logic for the flow and made any changes you wish to make to the contracts and states, you need to run the following Gradle task to regenerate the client, and then run the integration test:
+Once you've added business logic for the flow and made any changes you wish to make to the contracts and states, 
+you need to run the test (the client will be regenerated automatically):
 
-`./gradlew generateCorDappWrappers test`
-
+```shell
+$ ./gradlew test
+```
 
 ### Generating client wrappers for existing CorDapps
 

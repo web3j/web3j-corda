@@ -37,6 +37,16 @@ fun CordaNodes.notary(notaryBlock: CordaNotaryNode.() -> Unit) {
     notaryJava(Consumer { notaryBlock.invoke(it) })
 }
 
+@CordaDslMarker
+fun CordaNode.rpcSettings(rpcSettingsBlock: CordaRpcSettings.() -> Unit) {
+    rpcSettingsJava(Consumer { rpcSettingsBlock.invoke(it) })
+}
+
+@CordaDslMarker
+fun CordaNode.rpcUsers(rpcUsersBlock: CordaRpcUsers.() -> Unit) {
+    rpcUsersJava(Consumer { rpcUsersBlock.invoke(it) })
+}
+
 @DslMarker
 @Retention(AnnotationRetention.SOURCE)
 @Target(AnnotationTarget.CLASS, AnnotationTarget.FUNCTION)

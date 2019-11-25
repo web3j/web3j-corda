@@ -40,7 +40,6 @@ import org.web3j.corda.util.sanitizeCorDappName
 class CordaNetwork private constructor() : ContainerCoordinates(
     DEFAULT_ORGANIZATION, DEFAULT_IMAGE, DEFAULT_TAG
 ) {
-
     /**
      * Open API version.
      */
@@ -49,17 +48,22 @@ class CordaNetwork private constructor() : ContainerCoordinates(
     /**
      * Directory where the CorDapp JARs are located.
      */
-    var baseDir: File = File(System.getProperty("user.dir"))
+    var directory: File = File(System.getProperty("user.dir"))
+
+    /**
+     * Make container tag settable.
+     */
+    override var tag = super.tag
 
     /**
      * The nodes in this network.
      */
-    lateinit var notaries: List<CordaNotaryNode>
+    val notaries: List<CordaNotaryNode> = arrayListOf()
 
     /**
      * The nodes in this network.
      */
-    lateinit var parties: List<CordaPartyNode>
+    val parties: List<CordaPartyNode> = arrayListOf()
 
     /**
      * Client API to interact with this network.
@@ -70,11 +74,6 @@ class CordaNetwork private constructor() : ContainerCoordinates(
      * Corda service for this network.
      */
     val service: CordaService by lazy { map.instance.service }
-
-    /**
-     * Make container tag settable.
-     */
-    override var tag = super.tag
 
     /**
      * The network map in this network.
@@ -92,7 +91,7 @@ class CordaNetwork private constructor() : ContainerCoordinates(
                 copyGradleDependencies(this)
             } else {
                 // Not a valid Gradle project, copy baseDir
-                baseDir.walkTopDown().forEach {
+                directory.walkTopDown().forEach {
                     if (it.absolutePath.endsWith(".jar")) {
                         Files.copy(
                             it.toPath(),
@@ -114,12 +113,12 @@ class CordaNetwork private constructor() : ContainerCoordinates(
     internal val network = Network.newNetwork()
 
     /**
-     * Gradle connection to the CorDapp located in [baseDir].
+     * Gradle connection to the CorDapp located in [directory].
      */
     private val connection: ProjectConnection by lazy {
         GradleConnector.newConnector()
             .useBuildDistribution()
-            .forProjectDirectory(baseDir)
+            .forProjectDirectory(directory)
             .connect()
     }
 
@@ -130,14 +129,11 @@ class CordaNetwork private constructor() : ContainerCoordinates(
     fun nodesJava(nodesBlock: Consumer<CordaNodes>) {
         CordaNodes(this).apply {
             nodesBlock.accept(this)
-        }.also {
-            notaries = it.notaries
-            parties = it.parties
         }
     }
 
     /**
-     * Build the CorDapp located in [baseDir] using the `jar` task and copy the resulting JAR into the given directory.
+     * Build the CorDapp located in [directory] using the `jar` task and copy the resulting JAR into the given directory.
      */
     private fun createJarUsingGradle(cordappsDir: Path) {
         // Run the jar task to create the CorDapp JARs
@@ -167,7 +163,7 @@ class CordaNetwork private constructor() : ContainerCoordinates(
             .map {
                 it.file
             }.apply {
-                filterCorDapps().distinct().forEach {
+                filterCorDapps().forEach {
                     val destFile = File(cordappsDir.toFile(), it.name).toPath()
                     Files.copy(it.toPath(), destFile, REPLACE_EXISTING)
                 }
@@ -183,14 +179,11 @@ class CordaNetwork private constructor() : ContainerCoordinates(
                 .overrideClassLoaders(URLClassLoader(toTypedArray(), null))
                 .scan()
                 .getClassesWithAnnotation("net.corda.core.flows.StartableByRPC")
-                .map {
-                    File(it.classpathElementURL.path)
-                }
+                .map { File(it.classpathElementURL.path) }
+                .distinct()
         }
 
-    private fun isGradleProject(): Boolean {
-        return File(baseDir, "build.gradle").exists()
-    }
+    private fun isGradleProject() = File(directory, "build.gradle").exists()
 
     companion object {
         /**
