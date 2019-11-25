@@ -12,8 +12,6 @@ cache:
   - "$HOME/.gradle/caches/"
   - "$HOME/.gradle/wrapper/"
 before_install:
-- openssl aes-256-cbc -K $encrypted_9023d7762f93_key -iv $encrypted_9023d7762f93_iv
-  -in web3j.asc.enc -out web3j.asc -d
 - sudo rm /usr/local/bin/docker-compose
 - curl -L https://github.com/docker/compose/releases/download/1.24.1/docker-compose-Linux-x86_64
   > docker-compose
