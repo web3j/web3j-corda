@@ -16,37 +16,45 @@ buildscript {
 }
 
 plugins {
-    id 'com.diffplug.gradle.spotless' version '3.25.0'
+    id "com.diffplug.gradle.spotless" version '3.25.0'
+    id 'io.codearte.nexus-staging' version '0.21.1'
+    id "de.marcphilipp.nexus-publish" version '0.4.0'
+    id "de.undercouch.download" version '4.0.0'
 }
 
 description = 'Web3j integration with the Corda blockchain platform.'
 
 subprojects {
-    apply plugin: 'java'
     apply plugin: 'idea'
     apply plugin: 'maven'
-    apply plugin: 'jacoco'
-    apply plugin: 'signing'
-    apply plugin: 'maven-publish'
-    apply plugin: 'com.jfrog.bintray'
     apply plugin: 'org.jetbrains.kotlin.jvm'
     apply plugin: 'org.unbroken-dome.test-sets'
-    apply plugin: 'com.diffplug.gradle.spotless'
     apply plugin: 'com.adarshr.test-logger'
 
     apply from: "$rootProject.projectDir/gradle/versions.gradle"
     apply from: "$rootProject.projectDir/gradle/repositories.gradle"
 
-    task sourcesJar(type: Jar) {
-        from sourceSets.main.allSource
-        archiveClassifier.set('sources')
+    apply {
+        [
+                'bintray',
+                'jacoco',
+                'java',
+                'javadoc',
+                'repositories',
+                'publish',
+                'spotless'
+        ].each { buildScript ->
+            download {
+                src "https://raw.githubusercontent.com/web3j/build-tools/master/gradle/$buildScript/build.gradle"
+                dest "$rootDir/gradle/$buildScript/build.gradle"
+                overwrite true
+                quiet true
+                onlyIfModified true
+            }
+            from("$rootDir/gradle/$buildScript/build.gradle")
+        }
     }
-
-    task javadocJar(type: Jar) {
-        from javadoc
-        archiveClassifier.set('javadoc')
-    }
-
+    
     testSets {
         integrationTest {
             dirName = 'integration-test'
@@ -55,7 +63,6 @@ subprojects {
 
     tasks.withType(Test) {
         useJUnitPlatform()
-        reports.html.enabled = false
 //        jacoco {
 //            destinationFile = file("$buildDir/jacoco/${name}.exec")
 //            excludes = ['org.gradle.*']
@@ -74,12 +81,12 @@ subprojects {
     integrationTestJar {
         archiveClassifier.set('integration-test')
     }
-    
+
     task integrationTestSourcesJar(type: Jar) {
         from sourceSets.integrationTest.allSource
         archiveClassifier.set('integration-test-sources')
     }
-    
+
     jacoco {
         toolVersion = versions.jacoco
     }
@@ -195,56 +202,10 @@ subprojects {
     compileTestKotlin.kotlinOptions.jvmTarget = sourceCompatibility
     compileIntegrationTestKotlin.kotlinOptions.jvmTarget = sourceCompatibility
 
-    spotless {
-        kotlin {
-            // This path needs to be relative to each project
-            target fileTree('.') {
-                include '**/*.kt'
-                exclude '**/.gradle/**'
-            }
-            ktlint(versions.ktlint)
-            trimTrailingWhitespace()
-            licenseHeaderFile "${rootDir}/gradle/spotless.license"
-            endWithNewline()
-        }
-        java {
-            // This path needs to be relative to each project
-            target fileTree('.') {
-                include '**/src/*/java/**/*.java'
-                exclude '**/.gradle/**'
-                exclude '**/generated/**'
-            }
-            removeUnusedImports()
-            googleJavaFormat("1.7").aosp()
-            importOrder 'java', '', 'org.web3j', '\\#'
-            trimTrailingWhitespace()
-            endWithNewline()
-            licenseHeaderFile "${rootDir}/gradle/spotless.license"
-            paddedCell()
-        }
-    }
-
     publishing {
         publications {
             maven(MavenPublication) {
-                from components.java
-                artifact sourcesJar
-                artifact javadocJar
-                artifact integrationTestJar
-                artifact integrationTestSourcesJar
                 pom {
-                    name = project.name
-                    afterEvaluate {
-                        description = project.description
-                    }
-                    url = "https://github.com/web3j/corda"
-                    licenses {
-                        license {
-                            name = "The Apache License, Version 2.0"
-                            url = "http://www.apache.org/licenses/LICENSE-2.0.txt"
-                            distribution = "repo"
-                        }
-                    }
                     developers {
                         developer {
                             id = 'Puneetha17'
@@ -259,57 +220,12 @@ subprojects {
                             organization = 'Web3 Labs'
                         }
                     }
-                    scm {
-                        connection = "scm:git:https://github.com/web3j/corda.git"
-                        developerConnection = "scm:git://github.com/web3j/corda.git"
-                        url = "https://github.com/web3j/corda.git"
-                    }
-                }
-            }
-        }
-        repositories {
-            maven {
-                name = 'snapshots'
-                url = 'https://oss.sonatype.org/content/repositories/snapshots'
-                mavenContent {
-                    snapshotsOnly()
-                }
-                credentials {
-                    username ossrhUsername
-                    password ossrhPassword
                 }
             }
         }
     }
+}
 
-    bintray {
-        user = bintrayUser
-        key = bintrayKey
-        publications = ['maven']
-        publish = true
-        override = true
-        pkg {
-            repo = 'maven'
-            name = 'org.web3j.corda'
-            desc = project.description
-            userOrg = 'web3j'
-            licenses = ['Apache-2.0']
-            issueTrackerUrl = 'https://github.com/web3j/corda/issues'
-            vcsUrl = 'https://github.com/web3j/corda.git'
-            websiteUrl = 'https://web3j.io'
-            publicDownloadNumbers = true
-            version {
-                gpg {
-                    sign = true
-                    passphrase = bintrayGpgPassphrase
-                }
-                mavenCentralSync {
-                    sync = true
-                    user = ossrhUsername
-                    password = ossrhPassword
-                    close = '1'
-                }
-            }
-        }
-    }
+bintrayUpload {
+    enabled = false
 }
