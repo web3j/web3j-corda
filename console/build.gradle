@@ -136,8 +136,8 @@ githubRelease {
     draft version.endsWith('SNAPSHOT')
     prerelease version.endsWith('SNAPSHOT')
     releaseAssets = [
-            "$buildDir/distributions/$rootProject.name-shadow-${version}.zip",
-            "$buildDir/distributions/$rootProject.name-shadow-${version}.tar"
+        "$buildDir/distributions/$rootProject.name-shadow-${version}.zip",
+        "$buildDir/distributions/$rootProject.name-shadow-${version}.tar"
     ]
 }
 
