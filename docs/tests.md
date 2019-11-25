@@ -86,7 +86,7 @@ Defines a dockerized Corda network.
 
 ### **`notary`**, **`party`**
 
-Inside a `network` you can declare nodes using the `notary` and `party` markers.
+Inside a `network` you can declare nodes using the `notary` and `party` blocks.
 Both have in common the following configuration values:
 
 #### Required configuration
@@ -193,7 +193,7 @@ Defines a Corda party node.
 ## Customizing Docker images and tags
 
 All of `network`, `notary` and `party` elements allow you to specify which Docker container image name and tag you want
-to use in your network. This table resumes the default values:
+to use in your network. This table specifies the default values used:
 
 | Marker            |       Image name      |      Image tag      |
 | ------------------|:---------------------:| -------------------:|
