@@ -31,17 +31,17 @@ jobs:
     script: "./gradlew --stacktrace check jacocoTestReport"
     if: type = pull_request
   - stage: build master
-    script: "./gradlew check jacocoTestReport"
+    script: "./gradlew check jacocoTestReport publish"
     if: branch = master AND NOT type = pull_request
-    deploy:
-      provider: script
-      script: "./gradlew publish"
-  - stage: build release
+  - stage: build and stage release
     if: branch =~ /release/
     script: "./gradlew check publish bintrayUpload -Pversion=${TRAVIS_BRANCH#'release/'}"
-    deploy:
-      provider: script
-      script: "./gradlew closeAndReleaseRepository githubRelease"
+  - stage: build release
+    if: branch =~ /release/
+    script: "./gradlew closeAndReleaseRepository"
+  - stage: github release
+    if: branch =~ /release/
+    script: "./gradlew check githubRelease -Pversion=${TRAVIS_BRANCH#'release/'}"
 after_success:
 - bash <(curl -s https://codecov.io/bash)
 env:
