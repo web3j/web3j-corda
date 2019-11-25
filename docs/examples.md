@@ -29,7 +29,7 @@ The template integration test can be found at:
 
 - `clients/src/test/kotlin/org/web3j/corda/workflows/api/WorkflowsTest.kt`
 
-In the template integration test you'll fina a defined network, such as the following:
+In the template integration test you'll find a defined network, such as the following:
 
 ```kotlin
 network = network {
