@@ -69,9 +69,9 @@
     <link rel="stylesheet" href="assets/fonts/material-icons.css">
     
     
-      <link rel="stylesheet" href="stylesheets/extra.css">
+      <link rel="stylesheet" href="css/extra.css">
     
-      <link rel="stylesheet" href="stylesheets/github.css">
+      <link rel="stylesheet" href="css/github.css">
     
     
       
@@ -106,7 +106,7 @@
       <div class="md-flex__cell md-flex__cell--shrink">
         <a href="https://corda.web3j.io/" title="Web3j Corda" class="md-header-nav__button md-logo">
           
-            <img src="images/web3j-corda-logo.png" width="24" height="24">
+            <img src="img/web3j-corda-logo.png" width="24" height="24">
           
         </a>
       </div>
@@ -213,6 +213,8 @@
       
         
       
+        
+      
     </ul>
   </div>
 </nav>
@@ -228,7 +230,7 @@
   <label class="md-nav__title md-nav__title--site" for="__drawer">
     <a href="https://corda.web3j.io/" title="Web3j Corda" class="md-nav__button md-logo">
       
-        <img src="images/web3j-corda-logo.png" width="48" height="48">
+        <img src="img/web3j-corda-logo.png" width="48" height="48">
       
     </a>
     Web3j Corda
@@ -274,8 +276,8 @@
 
 
   <li class="md-nav__item">
-    <a href="dependencies/" title="Getting Started" class="md-nav__link">
-      Getting Started
+    <a href="dependencies/" title="Getting started" class="md-nav__link">
+      Getting started
     </a>
   </li>
 
@@ -286,8 +288,8 @@
 
 
   <li class="md-nav__item">
-    <a href="connecting_to_node/" title="Connect to Corda Node" class="md-nav__link">
-      Connect to Corda Node
+    <a href="connecting_to_node/" title="Connect to Corda node" class="md-nav__link">
+      Connect to Corda node
     </a>
   </li>
 
@@ -298,8 +300,8 @@
 
 
   <li class="md-nav__item">
-    <a href="generating/" title="Generating Client Wrappers" class="md-nav__link">
-      Generating Client Wrappers
+    <a href="network/" title="Network queries" class="md-nav__link">
+      Network queries
     </a>
   </li>
 
@@ -310,8 +312,8 @@
 
 
   <li class="md-nav__item">
-    <a href="client/" title="Client Wrappers" class="md-nav__link">
-      Client Wrappers
+    <a href="client/" title="CorDapp client wrappers" class="md-nav__link">
+      CorDapp client wrappers
     </a>
   </li>
 
@@ -322,8 +324,8 @@
 
 
   <li class="md-nav__item">
-    <a href="usage/" title="Working with Client Wrappers" class="md-nav__link">
-      Working with Client Wrappers
+    <a href="generating/" title="Generating client wrappers" class="md-nav__link">
+      Generating client wrappers
     </a>
   </li>
 
@@ -334,8 +336,20 @@
 
 
   <li class="md-nav__item">
-    <a href="network/" title="Network Queries" class="md-nav__link">
-      Network Queries
+    <a href="usage/" title="Testing with client wrappers" class="md-nav__link">
+      Testing with client wrappers
+    </a>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="tests/" title="Test network reference" class="md-nav__link">
+      Test network reference
     </a>
   </li>
 
@@ -410,6 +424,13 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#modules" class="md-nav__link">
+    Modules
+  </a>
+  
+</li>
+      
       
       
       
@@ -432,7 +453,7 @@
                 <h1 id="web3j-integration-for-corda">Web3j integration for Corda</h1>
 <h2 id="introduction">Introduction</h2>
 <p>web3j-corda is a lightweight client library for working with CorDapps and interacting with different nodes on Corda network.</p>
-<p><img alt="web3j-corda Network" src="images/web3j-corda.png" /></p>
+<p><img alt="web3j-corda Network" src="img/web3j-corda.png" /></p>
 <h2 id="features">Features</h2>
 <ul class="task-list">
 <li class="task-list-item"><input type="checkbox" disabled checked/> Connect to a Corda node</li>
@@ -440,6 +461,17 @@
 <li class="task-list-item"><input type="checkbox" disabled checked/> Generate CorDapp wrappers to interact with the deployed CorDapps</li>
 <li class="task-list-item"><input type="checkbox" disabled checked/> Generate integration tests using a fully Dockerized Corda network to test CorDapps against</li>
 <li class="task-list-item"><input type="checkbox" disabled checked/> Generate sample project with a CorDapp contract, workflow and client modules</li>
+</ul>
+<h2 id="modules">Modules</h2>
+<p>To provide greater flexibility for developers wishing to work with web3j-corda, the project is made up of a number of modules.</p>
+<p>In dependency order, they are as follows:</p>
+<ul>
+<li><strong>api</strong>: Corda and Network Map client API interfaces.</li>
+<li><strong>core</strong>: Corda and Network Map clients implementation.</li>
+<li><strong>codegen</strong>: CorDapp client code generation libraries.</li>
+<li><strong>console</strong>: Command-line tools for creating and publishing CorDapps.</li>
+<li><strong>test</strong>: Testing tools to run CorDapps in a Corda network.</li>
+<li><strong>common</strong>: Common libraries for all modules.</li>
 </ul>
                 
                   
@@ -483,9 +515,9 @@
       
       <script>app.initialize({version:"1.0.4",url:{base:"."}})</script>
       
-        <script src="javascripts/highlight.pack.js"></script>
+        <script src="js/highlight.pack.js"></script>
       
-        <script src="javascripts/index.js"></script>
+        <script src="js/index.js"></script>
       
     
   </body>

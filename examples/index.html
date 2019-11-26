@@ -69,9 +69,9 @@
     <link rel="stylesheet" href="../assets/fonts/material-icons.css">
     
     
-      <link rel="stylesheet" href="../stylesheets/extra.css">
+      <link rel="stylesheet" href="../css/extra.css">
     
-      <link rel="stylesheet" href="../stylesheets/github.css">
+      <link rel="stylesheet" href="../css/github.css">
     
     
       
@@ -106,7 +106,7 @@
       <div class="md-flex__cell md-flex__cell--shrink">
         <a href="https://corda.web3j.io/" title="Web3j Corda" class="md-header-nav__button md-logo">
           
-            <img src="../images/web3j-corda-logo.png" width="24" height="24">
+            <img src="../img/web3j-corda-logo.png" width="24" height="24">
           
         </a>
       </div>
@@ -213,6 +213,8 @@
       
         
       
+        
+      
     </ul>
   </div>
 </nav>
@@ -228,7 +230,7 @@
   <label class="md-nav__title md-nav__title--site" for="__drawer">
     <a href="https://corda.web3j.io/" title="Web3j Corda" class="md-nav__button md-logo">
       
-        <img src="../images/web3j-corda-logo.png" width="48" height="48">
+        <img src="../img/web3j-corda-logo.png" width="48" height="48">
       
     </a>
     Web3j Corda
@@ -274,8 +276,8 @@
 
 
   <li class="md-nav__item">
-    <a href="../dependencies/" title="Getting Started" class="md-nav__link">
-      Getting Started
+    <a href="../dependencies/" title="Getting started" class="md-nav__link">
+      Getting started
     </a>
   </li>
 
@@ -286,8 +288,8 @@
 
 
   <li class="md-nav__item">
-    <a href="../connecting_to_node/" title="Connect to Corda Node" class="md-nav__link">
-      Connect to Corda Node
+    <a href="../connecting_to_node/" title="Connect to Corda node" class="md-nav__link">
+      Connect to Corda node
     </a>
   </li>
 
@@ -298,8 +300,8 @@
 
 
   <li class="md-nav__item">
-    <a href="../generating/" title="Generating Client Wrappers" class="md-nav__link">
-      Generating Client Wrappers
+    <a href="../network/" title="Network queries" class="md-nav__link">
+      Network queries
     </a>
   </li>
 
@@ -310,8 +312,8 @@
 
 
   <li class="md-nav__item">
-    <a href="../client/" title="Client Wrappers" class="md-nav__link">
-      Client Wrappers
+    <a href="../client/" title="CorDapp client wrappers" class="md-nav__link">
+      CorDapp client wrappers
     </a>
   </li>
 
@@ -322,8 +324,8 @@
 
 
   <li class="md-nav__item">
-    <a href="../usage/" title="Working with Client Wrappers" class="md-nav__link">
-      Working with Client Wrappers
+    <a href="../generating/" title="Generating client wrappers" class="md-nav__link">
+      Generating client wrappers
     </a>
   </li>
 
@@ -334,8 +336,20 @@
 
 
   <li class="md-nav__item">
-    <a href="../network/" title="Network Queries" class="md-nav__link">
-      Network Queries
+    <a href="../usage/" title="Testing with client wrappers" class="md-nav__link">
+      Testing with client wrappers
+    </a>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../tests/" title="Test network reference" class="md-nav__link">
+      Test network reference
     </a>
   </li>
 
@@ -498,19 +512,22 @@
 <ul>
 <li><code>clients/src/test/kotlin/org/web3j/corda/workflows/api/WorkflowsTest.kt</code></li>
 </ul>
-<p>In the template integration test you'll need to define a network, such as the following:</p>
+<p>In the template integration test you'll find a defined network, such as the following:</p>
 <pre><code class="kotlin">network = network {
-            baseDir = File(System.getProperty(&quot;user.dir&quot;)).parentFile
-            nodes {
-                party {
-                    name = &quot;O=PartyA, L=London, C=GB&quot;
-                }
-            }
+    directory = File(System.getProperty(&quot;user.dir&quot;)).parentFile
+    nodes {
+        party {
+            name = &quot;O=PartyA, L=London, C=GB&quot;
         }
+    }
+}
 </code></pre>
 
-<p>Once you've added business logic for the flow and made any changes you wish to make to the contracts and states, you need to run the following Gradle task to regenerate the client, and then run the integration test:</p>
-<p><code>./gradlew generateCorDappWrappers test</code></p>
+<p>Once you've added business logic for the flow and made any changes you wish to make to the contracts and states, 
+you need to run the test (the client will be regenerated automatically):</p>
+<pre><code class="shell">$ ./gradlew test
+</code></pre>
+
 <h3 id="generating-client-wrappers-for-existing-cordapps">Generating client wrappers for existing CorDapps</h3>
 <p><a href="../quickstart/">Install</a> the <code>web3j-corda</code> executable. </p>
 <p>Provided we have the <code>Obligation</code> CorDapp at the location <code>~/obligation</code>, we can execute the following command to generate client wrappers: </p>
@@ -595,9 +612,9 @@
       
       <script>app.initialize({version:"1.0.4",url:{base:".."}})</script>
       
-        <script src="../javascripts/highlight.pack.js"></script>
+        <script src="../js/highlight.pack.js"></script>
       
-        <script src="../javascripts/index.js"></script>
+        <script src="../js/index.js"></script>
       
     
   </body>

@@ -42,7 +42,7 @@
     
     
       
-        <title>Getting Started - Web3j Corda</title>
+        <title>Getting started - Web3j Corda</title>
       
     
     
@@ -69,9 +69,9 @@
     <link rel="stylesheet" href="../assets/fonts/material-icons.css">
     
     
-      <link rel="stylesheet" href="../stylesheets/extra.css">
+      <link rel="stylesheet" href="../css/extra.css">
     
-      <link rel="stylesheet" href="../stylesheets/github.css">
+      <link rel="stylesheet" href="../css/github.css">
     
     
       
@@ -106,7 +106,7 @@
       <div class="md-flex__cell md-flex__cell--shrink">
         <a href="https://corda.web3j.io/" title="Web3j Corda" class="md-header-nav__button md-logo">
           
-            <img src="../images/web3j-corda-logo.png" width="24" height="24">
+            <img src="../img/web3j-corda-logo.png" width="24" height="24">
           
         </a>
       </div>
@@ -121,7 +121,7 @@
             </span>
             <span class="md-header-nav__topic">
               
-                Getting Started
+                Getting started
               
             </span>
           
@@ -213,6 +213,8 @@
       
         
       
+        
+      
     </ul>
   </div>
 </nav>
@@ -228,7 +230,7 @@
   <label class="md-nav__title md-nav__title--site" for="__drawer">
     <a href="https://corda.web3j.io/" title="Web3j Corda" class="md-nav__button md-logo">
       
-        <img src="../images/web3j-corda-logo.png" width="48" height="48">
+        <img src="../img/web3j-corda-logo.png" width="48" height="48">
       
     </a>
     Web3j Corda
@@ -283,11 +285,11 @@
     
     
       <label class="md-nav__link md-nav__link--active" for="__toc">
-        Getting Started
+        Getting started
       </label>
     
-    <a href="./" title="Getting Started" class="md-nav__link md-nav__link--active">
-      Getting Started
+    <a href="./" title="Getting started" class="md-nav__link md-nav__link--active">
+      Getting started
     </a>
     
       
@@ -314,6 +316,20 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#maven_1" class="md-nav__link">
+    Maven
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#gradle_1" class="md-nav__link">
+    Gradle
+  </a>
+  
+</li>
+      
       
       
       
@@ -331,8 +347,8 @@
 
 
   <li class="md-nav__item">
-    <a href="../connecting_to_node/" title="Connect to Corda Node" class="md-nav__link">
-      Connect to Corda Node
+    <a href="../connecting_to_node/" title="Connect to Corda node" class="md-nav__link">
+      Connect to Corda node
     </a>
   </li>
 
@@ -343,8 +359,8 @@
 
 
   <li class="md-nav__item">
-    <a href="../generating/" title="Generating Client Wrappers" class="md-nav__link">
-      Generating Client Wrappers
+    <a href="../network/" title="Network queries" class="md-nav__link">
+      Network queries
     </a>
   </li>
 
@@ -355,8 +371,8 @@
 
 
   <li class="md-nav__item">
-    <a href="../client/" title="Client Wrappers" class="md-nav__link">
-      Client Wrappers
+    <a href="../client/" title="CorDapp client wrappers" class="md-nav__link">
+      CorDapp client wrappers
     </a>
   </li>
 
@@ -367,8 +383,8 @@
 
 
   <li class="md-nav__item">
-    <a href="../usage/" title="Working with Client Wrappers" class="md-nav__link">
-      Working with Client Wrappers
+    <a href="../generating/" title="Generating client wrappers" class="md-nav__link">
+      Generating client wrappers
     </a>
   </li>
 
@@ -379,8 +395,20 @@
 
 
   <li class="md-nav__item">
-    <a href="../network/" title="Network Queries" class="md-nav__link">
-      Network Queries
+    <a href="../usage/" title="Testing with client wrappers" class="md-nav__link">
+      Testing with client wrappers
+    </a>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../tests/" title="Test network reference" class="md-nav__link">
+      Test network reference
     </a>
   </li>
 
@@ -455,6 +483,20 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#maven_1" class="md-nav__link">
+    Maven
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#gradle_1" class="md-nav__link">
+    Gradle
+  </a>
+  
+</li>
+      
       
       
       
@@ -480,13 +522,28 @@
 <pre><code class="xml">&lt;dependency&gt;
     &lt;groupId&gt;org.web3j.corda&lt;/groupId&gt;
     &lt;artifactId&gt;web3j-corda-core&lt;/artifactId&gt;
-    &lt;version&gt;0.1.0&lt;/version&gt;
+    &lt;version&gt;0.2.0&lt;/version&gt;
 &lt;/dependency&gt;
 </code></pre>
 
 <h3 id="gradle">Gradle</h3>
 <pre><code class="groovy">dependencies {
-    implementation 'org.web3j.corda:web3j-corda-core:0.1.0'
+    implementation 'org.web3j.corda:web3j-corda-core:0.2.0'
+}
+</code></pre>
+
+<p>To use the Web3j Corda test module, you'all also need to include it in your project build file:</p>
+<h3 id="maven_1">Maven</h3>
+<pre><code class="xml">&lt;dependency&gt;
+    &lt;groupId&gt;org.web3j.corda&lt;/groupId&gt;
+    &lt;artifactId&gt;web3j-corda-test&lt;/artifactId&gt;
+    &lt;version&gt;0.2.0&lt;/version&gt;
+&lt;/dependency&gt;
+</code></pre>
+
+<h3 id="gradle_1">Gradle</h3>
+<pre><code class="groovy">dependencies {
+    test implementation &quot;org.web3j.corda:web3j-corda-test:0.2.0&lt;version&gt;&quot;
 }
 </code></pre>
                 
@@ -524,13 +581,13 @@
           </a>
         
         
-          <a href="../connecting_to_node/" title="Connect to Corda Node" class="md-flex md-footer-nav__link md-footer-nav__link--next" rel="next">
+          <a href="../connecting_to_node/" title="Connect to Corda node" class="md-flex md-footer-nav__link md-footer-nav__link--next" rel="next">
             <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
               <span class="md-flex__ellipsis">
                 <span class="md-footer-nav__direction">
                   Next
                 </span>
-                Connect to Corda Node
+                Connect to Corda node
               </span>
             </div>
             <div class="md-flex__cell md-flex__cell--shrink">
@@ -566,9 +623,9 @@
       
       <script>app.initialize({version:"1.0.4",url:{base:".."}})</script>
       
-        <script src="../javascripts/highlight.pack.js"></script>
+        <script src="../js/highlight.pack.js"></script>
       
-        <script src="../javascripts/index.js"></script>
+        <script src="../js/index.js"></script>
       
     
   </body>
