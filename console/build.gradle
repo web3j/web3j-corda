@@ -1,9 +1,6 @@
-import com.github.breadmoirai.githubreleaseplugin.GithubReleaseTask
-
 plugins {
     id 'application'
     id 'distribution'
-    id 'com.github.breadmoirai.github-release'
     id 'com.github.johnrengelman.shadow'
 }
 
@@ -20,6 +17,14 @@ shadowJar {
     // Workaround: double-nest the jar.
     // Refer https://github.com/johnrengelman/shadow/issues/111
     from shadowBugWorkaround
+}
+
+shadowDistZip{
+    archiveFileName = "$rootProject.name-${rootProject.version}.zip"
+}
+
+shadowDistTar{
+    archiveFileName = "$rootProject.name-${rootProject.version}.tar"
 }
 
 description = 'Web3j command-line tools for the Corda blockchain platform.'
@@ -121,26 +126,4 @@ task generateVersionProperties {
         def generated = new File(generatedResources, "version.properties")
         generated.text = "version=$rootProject.version"
     }
-}
-
-githubRelease {
-    String githubToken = (project.hasProperty('githubToken') ?
-            project.property('githubToken') : System.getenv('GITHUB_TOKEN'))
-
-    token githubToken == null ? '' : githubToken
-
-    repo 'corda'
-    owner 'web3j'
-    overwrite true
-    releaseName "v${project.version}"
-    draft version.endsWith('SNAPSHOT')
-    prerelease version.endsWith('SNAPSHOT')
-    releaseAssets = [
-        "$buildDir/distributions/$rootProject.name-shadow-${version}.zip",
-        "$buildDir/distributions/$rootProject.name-shadow-${version}.tar"
-    ]
-}
-
-tasks.withType(GithubReleaseTask) {
-    dependsOn 'shadowDistZip', 'shadowDistTar'
 }
