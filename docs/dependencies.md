@@ -37,6 +37,6 @@ To use the Web3j Corda test module, you'all also need to include it in your proj
 
 ```groovy
 dependencies {
-    test implementation "org.web3j.corda:web3j-corda-test:0.2.0<version>"
+    testImplementation "org.web3j.corda:web3j-corda-test:0.2.0"
 }
 ```
