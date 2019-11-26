@@ -23,6 +23,7 @@ plugins {
 }
 
 description = 'Web3j integration with the Corda blockchain platform.'
+ext.scmSlug = 'web3j-corda'
 
 subprojects {
     apply plugin: 'idea'
