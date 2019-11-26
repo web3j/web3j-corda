@@ -35,7 +35,7 @@ Running this task will create six Docker containers:
 Additionally, all `party` nodes will include:
 
 * If `directory` is a Gradle project, any CorDapps defined in the project’s source folders and its dependencies.
-* If `directory` is *not* a Gradle project, all JAR files found in `directory` and its sub-directories.
+* If `directory` is *not* a Gradle project, all JAR files containing CorDapps found in `directory` and its sub-directories.
 
 This means that running the network from the generated sample CorDapp from `web3j-corda new`, for example, 
 would automatically build and add the sample CorDapp to each node.
