@@ -15,8 +15,8 @@ check_if_installed() {
 download_web3j_corda() {
   echo "Downloading web3j-corda ..."
   mkdir "${local}.web3j_corda"
-  if [[ $(curl --write-out %{http_code} --silent --output /dev/null "https://github.com/web3j/corda/releases/download/v${web3j_corda_version}/web3j-corda-${web3j_corda_version}.tar") -eq 302 ]]; then
-    curl -# -L -o "$HOME/.web3j_corda/web3j-corda-${web3j_corda_version}.tar" "https://github.com/web3j/corda/releases/download/v${web3j_corda_version}/web3j-corda-${web3j_corda_version}.tar"
+  if [[ $(curl --write-out %{http_code} --silent --output /dev/null "https://github.com/web3j/web3j-corda/releases/download/v${web3j_corda_version}/web3j-corda-${web3j_corda_version}.tar") -eq 302 ]]; then
+    curl -# -L -o "$HOME/.web3j_corda/web3j-corda-${web3j_corda_version}.tar" "https://github.com/web3j/web3j-corda/releases/download/v${web3j_corda_version}/web3j-corda-${web3j_corda_version}.tar"
     echo "Installing Web3j Corda..."
     tar -xf "$HOME/.web3j_corda/web3j-corda-${web3j_corda_version}.tar" -C "$HOME/.web3j_corda"
     echo "export PATH=\$PATH:$HOME/.web3j_corda/web3j-corda-${web3j_corda_version}/bin" >"$HOME/.web3j_corda/source.sh"
@@ -24,7 +24,7 @@ download_web3j_corda() {
     echo "Removing tar file ..."
     rm "$HOME/.web3j_corda/web3j-corda-${web3j_corda_version}.tar"
   else
-    echo "Looks like there was an error while trying to download web3j_corda"
+    echo "Looks like there was an error while trying to download web3j-corda"
     exit 0
   fi
 }
