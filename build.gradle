@@ -23,6 +23,7 @@ plugins {
 }
 
 description = 'Web3j integration with the Corda blockchain platform.'
+ext.rootProjectName = 'web3j-corda'
 
 subprojects {
     apply plugin: 'idea'
@@ -54,7 +55,7 @@ subprojects {
             from("$rootDir/gradle/$buildScript/build.gradle")
         }
     }
-    
+
     testSets {
         integrationTest {
             dirName = 'integration-test'
@@ -102,7 +103,7 @@ subprojects {
             //  For report generation the same class files must be used as at runtime.
             // [ant:jacocoReport] Execution data for class org/gradle/wrapper/WrapperExecutor does not match.
             classDirectories.from files(classDirectories.files.collect {
-                fileTree(dir: it, exclude: 'org/gradle/**')
+                fileTree(dir: it, exclude: ['org/gradle/**'])
             })
         }
     }

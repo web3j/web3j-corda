@@ -2,13 +2,13 @@ Set-StrictMode -Version Latest
 $ErrorActionPreference = "Stop"
 $PSDefaultParameterValues['*:ErrorAction']='Stop'
 
-$web3j_corda_version="0.1.2"
+$web3j_corda_version="0.2.0"
 
 [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
 $ProgressPreference = 'SilentlyContinue'
 
 New-Item -Force -ItemType directory -Path "${env:USERPROFILE}\.web3j_corda" | Out-Null
-$url = "https://github.com/web3j/corda/releases/download/v${web3j_corda_version}/web3j-corda-${web3j_corda_version}.zip"
+$url = "https://github.com/web3j/web3j-corda/releases/download/v${web3j_corda_version}/web3j-corda-${web3j_corda_version}.zip"
 $output = "${env:USERPROFILE}\.web3j_corda\web3j_corda.zip"
 Write-Output "Downloading Web3j Corda version ${web3j_corda_version}..."
 Invoke-WebRequest -Uri $url -OutFile $output
