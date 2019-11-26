@@ -74,13 +74,6 @@ subprojects {
         integrationTestOutput.extendsFrom(integrationTestCompile)
     }
 
-    artifacts {
-        archives sourcesJar
-        archives integrationTestSourcesJar
-        testOutput testJar
-        integrationTestOutput integrationTestJar
-    }
-
     testlogger {
         showSimpleNames true
         showStandardStreams true
