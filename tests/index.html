@@ -751,7 +751,7 @@ Here is an example of a Corda network that creates three nodes and start them on
 <p>Additionally, all <code>party</code> nodes will include:</p>
 <ul>
 <li>If <code>directory</code> is a Gradle project, any CorDapps defined in the project’s source folders and its dependencies.</li>
-<li>If <code>directory</code> is <em>not</em> a Gradle project, all JAR files found in <code>directory</code> and its sub-directories.</li>
+<li>If <code>directory</code> is <em>not</em> a Gradle project, all JAR files containing CorDapps found in <code>directory</code> and its sub-directories.</li>
 </ul>
 <p>This means that running the network from the generated sample CorDapp from <code>web3j-corda new</code>, for example, 
 would automatically build and add the sample CorDapp to each node.</p>
