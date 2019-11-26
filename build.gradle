@@ -63,10 +63,6 @@ subprojects {
 
     tasks.withType(Test) {
         useJUnitPlatform()
-//        jacoco {
-//            destinationFile = file("$buildDir/jacoco/${name}.exec")
-//            excludes = ['org.gradle.*']
-//        }
         systemProperties = [
                 'junit.jupiter.extensions.autodetection.enabled': 'true',
                 'junit.jupiter.testinstance.lifecycle.default'  : 'per_class'
@@ -77,45 +73,6 @@ subprojects {
         testOutput.extendsFrom(testCompile)
         integrationTestOutput.extendsFrom(integrationTestCompile)
     }
-
-    integrationTestJar {
-        archiveClassifier.set('integration-test')
-    }
-
-    task integrationTestSourcesJar(type: Jar) {
-        from sourceSets.integrationTest.allSource
-        archiveClassifier.set('integration-test-sources')
-    }
-
-    jacoco {
-        toolVersion = versions.jacoco
-    }
-
-    jacocoTestReport {
-        reports {
-            csv.enabled false
-            xml.enabled false
-            html.enabled true
-        }
-        afterEvaluate {
-            // FIXME [ant:jacocoReport] Classes in bundle 'web3j-corda-console' do no match with execution data. 
-            //  For report generation the same class files must be used as at runtime.
-            // [ant:jacocoReport] Execution data for class org/gradle/wrapper/WrapperExecutor does not match.
-            classDirectories.from files(classDirectories.files.collect {
-                fileTree(dir: it, exclude: ['org/gradle/**'])
-            })
-        }
-    }
-
-//    task jacocoIntegrationTestReport(type: JacocoReport, group: 'verification') {
-//        executionData integrationTest
-//        sourceSets sourceSets.main
-//        reports {
-//            csv.enabled false
-//            xml.enabled false
-//            html.enabled true
-//        }
-//    }
 
     artifacts {
         archives sourcesJar
