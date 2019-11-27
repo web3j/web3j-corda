@@ -19,7 +19,7 @@ $CurrentPath = [Environment]::GetEnvironmentVariable("Path", [EnvironmentVariabl
 if (!($CurrentPath -match $web3j_corda_version)) {
     [Environment]::SetEnvironmentVariable(
             "Path",
-            $CurrentPath + ";${env:USERPROFILE}\.web3j_corda\web3j_corda-${web3j_corda_version}\bin",
+            $CurrentPath + ";${env:USERPROFILE}\.web3j_corda\web3j-corda-${web3j_corda_version}\bin",
             [EnvironmentVariableTarget]::User)
     Write-Output "web3j-corda has been added to your PATH variable. You will need to open a new CMD/PowerShell instance to use it."
 }
