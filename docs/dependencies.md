@@ -9,7 +9,7 @@ To resolve all web3j-corda relevant dependencies, add the following to your proj
 <dependency>
     <groupId>org.web3j.corda</groupId>
     <artifactId>web3j-corda-core</artifactId>
-    <version>0.2.1</version>
+    <version>0.2.2</version>
 </dependency>
 ```
 
@@ -17,7 +17,7 @@ To resolve all web3j-corda relevant dependencies, add the following to your proj
 
 ```groovy
 dependencies {
-    implementation 'org.web3j.corda:web3j-corda-core:0.2.1'
+    implementation 'org.web3j.corda:web3j-corda-core:0.2.2'
 }
 ```
 
@@ -29,7 +29,7 @@ To use the Web3j Corda test module, you'all also need to include it in your proj
 <dependency>
     <groupId>org.web3j.corda</groupId>
     <artifactId>web3j-corda-test</artifactId>
-    <version>0.2.1</version>
+    <version>0.2.2</version>
 </dependency>
 ```
 
@@ -37,6 +37,6 @@ To use the Web3j Corda test module, you'all also need to include it in your proj
 
 ```groovy
 dependencies {
-    testImplementation "org.web3j.corda:web3j-corda-test:0.2.1"
+    testImplementation "org.web3j.corda:web3j-corda-test:0.2.2"
 }
 ```
