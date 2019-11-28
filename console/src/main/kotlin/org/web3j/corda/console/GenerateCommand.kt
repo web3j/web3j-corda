@@ -61,17 +61,6 @@ class GenerateCommand : BaseCommand() {
         } else {
             fetchOpenApiDef()
         }.apply {
-
-            // Output the swagger file into clients folder
-            File(outputDir.absolutePath)
-                .apply {
-                    mkdirs()
-                    resolve("swagger.json")
-                        .printWriter().use { out ->
-                            out.println(this)
-                        }
-                }
-
             CorDappClientGenerator(
                 packageName,
                 this,
