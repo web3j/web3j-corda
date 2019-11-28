@@ -15,7 +15,6 @@ package org.web3j.corda.console
 import io.bluebank.braid.corda.server.BraidDocsMain
 import io.bluebank.braid.core.utils.toJarsClassLoader
 import io.bluebank.braid.core.utils.tryWithClassLoader
-import java.io.File
 import java.net.URL
 import java.nio.charset.StandardCharsets.UTF_8
 import kotlin.streams.toList
