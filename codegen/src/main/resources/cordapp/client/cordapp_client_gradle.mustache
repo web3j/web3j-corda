@@ -2,14 +2,10 @@ dependencies {
     // web3j-corda dependency
     implementation (group: 'org.web3j.corda', name: 'web3j-corda-core', version: web3j_corda_version) {
         exclude group: 'com.fasterxml.jackson.core'
-        exclude group: 'org.glassfish.jersey.core'
-        exclude group: 'org.slf4j'
     }
 
-    testImplementation ("org.web3j.corda:web3j-corda-common:${web3j_corda_version}:integration-test") {
+    testImplementation ("org.web3j.corda:web3j-corda-test:${web3j_corda_version}") {
         exclude group: 'com.fasterxml.jackson.core'
-        exclude group: 'org.glassfish.jersey.core'
-        exclude group: 'org.slf4j'
     }
 
     testImplementation "org.junit.jupiter:junit-jupiter-api:${jupiter_version}"
