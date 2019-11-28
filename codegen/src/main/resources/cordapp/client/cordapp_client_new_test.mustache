@@ -32,7 +32,7 @@ class WorkFlowTest {
     @Test
     fun `start the Initiator flow`() {
 
-    Workflows.load(network.nodes[0].corda.service).flows.initiator.start(payload).apply {
+    Workflows.load(network.parties[0].corda.service).flows.initiator.start(payload).apply {
             assertEquals("Hello from flow with $text", this)
         }
     }
