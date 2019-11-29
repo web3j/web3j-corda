@@ -17,24 +17,25 @@ import java.io.File
 )
 class {{classname}}Test {
 
-    val network = network {
-            directory = File(System.getProperty("user.dir")).parentFile
-            nodes {
-                party {
-                    name = "O=PartyA, L=London, C=GB"
-                }
+    private val network = network {
+        directory = File(System.getProperty("user.dir")).parentFile
+        nodes {
+            party {
+                name = "O=PartyA, L=London, C=GB"
             }
         }
+    }
 
 {{#operations}}
     {{#flows}}
-    lateinit var {{#camelcase}}{{inputClass}}{{/camelcase}}: {{inputClass}}
+    private lateinit var {{#camelcase}}{{inputClass}}{{/camelcase}}: {{inputClass}}
 
     @Test
     fun `start the {{#titlecase}}{{#camelcase}}{{flowId}}{{/camelcase}}{{/titlecase}} flow`() {
     
         // TODO Initialize {{#camelcase}}{{inputClass}}{{/camelcase}}
-    
+        // val {{#camelcase}}{{inputClass}}{{/camelcase}} = {{inputClass}}(...)
+        
         {{classname}}.load(network.parties[0].corda.service).flows.{{#camelcase}}{{flowId}}{{/camelcase}}.start({{#camelcase}}{{inputClass}}{{/camelcase}})
         // TODO Add assertions
     }
