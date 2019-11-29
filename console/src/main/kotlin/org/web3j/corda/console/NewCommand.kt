@@ -84,6 +84,7 @@ class NewCommand : BaseCommand() {
 
     private fun copyProjectResources() {
         copyResource("settings.gradle", outputDir)
+        copyResource("gradlew.bat", outputDir)
         copyResource("gradlew", outputDir)
 
         File("${outputDir.toURI().path}${File.separator}gradlew").setExecutable(true)
