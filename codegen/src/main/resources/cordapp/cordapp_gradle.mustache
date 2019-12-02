@@ -1,3 +1,5 @@
+import org.gradle.internal.os.OperatingSystem
+
 buildscript {
     ext {
         web3j_corda_version = '{{web3jCordaVersion}}'
@@ -191,12 +193,22 @@ task installQuasar(type: Copy) {
     }
 }
 
-task generateCorDappWrappers(type: JavaExec, group: 'web3j') {
-    classpath = sourceSets.main.runtimeClasspath
-    main = 'org.web3j.corda.console.CordaCommandMain'
-    
-    args 'generate', 
-        '--package-name', project.group,
-        '--cordapps-dir', "$projectDir",
-        '--output-dir', 'clients'
+task generateCorDappWrappers {
+    dependsOn 'generateCorDappWrappersUnix', 'generateCorDappWrappersWindows'
+}
+
+task generateCorDappWrappersUnix(type: Exec, group: 'web3j') {
+    onlyIf { OperatingSystem.current().isMacOsX() || OperatingSystem.current().isLinux() }
+    commandLine 'web3j-corda', 'generate',
+    '--package-name', project.group,
+    '--cordapps-dir', "$projectDir",
+    '--output-dir', 'clients'
+}
+
+task generateCorDappWrappersWindows(type: Exec, group: 'web3j') {
+    onlyIf { OperatingSystem.current().isWindows() }
+    commandLine 'web3j-corda.bat', 'generate',
+    '--package-name', project.group,
+    '--cordapps-dir', "$projectDir",
+    '--output-dir', 'clients'
 }
