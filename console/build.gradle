@@ -91,7 +91,7 @@ sourceSets {
     }
 }
 
-task generateCorDappWrappers(type: JavaExec, group: 'web3j') {
+task generateCorDappWrappers(type: JavaExec, group: 'web3j-corda') {
     classpath = sourceSets.main.runtimeClasspath
     main = 'org.web3j.corda.console.CordaCommandMain'
 
