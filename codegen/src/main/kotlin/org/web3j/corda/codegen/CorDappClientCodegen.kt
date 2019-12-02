@@ -24,7 +24,6 @@ import org.openapitools.codegen.CodegenOperation
 import org.openapitools.codegen.languages.AbstractKotlinCodegen
 import org.openapitools.codegen.utils.StringUtils.camelize
 import org.web3j.corda.codegen.CordaGeneratorUtils.addLambdas
-import org.web3j.corda.codegen.CordaGeneratorUtils.needToRepackage
 import org.web3j.corda.codegen.CordaGeneratorUtils.repackage
 
 class CorDappClientCodegen(
@@ -69,8 +68,7 @@ class CorDappClientCodegen(
         return when {
             typeMapping.containsKey(name) -> typeMapping[name]!!
             needToImport(name) -> super.toModelImport(name)
-            needToRepackage(name, cordaMapping) -> repackage(name, cordaMapping)
-            modelPackage().isEmpty() -> name
+            modelPackage().isEmpty() -> repackage(name, cordaMapping)
             else -> "${modelPackage()}.$name"
         }
     }
@@ -81,16 +79,12 @@ class CorDappClientCodegen(
     override fun toModelName(name: String): String {
         return when {
             importMapping.containsKey(name) -> importMapping[name]!!
-            needToRepackage(name, cordaMapping) -> repackage(name, cordaMapping)
-            else -> name
+            else -> repackage(name, cordaMapping)
         }
     }
 
     override fun toVarName(name: String): String {
-        return when {
-            needToRepackage(name, cordaMapping) -> repackage(name, cordaMapping)
-            else -> name
-        }.let {
+        return repackage(name, cordaMapping).let {
             super.toVarName(it)
         }
     }
@@ -99,10 +93,7 @@ class CorDappClientCodegen(
      * Create folder structure according to the given package structure.
      */
     override fun toModelFilename(name: String): String {
-        return when {
-            needToRepackage(name, cordaMapping) -> repackage(name, cordaMapping)
-            else -> name
-        }.replace(".", File.separator)
+        return repackage(name, cordaMapping).replace(".", File.separator)
     }
 
     override fun getOrGenerateOperationId(

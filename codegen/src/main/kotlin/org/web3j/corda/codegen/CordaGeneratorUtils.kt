@@ -16,12 +16,12 @@ import com.pinterest.ktlint.core.KtLint
 import com.pinterest.ktlint.ruleset.experimental.ExperimentalRuleSetProvider
 import com.pinterest.ktlint.ruleset.standard.StandardRuleSetProvider
 import com.samskivert.mustache.Mustache
-import java.io.File
 import mu.KLogging
 import org.openapitools.codegen.templating.mustache.CamelCaseLambda
 import org.openapitools.codegen.templating.mustache.LowercaseLambda
 import org.openapitools.codegen.templating.mustache.TitlecaseLambda
 import org.openapitools.codegen.templating.mustache.UppercaseLambda
+import java.io.File
 
 internal object CordaGeneratorUtils : KLogging() {
 
@@ -30,19 +30,26 @@ internal object CordaGeneratorUtils : KLogging() {
         ExperimentalRuleSetProvider().get()
     )
 
-    fun needToRepackage(name: String, mapping: Map<String, String>): Boolean {
-        return mapping.keys.any { name.startsWith(it) }
-    }
-
     /**
-     * Repackage a given Corda ort Braid class name onto a safe name.
+     * Repackage a given class name onto a conflict-safe name.
      */
     fun repackage(name: String, mapping: Map<String, String>): String {
         return mapping.keys.firstOrNull {
             name.startsWith(it)
         }?.let {
             name.replace(it, mapping[it] ?: error("key '$it' not found"))
-        } ?: name
+        } ?: appendPrefix("generated", name)
+    }
+
+    /**
+     * Append the given prefix to a name if it doesn't contain it already or is a Kotlin class.
+     */
+    fun appendPrefix(prefix: String, name: String): String {
+        return if (!name.startsWith(prefix) && !name.startsWith("kotlin")) {
+            "$prefix.$name"
+        } else {
+            name
+        }
     }
 
     fun addLambdas(context: MutableMap<String, Any>) {
