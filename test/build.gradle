@@ -7,6 +7,7 @@ dependencies {
     api group: 'io.bluebank.braid', name: 'braid-corda', version: versions.braid, changing: true
 
     api(group: 'net.corda', name: 'corda-node', version: versions.corda) {
+        exclude group: 'org.jetbrains.kotlin'
         exclude group: 'org.apache.logging.log4j'
     }
 
