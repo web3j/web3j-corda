@@ -3910,9 +3910,6 @@
           "forDay": {
             "type": "string",
             "description": "JSR310 encoded time representation of LocalDate"
-          },
-          "ofTenor": {
-            "$ref": "#/components/schemas/net.corda.finance.contracts.Tenor"
           }
         }
       },
