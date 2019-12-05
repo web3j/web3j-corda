@@ -28,17 +28,20 @@ class {{classname}}Test {
 
 {{#operations}}
     {{#flows}}
-    private lateinit var {{#camelcase}}{{inputClass}}{{/camelcase}}: {{inputClass}}
+    {{#hasInput}}private lateinit var {{#camelcase}}{{inputClass}}{{/camelcase}}: {{inputClass}}{{/hasInput}}
 
     @Test
     fun `start the {{#titlecase}}{{#camelcase}}{{flowId}}{{/camelcase}}{{/titlecase}} flow`() {
-    
+        {{#hasInput}}
         // TODO Initialize {{#camelcase}}{{inputClass}}{{/camelcase}}
         // val {{#camelcase}}{{inputClass}}{{/camelcase}} = {{inputClass}}(...)
-        
-        {{classname}}.load(network.parties[0].corda.service).flows.{{#camelcase}}{{flowId}}{{/camelcase}}.start({{#camelcase}}{{inputClass}}{{/camelcase}})
+        {{/hasInput}}
+        {{classname}}.load(network.parties[0].corda.service).flows.{{#camelcase}}{{flowId}}{{/camelcase}}
+            .start({{#hasInput}}{{#camelcase}}{{inputClass}}{{/camelcase}}{{/hasInput}})
+
         // TODO Add assertions
     }
     {{/flows}}
+    
 {{/operations}}
 }

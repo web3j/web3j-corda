@@ -27,6 +27,7 @@ import org.openapitools.codegen.CodegenConstants.PACKAGE_NAME
 import org.openapitools.codegen.DefaultGenerator
 import org.openapitools.codegen.config.GeneratorProperties.setProperty
 import org.web3j.corda.codegen.CordaGeneratorUtils.repackage
+import org.web3j.corda.model.Amount
 import org.web3j.corda.model.AmountCurrency
 import org.web3j.corda.model.InvocationError
 import org.web3j.corda.model.core.contracts.Issued
@@ -88,6 +89,7 @@ class CorDappClientGenerator(
         // Corda types without package
         typeMapping["InvocationError"] = InvocationError::class.qualifiedName!!
         typeMapping["AmountCurrency"] = AmountCurrency::class.qualifiedName!!
+        typeMapping["Amount"] = Amount::class.qualifiedName!!
         typeMapping["Issued_issuer"] = Issued_issuer::class.qualifiedName!!
         typeMapping["Issued"] = Issued::class.qualifiedName!!
 

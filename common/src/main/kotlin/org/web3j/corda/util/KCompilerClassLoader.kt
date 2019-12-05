@@ -15,11 +15,9 @@ package org.web3j.corda.util
 import java.io.File
 import java.io.IOException
 import java.net.URL
-import java.net.URLClassLoader
 import java.nio.file.Files
 import java.nio.file.Paths
 import java.util.Optional
-import org.jetbrains.kotlin.cli.jvm.K2JVMCompiler
 
 /**
  * Class loader with Kotlin compilation capabilities.
@@ -29,93 +27,42 @@ class KCompilerClassLoader
 /**
  * Creates a class loader from the given source URLs.
  *
- * @param outputDir Directory where classes will be compiled.
+ * @param compiler Kotlin compiler to use on class loading.
  * @param urls Classpath URLs to compile the Java sources.
  */
 constructor(
     private val urls: Array<URL>,
-    private val outputDir: File
+    private val compiler: KCompiler = KCompiler()
 ) : ClassLoader(KCompilerClassLoader::class.java.classLoader) {
 
-    init {
-        if (!outputDir.exists()) outputDir.mkdirs()
-    }
-
     override fun findClass(name: String): Class<*> {
-        return compileClass(name)
-            .flatMap(this::readBytes)
+
+        val containerClass = name
+            .replace('.', File.separatorChar)
+            .split("$").first()
+
+        return findSourceFile(containerClass)
+            .map { compiler.compile(it) }
+            .flatMap { findInnerClass(it, name) }
+            .flatMap { readBytes(it) }
             .map { defineClass(name, it, 0, it.size) }
             .orElseThrow { ClassNotFoundException(name) }
     }
 
-    private fun compileClass(qualifiedName: String): Optional<File> {
-        val pathToClass = qualifiedName.replace(".", File.separator)
-        val containerClass = pathToClass.split("$").first()
-        val outputFile = File(outputDir, "$pathToClass.class")
-
-        // Check if already compiled
-        if (outputFile.exists()) {
-            return Optional.of(outputFile)
-        }
-
-        val sourceFile = findSourceFile(containerClass)
-        if (!sourceFile.exists()) {
-            return Optional.empty()
-        }
-
-        val classpath = buildClassPath()
-        val cmd = listOf(
-            JAVA_BINARY,
-            "-Djava.awt.headless=true",
-            "-cp", classpath,
-            K2JVMCompiler::class.qualifiedName!!,
-            "-cp", classpath,
-            "-no-reflect",
-            "-no-stdlib",
-            sourceFile.absolutePath
-        )
-
-        val process = createProcess(cmd, outputDir).apply { readOutput() }
-
-        return if (process.waitFor() == 0) {
-            Optional.of(outputFile)
-        } else {
-            Optional.empty()
-        }
-    }
-
-    private fun findSourceFile(path: String): File {
+    private fun findSourceFile(path: String): Optional<File> {
         for (url in urls) {
             val file = File(url.file, "$path.kt")
             if (file.exists()) {
-                return file
+                return Optional.of(file)
             }
         }
-        // Try to find the Kotlin file in generated files
-        return File(outputDir, "$path.kt")
+        return Optional.empty()
     }
 
-    private fun buildClassPath(): String {
-        val systemUrls = (javaClass.classLoader as URLClassLoader).urLs
-        return outputDir.absolutePath + ':' + buildClassPath(*systemUrls)
-    }
-
-    private fun buildClassPath(vararg urls: URL): String {
-        return urls.map(URL::toExternalForm).joinToString(":") {
-            it.replace("file:", "")
-        }
-    }
-
-    private fun createProcess(cmd: List<String>, projectDir: File): Process {
-        return ProcessBuilder(cmd).apply {
-            directory(projectDir)
-            redirectErrorStream(true)
-        }.start()
-    }
-
-    private fun Process.readOutput() {
-        inputStream.use { println(it.reader().readText()) }
-        errorStream.use { println(it.reader().readText()) }
+    private fun findInnerClass(classFiles: List<File>, name: String): Optional<File> {
+        return classFiles.firstOrNull { file ->
+            file.name.endsWith(name.split(".").last().split("$").last() + ".class")
+        }.toOptional()
     }
 
     private fun readBytes(file: File): Optional<ByteArray> {
@@ -124,9 +71,5 @@ constructor(
         } catch (e: IOException) {
             Optional.empty()
         }
-    }
-
-    companion object {
-        private val JAVA_BINARY = File(File(System.getProperty("java.home"), "bin"), "java").absolutePath
     }
 }

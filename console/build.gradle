@@ -52,6 +52,7 @@ dependencies {
         exclude group: 'com.jcabi'
         exclude group: 'io.atomix.catalyst'
         exclude group: 'io.atomix.copycat'
+        exclude group: 'org.jetbrains.kotlin'
         exclude group: 'org.apache.activemq'
         exclude group: 'org.apache.logging.log4j'
         exclude group: 'org.apache.shiro'

@@ -51,7 +51,7 @@ class CordaNetworkMap internal constructor(network: CordaNetwork) : ContainerLif
             .waitingFor(Wait.forHttp("").forPort(PORT))
             .withExposedPorts(PORT)
             .withLogConsumer {
-                logger.info { it.utf8String.trimEnd() }
+                print(it.utf8String)
             }
     }
 

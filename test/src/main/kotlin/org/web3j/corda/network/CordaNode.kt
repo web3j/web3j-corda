@@ -126,7 +126,7 @@ abstract class CordaNode internal constructor(protected val network: CordaNetwor
                 it.withHostName(canonicalName)
                 it.withName(canonicalName)
             }.withLogConsumer {
-                logger.info { it.utf8String.trimEnd() }
+                print(it.utf8String)
             }.apply {
                 configure(nodeDir)
                 logger.info { "Node $canonicalName environment variables: $envMap" }

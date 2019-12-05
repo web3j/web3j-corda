@@ -83,12 +83,6 @@ class CorDappClientCodegen(
         }
     }
 
-    override fun toVarName(name: String): String {
-        return repackage(name, cordaMapping).let {
-            super.toVarName(it)
-        }
-    }
-
     /**
      * Create folder structure according to the given package structure.
      */
