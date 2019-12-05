@@ -68,13 +68,11 @@ class CorDappClientGeneratorTest {
             assertThat(map { it.absolutePath }).containsOnly(
                 File(outputDir, KOTLIN_SOURCE.format("main", "workflows", "Workflows", "")).absolutePath
             )
-
             val initiatorClass = "org.web3j.corda.workflows.api.Workflows\$FlowResource\$Initiator"
             assertThat(classLoader.loadClass(initiatorClass).kotlin).all {
                 hasName("org.web3j.corda.workflows.api.Workflows.FlowResource.Initiator")
                 hasVoidFunction("start")
             }
-            
             forEach {
                 assertThat(compiler.compile(it)).isNotEmpty()
             }
