@@ -362,6 +362,26 @@
     Using a Gradle task
   </a>
   
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#maven" class="md-nav__link">
+    Maven
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#gradle" class="md-nav__link">
+    Gradle
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
       
@@ -467,6 +487,26 @@
     Using a Gradle task
   </a>
   
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#maven" class="md-nav__link">
+    Maven
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#gradle" class="md-nav__link">
+    Gradle
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
       
@@ -510,6 +550,20 @@
 </code></pre>
 
 <p>It exposes a Gradle task <code>generateCorDappWrappers</code> which can be invoked to generate client wrappers for the CorDapps.</p>
+<p>To use the Web3j Corda command-line from your project, you'all also need to include this in your project build file:</p>
+<h3 id="maven">Maven</h3>
+<pre><code class="xml">&lt;dependency&gt;
+    &lt;groupId&gt;org.web3j.corda&lt;/groupId&gt;
+    &lt;artifactId&gt;web3j-corda-console&lt;/artifactId&gt;
+    &lt;version&gt;0.2.5&lt;/version&gt;
+&lt;/dependency&gt;
+</code></pre>
+
+<h3 id="gradle">Gradle</h3>
+<pre><code class="groovy">dependencies {
+    testImplementation &quot;org.web3j.corda:web3j-corda-console:0.2.5&quot;
+}
+</code></pre>
                 
                   
                 
