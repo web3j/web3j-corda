@@ -45,7 +45,10 @@ internal object CordaGeneratorUtils : KLogging() {
      * Append the given prefix to a name if it doesn't contain it already or is a Kotlin class.
      */
     fun appendPrefix(prefix: String, name: String): String {
-        return if (!name.startsWith(prefix) && !name.startsWith("kotlin")) {
+        return if (!name.startsWith(prefix) &&
+            !name.startsWith("kotlin") &&
+            !name.startsWith("java") &&
+            !name.startsWith("org.web3j.corda.model")) {
             "$prefix.$name"
         } else {
             name
