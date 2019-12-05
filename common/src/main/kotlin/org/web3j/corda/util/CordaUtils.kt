@@ -22,6 +22,7 @@ import com.fasterxml.jackson.databind.SerializationFeature
 import com.fasterxml.jackson.module.kotlin.convertValue
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import java.net.ServerSocket
+import java.util.Optional
 import javax.naming.ldap.LdapName
 import javax.security.auth.x500.X500Principal
 
@@ -59,3 +60,5 @@ fun needToSanitizeCorDappName(name: String): Boolean {
 }
 
 fun randomPort() = ServerSocket(0).use { it.localPort }
+
+fun <T> T?.toOptional(): Optional<T> = Optional.ofNullable(this)
