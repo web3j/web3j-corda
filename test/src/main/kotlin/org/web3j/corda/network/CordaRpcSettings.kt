@@ -20,7 +20,7 @@ class CordaRpcSettings internal constructor (private val node: CordaNode) {
      * Corda RPC address for this node, e.g. `notary:10006`.
      */
     val address: String by lazy {
-        "${node.container.containerIpAddress}:${node.rpcSettings.port}"
+        "${node.container.containerIpAddress}:${node.container.ports[node.rpcSettings.port]}"
     }
 
     /**

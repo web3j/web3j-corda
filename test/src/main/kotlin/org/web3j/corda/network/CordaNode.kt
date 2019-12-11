@@ -43,7 +43,7 @@ abstract class CordaNode internal constructor(protected val network: CordaNetwor
      * IP address of this Corda node, e.g. `notary:10006`.
      */
     val p2pAddress: String by lazy {
-        "${container.containerIpAddress}:$p2pPort"
+        "${container.containerIpAddress}:${container.ports[p2pPort]}"
     }
 
     /**
