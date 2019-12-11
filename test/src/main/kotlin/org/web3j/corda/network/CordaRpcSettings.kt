@@ -30,7 +30,6 @@ class CordaRpcSettings internal constructor (private val node: CordaNode) {
         "${node.container.containerIpAddress}:${node.container.ports[node.rpcSettings.adminPort]}"
     }
 
-
     /**
      * Corda RPC port for this node.
      */
