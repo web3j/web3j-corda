@@ -24,6 +24,14 @@ class CordaRpcSettings internal constructor (private val node: CordaNode) {
     }
 
     /**
+     * Corda RPC admin address for this node, e.g. `notary:10006`.
+     */
+    val adminAddress: String by lazy {
+        "${node.container.containerIpAddress}:${node.container.ports[node.rpcSettings.adminPort]}"
+    }
+
+
+    /**
      * Corda RPC port for this node.
      */
     var port: Int = randomPort()
