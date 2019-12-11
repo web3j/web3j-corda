@@ -141,7 +141,6 @@ subprojects {
 
         testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:${versions.junit5}"
         testRuntimeOnly "org.junit.vintage:junit-vintage-engine:${versions.junit5}"
-        testRuntimeOnly "org.jetbrains.kotlin:kotlin-script-util"
 
         integrationTestImplementation "org.testcontainers:testcontainers:${versions.testcontainers}"
         integrationTestImplementation "org.testcontainers:junit-jupiter:${versions.testcontainers}"
