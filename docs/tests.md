@@ -150,6 +150,14 @@ rpcUsers {
     
 #### Read-only configuration
 
+* `rpcSettings.address: String`
+    
+    External host and port for the RPC server binding, e.g. `example.com:10002`
+    
+* `rpcSettings.adminAddress: String`
+    
+    External host and port for the RPC admin binding, e.g. `example.com:10002`
+
 * `p2pAddress: String`
 
     Address/port the node uses for inbound communication from other nodes. 
