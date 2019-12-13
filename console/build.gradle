@@ -63,7 +63,6 @@ dependencies {
         exclude group: 'org.fusesource.jansi'
     }
     implementation(group: 'io.bluebank.braid', name: 'braid-corda', version: versions.braid, changing: true) {
-        exclude group: 'io.vertx', module: 'vertx-auth-jwt'
         exclude group: 'io.vertx', module: 'vertx-auth-shiro'
         exclude group: 'io.vertx', module: 'vertx-rx-gen'
         exclude group: 'io.vertx', module: 'vertx-rx-java'
