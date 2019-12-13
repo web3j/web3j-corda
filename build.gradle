@@ -95,6 +95,7 @@ subprojects {
 
         configurations.all {
             resolutionStrategy {
+                force(group: 'org.ow2.asm', name: 'asm', version: versions.asm)
                 force(group: 'org.jetbrains.kotlin', name: 'kotlin-compiler-embeddable', version: versions.kotlin)
                 force(group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: versions.jackson)
                 force(group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: versions.jackson)
@@ -102,11 +103,15 @@ subprojects {
                 force(group: 'com.fasterxml.jackson.dataformat', name: 'jackson-dataformat-yaml', version: versions.jackson)
                 force(group: 'com.fasterxml.jackson.module', name: 'jackson-module-jaxb-annotations', version: versions.jackson)
                 force(group: 'com.fasterxml.jackson.module', name: 'jackson-module-kotlin', version: versions.jackson)
+                force(group: 'com.fasterxml.jackson.datatype', name: 'jackson-datatype-joda', version: versions.jackson)
                 force(group: 'com.fasterxml.jackson.datatype', name: 'jackson-datatype-jsr310', version: versions.jackson)
                 force(group: 'com.google.errorprone', name: 'error_prone_annotations', version: versions.errorProneAnnotations)
                 force(group: 'com.google.guava', name: 'guava', version: versions.guava)
                 force(group: 'commons-io', name: 'commons-io', version: versions.commonsIo)
+                force(group: 'commons-codec', name: 'commons-codec', version: versions.commonsCodec)
                 force(group: 'io.github.classgraph', name: 'classgraph', version: versions.classgraph)
+                force(group: 'io.swagger', name: 'swagger-core', version: versions.swagger)
+                force(group: 'io.swagger', name: 'swagger-models', version: versions.swagger)
                 force(group: 'io.swagger.core.v3', name: 'swagger-annotations', version: versions.swagger3)
                 force(group: 'io.swagger.core.v3', name: 'swagger-core', version: versions.swagger3)
                 force(group: 'io.swagger.core.v3', name: 'swagger-models', version: versions.swagger3)
