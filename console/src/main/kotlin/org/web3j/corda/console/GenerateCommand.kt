@@ -85,7 +85,9 @@ class GenerateCommand : BaseCommand() {
             paths.map {
                 it.toFile().toURI().toURL().toExternalForm()
             }.filter {
-                it.endsWith(".jar")
+                it.endsWith(".jar") && 
+                    !it.endsWith("quasar.jar") && 
+                    !it.endsWith("gradle-wrapper.jar")
             }.toList().run {
                 tryWithClassLoader(toJarsClassLoader()) {
                     BraidDocsMain().swaggerText(openApiVersion.toInt())
