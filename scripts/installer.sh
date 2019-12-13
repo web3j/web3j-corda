@@ -3,7 +3,7 @@
 installed_flag=0
 local=~/
 
-web3j_corda_version="0.2.6"
+web3j_corda_version="0.2.7"
 
 check_if_installed() {
   if [ -x "$(command -v web3j-corda)" ] &>/dev/null; then
