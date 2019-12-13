@@ -75,8 +75,8 @@ class CorDappClientGenerator(
     }
 
     override fun processPaths(paths: Paths): MutableMap<String, MutableList<CodegenOperation>> {
-        return super.processPaths(Paths().apply { 
-            paths.forEach { key, value -> 
+        return super.processPaths(Paths().apply {
+            paths.forEach { key, value ->
                 if (!excludedPaths.contains(key)) {
                     addPathItem(key, value)
                 }
@@ -155,7 +155,7 @@ class CorDappClientGenerator(
             "net.corda.core" to "org.web3j.corda.model.core",
             "io.bluebank.braid.corda" to "org.web3j.braid"
         )
-        
+
         private val excludedPaths = setOf(
             "/cordapps/progress-tracker"
         )
