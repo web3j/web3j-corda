@@ -13,6 +13,7 @@
 package org.web3j.corda.codegen
 
 import io.github.classgraph.ClassGraph
+import io.swagger.v3.oas.models.Paths
 import io.swagger.v3.parser.OpenAPIV3Parser
 import io.swagger.v3.parser.core.models.ParseOptions
 import io.swagger.v3.parser.core.models.SwaggerParseResult
@@ -24,6 +25,7 @@ import org.openapitools.codegen.CodegenConstants.API_TESTS
 import org.openapitools.codegen.CodegenConstants.MODELS
 import org.openapitools.codegen.CodegenConstants.MODEL_PACKAGE
 import org.openapitools.codegen.CodegenConstants.PACKAGE_NAME
+import org.openapitools.codegen.CodegenOperation
 import org.openapitools.codegen.DefaultGenerator
 import org.openapitools.codegen.config.GeneratorProperties.setProperty
 import org.web3j.corda.codegen.CordaGeneratorUtils.repackage
@@ -70,6 +72,16 @@ class CorDappClientGenerator(
         return super.generate().onEach {
             CordaGeneratorUtils.kotlinFormat(it)
         }
+    }
+
+    override fun processPaths(paths: Paths): MutableMap<String, MutableList<CodegenOperation>> {
+        return super.processPaths(Paths().apply { 
+            paths.forEach { key, value -> 
+                if (!excludedPaths.contains(key)) {
+                    addPathItem(key, value)
+                }
+            }
+        })
     }
 
     override fun processTemplateToFile(
@@ -142,6 +154,10 @@ class CorDappClientGenerator(
             "generated.net.corda" to "org.web3j.corda",
             "net.corda.core" to "org.web3j.corda.model.core",
             "io.bluebank.braid.corda" to "org.web3j.braid"
+        )
+        
+        private val excludedPaths = setOf(
+            "/cordapps/progress-tracker"
         )
 
         fun buildCorDappNameFromPath(path: String): String {
