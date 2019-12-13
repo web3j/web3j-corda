@@ -210,7 +210,7 @@ abstract class CordaNode internal constructor(protected val network: CordaNetwor
 
     companion object : KLogging() {
         private const val DEFAULT_ORGANIZATION = "corda"
-        private const val DEFAULT_IMAGE = "corda-zulu-4.1"
+        private const val DEFAULT_IMAGE = "corda-zulu-java1.8-4.3"
         private const val DEFAULT_TAG = "latest"
 
         private val portRange = 1024..65535
