@@ -12,17 +12,15 @@
  */
 package org.web3j.corda.api
 
-import javax.ws.rs.Path
-import org.web3j.braid.services.vault.VaultQuery
 import org.web3j.corda.model.core.node.services.Vault_Page_net_corda_core_contracts_ContractState
+import javax.ws.rs.GET
+import javax.ws.rs.QueryParam
 
-interface VaultResource {
+interface VaultQueryResource {
 
-    @get:Path("vaultQuery")
-    val queryBy: VaultQueryResource
-
-    @Path("vaultQueryBy")
-    fun query(
-        query: VaultQuery
+    @GET
+    fun contractStateType(
+        @QueryParam("contract-state-type")
+        contractStateType: String
     ): Vault_Page_net_corda_core_contracts_ContractState
 }

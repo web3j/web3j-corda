@@ -26,6 +26,8 @@ class ObligationKotlinTest {
     @Test
     fun `issue obligation`() {
 
+        val nodeA = network.parties[0]
+
         val partyB = network.parties[0].corda.api.network.nodes
             .findByX500Name("O=PartyB,L=New York,C=US")[0].legalIdentities[0]
 
@@ -37,6 +39,9 @@ class ObligationKotlinTest {
             )
         ).apply {
             assertThat(coreTransaction!!.outputs[0].data!!.participants?.first()?.owningKey).isEqualTo(partyB.owningKey)
+            val vaultQueryRes = nodeA.corda.api.vault.queryBy.contractStateType("net.corda.examples.obligation.Obligation")
+            val nodeState = vaultQueryRes.states[0].state?.data
+            assertThat(nodeState?.participants?.first()?.owningKey).isEqualTo(partyB.owningKey)
         }
     }
 }
