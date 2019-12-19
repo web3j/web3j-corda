@@ -36,7 +36,7 @@ To use the Web3j Corda command-line from your project, you'all also need to incl
 <dependency>
     <groupId>org.web3j.corda</groupId>
     <artifactId>web3j-corda-console</artifactId>
-    <version>0.2.7</version>
+    <version>0.2.8</version>
 </dependency>
 ```
 
@@ -44,6 +44,6 @@ To use the Web3j Corda command-line from your project, you'all also need to incl
 
 ```groovy
 dependencies {
-    testImplementation "org.web3j.corda:web3j-corda-console:0.2.7"
+    testImplementation "org.web3j.corda:web3j-corda-console:0.2.8"
 }
 ```
