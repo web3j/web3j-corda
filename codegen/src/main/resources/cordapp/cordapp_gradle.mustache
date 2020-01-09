@@ -201,7 +201,7 @@ task generateCorDappWrappersUnix(type: Exec, group: 'web3j') {
     onlyIf { OperatingSystem.current().isMacOsX() || OperatingSystem.current().isLinux() }
     commandLine 'web3j-corda', 'generate',
     '--package-name', project.group,
-    '--cordapps-dir', "$projectDir",
+    '--cordapps-dir', projectDir,
     '--output-dir', 'clients'
 }
 
@@ -209,6 +209,6 @@ task generateCorDappWrappersWindows(type: Exec, group: 'web3j') {
     onlyIf { OperatingSystem.current().isWindows() }
     commandLine 'web3j-corda.bat', 'generate',
     '--package-name', project.group,
-    '--cordapps-dir', "$projectDir",
+    '--cordapps-dir', projectDir,
     '--output-dir', 'clients'
 }
