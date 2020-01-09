@@ -193,7 +193,7 @@ task installQuasar(type: Copy) {
     }
 }
 
-task generateCorDappWrappers {
+task generateCorDappWrappers(group: 'web3j') {
     dependsOn 'generateCorDappWrappersUnix', 'generateCorDappWrappersWindows'
 }
 
