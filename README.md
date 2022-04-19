@@ -31,7 +31,7 @@ There is a web3j-corda binary that allows you to easily:
 You can install web3j-corda by running the following command in your terminal:
 
 ```shell
-curl -L https://getcorda.web3j.io | bash
+curl -L https://raw.githubusercontent.com/web3j/corda/master/scripts/installer.sh | bash
 ```
 
 ### Create a template CorDapp project
